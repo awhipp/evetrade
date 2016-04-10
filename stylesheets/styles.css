@@ -364,7 +364,7 @@ fieldset {
 
 /*
  * 1. Corrects color not being inherited in IE6/7/8/9
- * 2. Corrects text not wrapping in FF3 
+ * 2. Corrects text not wrapping in FF3
  * 3. Corrects alignment displayed oddly in IE6/7
  */
 legend {
@@ -618,6 +618,7 @@ pre code {
 table {
   width: 100%;
   border-collapse: collapse;
+  border-top: 1px solid #ffcc00;
 }
 
 th {
