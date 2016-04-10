@@ -175,6 +175,7 @@ function getItemName(itemId, refresh)
  * @param {jsonMarket} jsonMarket the market data in JSON format
  * @param {stationId} stationId the station ID to focus the search on
  * @param {orderType} orderType the type of order is either "sell" or "buy"
+ * @param {itemId} the item id being bought/sold
  */
 function getPrice(jsonMarket, stationId, orderType, itemId)
 {
@@ -210,11 +211,9 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
     }
   }
   if(orderType == "buy"){
-    $("#sell" + itemId+stationid).text(bestPrice);
-
+    $("#sell" + itemId+stationId).val(bestPrice);
   }else{
-    $("#buy" + itemId+stationid).text(bestPrice);
-
+    $("#buy" + itemId+stationId).val(bestPrice);
   }
   return bestPrice;
 }

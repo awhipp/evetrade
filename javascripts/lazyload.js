@@ -1,7 +1,21 @@
-var successful = [];
 
-  var regionid = 10000002;
-  var stationid = 60003760;
+var successful = [];
+var JITA = [10000002,60003760];
+var AMARR = [10000043,60008494];
+var DODIXIE = [10000032,60011866];
+var RENS = [10000030,60004588];
+var HEK = [10000042,60005686];
+
+
+
+function init(location){
+
+  var station_buy = JITA;
+  var station_sell1 = AMARR;
+  var station_sell2 = DODIXIE;
+  var station_sell3 = RENS;
+  $('#dataTable').append("<tr><td>Item</td><td>Buy at Jita</td><td>Sell at Jita</td><td>Sell at Jita</td><td>Sell at Jita</td></tr>")
+
   //document.write(successful.join(", "));
   var itemIds = [34, 36, 35, 39, 38, 37, 40, 41, 45, 44, 43, 42, 178, 179, 180, 181, 184, 185, 187, 182, 183, 186,
     188, 190, 189, 192, 193, 191, 194, 197, 196, 195, 199, 198, 202, 201, 203, 204, 205,
@@ -28,9 +42,12 @@ var successful = [];
     974, 977, 976, 978, 979, 983, 985, 984, 986, 987, 990, 989, 991, 992, 994, 995, 996];
 
    for(var i = 0; i < itemIds.length; i++){
-      $('#dataTable tr:last').after("<tr><td id='itemid_"+itemIds[i]+"'></td><td id=sell"+itemIds[i]+stationid+"></td><td id=buy"+itemIds[i]+stationid+"></td></tr>");
+      $('#dataTable tr:last').after("<tr><td id='itemid_"+itemIds[i]+"'></td><td id=sell"+itemIds[i]+station_buy[1]+"></td><td id=buy"+itemIds[i]+station_sell1[1]+"></td><td id=buy"+itemIds[i]+station_sell2[1]+"></td><td id=buy"+itemIds[i]+station_sell3[1]+"></td></tr>");
 
       var nameList = getItemName(itemIds[i], 0);
-      var jitaSell = getMarketPrice(itemIds[i], regionid, stationid, "sell", 0);
-      var jitaBuy = getMarketPrice(itemIds[i], regionid, stationid, "buy", 0);
+      var sellPrice = getMarketPrice(itemIds[i], station_buy[0], station_buy[1], "sell", 0);
+      var buyLocation1 = getMarketPrice(itemIds[i], station_sell1[0], station_sell1[1], "buy", 0);
+      var buyLocation2 = getMarketPrice(itemIds[i], station_sell2[0], station_sell2[1], "buy", 0);
+      var buyLocation3 = getMarketPrice(itemIds[i], station_sell3[0], station_sell3[1], "buy", 0);
    }
+ }
