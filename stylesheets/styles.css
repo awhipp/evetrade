@@ -10,13 +10,21 @@
 .container {
    margin-left: auto;
       margin-right: auto;
-   margin-top: 1em;
+   margin-top: 3em;
    text-align:center;
    background-color: white;
 }
 
-#dataTable {
-   width: 100%;
+.question {
+  font-size: 1.5em;
+}
+
+input[type="button"]{
+  width: 180px;
+}
+
+#dataTable_wrapper {
+   overflow-x: scroll;
 }
 
 td {

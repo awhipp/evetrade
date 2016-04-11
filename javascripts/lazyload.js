@@ -7,14 +7,14 @@ var RENS = [10000030,60004588];
 var HEK = [10000042,60005686];
 
 $('#dataTable').hide();
-$("#more").hide();
+$(".more").hide();
 
-var BOLD = "style='font-weight: bold;'";
+var BOLD = "style='text-align:center;'";
 
 function init(location){
-   $("#more").val("Loading...");
-   $("#more").show();
-   $("#more").prop('disabled', true);
+   $(".more").val("Loading...");
+   $(".more").show();
+   $(".more").prop('disabled', true);
 
    var station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
    if(location === "Jita"){
@@ -23,37 +23,38 @@ function init(location){
       station_sell2 = DODIXIE;
       station_sell3 = RENS;
       station_sell4 = HEK;
-      $('#dataTable').append("<tr><td  " + BOLD + ">Item</td><td  " + BOLD + ">Buy at Jita</td><td  " + BOLD + ">Max Profit Per Item</td><td  " + BOLD + ">Sell at Amarr</td><td  " + BOLD + ">Sell at Dodixie</td><td  " + BOLD + ">Sell at Rens</td><td  " + BOLD + ">Sell at Hek</td></tr>")
+      $('#dataTable').append("<thead><tr><th  " + BOLD + ">Item</th><th  " + BOLD + ">Buy at Jita</th><th  " + BOLD + ">Max Profit Per Item</th><th  " + BOLD + ">Sell at Amarr</th><th  " + BOLD + ">Sell at Dodixie</th><th  " + BOLD + ">Sell at Rens</th><th  " + BOLD + ">Sell at Hek</th></tr></thead>")
    }else if(location === "Amarr"){
       station_buy = AMARR;
       station_sell1 = JITA;
       station_sell2 = DODIXIE;
       station_sell3 = RENS;
       station_sell4 = HEK;
-      $('#dataTable').append("<tr><td  " + BOLD + ">Item</td><td  " + BOLD + ">Buy at Amarr</td><td  " + BOLD + ">Max Profit Per Item</td><td  " + BOLD + ">Sell at Jita</td><td  " + BOLD + ">Sell at Dodixie</td><td  " + BOLD + ">Sell at Rens</td><td  " + BOLD + ">Sell at Hek</td></tr>")
+      $('#dataTable').append("<thead><tr><th  " + BOLD + ">Item</th><th  " + BOLD + ">Buy at Amarr</th><th  " + BOLD + ">Max Profit Per Item</th><th  " + BOLD + ">Sell at Jita</th><th  " + BOLD + ">Sell at Dodixie</th><th  " + BOLD + ">Sell at Rens</th><th  " + BOLD + ">Sell at Hek</th></tr></thead>")
    }else if(location === "Dodixie"){
       station_buy = DODIXIE;
       station_sell1 = AMARR;
       station_sell2 = JITA;
       station_sell3 = RENS;
       station_sell4 = HEK;
-      $('#dataTable').append("<tr><td  " + BOLD + ">Item</td><td  " + BOLD + ">Buy at Dodoxie</td><td  " + BOLD + ">Max Profit Per Item</td><td  " + BOLD + ">Sell at Amarr</td><td  " + BOLD + ">Sell at Jita</td><td  " + BOLD + ">Sell at Rens</td><td  " + BOLD + ">Sell at Hek</td></tr>")
+      $('#dataTable').append("<thead><tr><th  " + BOLD + ">Item</th><th  " + BOLD + ">Buy at Dodoxie</th><th  " + BOLD + ">Max Profit Per Item</th><th  " + BOLD + ">Sell at Amarr</th><th  " + BOLD + ">Sell at Jita</th><th  " + BOLD + ">Sell at Rens</th><th  " + BOLD + ">Sell at Hek</th></tr></thead>")
    }else if(location === "Rens"){
       station_buy = RENS;
       station_sell1 = AMARR;
       station_sell2 = DODIXIE;
       station_sell3 = JITA;
       station_sell4 = HEK;
-      $('#dataTable').append("<tr><td  " + BOLD + ">Item</td><td  " + BOLD + ">Buy at Rens</td><td  " + BOLD + ">Max Profit Per Item</td><td  " + BOLD + ">Sell at Amarr</td><td  " + BOLD + ">Sell at Dodixie</td><td  " + BOLD + ">Sell at Jita</td><td  " + BOLD + ">Sell at Hek</td></tr>")
+      $('#dataTable').append("<thead><tr><th  " + BOLD + ">Item</th><th  " + BOLD + ">Buy at Rens</th><th  " + BOLD + ">Max Profit Per Item</th><th  " + BOLD + ">Sell at Amarr</th><th  " + BOLD + ">Sell at Dodixie</th><th  " + BOLD + ">Sell at Jita</th><th  " + BOLD + ">Sell at Hek</th></tr></thead>")
    }else {
       station_buy = HEK;
       station_sell1 = AMARR;
       station_sell2 = DODIXIE;
       station_sell3 = RENS;
       station_sell4 = JITA;
-      $('#dataTable').append("<tr><td  " + BOLD + ">Item</td><td  " + BOLD + ">Buy at Hekk</td><td  " + BOLD + ">Max Profit Per Item</td><td  " + BOLD + ">Sell at Amarr</td><td  " + BOLD + ">Sell at Dodixie</td><td  " + BOLD + ">Sell at Rens</td><td  " + BOLD + ">Sell at Jita</td></tr>")
+      $('#dataTable').append("<thead><tr><th  " + BOLD + ">Item</th><th  " + BOLD + ">Buy at Hekk</th><th  " + BOLD + ">Max Profit Per Item</th><th  " + BOLD + ">Sell at Amarr</th><th  " + BOLD + ">Sell at Dodixie</th><th  " + BOLD + ">Sell at Rens</th><th  " + BOLD + ">Sell at Jita</th></tr></thead>")
    }
 
+   $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
 
    //document.write(successful.join(", "));
    var itemIds = [34, 36, 35, 39, 38, 37, 40, 41, 45, 44, 43, 42, 178, 179, 180, 181, 184, 185, 187, 182, 183, 186,

@@ -5,12 +5,13 @@
 
 // LICENSE: Use at your own risk, and fly safe.
 
-var COLOR_CSS = "style='background-color:green; color: white;'";
 var JUMPS = 25;
 var start;
 var length;
 var lastIndex = 0;
 var toIndex = JUMPS;
+var created = false;
+var dt;
 
 var init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4;
 
@@ -24,8 +25,8 @@ function getData(data, stationId, orderType, itemId){
 }
 
 function goAgain(){
-   $("#more").val("Loading...");
-   $("#more").prop('disabled', true);
+   $(".more").val("Loading...");
+   $(".more").prop('disabled', true);
    getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
 }
 
@@ -46,8 +47,8 @@ function getRows(itemIds, station_buy, station_sell1, station_sell2, station_sel
       length = itemIds[i];
    }
    if(lastIndex >= itemIds.length){
-      $("#more").val("No more deals found");
-      $("#more").prop('disabled', true);
+      $(".more").val("No more deals found");
+      $(".more").prop('disabled', true);
    }
    lastIndex = i;
 }
@@ -143,41 +144,65 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
          sellPrice3 = parseFloat(sellPrice3);
          sellPrice4 = parseFloat(sellPrice4);
          if(buyPrice < sellPrice1 || buyPrice < sellPrice2 || buyPrice < sellPrice3 || buyPrice < sellPrice4){
-            $('#dataTable').show();
-            $("#more").show();
             var profit = -1;
+            var index = 0;
             if(sellPrice1 > 0){
                var gain = sellPrice1 - buyPrice;
                if(gain > profit){
                   profit = gain;
+                  index = 1;
                }
+            }else{
+              sellPrice1 = "-";
             }
             if(sellPrice2 > 0){
                var gain = sellPrice2 - buyPrice;
                if(gain > profit){
                   profit = gain;
+                  index = 2;
                }
+            }else{
+              sellPrice2 = "-";
             }
             if(sellPrice3 > 0){
                var gain = sellPrice3 - buyPrice;
                if(gain > profit){
                   profit = gain;
+                  index = 3;
                }
+            }else{
+              sellPrice3 = "-";
             }
             if(sellPrice4 > 0){
                var gain = sellPrice4 - buyPrice;
                if(gain > profit){
                   profit = gain;
+                  index = 4;
                }
+            }else{
+              sellPrice4 = "-";
             }
+
             profit = Math.round(profit * 100) / 100;
-            $('#dataTable tr:last').after("<tr><td>" + itemName + "</td><td>" + buyPrice + "</td>"
-            + "<td>" + profit + "</td>"
-            + "<td " + (buyPrice < sellPrice1 ? COLOR_CSS : "") + ">" + sellPrice1 + "</td>"
-            + "<td " + (buyPrice < sellPrice2 ? COLOR_CSS : "") + ">" + sellPrice2 + "</td>"
-            + "<td " + (buyPrice < sellPrice3 ? COLOR_CSS : "") + ">" + sellPrice3 + "</td>"
-            + "<td " + (buyPrice < sellPrice4 ? COLOR_CSS : "") + ">" + sellPrice4 + "</td>"
-            + "</tr>");
+            if(!created){
+              created = true;
+               dt = $('#dataTable').DataTable({
+                 "order": [[ 2, "desc" ]],
+                  "lengthMenu": [[-1], ["All"]]
+               });
+               $(".more").show();
+               $(".dataTables_length").remove();
+               $(".dataTables_filter").remove();
+               $(".dataTables_paginate").remove();
+               $(".dataTables_info").css("width", "100%");
+               $('#dataTable').show();
+            }
+            dt.row.add([itemName, buyPrice, profit,
+            (index === 1 ? "(" + sellPrice1 + ")" : sellPrice1),
+            (index === 2 ? "(" + sellPrice2 + ")" : sellPrice2),
+            (index === 3 ? "(" + sellPrice3 + ")" : sellPrice3),
+            (index === 4 ? "(" + sellPrice4 + ")" : sellPrice4)
+            ]).draw( false );
          }
          if(itemId === length){
             var end = new Date().getTime();
@@ -186,8 +211,8 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
             if($('tr').length-1 < toIndex){
                getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
             }else{
-               $("#more").val("Get More");
-               $("#more").prop('disabled', false);
+               $(".more").val("Get More");
+               $(".more").prop('disabled', false);
                toIndex += JUMPS;
             }
          }

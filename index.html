@@ -3,14 +3,16 @@
 <head>
    <meta charset="utf-8">
    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-   <title>Alex&#39;s Trade Finder by awhipp</title>
+   <title>The Trade Finder by awhipp</title>
    <link rel="stylesheet" href="stylesheets/styles.css">
    <link rel="stylesheet" href="stylesheets/github-dark.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
    <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
    <script src="javascripts/main.js"></script>
    <script src="javascripts/helper.js"></script>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
    <!--[if lt IE 9]>
    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -21,28 +23,31 @@
 <body>
 
    <div class="header">
-      <h1>Alex&#39;s Realtime EVE Trade Finder</h1>
+      <h1>The Realtime EVE Trade Finder</h1>
    </div>
 
    <div class="container">
       <div id="base">
          <div id="selection">
-            <div> <b> Where are you docked? </b> </div>
+            <div class="question"> <b> Where are you docked? </b> </div>
             <br/>
-            <input type="button" class="btn btn-default" onclick="init('Jita')" value="Jita"></input>
-            <input type="button" class="btn btn-default"  onclick="init('Amarr')" value="Amarr"></input>
-            <input type="button" class="btn btn-default"  onclick="init('Dodixie')" value="Dodixie"></input>
-            <input type="button" class="btn btn-default"  onclick="init('Rens')" value="Rens"></input>
-            <input type="button" class="btn btn-default"  onclick="init('Hek')" value="Hek"></input>
+            <input type="button" class="btn btn-default" onclick="init('Jita')" value="Jita"></input><br/><br/>
+            <input type="button" class="btn btn-default"  onclick="init('Amarr')" value="Amarr"></input><br/><br/>
+            <input type="button" class="btn btn-default"  onclick="init('Dodixie')" value="Dodixie"></input><br/><br/>
+            <input type="button" class="btn btn-default"  onclick="init('Rens')" value="Rens"></input><br/><br/>
+            <input type="button" class="btn btn-default"  onclick="init('Hek')" value="Hek"></input><br/><br/>
          </div>
-         <table id="dataTable">
+         <input type="button" class="btn btn-default more" onclick="goAgain()" value="Get More"></input>
+         <br/>
+         <table id="dataTable" class="display nowrap" cellspacing="0" width="100%">
          </table>
          <br/>
-         <input type="button" class="btn btn-default" id="more" onclick="goAgain()" value="Get More"></input>
+         <input type="button" class="btn btn-default more" onclick="goAgain()" value="Get More"></input>
       </div>
       <hr/>
       <footer>
          <p>Project maintained by <a href="https://github.com/awhipp">Alexander Whipp</a></p>
+         <p>Powered by <a href="https://developers.eveonline.com/">EVE's Crest API</a> and <a href="https://datatables.net/">JQuery DataTables</a></p>
       </footer>
    </div>
    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
