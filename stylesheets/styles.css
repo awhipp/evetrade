@@ -10,32 +10,26 @@ body {
   padding: 1em;
 }
 
-.header h1 {
-  font-size: 2em;
-}
-
-.header ol {
-  font-weight: bold;
-  color: #336699;
-  background-color: white;
-  border: solid #336699 1px;
-  border-radius: 1em;
-  padding-top: 1em;
-  padding-bottom: 1em;
-  padding-left: 30px;
-  padding-right: 30px;
-}
-
 .container {
   margin-left: auto;
   margin-right: auto;
   margin-top: 3em;
-  text-align:center;
-  background-color: white;
 }
 
-.question {
-  font-size: 1.75em;
+ol {
+  color: #336699;
+  background-color: white;
+  padding: 1.5em !important ;
+  border-radius: 1em;
+  font-weight: bold;
+}
+
+ul > li {
+  list-style: square;
+}
+
+#base, footer {
+  text-align:center;
 }
 
 input[type="button"]{
@@ -82,16 +76,68 @@ td {
 
 #howto {
   text-align: left;
+  display: none;
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #buyingHeader {
-  margin-bottom: 1em;
-  font-size: 1.75em;
   font-weight: bold;
 }
 
-#buyingHeader > p {
+#buyingFooter {
   color: #999;
-  font-size: 0.6em;
-  font-weight: 500;
+  margin-bottom: 1em;
+}
+
+.title {
+	font-size: 25px !important;
+  margin-bottom: 1em;
+  font-weight: bold;
+}
+
+.primary-text {
+	font-size: 15px !important;
+}
+
+.secondary-text {
+	font-size: 13px !important;
+}
+
+.minor-text, li, td {
+	font-size: 12px !important;
+}
+
+/* Small devices (tablets, 768px and up) */
+@media ( min-width : 768px) {
+	.title {
+		font-size: 30px !important;
+	}
+	.primary-text {
+		font-size: 20px !important;
+	}
+	.secondary-text {
+		font-size: 14px !important;
+	}
+	.minor-text, li, td {
+		font-size: 12px !important;
+	}
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media ( min-width : 992px) {
+	.title {
+		font-size: 38px !important;
+	}
+	.primary-text {
+		font-size: 28px !important;
+	}
+	.secondary-text {
+		font-size: 22px !important;
+	}
+	.minor-text, li, td {
+		font-size: 18px !important;
+	}
 }
