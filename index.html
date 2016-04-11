@@ -32,15 +32,26 @@
           <ol>
             <li>Select which trade hub you will be making purchases from.</li>
             <li>Find which item you wish to trade</li>
-            <li>ISK ratio = (Buy Price) / (Profit per Item). Essentially it represents return on investment</li>
+            <li>Legend
+              <ul>
+                <li>Item - The Item name to Purchase</li>
+                <li>Buy Price - The cost at your current trade hub per item</li>
+                <li>Buy Quantity - How many you can buy (amount available for purchase, or the amount that you can sell at the destination--whichever is lower)</li>
+                <li>Total Cost - How much it will cost you to buy all the quantity listed (Buy Price * Buy Quantity)</li>
+                <li>Sell At - Your destination trade hub for this trade</li>
+                <li>Sell Price - Cost per item that the buy order is asking for at the trade hub</li>
+                <li>Total Profit - (Buy Quantity * Sell Price)</li>
+                <li>Profit Per Item - (Sell Price - Buy Price)</li>
+                <li>Return on Investment = (Revenue - Cost) / Cost</li>
+              </ul>
+            </li>
             <li>"Sell at" references the hub that is buying at a higher price</li>
-            <li><b><u>Make sure to note the volume of items being purchased at the destination</u></b></li>
           </ol>
         </div>
         <div class="col-md-3">
         </div>
       </div>
-      <p class="question toggle" onclick="window.location.reload()">Reset</p>
+      <input type="button" id="reset" class="btn btn-default" onclick="window.location.reload()" value="Reset"></input>
     </div>
   </div>
 
@@ -56,13 +67,13 @@
         <input type="button" class="btn btn-default"  onclick="init('Rens')" value="Rens"></input><br/><br/>
         <input type="button" class="btn btn-default"  onclick="init('Hek')" value="Hek"></input><br/><br/>
       </div>
-      <input type="button" class="btn btn-default more" onclick="goAgain()" value="Get More"></input>
+      <input type="button" class="btn btn-default more" value="Get More"></input>
       <input type="button" class="btn btn-default scroll" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
       <br/>
       <table id="dataTable" class="display nowrap" cellspacing="0" width="100%">
       </table>
       <br/>
-      <input type="button" class="btn btn-default more" onclick="goAgain()" value="Get More"></input>
+      <input type="button" class="btn btn-default more" value="Get More"></input>
       <input type="button" class="btn btn-default scroll" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
     </div>
     <hr/>

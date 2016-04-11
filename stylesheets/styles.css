@@ -15,10 +15,13 @@ body {
 }
 
 .header ol {
-  border: solid white 1px;
+  color: #336699;
+  background-color: white;
+  border: solid #336699 1px;
   padding: 2em;
   padding-left: 3em;
   padding-right: 3em;
+  border-radius: 1em;
 }
 
 .container {
@@ -34,9 +37,15 @@ body {
 }
 
 input[type="button"]{
-    width: 150px;
-    margin-left: auto;
-    margin-right: auto;
+  width: 150px;
+  margin-left: auto;
+  margin-right: auto;
+  transition: all 0.3s ease 0s;
+}
+
+input[type="button"]:hover{
+  color: white;
+  background-color: #336699;
 }
 
 #dataTable_wrapper {
@@ -55,6 +64,21 @@ td {
 
 .toggle:hover {
   text-decoration:underline;
+}
+
+#reset {
+  color: white;
+  background-color: #336699;
+}
+
+#reset:hover {
+  color: #336699;
+  background-color: white;
+}
+
+.more:hover{
+  color: black !important;
+  background-color: white;
 }
 
 .sorting, .sorting_desc, .sorting_asc {

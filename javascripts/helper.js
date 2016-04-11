@@ -9,10 +9,10 @@ var dt;
 var init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4;
 
 function numberWithCommas(val) {
-    while (/(\d+)(\d{3})/.test(val.toString())){
-      val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-    }
-    return val;
+  while (/(\d+)(\d{3})/.test(val.toString())){
+    val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+  }
+  return val;
 }
 
 function getData(data, stationId, orderType, itemId){
@@ -196,8 +196,7 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
       sellPrice4 = "-";
     }
 
-    itemprofit = Math.round(itemprofit * 100) / 100;
-    iskRatio = (Math.floor((itemprofit/buyPrice) * 100));
+    iskRatio = (final_sell-buyPrice)/buyPrice;
     var profit;
     if(buyVolume >= final_volume){
       profit = final_volume * itemprofit;
@@ -205,12 +204,11 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
       final_volume = buyVolume;
       profit = final_volume * itemprofit;
     }
-    profit = Math.round(profit * 100) / 100;
-
+    var cost = buyPrice * final_volume;
     if(!created){
       created = true;
       dt = $('#dataTable').DataTable({
-        "order": [[ 5, "desc" ]],
+        "order": [[ 6, "desc" ]],
         "lengthMenu": [[-1], ["All"]]
       });
       $(".more").show();
@@ -223,27 +221,27 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
 
     dt.row.add([
       itemName,
-      numberWithCommas(buyPrice),
-      numberWithCommas(final_volume),
+      numberWithCommas(buyPrice.toFixed(2)),
+      numberWithCommas(final_volume.toFixed()),
+      numberWithCommas(cost.toFixed(2)),
       (index === JITA[0] ? "Jita" : index === AMARR[0] ? "Amarr" : index === DODIXIE[0] ? "Dodixie" : index === RENS[0] ? "Rens" : "Hek"),
-      numberWithCommas(final_sell),
-      numberWithCommas(profit),
-      numberWithCommas(itemprofit),
-      iskRatio+"%"
-  ]).draw( false );
-}
-if(itemId === length){
-  // var end = new Date().getTime();
-  // var time = end - start;
-  // console.log('Execution time: ' + time);
-  if($('tr').length-1 < toIndex){
-    getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
-  }else{
-    $(".more").val("Get " + JUMPS + " More");
-    $(".more").prop('disabled', false);
-    toIndex += JUMPS;
+      numberWithCommas(final_sell.toFixed(2)),
+      numberWithCommas(profit.toFixed(2)),
+      numberWithCommas(itemprofit.toFixed(2)),
+      iskRatio.toFixed(3)+"%"
+    ]).draw( false );
   }
-}
+  if(itemId === length){
+    // var end = new Date().getTime();
+    // var time = end - start;
+    // console.log('Execution time: ' + time);
+    if($('tr').length-1 < toIndex){
+      getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
+    }else{
+      window.setTimeout(goAgain(), 1000);
+      toIndex += JUMPS;
+    }
+  }
 }
 
 /**
