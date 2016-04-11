@@ -5,7 +5,6 @@ var lastIndex = 0;
 var toIndex = JUMPS;
 var created = false;
 var dt;
-var itemNames = [];
 
 var init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4;
 
@@ -276,13 +275,4 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
     }
   }
   return [bestPrice, bestVolume];
-}
-
-var successfulId = [];
-function findItemIds(){
-  for(var i = 6637; i < 100000; i++){
-    $.get("https://public-crest.eveonline.com/types/" + i+ "/", function() {}).success(function(data){
-      successfulId.push(data["id"]);
-    });
-  }
 }
