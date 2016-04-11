@@ -225,10 +225,10 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
       numberWithCommas(final_volume.toFixed()),
       numberWithCommas(cost.toFixed(2)),
       (index === JITA[0] ? "Jita" : index === AMARR[0] ? "Amarr" : index === DODIXIE[0] ? "Dodixie" : index === RENS[0] ? "Rens" : "Hek"),
-      numberWithCommas(final_sell.toFixed(2)),
       numberWithCommas(profit.toFixed(2)),
-      numberWithCommas(itemprofit.toFixed(2)),
-      iskRatio.toFixed(3)+"%"
+      (iskRatio.toFixed(3)*100).toFixed(1)+"%",
+      numberWithCommas(final_sell.toFixed(2)),
+      numberWithCommas(itemprofit.toFixed(2))
     ]).draw( false );
   }
   if(itemId === length){
@@ -292,4 +292,11 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
     }
   }
   return [bestPrice, bestVolume];
+}
+
+function run(val){
+  if($('#howto').is(':visible')){
+     $('#howto').slideToggle();
+  }
+  init(val);
 }
