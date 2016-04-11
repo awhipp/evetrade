@@ -16,6 +16,7 @@ function init(location){
   $(".more").show();
   $(".scroll").show();
   $(".more").prop('disabled', true);
+  $("#selection").hide();
 
   var station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
   if(location === "Jita"){
@@ -49,7 +50,7 @@ function init(location){
     station_sell3 = RENS;
     station_sell4 = JITA;
   }
-  $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Buy Quantity</th><th>Total Cost</th><th>Sell At</th><th>Sell Price</th><th>Total Profit</th><th>Profit Per Item</th><th>R.O.I.</th></tr></thead>")
+  $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Buy Quantity</th><th>Total Cost</th><th>Sell At</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th></tr></thead>")
 
 
   $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");

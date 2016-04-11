@@ -15,9 +15,11 @@ body {
 }
 
 .header ol {
+  font-weight: bold;
   color: #336699;
   background-color: white;
   border: solid #336699 1px;
+  font-size: 1em;
   padding: 2em;
   padding-left: 3em;
   padding-right: 3em;
@@ -33,7 +35,7 @@ body {
 }
 
 .question {
-  font-size: 1.5em;
+  font-size: 1.75em;
 }
 
 input[type="button"]{
@@ -58,20 +60,13 @@ td {
   border: #ccc solid 1px;
 }
 
-.toggle {
-  cursor: pointer;
-}
-
-.toggle:hover {
-  text-decoration:underline;
-}
-
-#reset {
+#reset, #toggle {
   color: white;
   background-color: #336699;
+  margin-bottom: 1em;
 }
 
-#reset:hover {
+#reset:hover, #toggle:hover {
   color: #336699;
   background-color: white;
 }
