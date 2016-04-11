@@ -49,7 +49,7 @@ function init(location){
     station_sell3 = RENS;
     station_sell4 = JITA;
   }
-  $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Volume</th><th>Max Profit Per Item</th><th>ISK Ratio</th><th>Sell At</th><th>Sell Price</th><th>Sell Volume</th></tr></thead>")
+  $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Price</th><th>Total Profit</th><th>Max Profit Per Item</th><th>Return per Item</th></tr></thead>")
 
 
   $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");

@@ -8,8 +8,11 @@ var dt;
 
 var init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4;
 
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+function numberWithCommas(val) {
+    while (/(\d+)(\d{3})/.test(val.toString())){
+      val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
 }
 
 function getData(data, stationId, orderType, itemId){
@@ -143,15 +146,15 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
   var sellVolume4 = sellPrice4[1];
   sellPrice4 = sellPrice4[0];
   if(buyPrice < sellPrice1 || buyPrice < sellPrice2 || buyPrice < sellPrice3 || buyPrice < sellPrice4){
-    var profit = -1;
+    var itemprofit = -1;
     var final_sell = -1;
     var final_volume = -1;
     var iskRatio = -1;
     var index = 0;
     if(sellPrice1 > 0){
       var gain = sellPrice1 - buyPrice;
-      if(gain > profit){
-        profit = gain;
+      if(gain > itemprofit){
+        itemprofit = gain;
         final_sell = sellPrice1;
         final_volume = sellVolume1;
         index = station_sell1[0];
@@ -161,8 +164,8 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
     }
     if(sellPrice2 > 0){
       var gain = sellPrice2 - buyPrice;
-      if(gain > profit){
-        profit = gain;
+      if(gain > itemprofit){
+        itemprofit = gain;
         final_sell = sellPrice2;
         final_volume = sellVolume2;
         index = station_sell2[0];
@@ -172,8 +175,8 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
     }
     if(sellPrice3 > 0){
       var gain = sellPrice3 - buyPrice;
-      if(gain > profit){
-        profit = gain;
+      if(gain > itemprofit){
+        itemprofit = gain;
         final_sell = sellPrice3;
         final_volume = sellVolume3;
         index = station_sell3[0];
@@ -183,8 +186,8 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
     }
     if(sellPrice4 > 0){
       var gain = sellPrice4 - buyPrice;
-      if(gain > profit){
-        profit = gain;
+      if(gain > itemprofit){
+        itemprofit = gain;
         final_sell = sellPrice4;
         final_volume = sellVolume4;
         index = station_sell4[0];
@@ -193,12 +196,21 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
       sellPrice4 = "-";
     }
 
+    itemprofit = Math.round(itemprofit * 100) / 100;
+    iskRatio = (Math.floor((itemprofit/buyPrice) * 100));
+    var profit;
+    if(buyVolume >= final_volume){
+      profit = final_volume * itemprofit;
+    }else{
+      final_volume = buyVolume;
+      profit = final_volume * itemprofit;
+    }
     profit = Math.round(profit * 100) / 100;
-    iskRatio = (Math.floor((profit/buyPrice) * 100));
+
     if(!created){
       created = true;
       dt = $('#dataTable').DataTable({
-        "order": [[ 4, "desc" ]],
+        "order": [[ 5, "desc" ]],
         "lengthMenu": [[-1], ["All"]]
       });
       $(".more").show();
@@ -208,9 +220,16 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
       $(".dataTables_info").css("width", "100%");
       $('#dataTable').show();
     }
-    dt.row.add([itemName, numberWithCommas(buyPrice), numberWithCommas(buyVolume) , numberWithCommas(profit), iskRatio+"%",
-    (index === JITA[0] ? "Jita" : index === AMARR[0] ? "Amarr" : index === DODIXIE[0] ? "Dodixie" : index === RENS[0] ? "Rens" : "Hek"),
-    numberWithCommas(final_sell), numberWithCommas(final_volume)
+
+    dt.row.add([
+      itemName,
+      numberWithCommas(buyPrice),
+      numberWithCommas(final_volume),
+      (index === JITA[0] ? "Jita" : index === AMARR[0] ? "Amarr" : index === DODIXIE[0] ? "Dodixie" : index === RENS[0] ? "Rens" : "Hek"),
+      numberWithCommas(final_sell),
+      numberWithCommas(profit),
+      numberWithCommas(itemprofit),
+      iskRatio+"%"
   ]).draw( false );
 }
 if(itemId === length){
