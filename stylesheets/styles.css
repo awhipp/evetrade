@@ -22,6 +22,8 @@ body {
   border-radius: 1em;
   padding-top: 1em;
   padding-bottom: 1em;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .container {

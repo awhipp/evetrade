@@ -1,3 +1,9 @@
+var meta = document.createElement('meta');
+meta.name = "viewport";
+meta.content = "width=device-width, initial-scale=1";
+window.parent.document.getElementsByTagName('head')[0].appendChild(meta);
+
+
 var JUMPS = 25;
 // var start;
 var length;
