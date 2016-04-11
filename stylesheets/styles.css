@@ -899,6 +899,11 @@ footer {
     margin: 190px auto 20px;
     max-width: 600px;
   }
+  @media print, screen and (max-width: 1060px){
+    section {
+     height: auto !important;
+   }
+   }
 
   footer {
     text-align: center;

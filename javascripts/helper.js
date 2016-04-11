@@ -5,215 +5,169 @@
 
 // LICENSE: Use at your own risk, and fly safe.
 
-// Global variable needed to track number of retries attempted
-var retries = 0;
-// Global variables used in order comparison function and set by
-// Advanced Orders function. Default is the Price column.
-var sortIndex = 1;
-var sortOrder = 1;
+var COLOR_CSS = "style='background-color:green; color: white;'";
+var start;
+var length;
 
-/**
- * Private helper method that will compare two market orders.
- */
-function compareOrders(order1, order2){
-  var comparison = 0;
-  if (order1[sortIndex] < order2[sortIndex])
-  {
-    comparison = -1;
-  }
-  else if (order1[sortIndex] > order2[sortIndex])
-  {
-    comparison = 1;
-  }
-  return comparison * sortOrder;
+function getData(data, stationId, orderType, itemId){
+   if (typeof(data) == "string")  {
+      return data;
+   }
+   else if (data != null){
+      return getPrice(data, stationId, orderType, itemId)
+   }
 }
 
-/**
- * Private helper function that will return the JSON provided for
- * a given CREST market query.
- *
- * @param {itemId} itemId the item ID of the product to look up
- * @param {regionId} regionId the region ID for the market to look up
- * @param {stationId} stationId the station ID for the market to look up
- * @param {orderType} orderType this should be set to "sell" or "buy" orders
- */
-function getMarketJson(itemId, regionId, stationId, orderType)
-{
-  var marketData = null;
+function getRows(itemIds, station_buy, station_sell1, station_sell2, station_sell3, station_sell4){
+   $("#loading").show();
+   $("#selection").hide();
+   start = new Date().getTime();
+   length = itemIds[itemIds.length-1];
+   for(var i = 0; i < itemIds.length; i++){
+      var itemId = itemIds[i];
+      getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
+   }
+}
 
-  // Validate incoming arguments
-  if (itemId == null || typeof(itemId) != "number")
-  {
-    throw new Error("Invalid Item ID");
-  }
-  else if (regionId == null || typeof(regionId) != "number")
-  {
-    throw new Error("Invalid Region ID");
-  }
-  else if (orderType == null || typeof(orderType) != "string" || orderType.toLowerCase() != 'sell' && orderType.toLowerCase() != 'buy')
-  {
-    throw new Error("Invalid order type");
-  }
-  else
-  {
-    orderType = orderType.toLowerCase();
-
-    // Setup variables for the market endpoint we want
-    var marketUrl = "https://public-crest.eveonline.com/market/" + regionId + "/orders/" + orderType + "/";
-    var typeUrl = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
-
-    try
-    {
-      // Make the call to get some market data
-      $.get(marketUrl + typeUrl, function(data) {
-        if (typeof(data) == "string")  {
-          if(orderType == "buy"){
-            $("#sell" + itemId+stationId).text(data);
-          }else{
-            $("#buy" + itemId+stationId).text(data);
-
-          }
-        }
-        else if (data != null){
-          returnPrice = getPrice(data, stationId, orderType, itemId)
-        }
+function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4){
+   var buyMarketUrl = "https://public-crest.eveonline.com/market/" + station_buy[0] + "/orders/buy/";
+   var buyTypeUrl = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+   try{
+      $.get(buyMarketUrl + buyTypeUrl, function(buyData) {
+         var buyPrice = getData(buyData, station_buy[1], "buy", itemId);
+         getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice);
       });
-
-    }
-    catch (unknownError)
-    {
-      var addressError = "Address unavailable:";
-      if (unknownError.message.slice(0, addressError.length) == addressError)
-      {
-        var maxRetries = 3;
-
-        // See if we can try again
-        if (retries <= maxRetries)
-        {
-          retries++;
-          marketData = getMarketJson(itemId, regionId, orderType);
-        }
-        else
-        {
-          marketData = "";
-          for (i in unknownError)
-          {
-            marketData += i + ": " + unknownError[i] + "\n";
-          }
-        }
-      }
-      else
-      {
-        marketData = "";
-        for (i in unknownError)
-        {
-          marketData += i + ": " + unknownError[i] + "\n";
-        }
-      }
-    }
-  }
+   }catch (unknownError){
+      getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
+   }
 
 }
 
-/**
- * Returns the market price for a given item.
- *
- * @param {itemId} itemId the item ID of the product to look up
- * @param {regionId} regionId the region ID for the market to look up
- * @param {stationId} stationId the station ID for the market to focus on
- * @param {orderType} orderType this should be set to "sell" or "buy" orders
- * @param {refresh} refresh (Optional) Change this value to force Google to refresh return value
- * @customfunction
- */
-function getMarketPrice(itemId, regionId, stationId, orderType, refresh)
-{
-  var returnPrice = 0;
+function getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice){
+   var sellMarketUrl_1 = "https://public-crest.eveonline.com/market/" + station_sell1[0] + "/orders/sell/";
+   var sellTypeUrl_1 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+   try{
+      $.get(sellMarketUrl_1 + sellTypeUrl_1, function(sellData1) {
+         var sellPrice1 = getData(sellData1, station_sell1[1], "sell", itemId);
+         getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1);
+      });
+   }catch (unknownError){
+      getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice);
+   }
+}
 
-  if (stationId == null || typeof(stationId) != "number")
-  {
-    throw new Error("Invalid Station ID");
-  }
-  else
-  {
-    var jsonMarket = getMarketJson(itemId, regionId, stationId, orderType);
-  }
+function getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1){
+   var sellMarketUrl_2 = "https://public-crest.eveonline.com/market/" + station_sell2[0] + "/orders/sell/";
+   var sellTypeUrl_2 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+   try{
+      $.get(sellMarketUrl_2 + sellTypeUrl_2, function(sellData2) {
+         var sellPrice2 = getData(sellData2, station_sell2[1], "sell", itemId);
+         getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2);
+      });
+   }catch (unknownError){
+      getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1);
+   }
+}
+
+function getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2){
+   var sellMarketUrl_3 = "https://public-crest.eveonline.com/market/" + station_sell3[0] + "/orders/sell/";
+   var sellTypeUrl_3 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+   try{
+      $.get(sellMarketUrl_3 + sellTypeUrl_3, function(sellData3) {
+         var sellPrice3 = getData(sellData3, station_sell3[1], "sell", itemId);
+         getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3);
+      });
+   }catch (unknownError){
+      getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2);
+   }
+}
+
+function getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3){
+   var sellMarketUrl_4 = "https://public-crest.eveonline.com/market/" + station_sell4[0] + "/orders/sell/";
+   var sellTypeUrl_4 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+   try{
+      $.get(sellMarketUrl_4 + sellTypeUrl_4, function(sellData4) {
+         var sellPrice4 = getData(sellData4, station_sell4[1], "sell", itemId);
+         getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3, sellPrice4);
+      });
+   }catch (unknownError){
+      getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3);
+   }
+}
+
+function getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3, sellPrice4){
+   var marketNameUrl = "https://public-crest.eveonline.com/types/" + itemId + "/";
+   try{
+      $.get(marketNameUrl, function() {}).success(function(data){
+         itemName = data["name"];
+         successful.push(itemId);
+         buyPrice = parseFloat(buyPrice);
+         sellPrice1 = parseFloat(sellPrice1);
+         sellPrice2 = parseFloat(sellPrice2);
+         sellPrice3 = parseFloat(sellPrice3);
+         sellPrice4 = parseFloat(sellPrice4);
+         if(buyPrice < sellPrice1 || buyPrice < sellPrice2 || buyPrice < sellPrice3 || buyPrice < sellPrice4){
+            $('#dataTable').show();
+            $("#loading").hide();
+            $('#dataTable tr:last').after("<tr><td>" + itemName + "</td><td>" + buyPrice + "</td>"
+            + "<td " + (buyPrice < sellPrice1 ? COLOR_CSS : "") + ">" + sellPrice1 + "</td>"
+            + "<td " + (buyPrice < sellPrice2 ? COLOR_CSS : "") + ">" + sellPrice2 + "</td>"
+            + "<td " + (buyPrice < sellPrice3 ? COLOR_CSS : "") + ">" + sellPrice3 + "</td>"
+            + "<td " + (buyPrice < sellPrice4 ? COLOR_CSS : "") + ">" + sellPrice4 + "</td>"
+            + "</tr>");
+            if(itemId === length){
+               var end = new Date().getTime();
+               var time = end - start;
+               console.log('Execution time: ' + time);
+            }
+         }
+      });
+   }catch (unknownError){
+      getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3, sellPrice4);
+   }
 }
 
 /**
- * Returns the market item name for item id
- *
- * @param {itemId} itemId the item ID of the product to look up
- * @customfunction
- */
-function getItemName(itemId, refresh)
-{
-  if (itemId == null || typeof(itemId) != "number")
-  {
-    throw new Error("Invalid Item ID");
-  }
-  else{
-
-    // Setup variables for the market endpoint we want
-    var marketUrl = "https://public-crest.eveonline.com/types/" + itemId + "/";
-
-    // Make the call to get some market data
-    var jsonMarket;
-    $.get( marketUrl, function() {
-    }).success(function(data){
-      $("#itemid_"+itemId).text(data["name"]);
-      successful.push(itemId);
-    }).error(function() {
-      $("#itemid_"+itemId).parents()[0].remove();
-    });
-  }
-}
-
-/**
- * Private helper method that will determine the best price for a given item from the
- * market data provided.
- *
- * @param {jsonMarket} jsonMarket the market data in JSON format
- * @param {stationId} stationId the station ID to focus the search on
- * @param {orderType} orderType the type of order is either "sell" or "buy"
- * @param {itemId} the item id being bought/sold
- */
+* Private helper method that will determine the best price for a given item from the
+* market data provided.
+*
+* @param {jsonMarket} jsonMarket the market data in JSON format
+* @param {stationId} stationId the station ID to focus the search on
+* @param {orderType} orderType the type of order is either "sell" or "buy"
+* @param {itemId} the item id being bought/sold
+*/
 function getPrice(jsonMarket, stationId, orderType, itemId)
 {
-  var bestPrice = 0;
+   var bestPrice = 0;
 
-  // Pull all orders found and start iteration
-  var orders = jsonMarket['items'];
-  for (var orderIndex = 0; orderIndex < orders.length; orderIndex++)
-  {
-    var order = orders[orderIndex];
-    if (stationId == order['location']['id'])
-    {
-      // This is the station market we want
-      var price = order['price'];
+   // Pull all orders found and start iteration
+   var orders = jsonMarket['items'];
+   for (var orderIndex = 0; orderIndex < orders.length; orderIndex++)
+   {
+      var order = orders[orderIndex];
+      if (stationId == order['location']['id'])
+      {
+         // This is the station market we want
+         var price = order['price'];
 
-      if (bestPrice > 0)
-      {
-        // We have a price from a previous iteration
-        if (orderType == "sell" && price < bestPrice)
-        {
-          bestPrice = price;
-        }
-        else if (orderType == "buy" && price > bestPrice)
-        {
-          bestPrice = price;
-        }
+         if (bestPrice > 0)
+         {
+            // We have a price from a previous iteration
+            if (orderType == "sell" && price < bestPrice)
+            {
+               bestPrice = price;
+            }
+            else if (orderType == "buy" && price > bestPrice)
+            {
+               bestPrice = price;
+            }
+         }
+         else
+         {
+            // This is the first price found, take it
+            bestPrice = price;
+         }
       }
-      else
-      {
-        // This is the first price found, take it
-        bestPrice = price;
-      }
-    }
-  }
-  if(orderType == "buy"){
-    $("#sell" + itemId+stationId).val(bestPrice);
-  }else{
-    $("#buy" + itemId+stationId).val(bestPrice);
-  }
-  return bestPrice;
+   }
+   return bestPrice;
 }

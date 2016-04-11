@@ -19,7 +19,7 @@
 <body>
 
    <header>
-      <h1>Alex&#39;s Trade Finder</h1>
+      <h1>Alex&#39;s Realtime EVE Trade Finder</h1>
       <p></p>
    </header>
 
@@ -38,11 +38,15 @@
 
    <div class="wrapper">
       <section>
-         <button onclick="init('jita')">Jita</button>
-         <button onclick="init('amarr')">Amarr</button>
-         <button onclick="init('dodixie')">Dodixie</button>
-         <button onclick="init('rens')">Rens</button>
-         <button onclick="init('hek')">Hek</button>
+         <div id="selection">
+         <div> Where are you docked? </div>
+         <button onclick="init('Jita')">Jita</button>
+         <button onclick="init('Amarr')">Amarr</button>
+         <button onclick="init('Dodixie')">Dodixie</button>
+         <button onclick="init('Rens')">Rens</button>
+         <button onclick="init('Hek')">Hek</button>
+      </div>
+         <div id="loading"> Scouring the data to find you the best deals <br/> The more orders at a station the longer this can take (up to a minute).</div>
          <table id="dataTable">
          </table>
       </section>
