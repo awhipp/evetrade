@@ -1,5 +1,5 @@
 body {
- font-family: 'Open Sans', sans-serif !important;
+  font-family: 'Open Sans', sans-serif !important;
 }
 
 .header {
@@ -39,9 +39,8 @@ input[type="button"]{
 
 #dataTable_wrapper {
   overflow-x: scroll;
-    box-shadow: 5px 5px 2px #888888;
-    border: 1px #ccc solid;
-    margin: 0.5em;
+  border: 1px #ccc solid;
+  margin: 0.5em;
 }
 
 td {

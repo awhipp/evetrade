@@ -1,5 +1,3 @@
-
-var successful = [];
 var JITA = [10000002,60003760];
 var AMARR = [10000043,60008494];
 var DODIXIE = [10000032,60011866];
