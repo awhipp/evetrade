@@ -13,6 +13,7 @@ $("#more").hide();
 var BOLD = "style='font-weight: bold;'";
 
 function init(location){
+   $("#loading").show();
    var station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
    if(location === "Jita"){
       station_buy = JITA;

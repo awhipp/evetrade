@@ -25,34 +25,21 @@
       <p></p>
    </header>
 
-   <div id="banner">
-      <span id="logo"></span>
-
-      <a href="https://github.com/awhipp/CrestTradeFinder" class="button fork"><strong>View On GitHub</strong></a>
-      <div class="downloads">
-         <span>Downloads:</span>
-         <ul>
-            <li><a href="https://github.com/awhipp/CrestTradeFinder/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/awhipp/CrestTradeFinder/tarball/master" class="button">TAR</a></li>
-         </ul>
-      </div>
-   </div><!-- end banner -->
-
-   <div class="wrapper container">
-      <section>
+   <div class="container">
+      <div id="base">
          <div id="selection">
-         <div> Where are you docked? </div>
-         <input type="button" class="btn btn-default" onclick="init('Jita')" value="Jita"></input>
-         <input type="button" class="btn btn-default"  onclick="init('Amarr')" value="Amarr"></input>
-         <input type="button" class="btn btn-default"  onclick="init('Dodixie')" value="Dodixie"></input>
-         <input type="button" class="btn btn-default"  onclick="init('Rens')" value="Rens"></input>
-         <input type="button" class="btn btn-default"  onclick="init('Hek')" value="Hek"></input>
-      </div>
+            <div> Where are you docked? </div>
+            <input type="button" class="btn btn-default" onclick="init('Jita')" value="Jita"></input>
+            <input type="button" class="btn btn-default"  onclick="init('Amarr')" value="Amarr"></input>
+            <input type="button" class="btn btn-default"  onclick="init('Dodixie')" value="Dodixie"></input>
+            <input type="button" class="btn btn-default"  onclick="init('Rens')" value="Rens"></input>
+            <input type="button" class="btn btn-default"  onclick="init('Hek')" value="Hek"></input>
+         </div>
          <table id="dataTable">
          </table>
          <div id="loading">Loading...</div>
          <input type="button" class="btn btn-default" id="more" onclick="goAgain()" value="Get More"></input>
-      </section>
+      </div>
       <footer>
          <p>Project maintained by <a href="https://github.com/awhipp">awhipp</a></p>
          <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>

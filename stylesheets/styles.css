@@ -1,3 +1,10 @@
+.container {
+   padding:5%;
+   margin-top: 190px;
+   text-align:center;
+   background-color: white;
+}
+
 /*
 Leap Day for GitHub Pages
 by Matt Graham

@@ -6,9 +6,12 @@
 // LICENSE: Use at your own risk, and fly safe.
 
 var COLOR_CSS = "style='background-color:green; color: white;'";
+var JUMPS = 25;
 var start;
 var length;
 var lastIndex = 0;
+var toIndex = JUMPS;
+
 var init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4;
 
 function getData(data, stationId, orderType, itemId){
@@ -21,6 +24,7 @@ function getData(data, stationId, orderType, itemId){
 }
 
 function goAgain(){
+   $("#loading").show();
    getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
 }
 
@@ -33,23 +37,22 @@ function getRows(itemIds, station_buy, station_sell1, station_sell2, station_sel
    init_station_sell4 = station_sell4;
 
    $("#selection").hide();
-      $("#loading").show();
    start = new Date().getTime();
-   length = itemIds[itemIds.length-1];
    var i;
-   for(i = lastIndex; i < itemIds.length && i < lastIndex+10; i++){
+   for(i = lastIndex; i < itemIds.length && i < lastIndex + JUMPS; i++){
       var itemId = itemIds[i];
       getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
+      length = itemIds[i];
    }
    lastIndex = i;
 }
 
 function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4){
-   var buyMarketUrl = "https://public-crest.eveonline.com/market/" + station_buy[0] + "/orders/buy/";
+   var buyMarketUrl = "https://public-crest.eveonline.com/market/" + station_buy[0] + "/orders/sell/";
    var buyTypeUrl = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(buyMarketUrl + buyTypeUrl, function(buyData) {
-         var buyPrice = getData(buyData, station_buy[1], "buy", itemId);
+         var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
          getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice);
       });
    }catch (unknownError){
@@ -59,11 +62,11 @@ function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_
 }
 
 function getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice){
-   var sellMarketUrl_1 = "https://public-crest.eveonline.com/market/" + station_sell1[0] + "/orders/sell/";
+   var sellMarketUrl_1 = "https://public-crest.eveonline.com/market/" + station_sell1[0] + "/orders/buy/";
    var sellTypeUrl_1 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_1 + sellTypeUrl_1, function(sellData1) {
-         var sellPrice1 = getData(sellData1, station_sell1[1], "sell", itemId);
+         var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
          getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1);
       });
    }catch (unknownError){
@@ -72,11 +75,11 @@ function getSellPrice1(itemId, station_buy, station_sell1, station_sell2, statio
 }
 
 function getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1){
-   var sellMarketUrl_2 = "https://public-crest.eveonline.com/market/" + station_sell2[0] + "/orders/sell/";
+   var sellMarketUrl_2 = "https://public-crest.eveonline.com/market/" + station_sell2[0] + "/orders/buy/";
    var sellTypeUrl_2 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_2 + sellTypeUrl_2, function(sellData2) {
-         var sellPrice2 = getData(sellData2, station_sell2[1], "sell", itemId);
+         var sellPrice2 = getData(sellData2, station_sell2[1], "buy", itemId);
          getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2);
       });
    }catch (unknownError){
@@ -85,11 +88,11 @@ function getSellPrice2(itemId, station_buy, station_sell1, station_sell2, statio
 }
 
 function getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2){
-   var sellMarketUrl_3 = "https://public-crest.eveonline.com/market/" + station_sell3[0] + "/orders/sell/";
+   var sellMarketUrl_3 = "https://public-crest.eveonline.com/market/" + station_sell3[0] + "/orders/buy/";
    var sellTypeUrl_3 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_3 + sellTypeUrl_3, function(sellData3) {
-         var sellPrice3 = getData(sellData3, station_sell3[1], "sell", itemId);
+         var sellPrice3 = getData(sellData3, station_sell3[1], "buy", itemId);
          getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3);
       });
    }catch (unknownError){
@@ -98,11 +101,11 @@ function getSellPrice3(itemId, station_buy, station_sell1, station_sell2, statio
 }
 
 function getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3){
-   var sellMarketUrl_4 = "https://public-crest.eveonline.com/market/" + station_sell4[0] + "/orders/sell/";
+   var sellMarketUrl_4 = "https://public-crest.eveonline.com/market/" + station_sell4[0] + "/orders/buy/";
    var sellTypeUrl_4 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_4 + sellTypeUrl_4, function(sellData4) {
-         var sellPrice4 = getData(sellData4, station_sell4[1], "sell", itemId);
+         var sellPrice4 = getData(sellData4, station_sell4[1], "buy", itemId);
          getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3, sellPrice4);
       });
    }catch (unknownError){
@@ -158,10 +161,15 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
             + "<td " + (buyPrice < sellPrice3 ? COLOR_CSS : "") + ">" + sellPrice3 + "</td>"
             + "<td " + (buyPrice < sellPrice4 ? COLOR_CSS : "") + ">" + sellPrice4 + "</td>"
             + "</tr>");
-            if(itemId === length){
-               var end = new Date().getTime();
-               var time = end - start;
-               console.log('Execution time: ' + time);
+         }
+         if(itemId === length){
+            var end = new Date().getTime();
+            var time = end - start;
+            console.log('Execution time: ' + time);
+            if($('tr').length-1 < toIndex){
+               getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
+            }else{
+               toIndex += JUMPS;
             }
          }
       });
