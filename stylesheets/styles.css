@@ -1,18 +1,32 @@
+body {
+ font-family: 'Open Sans', sans-serif !important;
+}
+
 .header {
-   font-size: 2em;
-   background-color: #336699;
-   color: white;
-   text-align: center;
-   margin:0;
-   padding: 1em;
+  background-color: #336699;
+  color: white;
+  text-align: center;
+  margin:0;
+  padding: 1em;
+}
+
+.header h1 {
+  font-size: 2em;
+}
+
+.header ol {
+  border: solid white 1px;
+  padding: 2em;
+  padding-left: 3em;
+  padding-right: 3em;
 }
 
 .container {
-   margin-left: auto;
-      margin-right: auto;
-   margin-top: 3em;
-   text-align:center;
-   background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3em;
+  text-align:center;
+  background-color: white;
 }
 
 .question {
@@ -24,9 +38,36 @@ input[type="button"]{
 }
 
 #dataTable_wrapper {
-   overflow-x: scroll;
+  overflow-x: scroll;
+    box-shadow: 5px 5px 2px #888888;
+    border: 1px #ccc solid;
+    margin: 0.5em;
 }
 
 td {
-   border: #ccc solid 1px;
+  border: #ccc solid 1px;
+}
+
+.toggle {
+  cursor: pointer;
+}
+
+.toggle:hover {
+  text-decoration:underline;
+}
+
+#howto {
+  text-align: left;
+}
+
+#buyingHeader {
+  margin-bottom: 1em;
+  font-size: 1.75em;
+  font-weight: bold;
+}
+
+#buyingHeader > p {
+  color: #999;
+  font-size: 0.6em;
+  font-weight: 500;
 }
