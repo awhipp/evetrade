@@ -1,1 +1,4 @@
 TheEveMarket-AndroidWebViewApp/.idea/*
+
+*.apk
+TheEveMarket-AndroidWebViewApp/.idea/runConfigurations.xml
