@@ -9,6 +9,8 @@
    <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
    <script src="javascripts/main.js"></script>
    <script src="javascripts/helper.js"></script>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
    <!--[if lt IE 9]>
    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -36,19 +38,20 @@
       </div>
    </div><!-- end banner -->
 
-   <div class="wrapper">
+   <div class="wrapper container">
       <section>
          <div id="selection">
          <div> Where are you docked? </div>
-         <button onclick="init('Jita')">Jita</button>
-         <button onclick="init('Amarr')">Amarr</button>
-         <button onclick="init('Dodixie')">Dodixie</button>
-         <button onclick="init('Rens')">Rens</button>
-         <button onclick="init('Hek')">Hek</button>
+         <input type="button" class="btn btn-default" onclick="init('Jita')" value="Jita"></input>
+         <input type="button" class="btn btn-default"  onclick="init('Amarr')" value="Amarr"></input>
+         <input type="button" class="btn btn-default"  onclick="init('Dodixie')" value="Dodixie"></input>
+         <input type="button" class="btn btn-default"  onclick="init('Rens')" value="Rens"></input>
+         <input type="button" class="btn btn-default"  onclick="init('Hek')" value="Hek"></input>
       </div>
-         <div id="loading"> Scouring the data to find you the best deals <br/> The more orders at a station the longer this can take (up to a minute).</div>
          <table id="dataTable">
          </table>
+         <div id="loading">Loading...</div>
+         <input type="button" class="btn btn-default" id="more" onclick="goAgain()" value="Get More"></input>
       </section>
       <footer>
          <p>Project maintained by <a href="https://github.com/awhipp">awhipp</a></p>

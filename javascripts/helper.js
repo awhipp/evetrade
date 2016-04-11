@@ -8,6 +8,8 @@
 var COLOR_CSS = "style='background-color:green; color: white;'";
 var start;
 var length;
+var lastIndex = 0;
+var init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4;
 
 function getData(data, stationId, orderType, itemId){
    if (typeof(data) == "string")  {
@@ -18,15 +20,28 @@ function getData(data, stationId, orderType, itemId){
    }
 }
 
+function goAgain(){
+   getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
+}
+
 function getRows(itemIds, station_buy, station_sell1, station_sell2, station_sell3, station_sell4){
-   $("#loading").show();
+   init_itemIds = itemIds;
+   init_station_buy = station_buy;
+   init_station_sell1 = station_sell1;
+   init_station_sell2 = station_sell2;
+   init_station_sell3 = station_sell3;
+   init_station_sell4 = station_sell4;
+
    $("#selection").hide();
+      $("#loading").show();
    start = new Date().getTime();
    length = itemIds[itemIds.length-1];
-   for(var i = 0; i < itemIds.length; i++){
+   var i;
+   for(i = lastIndex; i < itemIds.length && i < lastIndex+10; i++){
       var itemId = itemIds[i];
       getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
    }
+   lastIndex = i;
 }
 
 function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4){
@@ -109,7 +124,35 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
          if(buyPrice < sellPrice1 || buyPrice < sellPrice2 || buyPrice < sellPrice3 || buyPrice < sellPrice4){
             $('#dataTable').show();
             $("#loading").hide();
+            $("#more").show();
+            var profit = -1;
+            if(sellPrice1 > 0){
+               var gain = sellPrice1 - buyPrice;
+               if(gain > profit){
+                  profit = gain;
+               }
+            }
+            if(sellPrice2 > 0){
+               var gain = sellPrice2 - buyPrice;
+               if(gain > profit){
+                  profit = gain;
+               }
+            }
+            if(sellPrice3 > 0){
+               var gain = sellPrice3 - buyPrice;
+               if(gain > profit){
+                  profit = gain;
+               }
+            }
+            if(sellPrice4 > 0){
+               var gain = sellPrice4 - buyPrice;
+               if(gain > profit){
+                  profit = gain;
+               }
+            }
+            profit = Math.round(profit * 100) / 100;
             $('#dataTable tr:last').after("<tr><td>" + itemName + "</td><td>" + buyPrice + "</td>"
+            + "<td>" + profit + "</td>"
             + "<td " + (buyPrice < sellPrice1 ? COLOR_CSS : "") + ">" + sellPrice1 + "</td>"
             + "<td " + (buyPrice < sellPrice2 ? COLOR_CSS : "") + ">" + sellPrice2 + "</td>"
             + "<td " + (buyPrice < sellPrice3 ? COLOR_CSS : "") + ">" + sellPrice3 + "</td>"

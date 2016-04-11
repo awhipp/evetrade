@@ -568,6 +568,7 @@ strong {
   width: 650px;
   margin: 0 auto;
   position: relative;
+  text-align: center !important;
 }
 
 section img {
@@ -629,10 +630,11 @@ th {
 }
 
 td {
-  text-align: left;
   padding: 5px 10px;
   border-bottom: 1px solid #e5e5e5;
   border-right: 1px solid #ffcc00;
+  font-size: 1em;
+  text-align:center;
 }
 td:first-child {
   border-left: 1px solid #ffcc00;
@@ -795,7 +797,8 @@ header p {
 section {
   width: 590px;
   padding: 30px 30px 50px 30px;
-  margin: 20px 0;
+  margin: auto;
+  height: auto !important;
   margin-top: 190px;
   position: relative;
   background: #fbfbfb;
