@@ -34,7 +34,9 @@ body {
 }
 
 input[type="button"]{
-  width: 180px;
+    width: 180px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #dataTable_wrapper {
@@ -53,6 +55,10 @@ td {
 
 .toggle:hover {
   text-decoration:underline;
+}
+
+.sorting, .sorting_desc, .sorting_asc {
+  text-align: center;
 }
 
 #howto {
