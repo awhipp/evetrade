@@ -11,27 +11,26 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
   <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
   <script src="javascripts/helper.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
 
 </head>
 <body>
 
   <div class="header">
-    <h1>Realtime EVE Trade Finder</h1>
-    <div>
-      <input  id="toggle" type="button" class="question btn btn-default" onclick="$('#howto').slideToggle();" value="How To"></input>
-      <input type="button" id="reset" class="btn btn-default" onclick="window.location.reload()" value="Reset"></input>
-
-      <div class="row">
-        <div class="col-md-4">
-        </div>
-        <div id="howto" class="col-md-4" style="display:none;">
+    <div class="title">Realtime EVE Trade Finder</div>
+    <div class="primary-text">
+      <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="How To"></input>
+      <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
+        <div id="howto" class="container">
+          <div class="row">
+            <div class="col-md-3"></div>
+              <div class="col-md-6">
           <ol>
             <li>Select which trade hub you will be making purchases from.</li>
             <li>Find which item you wish to trade</li>
@@ -50,38 +49,42 @@
             </li>
           </ol>
         </div>
-        <div class="col-md-3">
+            <div class="col-md-3"></div>
         </div>
       </div>
     </div>
   </div>
+  </div>
 
   <div class="container">
     <div id="base">
-      <div id="buyingHeader"></div>
-      <div id="selection">
-        <div class="question"> <b> Where are you docked? </b> </div>
+      <div id="buyingHeader" class="secondary-text"></div>
+      <div id="buyingFooter" class="secondary-text"></div>
+      <div id="selection" class="secondary-text">
+        <div class="question primary-text"> <b> Where are you docked? </b> </div>
         <br/>
-        <input type="button" class="btn btn-default" onclick="run('Jita')" value="Jita"></input><br/><br/>
-        <input type="button" class="btn btn-default"  onclick="run('Amarr');" value="Amarr"></input><br/><br/>
-        <input type="button" class="btn btn-default"  onclick="run('Dodixie');" value="Dodixie"></input><br/><br/>
-        <input type="button" class="btn btn-default"  onclick="run('Rens');" value="Rens"></input><br/><br/>
-        <input type="button" class="btn btn-default"  onclick="run('Hek');" value="Hek"></input><br/><br/>
+        <input type="button" class="btn btn-default secondary-text" onclick="run('Jita')" value="Jita"></input><br/><br/>
+        <input type="button" class="btn btn-default secondary-text"  onclick="run('Amarr');" value="Amarr"></input><br/><br/>
+        <input type="button" class="btn btn-default secondary-text"  onclick="run('Dodixie');" value="Dodixie"></input><br/><br/>
+        <input type="button" class="btn btn-default secondary-text"  onclick="run('Rens');" value="Rens"></input><br/><br/>
+        <input type="button" class="btn btn-default secondary-text"  onclick="run('Hek');" value="Hek"></input><br/><br/>
       </div>
-      <input type="button" class="btn btn-default more" value="Get More"></input>
-      <input type="button" class="btn btn-default scroll" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
+      <input type="button" class="btn btn-default more secondary-text" value="Get More"></input>
+      <input type="button" class="btn btn-default scroll secondary-text" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
       <br/>
-      <table id="dataTable" class="display nowrap" cellspacing="0" width="100%">
+      <table id="dataTable" class="display nowrap minor-text" cellspacing="0" width="100%">
       </table>
       <br/>
-      <input type="button" class="btn btn-default more" value="Get More"></input>
-      <input type="button" class="btn btn-default scroll" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
+      <input type="button" class="btn btn-default more secondary-text" value="Get More"></input>
+      <input type="button" class="btn btn-default scroll secondary-text" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
     </div>
     <hr/>
     <footer>
       <p>Project maintained by <a href="https://github.com/awhipp">Alexander Whipp</a></p>
       <p>Powered by <a href="https://developers.eveonline.com/">EVE's Crest API</a> and <a href="https://datatables.net/">JQuery DataTables</a></p>
     </footer>
+    <hr/>
+
   </div>
   <!--[if !IE]><script>fixScale(document);</script><![endif]-->
   <script src="javascripts/lazyload.js"></script>

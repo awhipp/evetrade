@@ -10,6 +10,7 @@ $('#dataTable').hide();
 $(".more").hide();
 $(".scroll").hide();
 $("#buyingHeader").hide();
+$("#buyingFooter").hide();
 
 function init(location){
   $(".more").val("Loading...");
@@ -54,7 +55,9 @@ function init(location){
 
 
   $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
-  $("#buyingHeader").html("Buying from " + location +"<p>*Profit is not guaranteed. Use at your own risk. Verify in game that prices are accurate.</p>");
+  $("#buyingHeader").text("Buying from " + location);
+  $("#buyingFooter").text("*Profit is not guaranteed. Use at your own risk. Verify in game that prices are accurate.");
+  $("#buyingFooter").show();
   $("#buyingHeader").show();
 
   //document.write(successful.join(", "));
