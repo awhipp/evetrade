@@ -20,15 +20,15 @@
 </head>
 <body>
 
-   <header>
+   <div class="header">
       <h1>Alex&#39;s Realtime EVE Trade Finder</h1>
-      <p></p>
-   </header>
+   </div>
 
    <div class="container">
       <div id="base">
          <div id="selection">
-            <div> Where are you docked? </div>
+            <div> <b> Where are you docked? </b> </div>
+            <br/>
             <input type="button" class="btn btn-default" onclick="init('Jita')" value="Jita"></input>
             <input type="button" class="btn btn-default"  onclick="init('Amarr')" value="Amarr"></input>
             <input type="button" class="btn btn-default"  onclick="init('Dodixie')" value="Dodixie"></input>
@@ -37,12 +37,12 @@
          </div>
          <table id="dataTable">
          </table>
-         <div id="loading">Loading...</div>
+         <br/>
          <input type="button" class="btn btn-default" id="more" onclick="goAgain()" value="Get More"></input>
       </div>
+      <hr/>
       <footer>
-         <p>Project maintained by <a href="https://github.com/awhipp">awhipp</a></p>
-         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+         <p>Project maintained by <a href="https://github.com/awhipp">Alexander Whipp</a></p>
       </footer>
    </div>
    <!--[if !IE]><script>fixScale(document);</script><![endif]-->

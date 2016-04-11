@@ -24,7 +24,8 @@ function getData(data, stationId, orderType, itemId){
 }
 
 function goAgain(){
-   $("#loading").show();
+   $("#more").val("Loading...");
+   $("#more").prop('disabled', true);
    getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
 }
 
@@ -44,6 +45,10 @@ function getRows(itemIds, station_buy, station_sell1, station_sell2, station_sel
       getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
       length = itemIds[i];
    }
+   if(lastIndex >= itemIds.length){
+      $("#more").val("No more deals found");
+      $("#more").prop('disabled', true);
+   }
    lastIndex = i;
 }
 
@@ -52,8 +57,21 @@ function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_
    var buyTypeUrl = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(buyMarketUrl + buyTypeUrl, function(buyData) {
-         var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
-         getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice);
+         var buyPrice = parseFloat(getData(buyData, station_buy[1], "sell", itemId));
+         if(buyPrice > 0){
+            getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice);
+         }else{
+            if(itemId === length){
+               var end = new Date().getTime();
+               var time = end - start;
+               console.log('Execution time: ' + time);
+               if($('tr').length-1 < toIndex){
+                  getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
+               }else{
+                  toIndex += JUMPS;
+               }
+            }
+         }
       });
    }catch (unknownError){
       getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
@@ -66,7 +84,7 @@ function getSellPrice1(itemId, station_buy, station_sell1, station_sell2, statio
    var sellTypeUrl_1 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_1 + sellTypeUrl_1, function(sellData1) {
-         var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
+         var sellPrice1 = parseFloat(getData(sellData1, station_sell1[1], "buy", itemId));
          getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1);
       });
    }catch (unknownError){
@@ -79,7 +97,7 @@ function getSellPrice2(itemId, station_buy, station_sell1, station_sell2, statio
    var sellTypeUrl_2 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_2 + sellTypeUrl_2, function(sellData2) {
-         var sellPrice2 = getData(sellData2, station_sell2[1], "buy", itemId);
+         var sellPrice2 = parseFloat(getData(sellData2, station_sell2[1], "buy", itemId));
          getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2);
       });
    }catch (unknownError){
@@ -92,7 +110,7 @@ function getSellPrice3(itemId, station_buy, station_sell1, station_sell2, statio
    var sellTypeUrl_3 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_3 + sellTypeUrl_3, function(sellData3) {
-         var sellPrice3 = getData(sellData3, station_sell3[1], "buy", itemId);
+         var sellPrice3 = parseFloat(getData(sellData3, station_sell3[1], "buy", itemId));
          getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3);
       });
    }catch (unknownError){
@@ -105,7 +123,7 @@ function getSellPrice4(itemId, station_buy, station_sell1, station_sell2, statio
    var sellTypeUrl_4 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
    try{
       $.get(sellMarketUrl_4 + sellTypeUrl_4, function(sellData4) {
-         var sellPrice4 = getData(sellData4, station_sell4[1], "buy", itemId);
+         var sellPrice4 = parseFloat(getData(sellData4, station_sell4[1], "buy", itemId));
          getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, sellPrice1, sellPrice2, sellPrice3, sellPrice4);
       });
    }catch (unknownError){
@@ -126,7 +144,6 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
          sellPrice4 = parseFloat(sellPrice4);
          if(buyPrice < sellPrice1 || buyPrice < sellPrice2 || buyPrice < sellPrice3 || buyPrice < sellPrice4){
             $('#dataTable').show();
-            $("#loading").hide();
             $("#more").show();
             var profit = -1;
             if(sellPrice1 > 0){
@@ -169,6 +186,8 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
             if($('tr').length-1 < toIndex){
                getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
             }else{
+               $("#more").val("Get More");
+               $("#more").prop('disabled', false);
                toIndex += JUMPS;
             }
          }

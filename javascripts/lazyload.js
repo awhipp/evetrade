@@ -7,13 +7,15 @@ var RENS = [10000030,60004588];
 var HEK = [10000042,60005686];
 
 $('#dataTable').hide();
-$("#loading").hide();
 $("#more").hide();
 
 var BOLD = "style='font-weight: bold;'";
 
 function init(location){
-   $("#loading").show();
+   $("#more").val("Loading...");
+   $("#more").show();
+   $("#more").prop('disabled', true);
+
    var station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
    if(location === "Jita"){
       station_buy = JITA;
