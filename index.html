@@ -23,69 +23,57 @@
 <body>
 
   <div class="header">
-    <div class="title">Realtime EVE Trade Finder</div>
-    <div class="primary-text">
-      <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="How To"></input>
+    <div class="primary-text container">
+      <div class="title">The Real EVE Market</div>
+      <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="About"></input>
       <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
-        <div id="howto" class="container">
-          <div class="row">
-            <div class="col-md-3"></div>
-              <div class="col-md-6">
-          <ol>
-            <li>Select which trade hub you will be making purchases from.</li>
-            <li>Find which item you wish to trade</li>
-            <li>Column Description
-              <ul>
-                <li>Item - The Item name to Purchase</li>
-                <li>Buy Price - The cost at your current trade hub per item</li>
-                <li>Buy Quantity - Whichever is lower: Amount available for purchase at current station, or the amount that you can sell at the destination</li>
-                <li>Total Cost - How much it will cost you to buy all the quantity listed (Buy Price * Buy Quantity)</li>
-                <li>Sell At - Your destination trade hub for this trade</li>
-                <li>Sell Price - Cost per item that the buy order is asking for at the trade hub</li>
-                <li>Total Profit - (Buy Quantity * Sell Price)</li>
-                <li>Profit Per Item - (Sell Price - Buy Price)</li>
-                <li>Return on Investment = (Revenue - Cost) / Cost</li>
-              </ul>
-            </li>
-          </ol>
-        </div>
-            <div class="col-md-3"></div>
-        </div>
+      <div id="howto" class="minor-text">
+        <b>Item</b><br/>The Item name to Purchase<br/><br/>
+        <b>Buy Price</b><br/>The cost at your current trade hub per item<br/><br/>
+        <b>Buy Quantity</b><br/>Whichever is lower: Amount available for purchase at current station, or the amount that you can sell at the destination<br/><br/>
+        <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed (Buy Price * Buy Quantity)<br/><br/>
+        <b>Sell At</b><br/>Your destination trade hub for this trade<br/><br/>
+        <b>Total Profit</b><br/>(Buy Quantity * Sell Price)<br/><br/>
+        <b>Return on Investment</b><br/>(Revenue - Cost) / Cost<br/><br/>
+        <b>Sell Price</b><br/>Cost per item that the buy order is asking for at the trade hub<br/><br/>
+        <b>Profit Per Item</b><br/>(Sell Price - Buy Price)<br/><br/>
       </div>
     </div>
-  </div>
   </div>
 
-  <div class="container">
-    <div id="base">
-      <div id="buyingHeader" class="primary-text"></div>
-      <div id="buyingFooter" class="minor-text"></div>
-      <div id="selection" class="secondary-text">
-        <div class="question primary-text"> <b> Where are you docked? </b> </div>
-        <br/>
-        <input type="button" class="btn btn-default secondary-text" onclick="run('Jita')" value="Jita"></input><br/><br/>
-        <input type="button" class="btn btn-default secondary-text"  onclick="run('Amarr');" value="Amarr"></input><br/><br/>
-        <input type="button" class="btn btn-default secondary-text"  onclick="run('Dodixie');" value="Dodixie"></input><br/><br/>
-        <input type="button" class="btn btn-default secondary-text"  onclick="run('Rens');" value="Rens"></input><br/><br/>
-        <input type="button" class="btn btn-default secondary-text"  onclick="run('Hek');" value="Hek"></input><br/><br/>
-      </div>
-      <input type="button" class="btn btn-default more secondary-text" value="Get More"></input>
-      <input type="button" class="btn btn-default scroll secondary-text" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
+  <div class="container base">
+    <div id="buyingHeader" class="primary-text"></div>
+    <div id="buyingFooter" class="minor-text"></div>
+    <div id="selection" class="secondary-text">
+      <div class="question primary-text"> <b> Where are you docked? </b> </div>
       <br/>
-      <table id="dataTable" class="display nowrap minor-text" cellspacing="0" width="100%">
-      </table>
-      <br/>
-      <input type="button" class="btn btn-default more secondary-text" value="Get More"></input>
-      <input type="button" class="btn btn-default scroll secondary-text" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
+      <input type="button" class="btn btn-default secondary-text" onclick="init('Jita')" value="Jita"></input><br/><br/>
+      <input type="button" class="btn btn-default secondary-text"  onclick="init('Amarr');" value="Amarr"></input><br/><br/>
+      <input type="button" class="btn btn-default secondary-text"  onclick="init('Dodixie');" value="Dodixie"></input><br/><br/>
+      <input type="button" class="btn btn-default secondary-text"  onclick="init('Rens');" value="Rens"></input><br/><br/>
+      <input type="button" class="btn btn-default secondary-text"  onclick="init('Hek');" value="Hek"></input><br/><br/>
     </div>
+    <input type="button" class="btn btn-default more minor-text" value="Get More"></input>
+    <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
+  </div>
+
+  <div class="base">
+    <table id="dataTable" class="display nowrap minor-text" cellspacing="0" width="100%">
+    </table>
+  </div>
+
+  <div class="container base">
+    <input type="button" class="btn btn-default more minor-text" value="Get More"></input>
+    <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
     <hr/>
     <footer>
+      <p>Version 1.0.5</p>
       <p>Project maintained by <a href="https://github.com/awhipp">Alexander Whipp</a></p>
       <p>Powered by <a href="https://developers.eveonline.com/">EVE's Crest API</a> and <a href="https://datatables.net/">JQuery DataTables</a></p>
     </footer>
     <hr/>
-
   </div>
+
   <!--[if !IE]><script>fixScale(document);</script><![endif]-->
   <script src="javascripts/lazyload.js"></script>
   <script>

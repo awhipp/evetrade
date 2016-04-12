@@ -3,7 +3,11 @@ body {
 }
 
 .header {
-  background-color: #336699;
+  background: black; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(black, #336699); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(black, #336699); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(black, #336699); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(black, #336699); /* Standard syntax */
   color: white;
   text-align: center;
   margin:0;
@@ -16,19 +20,12 @@ body {
   margin-top: 3em;
 }
 
-ol {
-  color: #336699;
-  background-color: white;
-  padding: 1.5em !important ;
-  border-radius: 1em;
-  font-weight: bold;
+#howto{
+  text-align: center;
+  display: none;
 }
 
-ul > li {
-  list-style: square;
-}
-
-#base, footer {
+.base, footer {
   text-align:center;
 }
 
@@ -46,8 +43,17 @@ input[type="button"]:hover{
 
 #dataTable_wrapper {
   overflow-x: scroll;
-  border: 1px #ccc solid;
-  margin: 0.5em;
+  padding: 0;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-right: auto;
+  margin-left: auto;
+  width: 95%;
+}
+
+.dataTables_filter{
+    text-align: center !important;
+    width: 100% !important;
 }
 
 td {
@@ -72,15 +78,9 @@ td {
 
 .sorting, .sorting_desc, .sorting_asc {
   text-align: center;
-}
-
-#howto {
-  text-align: left;
-  display: none;
-  margin-top: 0;
-  padding-top: 0;
-  margin-left: auto;
-  margin-right: auto;
+  border: 1px #ccc solid;
+  background-color: #333;
+  color: white;
 }
 
 #buyingHeader {
@@ -93,51 +93,51 @@ td {
 }
 
 .title {
-	font-size: 25px !important;
+  font-size: 25px !important;
   margin-bottom: 1em;
   font-weight: bold;
 }
 
 .primary-text {
-	font-size: 15px !important;
+  font-size: 15px !important;
 }
 
 .secondary-text {
-	font-size: 13px !important;
+  font-size: 13px !important;
 }
 
 .minor-text, li, td {
-	font-size: 12px !important;
+  font-size: 12px !important;
 }
 
 /* Small devices (tablets, 768px and up) */
 @media ( min-width : 768px) {
-	.title {
-		font-size: 30px !important;
-	}
-	.primary-text {
-		font-size: 20px !important;
-	}
-	.secondary-text {
-		font-size: 14px !important;
-	}
-	.minor-text, li, td {
-		font-size: 12px !important;
-	}
+  .title {
+    font-size: 30px !important;
+  }
+  .primary-text {
+    font-size: 20px !important;
+  }
+  .secondary-text {
+    font-size: 14px !important;
+  }
+  .minor-text, li, td {
+    font-size: 12px !important;
+  }
 }
 
 /* Medium devices (desktops, 992px and up) */
 @media ( min-width : 992px) {
-	.title {
-		font-size: 38px !important;
-	}
-	.primary-text {
-		font-size: 28px !important;
-	}
-	.secondary-text {
-		font-size: 22px !important;
-	}
-	.minor-text, li, td {
-		font-size: 18px !important;
-	}
+  .title {
+    font-size: 38px !important;
+  }
+  .primary-text {
+    font-size: 28px !important;
+  }
+  .secondary-text {
+    font-size: 22px !important;
+  }
+  .minor-text, li, td {
+    font-size: 18px !important;
+  }
 }
