@@ -1,8 +1,6 @@
-var JUMPS = 25;
+var JUMPS = 150;
 // var start;
 var length;
-var lastIndex = 0;
-var toIndex = JUMPS;
 var created = false;
 var dt;
 
@@ -31,26 +29,27 @@ function goAgain(){
 }
 
 function getRows(itemIds, station_buy, station_sell1, station_sell2, station_sell3, station_sell4){
-  init_itemIds = itemIds;
+
+  $("#selection").hide();
+  //  start = new Date().getTime();
+  var i;
+  for(i = 0; i < itemIds.length && i < JUMPS; i++){
+    var itemId = itemIds[i];
+    getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
+    length = itemIds[i];
+  }
+  if(i >= itemIds.length){
+    $(".more").val("No More Deals");
+    $(".more").prop('disabled', true);
+    itemIds = [];
+  }
+  itemIds = itemIds.splice(JUMPS, itemIds.length);
+  init_itemIds = shuffle(itemIds); // shuffle after the initial search
   init_station_buy = station_buy;
   init_station_sell1 = station_sell1;
   init_station_sell2 = station_sell2;
   init_station_sell3 = station_sell3;
   init_station_sell4 = station_sell4;
-
-  $("#selection").hide();
-  //  start = new Date().getTime();
-  var i;
-  for(i = lastIndex; i < itemIds.length && i < lastIndex + JUMPS; i++){
-    var itemId = itemIds[i];
-    getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4);
-    length = itemIds[i];
-  }
-  if(lastIndex >= itemIds.length){
-    $(".more").val("No more deals found");
-    $(".more").prop('disabled', true);
-  }
-  lastIndex = i;
 }
 
 function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4){
@@ -67,11 +66,7 @@ function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_
           //  var end = new Date().getTime();
           //  var time = end - start;
           //  console.log('Execution time: ' + time);
-          if($('tr').length-1 < toIndex){
-            getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
-          }else{
-            toIndex += JUMPS;
-          }
+          window.setTimeout(goAgain(), 1100);
         }
       }
     });
@@ -145,103 +140,133 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
   sellPrice3 = sellPrice3[0];
   var sellVolume4 = sellPrice4[1];
   sellPrice4 = sellPrice4[0];
-  if(buyPrice < sellPrice1 || buyPrice < sellPrice2 || buyPrice < sellPrice3 || buyPrice < sellPrice4){
-    var itemprofit = -1;
-    var final_sell = -1;
-    var final_volume = -1;
-    var iskRatio = -1;
-    var index = 0;
-    if(sellPrice1 > 0){
-      var gain = sellPrice1 - buyPrice;
-      if(gain > itemprofit){
-        itemprofit = gain;
-        final_sell = sellPrice1;
-        final_volume = sellVolume1;
-        index = station_sell1[0];
-      }
-    }else{
-      sellPrice1 = "-";
-    }
-    if(sellPrice2 > 0){
-      var gain = sellPrice2 - buyPrice;
-      if(gain > itemprofit){
-        itemprofit = gain;
-        final_sell = sellPrice2;
-        final_volume = sellVolume2;
-        index = station_sell2[0];
-      }
-    }else{
-      sellPrice2 = "-";
-    }
-    if(sellPrice3 > 0){
-      var gain = sellPrice3 - buyPrice;
-      if(gain > itemprofit){
-        itemprofit = gain;
-        final_sell = sellPrice3;
-        final_volume = sellVolume3;
-        index = station_sell3[0];
-      }
-    }else{
-      sellPrice3 = "-";
-    }
-    if(sellPrice4 > 0){
-      var gain = sellPrice4 - buyPrice;
-      if(gain > itemprofit){
-        itemprofit = gain;
-        final_sell = sellPrice4;
-        final_volume = sellVolume4;
-        index = station_sell4[0];
-      }
-    }else{
-      sellPrice4 = "-";
-    }
 
-    iskRatio = (final_sell-buyPrice)/buyPrice;
+  if(buyPrice < sellPrice1 && sellPrice1 > 0){
+    var itemProfit = sellPrice1 - buyPrice;
     var profit;
-    if(buyVolume >= final_volume){
-      profit = final_volume * itemprofit;
+    var buyCost;
+    var volume;
+    if(buyVolume >= sellVolume1){
+      volume = sellVolume1;
+      profit = sellVolume1 * itemProfit;
+      buyCost = buyPrice * sellVolume1;
     }else{
-      final_volume = buyVolume;
-      profit = final_volume * itemprofit;
+      volume = buyVolume;
+      profit = buyVolume * itemProfit;
+      buyCost = buyPrice * buyVolume;
     }
-    var cost = buyPrice * final_volume;
-    if(!created){
-      created = true;
-      dt = $('#dataTable').DataTable({
-        "order": [[ 6, "desc" ]],
-        "lengthMenu": [[-1], ["All"]]
-      });
-      $(".more").show();
-      $(".dataTables_length").remove();
-      $(".dataTables_filter").remove();
-      $(".dataTables_paginate").remove();
-      $(".dataTables_info").css("width", "100%");
-      $('#dataTable').show();
-    }
-
-    dt.row.add([
-      itemName,
-      numberWithCommas(buyPrice.toFixed(2)),
-      numberWithCommas(final_volume.toFixed()),
-      numberWithCommas(cost.toFixed(2)),
-      (index === JITA[0] ? "Jita" : index === AMARR[0] ? "Amarr" : index === DODIXIE[0] ? "Dodixie" : index === RENS[0] ? "Rens" : "Hek"),
-      numberWithCommas(profit.toFixed(2)),
-      (iskRatio.toFixed(3)*100).toFixed(1)+"%",
-      numberWithCommas(final_sell.toFixed(2)),
-      numberWithCommas(itemprofit.toFixed(2))
-    ]).draw( false );
+    var location = getLocation(station_sell1[0]);
+    var iskRatio = (sellPrice1-buyPrice)/buyPrice;
+    addRow(itemName, buyPrice, volume, buyCost, location, profit, iskRatio, sellPrice1, itemProfit)
   }
+
+  if(buyPrice < sellPrice2 && sellPrice2 > 0){
+    var itemProfit = sellPrice2 - buyPrice;
+    var profit;
+    var buyCost;
+    var volume;
+    if(buyVolume >= sellVolume2){
+      volume = sellVolume2;
+      profit = sellVolume2 * itemProfit;
+      buyCost = buyPrice * sellVolume2;
+    }else{
+      volume = buyVolume;
+      profit = buyVolume * itemProfit;
+      buyCost = buyPrice * buyVolume;
+    }
+    var location = getLocation(station_sell2[0]);
+    var iskRatio = (sellPrice2-buyPrice)/buyPrice;
+    addRow(itemName, buyPrice, volume, buyCost, location, profit, iskRatio, sellPrice2, itemProfit)
+  }
+
+  if(buyPrice < sellPrice3 && sellPrice3 > 0){
+    var itemProfit = sellPrice3 - buyPrice;
+    var profit;
+    var buyCost;
+    var volume;
+    if(buyVolume >= sellVolume3){
+      volume = sellVolume3;
+      profit = sellVolume3 * itemProfit;
+      buyCost = buyPrice * sellVolume3;
+    }else{
+      volume = buyVolume;
+      profit = buyVolume * itemProfit;
+      buyCost = buyPrice * buyVolume;
+    }
+    var location = getLocation(station_sell3[0]);
+    var iskRatio = (sellPrice3-buyPrice)/buyPrice;
+    addRow(itemName, buyPrice, volume, buyCost, location, profit, iskRatio, sellPrice3, itemProfit)
+  }
+
+  if(buyPrice < sellPrice4 && sellPrice4 > 0){
+    var itemProfit = sellPrice4 - buyPrice;
+    var profit;
+    var buyCost;
+    var volume;
+    if(buyVolume >= sellVolume4){
+      volume = sellVolume4;
+      profit = sellVolume4 * itemProfit;
+      buyCost = buyPrice * sellVolume4;
+    }else{
+      volume = buyVolume;
+      profit = buyVolume * itemProfit;
+      buyCost = buyPrice * buyVolume;
+    }
+    var location = getLocation(station_sell4[0]);
+    var iskRatio = (sellPrice4-buyPrice)/buyPrice;
+    addRow(itemName, buyPrice, volume, buyCost, location, profit, iskRatio, sellPrice4, itemProfit)
+  }
+
   if(itemId === length){
     // var end = new Date().getTime();
     // var time = end - start;
     // console.log('Execution time: ' + time);
-    if($('tr').length-1 < toIndex){
-      getRows(init_itemIds, init_station_buy, init_station_sell1, init_station_sell2, init_station_sell3, init_station_sell4);
-    }else{
-      window.setTimeout(goAgain(), 1000);
-      toIndex += JUMPS;
-    }
+    window.setTimeout(goAgain(), 1100);
   }
+}
+
+function getLocation(location){
+  return (location === JITA[0] ? "Jita" : location === AMARR[0] ? "Amarr" : location === DODIXIE[0] ? "Dodixie" : location === RENS[0] ? "Rens" : "Hek");
+}
+
+function addRow(itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit){
+  if(!created){
+    created = true;
+    dt = $('#dataTable').DataTable({
+      "order": [[ 6, "desc" ]],
+      columnDefs: [
+        {
+          targets: [6],//when sorting age column
+          orderData: [6,5] //sort by age then by salary
+        },
+        {
+          targets: [6],//when sorting age column
+          orderData: [6,4] //sort by age then by salary
+        }
+      ],
+      "lengthMenu": [[-1], ["All"]]
+    });
+    $(".more").show();
+    $(".dataTables_length").remove();
+    $(".dataTables_paginate").remove();
+    $(".dataTables_filter > label").css("color", "white");
+    $("label > input").addClass("form-control").addClass("minor-text");
+    $("label > input").attr("placeholder", "Search Results...").css("width", "300px");
+    $(".dataTables_info").css("width", "100%");
+    $('#dataTable').show();
+  }
+
+  dt.row.add([
+    itemName,
+    numberWithCommas(buyPrice.toFixed(2)),
+    numberWithCommas(buyVolume.toFixed()),
+    numberWithCommas(buyCost.toFixed(2)),
+    location,
+    numberWithCommas(profit.toFixed(2)),
+    (iskRatio.toFixed(3)*100).toFixed(1)+"%",
+    numberWithCommas(sellPrice.toFixed(2)),
+    numberWithCommas(itemProfit.toFixed(2))
+  ]).draw( false );
 }
 
 /**
@@ -292,11 +317,4 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
     }
   }
   return [bestPrice, bestVolume];
-}
-
-function run(val){
-  if($('#howto').is(':visible')){
-     $('#howto').slideToggle();
-  }
-  init(val);
 }

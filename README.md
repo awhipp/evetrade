@@ -1,4 +1,4 @@
-# Crest Trade Finder v1.0.4
+# Crest Trade Finder v1.0.5
 Implements the EVE Crest API to find the best trades between the major trade hubs.
 Select which of the 5 trade hubs you are docked in:
 * Amarr
