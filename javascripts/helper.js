@@ -1,4 +1,5 @@
-var JUMPS = 150;
+var JUMPS = 25;
+var SECOND_DELAY = 750;
 // var start;
 var length;
 var created = false;
@@ -66,7 +67,7 @@ function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_
           //  var end = new Date().getTime();
           //  var time = end - start;
           //  console.log('Execution time: ' + time);
-          window.setTimeout(goAgain(), 1100);
+          window.setTimeout(goAgain(), SECOND_DELAY);
         }
       }
     });
@@ -221,7 +222,7 @@ function getItemName(itemId, station_buy, station_sell1, station_sell2, station_
     // var end = new Date().getTime();
     // var time = end - start;
     // console.log('Execution time: ' + time);
-    window.setTimeout(goAgain(), 1100);
+    window.setTimeout(goAgain(), SECOND_DELAY);
   }
 }
 
