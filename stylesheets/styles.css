@@ -58,10 +58,10 @@ input[type="button"]:hover{
 
 td {
   border: #ccc solid 1px;
+    color: inherit !important;
+    background-color: inherit !important;
 }
 
-.header_buttons {
-}
 
 #reset, #toggle {
   color: white;
@@ -94,6 +94,15 @@ td {
 #buyingFooter {
   color: #999;
   margin-bottom: 1em;
+}
+
+.row-selected {
+  color: white !important;
+  background-color: #336699 !important;
+}
+
+a {
+  margin: 1em;
 }
 
 .title {

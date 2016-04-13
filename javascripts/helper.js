@@ -247,6 +247,13 @@ function addRow(itemName, buyPrice, buyVolume, buyCost, location, profit, iskRat
       ],
       "lengthMenu": [[-1], ["All"]]
     });
+    $('#dataTable tbody').on('click', 'tr', function () {
+      if(!$(this).hasClass("row-selected")){
+        $(this).addClass("row-selected");
+      }else{
+        $(this).removeClass("row-selected");
+      }
+    } );
     $(".more").show();
     $(".dataTables_length").remove();
     $(".dataTables_paginate").remove();
