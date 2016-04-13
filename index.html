@@ -25,14 +25,15 @@
 
   <div class="header">
     <div class="primary-text container">
-      <div ><img class="title" src="logo.png"></img></div>
+        <div><img class="title" src="logo.png"></img></div>
       <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="About"></input>
       <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
       <div id="howto" class="minor-text">
+        <b>Clicking a Result</b><br/>Updates that row and highlights it to be tracked<br/><br/>
         <b>Item</b><br/>The Item name to Purchase<br/><br/>
         <b>Buy Price</b><br/>The cost at your current trade hub per item<br/><br/>
         <b>Buy Quantity</b><br/>Whichever is lower: Amount available for purchase at current station, or the amount that you can sell at the destination<br/><br/>
-        <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed (Buy Price * Buy Quantity)<br/><br/>
+        <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed<br/>(Buy Price * Buy Quantity)<br/><br/>
         <b>Sell At</b><br/>Your destination trade hub for this trade<br/><br/>
         <b>Total Profit</b><br/>(Buy Quantity * Sell Price)<br/><br/>
         <b>Return on Investment</b><br/>(Revenue - Cost) / Cost<br/><br/>
@@ -68,11 +69,9 @@
     <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
     <hr/>
     <footer>
-      <p>Version 1.0.5 <a href='https://ko-fi.com/A180K9' target='_blank'><img height='32' style='border:0px;height:32px;' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
-      <p>Project maintained by <a href="https://github.com/awhipp">Alexander Whipp</a></p>
-      <p>Powered by <a href="https://developers.eveonline.com/">EVE's Crest API</a> and <a href="https://datatables.net/">JQuery DataTables</a></p>
+      <p><a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
+      <p>Version 1.0.5 | <a href="https://github.com/awhipp">Alexander Whipp © 2016</a></p>
     </footer>
-    <hr/>
   </div>
 
   <!--[if !IE]><script>fixScale(document);</script><![endif]-->
