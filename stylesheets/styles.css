@@ -118,6 +118,19 @@ a > img:hover {
   height: auto;
 }
 
+.ignore {
+    background-color: #B71C1C !important;
+    color: white !important;
+}
+
+.question {
+    margin-bottom: 0.5em;
+}
+
+.btn {
+    margin-bottom: 0.5em !important;
+}
+
 .primary-text {
   font-size: 15px !important;
 }

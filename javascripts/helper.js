@@ -40,7 +40,7 @@ function getRows(itemIds, station_buy, station_sell1, station_sell2, station_sel
         length = itemIds[i];
     }
     if(i >= itemIds.length){
-        $(".more").val("No More Deals");
+        $(".more").val("Finished");
         $(".more").prop('disabled', true);
         itemIds = [];
     }
@@ -78,54 +78,70 @@ function getBuyPrice(itemId, station_buy, station_sell1, station_sell2, station_
 }
 
 function getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName){
-    var sellMarketUrl_1 = "https://public-crest.eveonline.com/market/" + station_sell1[0] + "/orders/buy/";
-    var sellTypeUrl_1 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
-    try{
-        $.get(sellMarketUrl_1 + sellTypeUrl_1, function(sellData1) {
-            var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
-            getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1);
-        });
-    }catch (unknownError){
-        getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName);
+    if(station_sell1[0] !== -1){
+        var sellMarketUrl_1 = "https://public-crest.eveonline.com/market/" + station_sell1[0] + "/orders/buy/";
+        var sellTypeUrl_1 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        try{
+            $.get(sellMarketUrl_1 + sellTypeUrl_1, function(sellData1) {
+                var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
+                getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1);
+            });
+        }catch (unknownError){
+            getSellPrice1(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName);
+        }
+    }else{
+        getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, -1);
     }
 }
 
 function getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1){
-    var sellMarketUrl_2 = "https://public-crest.eveonline.com/market/" + station_sell2[0] + "/orders/buy/";
-    var sellTypeUrl_2 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
-    try{
-        $.get(sellMarketUrl_2 + sellTypeUrl_2, function(sellData2) {
-            var sellPrice2 = getData(sellData2, station_sell2[1], "buy", itemId);
-            getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2);
-        });
-    }catch (unknownError){
-        getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1);
+    if(station_sell2[0] !== -1){
+        var sellMarketUrl_2 = "https://public-crest.eveonline.com/market/" + station_sell2[0] + "/orders/buy/";
+        var sellTypeUrl_2 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        try{
+            $.get(sellMarketUrl_2 + sellTypeUrl_2, function(sellData2) {
+                var sellPrice2 = getData(sellData2, station_sell2[1], "buy", itemId);
+                getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2);
+            });
+        }catch (unknownError){
+            getSellPrice2(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1);
+        }
+    }else{
+        getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, -1);
     }
 }
 
 function getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2){
-    var sellMarketUrl_3 = "https://public-crest.eveonline.com/market/" + station_sell3[0] + "/orders/buy/";
-    var sellTypeUrl_3 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
-    try{
-        $.get(sellMarketUrl_3 + sellTypeUrl_3, function(sellData3) {
-            var sellPrice3 = getData(sellData3, station_sell3[1], "buy", itemId);
-            getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3);
-        });
-    }catch (unknownError){
-        getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2);
+    if(station_sell3[0] !== -1){
+        var sellMarketUrl_3 = "https://public-crest.eveonline.com/market/" + station_sell3[0] + "/orders/buy/";
+        var sellTypeUrl_3 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        try{
+            $.get(sellMarketUrl_3 + sellTypeUrl_3, function(sellData3) {
+                var sellPrice3 = getData(sellData3, station_sell3[1], "buy", itemId);
+                getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3);
+            });
+        }catch (unknownError){
+            getSellPrice3(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2);
+        }
+    }else{
+        getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, -1);
     }
 }
 
 function getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3){
-    var sellMarketUrl_4 = "https://public-crest.eveonline.com/market/" + station_sell4[0] + "/orders/buy/";
-    var sellTypeUrl_4 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
-    try{
-        $.get(sellMarketUrl_4 + sellTypeUrl_4, function(sellData4) {
-            var sellPrice4 = getData(sellData4, station_sell4[1], "buy", itemId);
-            getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, sellPrice4);
-        });
-    }catch (unknownError){
-        getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3);
+    if(station_sell4[0] !== -1){
+        var sellMarketUrl_4 = "https://public-crest.eveonline.com/market/" + station_sell4[0] + "/orders/buy/";
+        var sellTypeUrl_4 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        try{
+            $.get(sellMarketUrl_4 + sellTypeUrl_4, function(sellData4) {
+                var sellPrice4 = getData(sellData4, station_sell4[1], "buy", itemId);
+                getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, sellPrice4);
+            });
+        }catch (unknownError){
+            getSellPrice4(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3);
+        }
+    }else{
+        getItemName(itemId, station_buy, station_sell1, station_sell2, station_sell3, station_sell4, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, -1);
     }
 }
 
@@ -234,15 +250,23 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     if(!created){
         created = true;
         dt = $('#dataTable').DataTable({
-            "order": [[ 6, "desc" ]],
+            "order": [[ 5, "desc" ]],
             columnDefs: [
                 {
-                    targets: [6],//when sorting age column
-                    orderData: [6,5] //sort by age then by salary
+                    targets: [5],
+                    orderData: [5,4]
                 },
                 {
-                    targets: [6],//when sorting age column
-                    orderData: [6,4] //sort by age then by salary
+                    targets: [5],
+                    orderData: [4,6]
+                },
+                {
+                    targets: [3],
+                    orderData: [3,5]
+                },
+                {
+                    targets: [3],
+                    orderData: [5,6]
                 }
             ],
             "lengthMenu": [[-1], ["All"]]
