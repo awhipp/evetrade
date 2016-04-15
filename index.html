@@ -5,21 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Real EVE Market</title>
     <link rel='shortcut icon' href='favicon.png' type='image/x-icon'/ >
-    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/min/styles.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-    <script src="javascripts/helper.js"></script>
-
+    <script src="javascripts/min/calculator.min.js"></script>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
 </head>
 <body>
 
@@ -29,13 +27,17 @@
             <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="About"></input>
             <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
             <div id="howto" class="minor-text">
-                <b>Clicking a Result</b><br/>Updates that row and highlights it to be tracked<br/><br/>
+                <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
+                <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
+                <b>Right-click a Result</b><br/>Updates that item instantly on the table<br/><br/>
                 <b>Item</b><br/>The Item name to Purchase<br/><br/>
                 <b>Buy Price</b><br/>The cost at your current trade hub per item<br/><br/>
-                <b>Buy Quantity</b><br/>Whichever is lower: Amount available for purchase at current station, or the amount that you can sell at the destination<br/><br/>
-                <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed<br/>(Buy Price * Buy Quantity)<br/><br/>
+                <b>Buy Quantity</b><br/>Amount available for purchase at current statio<br/><br/>
+                <b>Sell Quantity</b><br/>Amount available for purchase at destination station<br/><br/>
+                <b>Recommended Quantity</b><br/>(Not Shown) Whichever is lower, Buy Quantity or Sell Quantity<br/><br/>
+                <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed<br/>(Buy Price * Recommended Quantity)<br/><br/>
                 <b>Sell At</b><br/>Your destination trade hub for this trade<br/><br/>
-                <b>Total Profit</b><br/>(Buy Quantity * Sell Price)<br/><br/>
+                <b>Total Profit</b><br/>(Recommended Quantity * Sell Price)<br/><br/>
                 <b>Return on Investment</b><br/>(Revenue - Cost) / Cost<br/><br/>
                 <b>Sell Price</b><br/>Cost per item that the buy order is asking for at the trade hub<br/><br/>
                 <b>Profit Per Item</b><br/>(Sell Price - Buy Price)<br/><br/>
@@ -47,29 +49,44 @@
         <div id="buyingHeader" class="primary-text"></div>
         <div id="buyingFooter" class="minor-text"></div>
         <div id="selection" class="secondary-text">
-            <br/>
-            <div class="col-md-6">
-                <div class="question primary-text"> <b> Ignore these these trade hubs</b> </div>
-                <input type="button" class="btn btn-default secondary-text" id="ignore_jita" value="Jita"></input><br/>
-                <input type="button" class="btn btn-default secondary-text" id="ignore_amarr" value="Amarr"></input><br/>
-                <input type="button" class="btn btn-default secondary-text" id="ignore_dodixie" value="Dodixie"></input><br/>
-                <input type="button" class="btn btn-default secondary-text" id="ignore_rens" value="Rens"></input><br/>
-                <input type="button" class="btn btn-default secondary-text" id="ignore_hek" value="Hek"></input><br/>
+            <div class="row">
+                <div class="question primary-text"> <b>  Start </b> </div>
+                <span class="avoidwrap">
+                    <input type="button" class="btn btn-default secondary-text start" value="Jita"></input>
+                    <input type="button" class="btn btn-default secondary-text start" value="Amarr"></input>
+                    <input type="button" class="btn btn-default secondary-text start" value="Dodixie"></input>
+                </span>
+                <span class="avoidwrap">
+                    <input type="button" class="btn btn-default secondary-text start" value="Rens"></input>
+                    <input type="button" class="btn btn-default secondary-text start" value="Hek"></input>
+                </span>
             </div>
-            <div class="col-md-6">
-                <div class="question primary-text"> <b> Where are you docked? </b> </div>
-                <input type="button" class="btn btn-default secondary-text" onclick="init('Jita')" value="Jita"></input><br/>
-                <input type="button" class="btn btn-default secondary-text"  onclick="init('Amarr');" value="Amarr"></input><br/>
-                <input type="button" class="btn btn-default secondary-text"  onclick="init('Dodixie');" value="Dodixie"></input><br/>
-                <input type="button" class="btn btn-default secondary-text"  onclick="init('Rens');" value="Rens"></input><br/>
-                <input type="button" class="btn btn-default secondary-text"  onclick="init('Hek');" value="Hek"></input>
+            <div class="row">
+                <div class="question primary-text"> <b> Destination(s) </b> </div>
+                <span class="avoidwrap">
+                    <input type="button" class="btn btn-default secondary-text end" id="add_jita" value="Jita"></input>
+                    <input type="button" class="btn btn-default secondary-text end" id="add_amarr" value="Amarr"></input>
+                    <input type="button" class="btn btn-default secondary-text end" id="add_dodixie" value="Dodixie"></input>
+                </span>
+                <span class="avoidwrap">
+                    <input type="button" class="btn btn-default secondary-text end" id="add_rens" value="Rens"></input>
+                    <input type="button" class="btn btn-default secondary-text end" id="add_hek" value="Hek"></input>
+                </span>
+            </div>
+            <div class="row">
+                <div class="question secondary-text"> <b> Number of trades to return (1-3) </b> </div>
+                <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"></input>
+            </div>
+            <div class="row">
+                <div id="error" class="question secondary-text"> A starting point, and at least one destination is required. </div>
+                <input type="button" class="btn btn-default secondary-text" onclick="init()" value="Search"></input>
             </div>
         </div>
         <input type="button" class="btn btn-default more minor-text" value="Get More"></input>
         <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
     </div>
 
-    <div class="base">
+    <div class="base" oncontextmenu="return false;">
         <table id="dataTable" class="display nowrap minor-text" cellspacing="0" width="100%">
         </table>
     </div>
@@ -79,13 +96,13 @@
         <hr/>
         <footer>
             <p><a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
-            <p>Version 1.0.6 | <a href="https://github.com/awhipp">Alexander Whipp © 2016</a></p>
+            <p>Version 1.1.0 | <a href="https://github.com/awhipp">Alexander Whipp © 2016</a></p>
             <p><a href="https://developers.eveonline.com/">EVE Crest API</a> powered and rate limit compliant</p>
         </footer>
     </div>
 
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    <script src="javascripts/lazyload.js"></script>
+    <script src="javascripts/min/init.min.js"></script>
     <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

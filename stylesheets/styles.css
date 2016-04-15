@@ -17,7 +17,7 @@ body {
 .container {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 3em;
+  margin-top: 1em;
 }
 
 #howto{
@@ -118,19 +118,44 @@ a > img:hover {
   height: auto;
 }
 
-.ignore {
-    background-color: #B71C1C !important;
+.end:hover{
+    background-color: #339ab5 !important;
     color: white !important;
 }
 
+.end-selected {
+    background-color: #339ab5 !important;
+    color: white !important;
+}
+
+.start-selected {
+    background-color: #336699 !important;
+    color: white !important;
+}
+
+span.avoidwrap { display:inline-block; }
+
+#selection > .row {
+    margin-top: 1em;
+}
+
+#error{
+    display:none;
+    color: #B71C1C;
+}
+
 .question {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.25em;
 }
 
 .btn {
     margin-bottom: 0.5em !important;
 }
 
+.selected_volume {
+    text-decoration: underline !important;
+    font-weight:bolder;
+}
 .primary-text {
   font-size: 15px !important;
 }
@@ -139,8 +164,9 @@ a > img:hover {
   font-size: 13px !important;
 }
 
-.minor-text, li, td {
-  font-size: 12px !important;
+
+.minor-text, li, td, th {
+  font-size: 9px !important;
 }
 
 @media ( min-width : 450px) {
@@ -155,12 +181,13 @@ a > img:hover {
     width: 500px;
   }
   .primary-text {
-    font-size: 20px !important;
+    font-size: 18px !important;
   }
   .secondary-text {
     font-size: 14px !important;
   }
-  .minor-text, li, td {
+
+  .minor-text, li, td, th {
     font-size: 12px !important;
   }
 }
@@ -176,7 +203,7 @@ a > img:hover {
   .secondary-text {
     font-size: 22px !important;
   }
-  .minor-text, li, td {
-    font-size: 18px !important;
+  .minor-text, li, td, th {
+    font-size: 14px !important;
   }
 }
