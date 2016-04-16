@@ -300,10 +300,8 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
         $(".more").show();
         $(".dataTables_length").remove();
         $(".dataTables_paginate").remove();
-        $(".dataTables_filter > label").css("color", "white");
         $("label > input").addClass("form-control").addClass("minor-text");
-        $("label > input").attr("placeholder", "Search Results...").css("width", "300px");
-        $(".dataTables_info").css("width", "100%");
+        $("label > input").attr("placeholder", "Search Results...");
         $('#dataTable').show();
     }
 

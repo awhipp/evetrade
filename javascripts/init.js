@@ -13,16 +13,15 @@ var start_location = "";
 
 var IGNORE_STRING;
 
-$('#dataTable').hide();
-$(".more").hide();
-$(".scroll").hide();
-$("#buyingHeader").hide();
-$("#buyingFooter").hide();
-
 $(".start").on('click', function(){
     start_location = $(this).val();
     $(".start").removeClass("start-selected");
     $(this).addClass("start-selected");
+    start_location == "Jita" ? $("#add_jita").removeClass("end-selected") : "";
+    start_location == "Amarr" ? $("#add_amarr").removeClass("end-selected") : "";
+    start_location == "Dodixie" ? $("#add_dodixie").removeClass("end-selected") : "";
+    start_location == "Rens" ? $("#add_rens").removeClass("end-selected") : "";
+    start_location == "Hek" ? $("#add_hek").removeClass("end-selected") : "";
 });
 
 $(".end").on('click', function(){
@@ -69,7 +68,13 @@ function init(){
         destinations.push($(this).val());
     });
 
-    if(destinations.length == 0 || start_location === ""){
+    var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
+    var add_amarr = destinations.indexOf("Amarr") > -1 ? true : false;
+    var add_dodixie = destinations.indexOf("Dodixie") > -1 ? true : false;
+    var add_rens = destinations.indexOf("Rens") > -1 ? true : false;
+    var add_hek = destinations.indexOf("Hek") > -1 ? true : false;
+
+    if((destinations.indexOf(start_location) > -1 && destinations.length == 1)|| (destinations.length == 0 || start_location === "")){
         $("#error").show();
         return;
     }else{
@@ -79,6 +84,7 @@ function init(){
         $(".scroll").show();
         $(".more").prop('disabled',true);
         $("#selection").hide();
+        $("#stop").show();
     }
 
     var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
@@ -121,7 +127,6 @@ function init(){
     }
     $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th></tr></thead>")
 
-
     $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
     $("#buyingHeader").text("Buying from " + location);
 
@@ -143,14 +148,10 @@ function init(){
     }
     if(including.length > 0){
         including = "( routes to " + including.substring(0,including.length-2) + " )";
-        if(including.split(",").length === 4){
-            originalIds = [];
-        }
     }
-    $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. Use at your own risk. Verify in game that prices are accurate.");
+    $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span>");
     $("#buyingFooter").show();
     $("#buyingHeader").show();
 
-    //document.write(successful.join(","));
     begin(originalIds,station_buy,station_sell1,station_sell2,station_sell3,station_sell4);
 }
