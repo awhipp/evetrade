@@ -231,7 +231,7 @@ function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, s
         if(b_volume >= s_volume){
             volume = numberWithCommas(b_volume.toFixed()) + "-<span class='selected_volume'>" + numberWithCommas(s_volume.toFixed()) + "</span>";
             profit = s_volume * itemProfit;
-            buyCost = s_price * s_volume;
+            buyCost = b_price * s_volume;
         }else{
             volume = "<span class='selected_volume'>" + numberWithCommas(b_volume.toFixed()) + "</span>-" + numberWithCommas(s_volume.toFixed());
             profit = b_volume * itemProfit;
@@ -268,15 +268,15 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
             if(event.which === 1){
                 if(event.ctrlKey || event.shiftKey){
                     var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
-                        if(!$(this).hasClass("row-selected")){
-                            $.each($("."+classToFind), function(){
-                                $(this).addClass("row-selected");
-                            })
-                        }else{
-                            $.each($("."+classToFind), function(){
-                                $(this).removeClass("row-selected");
-                            })
-                        }
+                    if(!$(this).hasClass("row-selected")){
+                        $.each($("."+classToFind), function(){
+                            $(this).addClass("row-selected");
+                        })
+                    }else{
+                        $.each($("."+classToFind), function(){
+                            $(this).removeClass("row-selected");
+                        })
+                    }
                 }else{
                     if(!$(this).hasClass("row-selected")){
                         $(this).addClass("row-selected");

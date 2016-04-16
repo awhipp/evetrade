@@ -1,4 +1,4 @@
-# Crest Trade Finder v1.1.1
+# Crest Trade Finder v1.1.2
 
 ## About
 
@@ -11,6 +11,10 @@ Select which of the 5 trade hubs you are docked in:
 * Jita
 
 It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+## Bug Fix v1.1.2
+
+* Buy Cost was not being calculated properly
 
 ## Bug Fix v1.1.1
 
