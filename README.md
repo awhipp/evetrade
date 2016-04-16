@@ -20,8 +20,10 @@ It will return a lazyloaded table of trades you can make at other trade hubs. Al
 * Added stop functionality to stop loading if the user does not wish to continue
 * If same destination and start point occurs it throws an error
 * Unhighlights destination if start location is selected
+
 ### v1.1.2
 * Buy Cost was not being calculated properly
+
 ### v1.1.1
 * Update no longer returns just the top trade for all 3 slots
 * Update graphic now just changes opacity. Less intrusive.
