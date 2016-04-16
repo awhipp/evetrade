@@ -1,26 +1,13 @@
 var JUMPS = 75;
 var SECOND_DELAY = 900;
 var PROFIT_INDEX = 6;
+var UPDATING_TIMEOUT = 25000;
+var UPDATING_CHECK = [];
 var length;
 var created = false;
 var dt;
 
 var itemIds, station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
-
-jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-    "numeric-comma-pre": function ( a ) {
-        var x = (a == "-") ? 0 : a.replace( /,/, "." ).replace("/(/","").replace("/)/","");
-        return parseFloat( x );
-    },
-
-    "numeric-comma-asc": function ( a, b ) {
-        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-    },
-
-    "numeric-comma-desc": function ( a, b ) {
-        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-    }
-} );
 
 function numberWithCommas(val) {
     while (/(\d+)(\d{3})/.test(val.toString())){
@@ -261,6 +248,13 @@ function getLocation(location){
     return (location === JITA[0] ? "Jita" : location === AMARR[0] ? "Amarr" : location === DODIXIE[0] ? "Dodixie" : location === RENS[0] ? "Rens" : "Hek");
 }
 
+function checkRow(row_id){
+    var next = UPDATING_CHECK[UPDATING_CHECK.length-1];
+    if($("#"+next).hasClass("updating")){
+        $("#"+next).remove();
+    }
+}
+
 function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate){
     var id = itemId + "-" + location;
 
@@ -272,13 +266,14 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
         });
         $('#dataTable tbody').on('mousedown', 'tr', function (event) {
             if(event.which === 1){
-                if(event.ctrlKey){
+                if(event.ctrlKey || event.shiftKey){
+                    var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
                         if(!$(this).hasClass("row-selected")){
-                            $.each($("."+$(this).attr('value')), function(){
+                            $.each($("."+classToFind), function(){
                                 $(this).addClass("row-selected");
                             })
                         }else{
-                            $.each($("."+$(this).attr('value')), function(){
+                            $.each($("."+classToFind), function(){
                                 $(this).removeClass("row-selected");
                             })
                         }
@@ -290,16 +285,16 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
                     }
                 }
             }else if(event.which === 3){
-                var id = $(this).attr("value").split("-");
+                var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
                 if(document.getElementsByClassName(id)){
-                    var row = $("." + $(this).attr("value"));
+                    var row = $("." + classToFind);
                     $.each(row, function(){
-                        var clickedItem = $(this).children()[0];
-                        clickedItem.textContent = clickedItem.textContent + " (updating)";
+                        $(this).addClass("updating");
+                        window.setTimeout(function(){ UPDATING_CHECK.push($(this).attr('id')); checkRow(); }, UPDATING_TIMEOUT);
                     });
                 }
-                getBuyPrice(id[0], true);
-                return false;
+
+                getBuyPrice($(this).attr('id').split("-")[0], true);
             }
         } );
         $(".more").show();
@@ -327,17 +322,23 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
 
     if(isUpdate && document.getElementsByClassName(id).length > 0){
         var row = $("." + id);
+        var found = false;
         $.each(row, function(){
-            var counter = 0;
-            $.each($(this).children(), function(){
-                $(this).html(row_data[counter]);
-                counter++;
-            });
+            if(!found && $(this).hasClass("updating")){
+                found = true;
+                var counter = 0;
+                $.each($(this).children(), function(){
+                    $(this).html(row_data[counter]);
+                    counter++;
+
+                });
+                $(this).removeClass("updating");
+            }
         });
     }else{
         var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
         var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
-        $(row).attr('value', id);
+        $(row).attr('id', id + "-" + $("." + id).length);
         $(row).addClass(id);
     }
 }

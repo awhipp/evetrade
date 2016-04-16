@@ -112,6 +112,11 @@ a > img:hover {
   background-color: #336699 !important;
 }
 
+.updating {
+    opacity: 0.5;
+    
+}
+
 .title {
   width: 250px;
   padding: 0.5em;
