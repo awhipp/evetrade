@@ -53,6 +53,8 @@ function getRows(){
     if(i >= itemIds.length){
         $(".more").val("Finished");
         $(".more").prop('disabled', true);
+        $('#stop').val('Finished');
+        $('#stop').prop('disabled', true);
         itemIds = [];
     }
     itemIds = itemIds.splice(JUMPS, itemIds.length);
@@ -65,15 +67,22 @@ function getBuyPrice(itemId, isUpdate){
     var buyMarketUrl = "https://public-crest.eveonline.com/market/" + station_buy[0] + "/orders/sell/";
     var buyTypeUrl = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
     try{
-        $.get(buyMarketUrl + buyTypeUrl, function(buyData) {
-            var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
-            if(buyPrice.length > 0 && (buyPrice[0][0] > 0 || buyPrice[1][0] > 0 || buyPrice[2][0] > 0)){
-                var itemName = buyData.items[0].type.name;
-                getSellPrice1(itemId, buyPrice, itemName, isUpdate);
-            }else{
-                if(itemId === length){
-                    window.setTimeout(goAgain(), SECOND_DELAY);
+        $.ajax({
+            type: "get",
+            url: buyMarketUrl + buyTypeUrl,
+            success: function(buyData) {
+                var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
+                if(buyPrice.length > 0 && (buyPrice[0][0] > 0 || buyPrice[1][0] > 0 || buyPrice[2][0] > 0)){
+                    var itemName = buyData.items[0].type.name;
+                    getSellPrice1(itemId, buyPrice, itemName, isUpdate);
+                }else{
+                    if(itemId === length){
+                        window.setTimeout(goAgain(), SECOND_DELAY);
+                    }
                 }
+            },
+            error: function (request, error) {
+                unreachable();
             }
         });
     }catch (unknownError){
@@ -87,9 +96,16 @@ function getSellPrice1(itemId, buyPrice, itemName, isUpdate){
         var sellMarketUrl_1 = "https://public-crest.eveonline.com/market/" + station_sell1[0] + "/orders/buy/";
         var sellTypeUrl_1 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
         try{
-            $.get(sellMarketUrl_1 + sellTypeUrl_1, function(sellData1) {
-                var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
-                getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate);
+            $.ajax({
+                type: "get",
+                url: sellMarketUrl_1 + sellTypeUrl_1,
+                success: function(sellData1) {
+                    var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
+                    getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate);
+                },
+                error: function (request, error) {
+                    unreachable();
+                }
             });
         }catch (unknownError){
             getSellPrice1(itemId, buyPrice, itemName, isUpdate);
@@ -104,9 +120,16 @@ function getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate){
         var sellMarketUrl_2 = "https://public-crest.eveonline.com/market/" + station_sell2[0] + "/orders/buy/";
         var sellTypeUrl_2 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
         try{
-            $.get(sellMarketUrl_2 + sellTypeUrl_2, function(sellData2) {
-                var sellPrice2 = getData(sellData2, station_sell2[1], "buy", itemId);
-                getSellPrice3(itemId, buyPrice, itemName, sellPrice1, sellPrice2, isUpdate);
+            $.ajax({
+                type: "get",
+                url: sellMarketUrl_2 + sellTypeUrl_2,
+                success: function(sellData2) {
+                    var sellPrice2 = getData(sellData2, station_sell2[1], "buy", itemId);
+                    getSellPrice3(itemId, buyPrice, itemName, sellPrice1, sellPrice2, isUpdate);
+                },
+                error: function (request, error) {
+                    unreachable();
+                }
             });
         }catch (unknownError){
             getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate);
@@ -121,9 +144,16 @@ function getSellPrice3(itemId, buyPrice, itemName, sellPrice1, sellPrice2, isUpd
         var sellMarketUrl_3 = "https://public-crest.eveonline.com/market/" + station_sell3[0] + "/orders/buy/";
         var sellTypeUrl_3 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
         try{
-            $.get(sellMarketUrl_3 + sellTypeUrl_3, function(sellData3) {
-                var sellPrice3 = getData(sellData3, station_sell3[1], "buy", itemId);
-                getSellPrice4(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, isUpdate);
+            $.ajax({
+                type: "get",
+                url: sellMarketUrl_3 + sellTypeUrl_3,
+                success: function(sellData3) {
+                    var sellPrice3 = getData(sellData3, station_sell3[1], "buy", itemId);
+                    getSellPrice4(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, isUpdate);
+                },
+                error: function (request, error) {
+                    unreachable();
+                }
             });
         }catch (unknownError){
             getSellPrice3(itemId, buyPrice, itemName, sellPrice1, sellPrice2, isUpdate);
@@ -138,9 +168,16 @@ function getSellPrice4(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellP
         var sellMarketUrl_4 = "https://public-crest.eveonline.com/market/" + station_sell4[0] + "/orders/buy/";
         var sellTypeUrl_4 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
         try{
-            $.get(sellMarketUrl_4 + sellTypeUrl_4, function(sellData4) {
-                var sellPrice4 = getData(sellData4, station_sell4[1], "buy", itemId);
-                getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, sellPrice4, isUpdate);
+            $.ajax({
+                type: "get",
+                url: sellMarketUrl_4 + sellTypeUrl_4,
+                success: function(sellData4) {
+                    var sellPrice4 = getData(sellData4, station_sell4[1], "buy", itemId);
+                    getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, sellPrice4, isUpdate);
+                },
+                error: function (request, error) {
+                    unreachable();
+                }
             });
         }catch (unknownError){
             getSellPrice4(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, isUpdate);

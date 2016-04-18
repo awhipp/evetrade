@@ -13,33 +13,44 @@ var start_location = "";
 
 var IGNORE_STRING;
 
-$(".start").on('click', function(){
-    start_location = $(this).val();
-    $(".start").removeClass("start-selected");
-    $(this).addClass("start-selected");
-    start_location == "Jita" ? $("#add_jita").removeClass("end-selected") : "";
-    start_location == "Amarr" ? $("#add_amarr").removeClass("end-selected") : "";
-    start_location == "Dodixie" ? $("#add_dodixie").removeClass("end-selected") : "";
-    start_location == "Rens" ? $("#add_rens").removeClass("end-selected") : "";
-    start_location == "Hek" ? $("#add_hek").removeClass("end-selected") : "";
-});
+$( document ).ready(function() {
+    $.ajax({
+        type: "get",
+        url: "https://public-crest.eveonline.com",
+        error: function (request, error) {
+            unreachable();
+        }
+    });
 
-$(".end").on('click', function(){
-    if($(this).hasClass("end-selected")){
-        $(this).removeClass("end-selected");
-    }else{
-        $(this).addClass("end-selected");
-    }
+    $(".start").on('click', function(){
+        start_location = $(this).val();
+        $(".start").removeClass("start-selected");
+        $(this).addClass("start-selected");
+        start_location == "Jita" ? $("#add_jita").removeClass("end-selected") : "";
+        start_location == "Amarr" ? $("#add_amarr").removeClass("end-selected") : "";
+        start_location == "Dodixie" ? $("#add_dodixie").removeClass("end-selected") : "";
+        start_location == "Rens" ? $("#add_rens").removeClass("end-selected") : "";
+        start_location == "Hek" ? $("#add_hek").removeClass("end-selected") : "";
+    });
+
+    $(".end").on('click', function(){
+        if($(this).hasClass("end-selected")){
+            $(this).removeClass("end-selected");
+        }else{
+            $(this).addClass("end-selected");
+        }
+    });
+
+    $("#numberInput").on('blur', updateNumber);
 });
 
 function updateNumber(){
     NUMBER_RETURNED = parseInt($("#numberInput").val());
-    if(NUMBER_RETURNED > 3 || NUMBER_RETURNED < 1){
+    if(NUMBER_RETURNED > 10 || NUMBER_RETURNED < 1){
         NUMBER_RETURNED = 1;
         $("#numberInput").val("1");
     }
 }
-$("#numberInput").on('blur', updateNumber);
 
 function shuffle(array) {
     var currentIndex = array.length,temporaryValue,randomIndex;
@@ -58,6 +69,15 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+function unreachable(){
+    itemIds = [];
+    originalIds = [];
+    if($("#unreachable").is(":hidden")){
+        $("#unreachable").hide();
+        $("#unreachable").slideToggle();
+    }
 }
 
 function init(){

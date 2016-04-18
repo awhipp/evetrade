@@ -1,4 +1,4 @@
-# Crest Trade Finder v1.1.3
+# Crest Trade Finder v1.1.4
 
 ## About
 Implements the EVE Crest API to find the best trades between the major trade hubs.
@@ -12,6 +12,14 @@ Select which of the 5 trade hubs you are docked in:
 It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
 ## Minor Updates
+### v1.1.4
+* Stop button updates and provides feedback
+* Moved init.js to the top through an on document ready function
+* Added an unreachable notification if EVE's servers are down
+* Moved to AJAX call structure rather than simple Jquery GET
+* Updated number returned to between 1-10
+* Moved all minified JS to one file
+
 ### v1.1.3
 * Improved breakpoints for text and buttons on smaller screens
 * Updated color scheme
