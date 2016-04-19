@@ -14,18 +14,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
-<!--
-    <script src="javascripts/init.js"></script>
-    <script src="javascripts/calculator.js"></script>
-    <link rel="stylesheet" href="stylesheets/styles.css">
--->
+    <!--
+        <script src="javascripts/init.js"></script>
+        <script src="javascripts/calculator.js"></script>
+        <link rel="stylesheet" href="stylesheets/styles.css">
+    -->
     <script src="javascripts/min/all.min.js"></script>
     <link rel="stylesheet" href="stylesheets/min/styles.min.css">
-
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    
 </head>
 <body>
 
@@ -34,9 +34,11 @@
             <div><img class="title" src="logo.png"></img></div>
             <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="About"></input>
             <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
+            <input type="button" id="stop" class="btn btn-default secondary-text" onclick="$('#stop').val('Stopped'); $('#stop').prop('disabled', true); itemIds = [];" value="Stop"></input>
             <div id="howto" class="minor-text">
                 <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
-                <b>(Ctrl or Shift) + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
+                <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
+                <b>Shift + left-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
                 <b>Right-click a Result</b><br/>Updates that item instantly on the table<br/><br/>
                 <b>Item</b><br/>The Item name to Purchase<br/><br/>
                 <b>Buy Price</b><br/>The cost at your current trade hub per item<br/><br/>
@@ -50,7 +52,6 @@
                 <b>Sell Price</b><br/>Cost per item that the buy order is asking for at the trade hub<br/><br/>
                 <b>Profit Per Item</b><br/>(Sell Price - Buy Price)<br/><br/>
             </div>
-            <input type="button" id="stop" class="btn btn-default secondary-text" onclick="$('#stop').val('Stopped'); $('#stop').prop('disabled', true); itemIds = [];" value="Stop"></input>
         </div>
     </div>
 
@@ -61,6 +62,48 @@
                 <input type="button" class="btn btn-default secondary-text" onclick="$('#unreachable').slideToggle();" value="Dismiss"></input>
             </div>
         </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title primary-text" id="popup_itemName">Item Name</h4>
+          </div>
+          <div class="popup-subheading secondary-text" id="buyLocation">Location A</div>
+          <table id="popup-table-buy" class="display minor-text modal-body" cellspacing="0" width="100%">
+              <thead>
+                  <tr>
+                  <th>
+                      Buy Price
+                  </th>
+                  <th>
+                      Buy Quantity
+                  </th>
+              </tr>
+              </thead>
+          </table>
+          <hr/>
+          <div class="popup-subheading secondary-text" id="sellLocation">Location B</div>
+          <table id="popup-table-sell" class="display minor-text modal-body" cellspacing="0" width="100%">
+              <thead>
+                  <tr>
+                  <th>
+                      Sell Price
+                  </th>
+                  <th>
+                      Sell Quantity
+                  </th>
+              </tr>
+              </thead>
+          </table>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="base">
@@ -105,8 +148,8 @@
             <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
         </div>
 
-        <div oncontextmenu="return false;">
-            <table id="dataTable" class="display nowrap minor-text" cellspacing="0" width="100%">
+        <div oncontextmenu="return false;" class="noselect">
+            <table id="dataTable" class="display minor-text" cellspacing="0" width="100%">
             </table>
         </div>
 
@@ -117,7 +160,7 @@
 
     <footer>
         <p><a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
-        <p>Version 1.1.4 | <a href="https://github.com/awhipp">Alexander Whipp © 2016</a></p>
+        <p>Version 1.2 | <a href="https://github.com/awhipp">Alexander Whipp © 2016</a></p>
         <p>Powered by: <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a> | <a href="https://datatables.net/">DataTables</a></p>
         </footer>
 

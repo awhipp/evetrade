@@ -188,8 +188,8 @@ function getSellPrice4(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellP
 }
 
 function rowComparator(a,b){
-    if (a[PROFIT_INDEX] < b[PROFIT_INDEX]) return -1;
-    if (a[PROFIT_INDEX] > b[PROFIT_INDEX]) return 1;
+    if (a[PROFIT_INDEX] < b[PROFIT_INDEX]) return 1;
+    if (a[PROFIT_INDEX] > b[PROFIT_INDEX]) return -1;
     return 0;
 }
 
@@ -197,12 +197,8 @@ function getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPri
     var rows = [];
 
     for(var i = 0; i < buyPrice.length; i++){
-        var b_volume = buyPrice[i][1];
-        var b_price = buyPrice[i][0];
         for(var j = 0; j < sellPrice1.length; j++){
-            var s_volume = sellPrice1[j][1];
-            var s_price = sellPrice1[j][0];
-            var row = calculateRow(itemId, itemName, b_price, b_volume, s_price, s_volume, station_sell1, isUpdate);
+            var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice1[j][0], sellPrice1[j][1], station_sell1, isUpdate);
             if(row.length > 0){
                 rows.push(row);
             }
@@ -210,12 +206,8 @@ function getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPri
     }
 
     for(var i = 0; i < buyPrice.length; i++){
-        var b_volume = buyPrice[i][1];
-        var b_price = buyPrice[i][0];
         for(var j = 0; j < sellPrice2.length; j++){
-            var s_volume = sellPrice2[j][1];
-            var s_price = sellPrice2[j][0];
-            var row = calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, station_sell2, isUpdate);
+                var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice2[j][0], sellPrice2[j][1], station_sell2, isUpdate);
             if(row.length > 0){
                 rows.push(row);
             }
@@ -223,12 +215,8 @@ function getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPri
     }
 
     for(var i = 0; i < buyPrice.length; i++){
-        var b_volume = buyPrice[i][1];
-        var b_price = buyPrice[i][0];
         for(var j = 0; j < sellPrice3.length; j++){
-            var s_volume = sellPrice3[j][1];
-            var s_price = sellPrice3[j][0];
-            var row = calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, station_sell3, isUpdate);
+            var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice3[j][0], sellPrice3[j][1], station_sell3, isUpdate);
             if(row.length > 0){
                 rows.push(row);
             }
@@ -236,12 +224,8 @@ function getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPri
     }
 
     for(var i = 0; i < buyPrice.length; i++){
-        var b_volume = buyPrice[i][1];
-        var b_price = buyPrice[i][0];
         for(var j = 0; j < sellPrice4.length; j++){
-            var s_volume = sellPrice4[j][1];
-            var s_price = sellPrice4[j][0];
-            var row = calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, station_sell4, isUpdate);
+                var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice4[j][0], sellPrice4[j][1], station_sell4, isUpdate);
             if(row.length > 0){
                 rows.push(row);
             }
@@ -299,11 +283,11 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
         created = true;
         dt = $('#dataTable').DataTable({
             "order": [[ PROFIT_INDEX, "desc" ]],
-            "lengthMenu": [[-1], ["All"]],
+            "lengthMenu": [[-1], ["All"]]
         });
         $('#dataTable tbody').on('mousedown', 'tr', function (event) {
             if(event.which === 1){
-                if(event.ctrlKey || event.shiftKey){
+                if(event.ctrlKey){
                     var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
                     if(!$(this).hasClass("row-selected")){
                         $.each($("."+classToFind), function(){
@@ -314,6 +298,8 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
                             $(this).removeClass("row-selected");
                         })
                     }
+                }else if(event.shiftKey){
+                    open_popup($(this).attr('id').split("-")[0], $(this).children()[0].textContent, $(this).children()[4].textContent);
                 }else{
                     if(!$(this).hasClass("row-selected")){
                         $(this).addClass("row-selected");
@@ -335,8 +321,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
             }
         } );
         $(".more").show();
-        $(".dataTables_length").remove();
-        $(".dataTables_paginate").remove();
         $("label > input").addClass("form-control").addClass("minor-text");
         $("label > input").attr("placeholder", "Search Results...");
         $('#dataTable').show();
@@ -404,14 +388,12 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
     var bestPrice = [];
     var bestVolume = [];
 
-
     // Pull all orders found and start iteration
     var orders = jsonMarket['items'];
     for (var orderIndex = 0; orderIndex < orders.length; orderIndex++)
     {
         var order = orders[orderIndex];
-        if (stationId == order['location']['id'])
-        {
+        if (stationId == order['location']['id']){
             // This is the station market we want
             var price = order['price'];
             var volume = order['volume'];
@@ -421,7 +403,11 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
 
     /** Selling to Users at this price - ordered high to low **/
     if (orderType == "sell"){
+        saveBuyData(stationId, itemId, $.extend(true, [], bestPrice));
         bestPrice = bestPrice.sort(buyComparator);
+        if(itemId == 34){
+            console.log(bestPrice);
+        }
         if(bestPrice.length > NUMBER_RETURNED-1){
             return bestPrice.splice(0,NUMBER_RETURNED);
         }else{
@@ -429,11 +415,40 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
         }
         /** Buying from Users at this price - ordered low to high **/
     }else{
+        saveSellData(stationId, itemId, $.extend(true, [], bestPrice))
         bestPrice = bestPrice.sort(sellComparator);
         if(bestPrice.length > NUMBER_RETURNED-1){
             return bestPrice.splice(0,NUMBER_RETURNED);
         }else{
             return bestPrice;
         }
+    }
+}
+
+function saveBuyData(stationId, itemId, data){
+    if (stationId == JITA[1]) {
+        jitaBuy[itemId] = data;
+    }else if(stationId == AMARR[1]){
+        amarrBuy[itemId] = data;
+    }else if(stationId == RENS[1]){
+        rensBuy[itemId] = data;
+    }else if(stationId == DODIXIE[1]){
+        dodixieBuy[itemId] = data;
+    }else if(stationId == HEK[1]){
+        hekBuy[itemId] = data;
+    }
+}
+
+function saveSellData(stationId, itemId, data){
+    if (stationId == JITA[1]) {
+        jitaSell[itemId] = data;
+    }else if(stationId == AMARR[1]){
+        amarrSell[itemId] = data;
+    }else if(stationId == RENS[1]){
+        rensSell[itemId] = data;
+    }else if(stationId == DODIXIE[1]){
+        dodixieSell[itemId] = data;
+    }else if(stationId == HEK[1]){
+        hekSell[itemId] = data;
     }
 }
