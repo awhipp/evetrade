@@ -1,178 +1,184 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Real EVE Market</title>
-    <link rel='shortcut icon' href='favicon.png' type='image/x-icon'/ >
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <title>Real EVE Market</title>
+  <link rel='shortcut icon' href='favicon.png' type='image/x-icon'/ >
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+  <script   src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
-    <!--
-        <script src="javascripts/init.js"></script>
-        <script src="javascripts/calculator.js"></script>
-        <link rel="stylesheet" href="stylesheets/styles.css">
-    -->
-    <script src="javascripts/min/all.min.js"></script>
-    <link rel="stylesheet" href="stylesheets/min/styles.min.css">
+  <!--
+    <script src="javascripts/init.js"></script>
+    <script src="javascripts/calculator.js"></script>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+  -->
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
+<script src="javascripts/min/all.min.js"></script>
+<link rel="stylesheet" href="stylesheets/min/styles.min.css">
+
+<!--[if lt IE 9]>
+<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
 </head>
 <body>
 
-    <div class="header">
-        <div class="primary-text container">
-            <div><img class="title" src="logo.png"></img></div>
-            <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="About"></input>
-            <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
-            <input type="button" id="stop" class="btn btn-default secondary-text" onclick="$('#stop').val('Stopped'); $('#stop').prop('disabled', true); itemIds = [];" value="Stop"></input>
-            <div id="howto" class="minor-text">
-                <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
-                <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
-                <b>Shift + left-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
-                <b>Right-click a Result</b><br/>Updates that item instantly on the table<br/><br/>
-                <b>Item</b><br/>The Item name to Purchase<br/><br/>
-                <b>Buy Price</b><br/>The cost at your current trade hub per item<br/><br/>
-                <b>Buy Quantity</b><br/>Amount available for purchase at current statio<br/><br/>
-                <b>Sell Quantity</b><br/>Amount available for purchase at destination station<br/><br/>
-                <b>Recommended Quantity</b><br/>(Not Shown) Whichever is lower, Buy Quantity or Sell Quantity<br/><br/>
-                <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed<br/>(Buy Price * Recommended Quantity)<br/><br/>
-                <b>Sell At</b><br/>Your destination trade hub for this trade<br/><br/>
-                <b>Total Profit</b><br/>(Recommended Quantity * Sell Price)<br/><br/>
-                <b>Return on Investment</b><br/>(Revenue - Cost) / Cost<br/><br/>
-                <b>Sell Price</b><br/>Cost per item that the buy order is asking for at the trade hub<br/><br/>
-                <b>Profit Per Item</b><br/>(Sell Price - Buy Price)<br/><br/>
-            </div>
-        </div>
+  <div class="header">
+    <div class="primary-text container">
+      <div><img class="title" src="logo.png"></img></div>
+      <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="$('#howto').slideToggle();" value="About"></input>
+      <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
+      <input type="button" id="stop" class="btn btn-default secondary-text" onclick="$('#stop').val('Stopped'); $('#stop').prop('disabled', true); itemIds = [];" value="Stop"></input>
+      <div id="howto" class="minor-text">
+        <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
+        <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
+        <b>Shift + left-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
+        <b>Right-click a Result</b><br/>Updates that item instantly on the table<br/><br/>
+        <b>Item</b><br/>The Item name to Purchase<br/><br/>
+        <b>Buy Price</b><br/>The cost at your current trade hub per item<br/><br/>
+        <b>Buy Quantity</b><br/>Amount available for purchase at current statio<br/><br/>
+        <b>Sell Quantity</b><br/>Amount available for purchase at destination station<br/><br/>
+        <b>Recommended Quantity</b><br/>(Not Shown) Whichever is lower, Buy Quantity or Sell Quantity<br/><br/>
+        <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed<br/>(Buy Price * Recommended Quantity)<br/><br/>
+        <b>Sell At</b><br/>Your destination trade hub for this trade<br/><br/>
+        <b>Total Profit</b><br/>(Recommended Quantity * Sell Price)<br/><br/>
+        <b>Return on Investment</b><br/>(Revenue - Cost) / Cost<br/><br/>
+        <b>Sell Price</b><br/>Cost per item that the buy order is asking for at the trade hub<br/><br/>
+        <b>Profit Per Item</b><br/>(Sell Price - Buy Price)<br/><br/>
+      </div>
     </div>
+  </div>
 
-    <div  id="unreachable">
-        <div class="container">
-            <div class="row">
-                <div class="primary-text"> Oops. We cannot seem reach EVE's servers.<br/>Sorry, but please try again later. </div>
-                <input type="button" class="btn btn-default secondary-text" onclick="$('#unreachable').slideToggle();" value="Dismiss"></input>
-            </div>
-        </div>
+  <div  id="unreachable">
+    <div class="container">
+      <div class="row">
+        <div class="primary-text"> Oops. We cannot seem reach EVE's servers.<br/>Sorry, but please try again later. </div>
+        <input type="button" class="btn btn-default secondary-text" onclick="$('#unreachable').slideToggle();" value="Dismiss"></input>
+      </div>
     </div>
+  </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title primary-text" id="popup_itemName">Item Name</h4>
-          </div>
-          <div class="popup-subheading secondary-text" id="buyLocation">Location A</div>
-          <table id="popup-table-buy" class="display minor-text modal-body" cellspacing="0" width="100%">
-              <thead>
-                  <tr>
-                  <th>
-                      Buy Price
-                  </th>
-                  <th>
-                      Buy Quantity
-                  </th>
-              </tr>
-              </thead>
-          </table>
-          <hr/>
-          <div class="popup-subheading secondary-text" id="sellLocation">Location B</div>
-          <table id="popup-table-sell" class="display minor-text modal-body" cellspacing="0" width="100%">
-              <thead>
-                  <tr>
-                  <th>
-                      Sell Price
-                  </th>
-                  <th>
-                      Sell Quantity
-                  </th>
-              </tr>
-              </thead>
-          </table>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+  <!-- Modal -->
+  <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title primary-text" id="popup_itemName">Item Name</h4>
+        </div>
+        <div class="popup-subheading secondary-text" id="buyLocation">Location A</div>
+        <table id="popup-table-buy" class="display minor-text modal-body" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th>
+                Buy Price
+              </th>
+              <th>
+                Buy Quantity
+              </th>
+            </tr>
+          </thead>
+        </table>
+        <hr/>
+        <div class="popup-subheading secondary-text" id="sellLocation">Location B</div>
+        <table id="popup-table-sell" class="display minor-text modal-body" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th>
+                Sell Price
+              </th>
+              <th>
+                Sell Quantity
+              </th>
+            </tr>
+          </thead>
+        </table>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="base">
-        <div class="container">
-            <div id="buyingHeader" class="primary-text"></div>
-            <div id="buyingFooter" class="minor-text"></div>
-            <div id="selection" class="secondary-text">
-                <div class="row">
-                    <div class="question primary-text"> <b>  Start </b> </div>
-                    <span class="avoidwrap">
-                        <input type="button" class="btn btn-default secondary-text start" id="location_jita" value="Jita"></input>
-                        <input type="button" class="btn btn-default secondary-text start" id="location_amarr" value="Amarr"></input>
-                        <span class="avoidwrap">
-                            <input type="button" class="btn btn-default secondary-text start" id="location_dodixie" value="Dodixie"></input>
-                            <input type="button" class="btn btn-default secondary-text start" id="location_rens" value="Rens"></input>
-                            <input type="button" class="btn btn-default secondary-text start" id="location_hek" value="Hek"></input>
-                        </span>
-                    </span>
-                </div>
-                <div class="row">
-                    <div class="question primary-text"> <b> Destination(s) </b> </div>
-                    <span class="avoidwrap">
-                        <input type="button" class="btn btn-default secondary-text end" id="add_jita" value="Jita"></input>
-                        <input type="button" class="btn btn-default secondary-text end" id="add_amarr" value="Amarr"></input>
-                        <span class="avoidwrap">
-                            <input type="button" class="btn btn-default secondary-text end" id="add_dodixie" value="Dodixie"></input>
-                            <input type="button" class="btn btn-default secondary-text end" id="add_rens" value="Rens"></input>
-                            <input type="button" class="btn btn-default secondary-text end" id="add_hek" value="Hek"></input>
-                        </span>
-                    </span>
-                </div>
-                <div class="row">
-                    <div class="question secondary-text"> <b> Number of trades to return (1-10) </b> </div>
-                    <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"></input>
-                </div>
-                <div class="row">
-                    <div id="error" class="question secondary-text"> A starting point, and at least one destination is required. </div>
-                    <input type="button" class="btn btn-default secondary-text" onclick="init()" value="Search"></input>
-                </div>
-            </div>
-            <input type="button" class="btn btn-default more minor-text" value="Get More"></input>
-            <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
+  <div class="base">
+    <div class="container">
+      <div id="buyingHeader" class="primary-text"></div>
+      <div id="buyingFooter" class="minor-text"></div>
+      <div id="loading">
+        <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+        <div class="primary-text question">Get new market items...</div>
+      </div>
+      <div id="selection" class="secondary-text">
+        <div class="row">
+          <div class="question primary-text"> <b>  Start </b> </div>
+          <span class="avoidwrap">
+            <input type="button" class="btn btn-default secondary-text start" id="location_jita" value="Jita"></input>
+            <input type="button" class="btn btn-default secondary-text start" id="location_amarr" value="Amarr"></input>
+            <span class="avoidwrap">
+              <input type="button" class="btn btn-default secondary-text start" id="location_dodixie" value="Dodixie"></input>
+              <input type="button" class="btn btn-default secondary-text start" id="location_rens" value="Rens"></input>
+              <input type="button" class="btn btn-default secondary-text start" id="location_hek" value="Hek"></input>
+            </span>
+          </span>
         </div>
-
-        <div oncontextmenu="return false;" class="noselect">
-            <table id="dataTable" class="display minor-text" cellspacing="0" width="100%">
-            </table>
+        <div class="row">
+          <div class="question primary-text"> <b> Destination(s) </b> </div>
+          <span class="avoidwrap">
+            <input type="button" class="btn btn-default secondary-text end" id="add_jita" value="Jita"></input>
+            <input type="button" class="btn btn-default secondary-text end" id="add_amarr" value="Amarr"></input>
+            <span class="avoidwrap">
+              <input type="button" class="btn btn-default secondary-text end" id="add_dodixie" value="Dodixie"></input>
+              <input type="button" class="btn btn-default secondary-text end" id="add_rens" value="Rens"></input>
+              <input type="button" class="btn btn-default secondary-text end" id="add_hek" value="Hek"></input>
+            </span>
+          </span>
         </div>
-
-        <div class="container">
-            <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
+        <div class="row">
+          <div class="question secondary-text"> <b> Number of trades to return (1-10) </b> </div>
+          <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"></input>
         </div>
+        <div class="row">
+          <div id="error" class="question secondary-text"> A starting point, and at least one destination is required. </div>
+          <input type="button" class="btn btn-default secondary-text" onclick="init()" value="Search"></input>
+        </div>
+      </div>
+      <input type="button" class="btn btn-default more minor-text" value="Get More"></input>
+      <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: $(document).height() }, 'slow');" value="To Bottom"></input>
     </div>
 
-    <footer>
-        <p><a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
-        <p>Version 1.2 | <a href="https://github.com/awhipp">Alexander Whipp © 2016</a></p>
-        <p>Powered by: <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a> | <a href="https://datatables.net/">DataTables</a></p>
-        </footer>
+    <div oncontextmenu="return false;" class="noselect">
+      <table id="dataTable" class="display minor-text" cellspacing="0" width="100%">
+      </table>
+    </div>
 
-        <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-        <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-53648946-3', 'auto');
-        ga('send', 'pageview');
-        </script>
+    <div class="container">
+      <input type="button" class="btn btn-default scroll minor-text" onclick="$('html, body').animate({ scrollTop: 0 }, 'slow');" value="To Top"></input>
+    </div>
+  </div>
 
-    </body>
-    </html>
+  <footer>
+    <p><a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
+    <p>Version 1.2.1 | <a href="https://github.com/awhipp">Alexander Whipp © 2016</a></p>
+    <p>Powered by: <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a> | <a href="https://datatables.net/">DataTables</a></p>
+    </footer>
+
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53648946-3', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+  </body>
+  </html>

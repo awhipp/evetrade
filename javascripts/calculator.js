@@ -7,7 +7,7 @@ var length;
 var created = false;
 var dt;
 
-var itemIds, station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
+var station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
 
 function numberWithCommas(val) {
     while (/(\d+)(\d{3})/.test(val.toString())){
@@ -31,8 +31,7 @@ function goAgain(){
     getRows();
 }
 
-function begin(o_ids, s_buy, s_sell1, s_sell2, s_sell3, s_sell4){
-    itemIds = $.extend(true, [], o_ids);
+function begin(s_buy, s_sell1, s_sell2, s_sell3, s_sell4){
     station_buy = s_buy;
     station_sell1 = s_sell1;
     station_sell2 = s_sell2;
@@ -58,9 +57,6 @@ function getRows(){
         itemIds = [];
     }
     itemIds = itemIds.splice(JUMPS, itemIds.length);
-    if(itemIds.length == originalIds.length-JUMPS){
-        itemIds = shuffle(itemIds);
-    }
 }
 
 function getBuyPrice(itemId, isUpdate){
