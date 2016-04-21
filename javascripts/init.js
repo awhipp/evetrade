@@ -63,11 +63,11 @@ $( document ).ready(function() {
 
   popup_table_buy = $("#popup-table-buy").DataTable({
     "order": [[ 0, "asc" ]],
-    "lengthMenu": [[5], ["5"]]
+    "lengthMenu": [[10], ["10"]]
   });
   popup_table_sell = $("#popup-table-sell").DataTable({
     "order": [[ 0, "desc" ]],
-    "lengthMenu": [[5], ["5"]]
+    "lengthMenu": [[10], ["10"]]
   });
 
   getMoreItems();

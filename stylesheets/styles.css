@@ -251,6 +251,10 @@ span.avoidwrap { display:inline-block; }
     .title {
         width: 400px;
     }
+    .modal-dialog {
+        width: 415px;
+        margin: 30px auto;
+    }
 }
 
 /* Small devices (tablets, 768px and up) */
@@ -268,6 +272,10 @@ span.avoidwrap { display:inline-block; }
     .minor-text, li, td, th {
         font-size: 12px !important;
     }
+    .modal-dialog {
+        width: 720px;
+        margin: 30px auto;
+    }
 }
 
 /* Medium devices (desktops, 992px and up) */
@@ -283,5 +291,9 @@ span.avoidwrap { display:inline-block; }
     }
     .minor-text, li, td, th {
         font-size: 14px !important;
+    }
+    .modal-dialog {
+        width: 950px;
+        margin: 30px auto;
     }
 }
