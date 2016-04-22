@@ -14,6 +14,8 @@ It will return a lazyloaded table of trades you can make at other trade hubs. Al
 ## Patch v1.2.2
 * Added YUI Compressor and Scripts to automatically created and deposit minimized code to proper directories
 * Improved Trade info layout to use bootstrap columns
+* Removed unused log statements
+* Trade info sets to fixed decimals to improve sorting
 
 ## Patch v1.2.1
 * Lazy load the item IDs from EVE's API and shuffles them
