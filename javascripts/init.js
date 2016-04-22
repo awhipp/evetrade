@@ -144,7 +144,7 @@ function open_popup(itemId, name, location){
 
   for(var i = 0; i < buyArr.length; i++){
     if(buyArr[i]){
-      $('#popup-table-buy').dataTable().fnAddData([numberWithCommas(buyArr[i][0]), numberWithCommas(buyArr[i][1])]);
+      $('#popup-table-buy').dataTable().fnAddData([numberWithCommas(buyArr[i][0].toFixed(2)), numberWithCommas(buyArr[i][1].toFixed())]);
     }
   }
 
@@ -162,7 +162,7 @@ function open_popup(itemId, name, location){
 
   for(var i = 0; i < sellArr.length; i++){
     if(sellArr[i]){
-      $('#popup-table-sell').dataTable().fnAddData([numberWithCommas(sellArr[i][0]), numberWithCommas(sellArr[i][1])]);
+      $('#popup-table-sell').dataTable().fnAddData([numberWithCommas(sellArr[i][0].toFixed(2)), numberWithCommas(sellArr[i][1].toFixed())]);
     }
   }
 

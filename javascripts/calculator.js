@@ -401,9 +401,6 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
     if (orderType == "sell"){
         saveBuyData(stationId, itemId, $.extend(true, [], bestPrice));
         bestPrice = bestPrice.sort(buyComparator);
-        if(itemId == 34){
-            console.log(bestPrice);
-        }
         if(bestPrice.length > NUMBER_RETURNED-1){
             return bestPrice.splice(0,NUMBER_RETURNED);
         }else{
