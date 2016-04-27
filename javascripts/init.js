@@ -23,8 +23,8 @@ var start_location = "";
 var popup_table_buy;
 var popup_table_sell;
 
-var IGNORE_STRING;
 var page = 1;
+var has_shown = false;
 var curr;
 
 //https://public-crest.eveonline.com
@@ -176,9 +176,10 @@ function open_popup(itemId, name, location){
 }
 
 function unreachable(){
-  if($("#unreachable").is(":hidden")){
+  if(!has_shown && $("#unreachable").is(":hidden")){
     $("#unreachable").hide();
     $("#unreachable").slideToggle();
+    has_shown = true;
   }
 }
 
