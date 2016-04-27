@@ -25,13 +25,16 @@ var popup_table_sell;
 
 var IGNORE_STRING;
 var page = 1;
-
 var curr;
+
+//https://public-crest.eveonline.com
+var ENDPOINT = "https://crest-tq.eveonline.com";
 
 function getMoreItems(){
   $.ajax({
     type: "get",
-    url: "https://public-crest.eveonline.com/market/types/?page=" + page,
+    dataType: "json",
+    url: ENDPOINT + "/market/types/?page=" + page,
     success: function(data){
       if(data && data.items){
         var items = shuffle(data.items);
@@ -52,12 +55,13 @@ function getMoreItems(){
       }
     },
     error: function (request, error) {
-      unreachable();
+      getMoreItems();
     }
   });
 }
 
 $( document ).ready(function() {
+
   $("#loading").show();
   $("#selection").hide();
 
@@ -172,7 +176,6 @@ function open_popup(itemId, name, location){
 }
 
 function unreachable(){
-  itemIds = [];
   if($("#unreachable").is(":hidden")){
     $("#unreachable").hide();
     $("#unreachable").slideToggle();

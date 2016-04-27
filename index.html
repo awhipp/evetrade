@@ -50,14 +50,6 @@
       </div>
     </div>
   </div>
-  <div  id="unreachable">
-    <div class="container">
-      <div class="row">
-        <div class="primary-text"> Oops. We cannot seem reach EVE's servers.<br/>Sorry, but please try again later. </div>
-        <input type="button" class="btn btn-default secondary-text" onclick="$('#unreachable').slideToggle();" value="Dismiss"></input>
-      </div>
-    </div>
-  </div>
   <!-- Modal -->
   <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -104,6 +96,14 @@
     </div>
   </div>
 
+  <div  id="unreachable">
+    <div class="container">
+      <div class="row">
+        <div class="secondary-text"> EVE's servers returned some errors. Some items may be missing. </div>
+        <input type="button" class="btn btn-default minor-text" onclick="$('#unreachable').slideToggle();" value="Dismiss"></input>
+      </div>
+    </div>
+  </div>
   <div class="base">
     <div class="container">
       <div id="buyingHeader" class="primary-text"></div>

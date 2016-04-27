@@ -60,8 +60,8 @@ function getRows(){
 }
 
 function getBuyPrice(itemId, isUpdate){
-    var buyMarketUrl = "https://public-crest.eveonline.com/market/" + station_buy[0] + "/orders/sell/";
-    var buyTypeUrl = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+    var buyMarketUrl = ENDPOINT + "/market/" + station_buy[0] + "/orders/sell/";
+    var buyTypeUrl = "?type=" + ENDPOINT + "/types/" + itemId + "/";
     try{
         $.ajax({
             type: "get",
@@ -89,8 +89,8 @@ function getBuyPrice(itemId, isUpdate){
 
 function getSellPrice1(itemId, buyPrice, itemName, isUpdate){
     if(station_sell1[0] !== -1){
-        var sellMarketUrl_1 = "https://public-crest.eveonline.com/market/" + station_sell1[0] + "/orders/buy/";
-        var sellTypeUrl_1 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        var sellMarketUrl_1 = ENDPOINT + "/market/" + station_sell1[0] + "/orders/buy/";
+        var sellTypeUrl_1 = "?type=" + ENDPOINT + "/types/" + itemId + "/";
         try{
             $.ajax({
                 type: "get",
@@ -113,8 +113,8 @@ function getSellPrice1(itemId, buyPrice, itemName, isUpdate){
 
 function getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate){
     if(station_sell2[0] !== -1){
-        var sellMarketUrl_2 = "https://public-crest.eveonline.com/market/" + station_sell2[0] + "/orders/buy/";
-        var sellTypeUrl_2 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        var sellMarketUrl_2 = ENDPOINT + "/market/" + station_sell2[0] + "/orders/buy/";
+        var sellTypeUrl_2 = "?type=" + ENDPOINT + "/types/" + itemId + "/";
         try{
             $.ajax({
                 type: "get",
@@ -137,8 +137,8 @@ function getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate){
 
 function getSellPrice3(itemId, buyPrice, itemName, sellPrice1, sellPrice2, isUpdate){
     if(station_sell3[0] !== -1){
-        var sellMarketUrl_3 = "https://public-crest.eveonline.com/market/" + station_sell3[0] + "/orders/buy/";
-        var sellTypeUrl_3 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        var sellMarketUrl_3 = ENDPOINT + "/market/" + station_sell3[0] + "/orders/buy/";
+        var sellTypeUrl_3 = "?type=" + ENDPOINT + "/types/" + itemId + "/";
         try{
             $.ajax({
                 type: "get",
@@ -161,8 +161,8 @@ function getSellPrice3(itemId, buyPrice, itemName, sellPrice1, sellPrice2, isUpd
 
 function getSellPrice4(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPrice3, isUpdate){
     if(station_sell4[0] !== -1){
-        var sellMarketUrl_4 = "https://public-crest.eveonline.com/market/" + station_sell4[0] + "/orders/buy/";
-        var sellTypeUrl_4 = "?type=https://public-crest.eveonline.com/types/" + itemId + "/";
+        var sellMarketUrl_4 = ENDPOINT + "/market/" + station_sell4[0] + "/orders/buy/";
+        var sellTypeUrl_4 = "?type=" + ENDPOINT + "/types/" + itemId + "/";
         try{
             $.ajax({
                 type: "get",
