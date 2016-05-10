@@ -26,22 +26,28 @@ function getData(data, stationId, orderType, itemId){
 }
 
 function goAgain(){
-    $(".more").val("Loading...");
-    $(".more").prop('disabled', true);
-    getRows();
+    if(routeTrading){
+        $(".more").val("Loading...");
+        $(".more").prop('disabled', true);
+        getRowsRoute();
+    }else{
+        $(".more").val("Loading...");
+        $(".more").prop('disabled', true);
+        getRowsStation();
+    }
 }
 
-function begin(s_buy, s_sell1, s_sell2, s_sell3, s_sell4){
+function beginRoute(s_buy, s_sell1, s_sell2, s_sell3, s_sell4){
     station_buy = s_buy;
     station_sell1 = s_sell1;
     station_sell2 = s_sell2;
     station_sell3 = s_sell3;
     station_sell4 = s_sell4;
 
-    getRows();
+    getRowsRoute();
 }
 
-function getRows(){
+function getRowsRoute(){
     $("#selection").hide();
     var i;
     for(i = 0; i < itemIds.length && i < JUMPS; i++){
@@ -203,7 +209,7 @@ function getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPri
 
     for(var i = 0; i < buyPrice.length; i++){
         for(var j = 0; j < sellPrice2.length; j++){
-                var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice2[j][0], sellPrice2[j][1], station_sell2, isUpdate);
+            var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice2[j][0], sellPrice2[j][1], station_sell2, isUpdate);
             if(row.length > 0){
                 rows.push(row);
             }
@@ -221,7 +227,7 @@ function getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPri
 
     for(var i = 0; i < buyPrice.length; i++){
         for(var j = 0; j < sellPrice4.length; j++){
-                var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice4[j][0], sellPrice4[j][1], station_sell4, isUpdate);
+            var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice4[j][0], sellPrice4[j][1], station_sell4, isUpdate);
             if(row.length > 0){
                 rows.push(row);
             }
@@ -237,7 +243,6 @@ function getItemName(itemId, buyPrice, itemName, sellPrice1, sellPrice2, sellPri
         window.setTimeout(goAgain(), SECOND_DELAY);
     }
 }
-
 
 function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, station, isUpdate){
     if(b_price < s_price && s_price > 0){

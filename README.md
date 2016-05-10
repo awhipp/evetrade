@@ -1,7 +1,10 @@
-# Crest Trade Finder v1.2.3
+# Crest Trade Finder v2.0
 
 ## About
-Implements the EVE Crest API to find the best trades between the major trade hubs.
+Implements the EVE Crest API to find:
+* the best trades between the major trade hubs.
+* the best margins inside your own station
+
 Select which of the 5 trade hubs you are docked in:
 * Amarr
 * Dodixie
@@ -11,23 +14,20 @@ Select which of the 5 trade hubs you are docked in:
 
 It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-## Patch v1.2.3
-* Made error messages more hospitable and do not show up multiple times
-* Updated endpoint to not receive CORS as frequently
-
-## Patch v1.2.2
-* Added YUI Compressor and Scripts to automatically created and deposit minimized code to proper directories
-* Improved Trade info layout to use bootstrap columns
-* Removed unused log statements
-* Trade info sets to fixed decimals to improve sorting
-
-## Patch v1.2.1
-* Lazy load the item IDs from EVE's API and shuffles them
+## "Margin Trading" Update v2.0
+* Added functionality for margin trading within a station
 
 ## The "App-in-an-App" Update v1.2
 * Allows user to view all active orders - buy and sell for a specific item on shift + click
 * Only ctrl + click selects all now
 * Updates algorithm to return better profit results
+* Lazy load the item IDs from EVE's API and shuffles them
+* Added YUI Compressor and Scripts to automatically created and deposit minimized code to proper directories
+* Improved Trade info layout to use bootstrap columns
+* Removed unused log statements
+* Trade info sets to fixed decimals to improve sorting
+* Made error messages more hospitable and do not show up multiple times
+* Updated endpoint to not receive CORS as frequently
 
 ## The "Increased Functionality" Update v1.1
 * Minified CSS and Javascript to improve performance
