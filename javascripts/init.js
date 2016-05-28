@@ -289,6 +289,9 @@ function init(){
         station_sell3 = add_rens ? RENS : IGNORE;
         station_sell4 = add_jita ? JITA : IGNORE;
     }
+    $("#title-banner").slideToggle();
+    $(".ad-left").css("opacity", 1);
+    $(".ad-right").css("opacity", 1);
     if(routeTrading){
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th></tr></thead>")
             $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
