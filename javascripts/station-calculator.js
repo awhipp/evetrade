@@ -15,8 +15,6 @@ function getRowsStation(){
         length = itemIds[i];
     }
     if(i >= itemIds.length){
-        $(".more").val("Finished");
-        $(".more").prop('disabled', true);
         $('#stop').val('Finished');
         $('#stop').prop('disabled', true);
         itemIds = [];
@@ -112,9 +110,9 @@ function addMarginRow(itemId, itemName, sellPrice, buyPrice){
                 }
             } );
 
-            $(".more").show();
             $("label > input").addClass("form-control").addClass("minor-text");
             $("label > input").attr("placeholder", "Search Results...");
+            $(".loading").hide();
             $('#dataTable').show();
         }
 

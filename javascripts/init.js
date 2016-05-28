@@ -91,7 +91,6 @@ function setup(tradeType){
 
 
 $( document ).ready(function() {
-
     $("#loading").show();
     $("#selection").hide();
 
@@ -243,10 +242,6 @@ function init(){
         return;
     }else{
         $(".error").hide();
-        $(".more").val("Loading...");
-        $(".more").show();
-        $(".scroll").show();
-        $(".more").prop('disabled',true);
         $("#selection").hide();
         $("#stop").show();
     }
@@ -290,8 +285,6 @@ function init(){
         station_sell4 = add_jita ? JITA : IGNORE;
     }
     $("#title-banner").slideToggle();
-    $(".ad-left").css("opacity", 1);
-    $(".ad-right").css("opacity", 1);
     if(routeTrading){
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th></tr></thead>")
             $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
@@ -316,7 +309,7 @@ function init(){
         if(including.length > 0){
             including = "( routes to " + including.substring(0,including.length-2) + " )";
         }
-        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span>");
+        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
         beginRoute(station_buy,station_sell1,station_sell2,station_sell3,station_sell4);

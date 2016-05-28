@@ -27,12 +27,8 @@ function getData(data, stationId, orderType, itemId){
 
 function goAgain(){
     if(routeTrading){
-        $(".more").val("Loading...");
-        $(".more").prop('disabled', true);
         getRowsRoute();
     }else{
-        $(".more").val("Loading...");
-        $(".more").prop('disabled', true);
         getRowsStation();
     }
 }
@@ -56,8 +52,6 @@ function getRowsRoute(){
         length = itemIds[i];
     }
     if(i >= itemIds.length){
-        $(".more").val("Finished");
-        $(".more").prop('disabled', true);
         $('#stop').val('Finished');
         $('#stop').prop('disabled', true);
         itemIds = [];
@@ -321,9 +315,9 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
                 getBuyPrice($(this).attr('id').split("-")[0], true);
             }
         } );
-        $(".more").show();
         $("label > input").addClass("form-control").addClass("minor-text");
         $("label > input").attr("placeholder", "Search Results...");
+        $(".loading").hide();
         $('#dataTable').show();
     }
 

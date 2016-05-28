@@ -2,6 +2,10 @@ body {
     font-family: 'Montserrat', sans-serif !important;
 }
 
+hr {
+  opacity: 0;
+}
+
 .header {
     background: black; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(black 75%, #336699); /* For Safari 5.1 to 6.0 */
@@ -14,24 +18,15 @@ body {
     padding: 1em;
 }
 
-.ad-left {
+.ad{
+  opacity: 0;
+  position: fixed;
+  bottom: 0;
   left: 0;
-  min-width: 160px;
-  position: absolute;
-  opacity: 0;
-   transition: opacity 1s ease-in-out;
-   -moz-transition: opacity 1s ease-in-out;
-   -webkit-transition: opacity 1s ease-in-out;
-}
-
-.ad-right {
-  right:0;
-  min-width: 160px;
-  position: absolute;
-  opacity: 0;
-   transition: opacity .25s ease-in-out;
-   -moz-transition: opacity .25s ease-in-out;
-   -webkit-transition: opacity .25s ease-in-out;
+  z-index: 1000;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .container {
@@ -54,8 +49,6 @@ body {
     background-color: #e7e7e7;
     padding-top: 1em;
     padding-bottom: 2em;
-    min-height: 650px;
-    max-height: 650px;
 }
 
 .noselect {
@@ -72,6 +65,7 @@ footer {
     text-align:center;
     border-top: 1px #ccc solid;
     padding-top: 2em;
+    padding-bottom: 100px;
 }
 
 input[type="button"]{
@@ -101,13 +95,12 @@ input[type="button"]:hover{
 
 .dataTables_wrapper {
     padding: 0;
-    overflow-y: scroll;
-    margin-right: 170px;
-    margin-left: 170px;
+    overflow-y: none;
+    overflow-x: auto;
     padding-bottom: 1em;
-    width: auto;
-    min-height: 520px;
-    max-height: 520px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .dataTables_info{
@@ -158,14 +151,13 @@ a > img:hover {
     background-color: white;
 }
 
-.more, .scroll {
-    display: none;
+.loading {
+    color: #336699;
+    font-weight: bolder;
+    margin-top: 2em;
+    font-size: 200%;
 }
 
-.more:hover{
-    color: black !important;
-    background-color: white;
-}
 
 .sorting, .sorting_desc, .sorting_asc {
     text-align: center;
@@ -312,7 +304,6 @@ span.avoidwrap { display:inline-block; }
     }
 }
 
-/* Medium devices (desktops, 992px and up) */
 @media ( min-width : 992px) {
     .title {
         width: 600px;
@@ -326,6 +317,7 @@ span.avoidwrap { display:inline-block; }
     .minor-text, li, td, th {
         font-size: 14px !important;
     }
+
     .modal-dialog {
         width: 950px;
         margin: 30px auto;
