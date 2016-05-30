@@ -80,7 +80,52 @@ input[type="button"]:hover{
     background-color: #336699;
 }
 
-#dataTable, #dataTable_length, #dataTable_paginate {
+#show-hide{
+    display: none;
+}
+
+.dropdown {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#colvis {
+    background: white !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid black !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 25em;
+}
+
+#colvis > li {
+    background: transparent !important;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:center;
+}
+
+.colvistoggle {
+    width: 20em;
+    text-align:center;
+}
+
+.is-true{
+    background-color: #1B5E20;
+    color: white;
+    margin: 0 !important;
+}
+
+.is-false{
+    background-color: #D50000;
+    color: white;
+    margin: 0 !important;
+}
+
+#dataTable, #dataTable_length, #dataTable_paginate, #dataTable_filter {
     display: none;
 }
 

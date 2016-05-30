@@ -14,8 +14,8 @@ Select which of the 5 trade hubs you are docked in:
 
 It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-## V2.1 Patch
-* Addition of AdSense ads. Will need to improve to be mobile responsive.
+## V2.1 Filter Patch
+* Addition of filtering of columns with preset columns to make tables a little more mobile responsive on small width screens.
 
 ## "Margin Trading" Update v2.0
 * Added functionality for margin trading within a station

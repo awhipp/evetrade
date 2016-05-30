@@ -280,6 +280,60 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
             "order": [[ PROFIT_INDEX, "desc" ]],
             "lengthMenu": [[-1], ["All"]]
         });
+
+        // for each column in header add a togglevis button in the div
+        var li_counter = 0;
+        $("#dataTable thead th").each( function ( i ) {
+            var name = dt.column( i ).header();
+            var spanelt = document.createElement( "button" );
+            var initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
+            spanelt.innerHTML = name.innerHTML;
+
+            $(spanelt).addClass("colvistoggle");
+            $(spanelt).addClass("btn");
+            $(spanelt).addClass("btn-default");
+            $(spanelt).attr("colidx",i);		// store the column idx on the button
+
+            $(spanelt).addClass("is-true");
+            var column = dt.column( $(spanelt).attr('colidx') );
+            column.visible( true );
+
+            for(var i = 0; i < initial_removed.length; i++){
+                if(spanelt.innerHTML === initial_removed[i]){
+                    $(spanelt).addClass("is-false");
+                    var column = dt.column( $(spanelt).attr('colidx') );
+                    column.visible( false );
+                    break;
+                }
+            }
+
+            $(spanelt).on( 'click', function (e) {
+                e.preventDefault();
+                // Get the column API object
+                var column = dt.column( $(this).attr('colidx') );
+                // Toggle the visibility
+                $(this).removeClass("is-"+column.visible());
+                column.visible( ! column.visible() );
+                $(this).addClass("is-"+column.visible());
+
+            });
+            var li = document.createElement("li");
+            $(li).append($(spanelt));
+            $("#colvis").append($(li));
+        });
+
+        $("#show-hide").show();
+
+        // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
+        $('.dropdown').on('show.bs.dropdown', function(e){
+            $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+        });
+
+        // ADD SLIDEUP ANIMATION TO DROPDOWN //
+        $('.dropdown').on('hide.bs.dropdown', function(e){
+            $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+        });
+
         $('#dataTable tbody').on('mousedown', 'tr', function (event) {
             if(event.which === 1){
                 if(event.ctrlKey){

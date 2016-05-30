@@ -287,8 +287,8 @@ function init(){
     $("#title-banner").slideToggle();
     if(routeTrading){
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th></tr></thead>")
-            $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
-            $("#buyingHeader").text("Buying from " + location);
+        $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
+        $("#buyingHeader").text("Buying from " + location);
 
         var including = "";
         if(add_jita && location !== "Jita"){
@@ -315,7 +315,9 @@ function init(){
         beginRoute(station_buy,station_sell1,station_sell2,station_sell3,station_sell4);
     }else{
         $("#buyingHeader").text("Station Trading at " + location);
-        $("#buyingFooter").html("<br/>Margins between " + threshold_lower + " and " + threshold_upper);
+        $("#buyingFooter").html("Margins between " + threshold_lower + " and " + threshold_upper + "<div class='loading'>Loading. Please wait...</div>");
+        $("#buyingFooter").show();
+        $("#buyingHeader").show();
 
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Sell Price</th><th>Profit Per Item</th><th>Margin</th></tr></thead>");
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
