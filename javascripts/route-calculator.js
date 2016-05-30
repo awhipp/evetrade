@@ -286,7 +286,10 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
         $("#dataTable thead th").each( function ( i ) {
             var name = dt.column( i ).header();
             var spanelt = document.createElement( "button" );
-            var initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
+            var initial_removed = [];
+            if($(document).width() < 768){
+                initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
+            }
             spanelt.innerHTML = name.innerHTML;
 
             $(spanelt).addClass("colvistoggle");
