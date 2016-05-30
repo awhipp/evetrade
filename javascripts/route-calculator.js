@@ -348,7 +348,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
                         })
                     }
                 }else if(event.shiftKey){
-                    open_popup($(this).attr('id').split("-")[0], $(this).children()[0].textContent, $(this).children()[4].textContent);
+                    open_popup($(this).attr('id').split("-")[0], $(this).children()[0].textContent,$(this).attr('id').split("-")[1]);
                 }else{
                     if(!$(this).hasClass("row-selected")){
                         $(this).addClass("row-selected");
