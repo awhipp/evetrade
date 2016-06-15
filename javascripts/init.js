@@ -32,7 +32,7 @@ var page = 1;
 var has_shown = false;
 var curr;
 
-//https://public-crest.eveonline.com
+//var ENDPOINT = "https://public-crest.eveonline.com";
 var ENDPOINT = "https://crest-tq.eveonline.com";
 
 function showAbout(){

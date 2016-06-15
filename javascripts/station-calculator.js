@@ -35,7 +35,7 @@ function getSingleData(data, stationId, orderType, itemId){
 
 function getBuyStationPrice(itemId, isUpdate){
     var buyMarketUrl = ENDPOINT + "/market/" + station_buy[0] + "/orders/buy/";
-    var buyTypeUrl = "?type=" + ENDPOINT + "/types/" + itemId + "/";
+    var buyTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
     try{
         $.ajax({
             type: "get",
@@ -63,7 +63,7 @@ function getBuyStationPrice(itemId, isUpdate){
 
 function getSellStationPrice(itemId, buyPrice, itemName, isUpdate){
     var sellMarketUrl = ENDPOINT + "/market/" + station_buy[0] + "/orders/sell/";
-    var sellTypeUrl = "?type=" + ENDPOINT + "/types/" + itemId + "/";
+    var sellTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
     try{
         $.ajax({
             type: "get",

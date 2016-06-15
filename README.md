@@ -1,4 +1,4 @@
-# Crest Trade Finder v2.1
+# Crest Trade Finder v2.11
 
 ## About
 Implements the EVE Crest API to find:
@@ -13,6 +13,9 @@ Select which of the 5 trade hubs you are docked in:
 * Jita
 
 It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+## V2.11 Emergency Hotfix
+* Route changed to https://crest-tq.eveonline.com/market/{ID}/orders/sell/?type=https://crest-tq.eveonline.com**/INVENTORY**/types/{TYPE}/
 
 ## V2.1 Filter Patch
 * Addition of filtering of columns with preset columns to make tables a little more mobile responsive on small width screens.
