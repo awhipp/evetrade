@@ -1,4 +1,4 @@
-# Crest Trade Finder v2.11
+# Crest Trade Finder v2.12
 
 ## About
 Implements the EVE Crest API to find:
@@ -14,21 +14,21 @@ Select which of the 5 trade hubs you are docked in:
 
 It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-## V2.12 Minor tweaks
+### V2.12 Minor tweaks
 * Removed minified files as they are minified automatically on the server
 * Updated wording and about pages to be more concise
 * Added designed and developed by fields
 
-## V2.11 Emergency Hotfix
+### V2.11 Emergency Hotfix
 * Route changed to https://crest-tq.eveonline.com/market/{ID}/orders/sell/?type=https://crest-tq.eveonline.com**/INVENTORY**/types/{TYPE}/
 
-## V2.1 Filter Patch
+### V2.1 Filter Patch
 * Addition of filtering of columns with preset columns to make tables a little more mobile responsive on small width screens.
 
-## "Margin Trading" Update v2.0
+### "Margin Trading" Update v2.0
 * Added functionality for margin trading within a station
 
-## The "App-in-an-App" Update v1.2
+### The "App-in-an-App" Update v1.2
 * Allows user to view all active orders - buy and sell for a specific item on shift + click
 * Only ctrl + click selects all now
 * Updates algorithm to return better profit results
