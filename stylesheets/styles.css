@@ -368,3 +368,7 @@ span.avoidwrap { display:inline-block; }
         margin: 30px auto;
     }
 }
+
+a[href="https://venturefocused.com"]{
+  color: #ddd;
+}
