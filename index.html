@@ -19,10 +19,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
-    <script src="javascripts/min/init.min.js"></script>
-    <script src="javascripts/min/route-calculator.min.js"></script>
-    <script src="javascripts/min/station-calculator.min.js"></script>
-    <link rel="stylesheet" href="stylesheets/min/styles.min.css">
+    <script src="javascripts/init.js"></script>
+    <script src="javascripts/route-calculator.js"></script>
+    <script src="javascripts/station-calculator.js"></script>
+    <link rel="stylesheet" href="stylesheets/styles.css">
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -44,37 +44,28 @@
         <div class="primary-text container">
             <div id="title-banner"><img class="title" src="logo.png"></img></div>
             <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="showAbout()" value="About"></input>
-            <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Reset"></input>
+            <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Restart"></input>
             <input type="button" id="stop" class="btn btn-default secondary-text" onclick="$('#stop').val('Stopped'); $('#stop').prop('disabled', true); itemIds = [];" value="Stop"></input>
             <div id="howto" class="minor-text howto">
                 <b>Select Route or Station</b>
                 <br/>Route - Find best trades between multiple trade hubs<br/>
-                <br/>Station - Find margins in one trade hub<br/>
+                Station - Find margins in one trade hub<br/><br/>
+                <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
+                <b>Designed by</b><br/>EVETrade.space<br/><br/>
+                <b>Developed by</b><br/>Venture Focused Consulting<br/><a href="https://venturefocused.com">https://venturefocused.com</a><br/><br/>
             </div>
             <div id="howto-route" class="minor-text howto">
                 <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
                 <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
                 <b>Shift + left-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
                 <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/>
-                <b>Item</b><br/>The Item name to Purchase<br/><br/>
-                <b>Buy Price</b><br/>The cost at your current trade hub per item<br/><br/>
-                <b>Buy Quantity</b><br/>Amount available for purchase at current statio<br/><br/>
-                <b>Sell Quantity</b><br/>Amount available for purchase at destination station<br/><br/>
-                <b>Recommended Quantity</b><br/>(Not Shown) Whichever is lower, Buy Quantity or Sell Quantity<br/><br/>
-                <b>Total Cost</b><br/>How much it will cost you to buy all the quantity listed<br/>(Buy Price * Recommended Quantity)<br/><br/>
-                <b>Sell At</b><br/>Your destination trade hub for this trade<br/><br/>
-                <b>Total Profit</b><br/>(Recommended Quantity * Sell Price)<br/><br/>
-                <b>Return on Investment</b><br/>(Revenue - Cost) / Cost<br/><br/>
-                <b>Sell Price</b><br/>Cost per item that the buy order is asking for at the trade hub<br/><br/>
-                <b>Profit Per Item</b><br/>(Sell Price - Buy Price)<br/><br/>
+                <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
             </div>
             <div id="howto-station" class="minor-text howto">
                 <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
-                <b>Item</b><br/>The Item name to Purchase<br/><br/>
-                <b>Buy Price</b><br/>The highest buy order at the trade hub<br/><br/>
-                <b>Sell Price</b><br/>The lowest sell order at the trade hub<br/><br/>
-                <b>Profit Per Item</b><br/>(Sell Price - Buy Price)<br/><br/>
-                <b>Margin</b><br/>Ratio between buying to selling<br/>(sellPrice - buyPrice) / sellPrice<br/>
+                <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/>
+                <b>Margin</b><br/>Ratio between buying to selling<br/>(Sell Price - Buy Price) / (Sell Price)<br/>
+                <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
             </div>
         </div>
 
@@ -210,7 +201,7 @@
                 </div>
                 <hr/>
                 <div class="row">
-                    <div class="question secondary-text"> <b> Number of trades to return (1-10) </b> </div>
+                    <div class="question secondary-text"> <b> Number of trades per item (1-10) </b> </div>
                     <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"></input>
                 </div>
                 <hr/>
@@ -231,11 +222,15 @@
                 <table id="dataTable" class="display minor-text" cellspacing="0" width="100%">
                 </table>
             </div>
+            <hr/>
+            Deal finding is dependant on connection speed. Please be patient.
         </div>
 
         <footer>
             <p><a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a></p>
-            <p>Version 2.11 | <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a> | <a href="https://datatables.net/">DataTables</a></p>
+            <b>Designed by</b> EVETrade.space<br/>
+            <b>Developed by</b> <a href="https://www.venturefocused.com">Venture Focused Consulting</a><br/>
+            Version 2.12 | <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a> | <a href="https://datatables.net/">DataTables</a><br/>
             </footer>
 
             <!--[if !IE]><script>fixScale(document);</script><![endif]-->

@@ -14,6 +14,11 @@ Select which of the 5 trade hubs you are docked in:
 
 It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
+## V2.12 Minor tweaks
+* Removed minified files as they are minified automatically on the server
+* Updated wording and about pages to be more concise
+* Added designed and developed by fields
+
 ## V2.11 Emergency Hotfix
 * Route changed to https://crest-tq.eveonline.com/market/{ID}/orders/sell/?type=https://crest-tq.eveonline.com**/INVENTORY**/types/{TYPE}/
 
