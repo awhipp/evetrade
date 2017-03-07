@@ -20,9 +20,9 @@
   <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
   <script src="javascripts/init.min.js"></script>
-  <script src="javascripts/route-calculator.min.js"></script>
-  <script src="javascripts/station-calculator.min.js"></script>
-  <link rel="stylesheet" href="stylesheets/styles.min.css">
+  <script src="javascripts/route-calculator.js"></script>
+  <script src="javascripts/station-calculator.js"></script>
+  <link rel="stylesheet" href="stylesheets/styles.css">
 
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -56,12 +56,14 @@
         <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
         <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
         <b>Shift + left-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
+        <b>Shift + left-click the header</b><br/>Multi-sort on that additional column<br/><br/>
         <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/>
         <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
       </div>
       <div id="howto-station" class="minor-text howto">
         <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
         <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/>
+        <b>Shift + left-click the header</b><br/>Multi-sort on that additional column<br/><br/>
         <b>Margin</b><br/>Ratio between buying to selling<br/>(Sell Price - Buy Price) / (Sell Price)<br/>
         <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
       </div>
@@ -231,12 +233,13 @@
       <div style="border-top: 1px solid lightgrey; margin-top: 1em; padding-top: 1em;">
         <a style="color: grey" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">We are revamping our service. Would you like to provide feedback?</a>
       </div>
+      <p>
+        <a href="release.html" target="_blank">Version 2.14 Release Notes</a><br/><br/>
+        <a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+      </p>
     </div>
     <footer>
       <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-      <!-- <p>
-        <a href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-      </p> -->
       <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
       <!-- evetrade-top -->
       <ins class="adsbygoogle"
@@ -249,8 +252,8 @@
       </script>
 
       <p style="margin-top: 1.5em">
-        &copy;2017 EVE Trade &amp; Alexander Whipp. All rights reserved.<br/>
-        Version 2.13 |
+        &copy;2016-2017 Alexander Whipp. All rights reserved.<br/>
+        Version 2.14 |
         <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a>
           | <a href="https://datatables.net/">DataTables</a>
         </p>
