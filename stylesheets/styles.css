@@ -48,7 +48,7 @@ hr {
     text-align: center;
     background-color: #e7e7e7;
     padding-top: 1em;
-    padding-bottom: 2em;
+    padding-bottom: 1em;
 }
 
 .noselect {
@@ -82,6 +82,7 @@ input[type="button"]:hover{
 
 #show-hide{
     display: none;
+    background-color: #336699;
 }
 
 .dropdown {
@@ -168,14 +169,19 @@ td {
     background-color: inherit !important;
 }
 
-a > img {
-    border: 1px white solid;
-    border-radius: 2em;
-    height: 34px;
-    transition: all 0.3s ease 0s;
+.donate{
+    position: fixed;
+    top: 1em;
+    right: 1em;
 }
 
-a > img:hover {
+.donate > img {
+    border-radius: 2em;
+    height: 34px;
+    transition: all 0.3s;
+}
+
+.donate > img:hover {
     opacity: 0.8;
     height: 38px;
 }
