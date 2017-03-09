@@ -248,7 +248,7 @@ td {
     color: white !important;
 }
 
-.end-selected {
+.end-selected, .station-selected {
     background-color: #339ab5 !important;
     color: white !important;
 }

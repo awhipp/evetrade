@@ -97,7 +97,6 @@ function setup(tradeType){
     }else{
         $("#initial_choice").hide();
         $("#station_trade").slideToggle();
-        destinations = ["Jita","Amarr"];
     }
 }
 
@@ -134,6 +133,11 @@ $( document ).ready(function() {
         }else{
             $(this).addClass("end-selected");
         }
+    });
+
+    $(".station-start").on('click', function(){
+      $(".station-start").removeClass("station-selected");
+      $(this).addClass("station-selected");
     });
 
     $("#numberInput").on('blur', updateNumber);
@@ -228,11 +232,18 @@ function init(){
     var location = start_location;
 
     var destinations = [];
-    $.each($(".end-selected"), function(){
-        destinations.push($(this).val());
-    });
+
 
     if(routeTrading == false){
+        $.each($(".station-selected"), function(){
+            start_location = "Nil";
+            location = $(this).val();
+            destinations.push($(this).val());
+            console.log(location);
+            console.log(start_location);
+            console.log(destinations);
+        });
+
         if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
             threshold_margin_lower = parseInt($("#lower-margin-threshold").val());
         }
@@ -241,6 +252,10 @@ function init(){
             threshold_margin_upper = parseInt($("#upper-margin-threshold").val());
         }
     }else{
+      $.each($(".end-selected"), function(){
+          destinations.push($(this).val());
+      });
+
       if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
           threshold_profit = parseInt($("#profit-threshold").val());
       }
@@ -258,7 +273,7 @@ function init(){
     var add_rens = destinations.indexOf("Rens") > -1 ? true : false;
     var add_hek = destinations.indexOf("Hek") > -1 ? true : false;
 
-    if((destinations.indexOf(start_location) > -1 && destinations.length == 1)|| (destinations.length == 0 || start_location === "")){
+    if((destinations.indexOf(start_location) > -1 && destinations.length == 1) || (destinations.length == 0 || start_location === "")){
         $(".error").show();
         return;
     }else{
