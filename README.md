@@ -21,6 +21,7 @@ It will return a lazy-loaded table of trades you can make at other trade hubs. A
 * Ability to filter ROI to show only rows where ROI % is greater than M on route trades
 * Ability to filter Buy Cost to show only rows where Cost is less than O on route trades
 * Fixed a bug with station trading where it shows the wrong station's information
+* Updated UI to appear a little more clean
 
 ### V2.14 Implemented Multi-sorting tables
 * Now by shift + clicking a header row you are able to sort on additional properties.

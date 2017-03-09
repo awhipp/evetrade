@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
   <script src="https://code.jquery.com/jquery-1.12.3.min.js"   integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ="   crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -136,7 +136,7 @@
     <div id="selection" class="secondary-text">
       <div id="initial_choice">
         <div class="row">
-          <div class="question primary-text"> <b>  How are you trading? </b> </div>
+          <div class="question primary-text"> How are you trading? </div>
           <div class="row">
             <input type="button" class="btn btn-default secondary-text" onclick="setup(true)" value="Route"></input>
           </div>
@@ -148,12 +148,12 @@
       <div id="station_trade">
         <div class="row">
           <div class="row">
-            <div class="col-md-offset-3 col-md-6 col-xs-offset-1 col-xs-10">
+            <div class="col-md-offset-2 col-md-8 col-xs-offset-1 col-xs-10">
               <p> Finding the most profitable items to buy low, and then sell high without leaving the station: </p>
             </div>
           </div>
-
-          <div class="question primary-text"> <b>  Station Trade at </b> </div>
+          <br/>
+          <div class="question primary-text"> Station Trade at </div>
           <span class="avoidwrap">
             <input type="button" class="btn btn-default secondary-text station-start" id="station_jita" value="Jita"/>
             <input type="button" class="btn btn-default secondary-text station-start" id="station_amarr" value="Amarr"/>
@@ -165,11 +165,11 @@
           </span>
           <hr/>
           <div class="row">
-            <div class="question secondary-text"> <b> Only return margins between </b> </div>
+            <div class="question secondary-text"> Only return margins between </div>
             <span class="avoidwrap">
               <input type="text" id="lower-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 30"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
               <span class="avoidwrap">
-                <div class="question secondary-text"> <b> and </b> </div>
+                <div class="question secondary-text"> and </div>
               </span>
             </span>
             <input type="text" id="upper-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 45"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
@@ -184,12 +184,13 @@
       <div id="route_trade">
         <div class="row">
           <div class="row">
-            <div class="col-md-offset-3 col-md-6 col-xs-offset-1 col-xs-10">
+            <div class="col-md-offset-2 col-md-8 col-xs-offset-1 col-xs-10">
               <p> Finding the most profitable items to buy at the start location, and sell at the end location(s): </p>
             </div>
           </div>
+          <br/>
           <div class="col-lg-2 col-lg-offset-4 col-sm-3 col-sm-offset-3 col-xs-6">
-            <div class="question primary-text"> <b>  Start </b> </div>
+            <div class="question primary-text"> Start </div>
             <input type="button" class="btn btn-default secondary-text start" id="location_jita" value="Jita"/><br/>
             <input type="button" class="btn btn-default secondary-text start" id="location_amarr" value="Amarr"/><br/>
             <input type="button" class="btn btn-default secondary-text start" id="location_dodixie" value="Dodixie"/><br/>
@@ -197,7 +198,7 @@
             <input type="button" class="btn btn-default secondary-text start" id="location_hek" value="Hek"/>
           </div>
           <div class="col-lg-2 col-sm-3 col-xs-6">
-            <div class="question primary-text"> <b> End(s) </b> </div>
+            <div class="question primary-text"> End(s) </div>
             <input type="button" class="btn btn-default secondary-text end" id="add_jita" value="Jita"/><br/>
             <input type="button" class="btn btn-default secondary-text end" id="add_amarr" value="Amarr"/><br/>
             <input type="button" class="btn btn-default secondary-text end" id="add_dodixie" value="Dodixie"/><br/>
@@ -209,21 +210,22 @@
         <div class="wrapper">
           <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
-              <div class="question secondary-text"> <b> Only return profits above </b> </div>
-              <input type="text" id="profit-threshold" class="btn btn-default minor-text" placeholder="Default: 250,000"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <div class="question secondary-text"> Only return profits above </div>
+              <input type="text" id="profit-threshold" class="btn btn-default minor-text" placeholder="Default: 100,000"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6">
-              <div class="question secondary-text"> <b> Number of trades per item (1-10) </b> </div>
+              <div class="question secondary-text"> Number of trades per item (1-10) </div>
               <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
             </div>
           </div>
+          <br/>
           <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
-              <div class="question secondary-text"> <b> Minimum Return on Investment (in %) </b> </div>
+              <div class="question secondary-text"> Minimum Return on Investment (in %) </div>
               <input type="text" id="roi-threshold" class="btn btn-default minor-text" placeholder="Default: 1"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6">
-              <div class="question secondary-text"> <b> How much are you willing to spend? </b> </div>
+              <div class="question secondary-text"> How much are you willing to spend? </div>
               <input type="text" id="buy-threshold" class="btn btn-default minor-text" placeholder="Default: Infinity"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
             </div>
           </div>
@@ -254,7 +256,7 @@
     </div>
     <footer>
       <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
       <!-- evetrade-top -->
       <ins class="adsbygoogle"
       style="display:block"
@@ -266,10 +268,10 @@
       </script>
 
       <p style="margin-top: 1.5em">
-        <a href="release.html" target="_blank">Release Notes</a>
         <div class="donate">
           <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#336699', 'A180K9');kofiwidget2.draw();</script>
         </div>
+        <a href="release.html" target="_blank">Release Notes</a>
         <!-- <a class="donate" href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> -->
         <br/>
         &copy;2016-2017 Alexander Whipp. All rights reserved.<br/>

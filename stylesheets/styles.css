@@ -1,5 +1,5 @@
 body {
-    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Roboto', sans-serif !important;
 }
 
 hr {
@@ -78,6 +78,13 @@ input[type="button"]{
 input[type="button"]:hover{
     color: white;
     background-color: #336699;
+}
+
+input[type="text"]{
+    outline: none !important;
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid grey;
 }
 
 #show-hide{
@@ -375,6 +382,9 @@ span.avoidwrap { display:inline-block; }
     }
 }
 
-a[href="https://venturefocused.com"]{
-  color: #ddd;
+.adsbygoogle{
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%,0);
 }

@@ -10,7 +10,7 @@ var NUMBER_RETURNED = 3;
 var threshold_margin_lower = 30;
 var threshold_margin_upper = 45;
 
-var threshold_profit = 250000;
+var threshold_profit = 100000;
 var threshold_roi = 1;
 var threshold_cost = 999999999999999999;
 
@@ -239,9 +239,6 @@ function init(){
             start_location = "Nil";
             location = $(this).val();
             destinations.push($(this).val());
-            console.log(location);
-            console.log(start_location);
-            console.log(destinations);
         });
 
         if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
@@ -355,7 +352,7 @@ function init(){
         beginRoute(station_buy,station_sell1,station_sell2,station_sell3,station_sell4);
     }else{
         $("#buyingHeader").text("Station Trading at " + location);
-        $("#buyingFooter").html("Margins between " + threshold_margin_lower + " and " + threshold_margin_upper + "<div class='loading'>Loading. Please wait...</div>");
+        $("#buyingFooter").html("Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
 
