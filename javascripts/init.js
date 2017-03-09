@@ -7,8 +7,12 @@ var IGNORE = [-1,-1];
 
 var NUMBER_RETURNED = 3;
 
-var threshold_lower = 30;
-var threshold_upper = 45;
+var threshold_margin_lower = 30;
+var threshold_margin_upper = 45;
+
+var threshold_profit = 250000;
+var threshold_roi = 1;
+var threshold_cost = 999999999999999999;
 
 var itemIds = [];
 var jitaBuy = [];
@@ -34,6 +38,14 @@ var curr;
 
 //var ENDPOINT = "https://public-crest.eveonline.com";
 var ENDPOINT = "https://crest-tq.eveonline.com";
+
+
+function numberWithCommas(val) {
+    while (/(\d+)(\d{3})/.test(val.toString())){
+        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
+}
 
 function showAbout(){
     if(routeTrading == null){
@@ -221,14 +233,23 @@ function init(){
     });
 
     if(routeTrading == false){
-        destinations = ["Jita", "Amarr"];
-        if($("#lower-threshold").val().length > 0 && !isNaN($("#lower-threshold").val())){
-            threshold_lower = parseInt($("#lower-threshold").val());
+        if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
+            threshold_margin_lower = parseInt($("#lower-margin-threshold").val());
         }
 
-        if($("#upper-threshold").val().length > 0 && !isNaN($("#upper-threshold").val())){
-            threshold_upper = parseInt($("#upper-threshold").val());
+        if($("#upper-margin-threshold").val().length > 0 && !isNaN($("#upper-margin-threshold").val())){
+            threshold_margin_upper = parseInt($("#upper-margin-threshold").val());
         }
+    }else{
+      if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
+          threshold_profit = parseInt($("#profit-threshold").val());
+      }
+      if($("#roi-threshold").val().length > 0 && !isNaN($("#roi-threshold").val())){
+          threshold_roi = parseInt($("#roi-threshold").val());
+      }
+      if($("#buy-threshold").val().length > 0 && !isNaN($("#buy-threshold").val())){
+          threshold_cost = parseInt($("#buy-threshold").val());
+      }
     }
 
     var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
@@ -307,7 +328,11 @@ function init(){
             including += "Hek, ";
         }
         if(including.length > 0){
-            including = "( routes to " + including.substring(0,including.length-2) + " )";
+            including = "( routes to " + including.substring(0,including.length-2) + " )<br/>";
+        }
+        including += "ROI Greater Than " + threshold_roi + "% | Profits Greater Than " + numberWithCommas(threshold_profit) + " ISK";
+        if(threshold_cost !== 999999999999999999){
+          including += " | Buy Costs Less Than " + numberWithCommas(threshold_cost) + " ISK";
         }
         $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
@@ -315,7 +340,7 @@ function init(){
         beginRoute(station_buy,station_sell1,station_sell2,station_sell3,station_sell4);
     }else{
         $("#buyingHeader").text("Station Trading at " + location);
-        $("#buyingFooter").html("Margins between " + threshold_lower + " and " + threshold_upper + "<div class='loading'>Loading. Please wait...</div>");
+        $("#buyingFooter").html("Margins between " + threshold_margin_lower + " and " + threshold_margin_upper + "<div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
 

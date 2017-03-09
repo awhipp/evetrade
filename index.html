@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <title>Realtime EVE Online Market Trading Tool</title>
+  <title>Realtime EVE Online Market Trading Tool | Hauling & Station Trading</title>
   <meta name="Description" content="The EVE Online trading tool that allows you to find out what items to trade between stations. This tool enables making millions of ISK through hauling or station trading.">
   <meta name="Keywords" content="eve, eve online, isk, market, eve market, jita, amarr, dodixie, rens, hek, trade, trade finder, tradefinder, help, hauling, haul, route, buy, sell">
   <meta name="google-site-verification" content="g0f9bRd7w4GdyAXj5bzHhlW725kHswcpIgkzqdEum9s" />
@@ -167,12 +167,12 @@
           <div class="row">
             <div class="question secondary-text"> <b> Only return margins between </b> </div>
             <span class="avoidwrap">
-              <input type="text" id="lower-threshold" class="btn btn-default minor-text" placeholder="Default: 30"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <input type="text" id="lower-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 30"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
               <span class="avoidwrap">
                 <div class="question secondary-text"> <b> and </b> </div>
               </span>
             </span>
-            <input type="text" id="upper-threshold" class="btn btn-default minor-text" placeholder="Default: 45"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+            <input type="text" id="upper-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 45"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
           </div>
           <hr/>
           <div class="row">
@@ -206,9 +206,27 @@
           </div>
         </div>
         <hr/>
-        <div class="row">
-          <div class="question secondary-text"> <b> Number of trades per item (1-10) </b> </div>
-          <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+        <div class="wrapper">
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
+              <div class="question secondary-text"> <b> Only return profits above </b> </div>
+              <input type="text" id="profit-threshold" class="btn btn-default minor-text" placeholder="Default: 250,000"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+              <div class="question secondary-text"> <b> Number of trades per item (1-10) </b> </div>
+              <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
+              <div class="question secondary-text"> <b> Minimum Return on Investment (in %) </b> </div>
+              <input type="text" id="roi-threshold" class="btn btn-default minor-text" placeholder="Default: 1"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+              <div class="question secondary-text"> <b> How much are you willing to spend? </b> </div>
+              <input type="text" id="buy-threshold" class="btn btn-default minor-text" placeholder="Default: Infinity"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+            </div>
+          </div>
         </div>
         <div class="row">
           <div class="error question secondary-text"> A starting point, and at least one destination is required. </div>
@@ -227,8 +245,8 @@
           <table id="dataTable" class="display minor-text" cellspacing="0" width="100%">
           </table>
           <hr/>
-          Deal finding is dependant on connection speed. Please be patient.<br>
-          Best viewed on a laptop or desktop.
+          Deal finding is dependant on connection speed and number of filters. <br>
+          Please be patient. Best viewed on a laptop or desktop.
       </div>
       <div style="border-top: 1px solid lightgrey; margin-top: 1em; padding-top: 1em;">
         <a style="color: grey" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">We are revamping our service. Would you like to provide feedback?</a>
@@ -252,7 +270,7 @@
         <a class="donate" href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
         <br/>
         &copy;2016-2017 Alexander Whipp. All rights reserved.<br/>
-        Version 2.14 |
+        Version 2.15 |
         <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a>
           | <a href="https://datatables.net/">DataTables</a>
         </p>

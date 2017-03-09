@@ -1,4 +1,4 @@
-# EVE Trade Finder v2.14
+# EVE Trade Finder v2.15
 
 ## About
 Implements the EVE Crest API to find:
@@ -14,7 +14,13 @@ Select which of the 5 trade hubs you are docked in:
 * Hek
 * Jita
 
-It will return a lazyloaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+It will return a lazy-loaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+### V2.15 Implemented Profit filtering
+* Ability to filter profits to show only rows where ISK is greater than N on route trades
+* Ability to filter ROI to show only rows where ROI % is greater than M on route trades
+* Ability to filter Buy Cost to show only rows where Cost is less than O on route trades
+* Fixed a bug with station trading where it shows the wrong station's information
 
 ### V2.14 Implemented Multi-sorting tables
 * Now by shift + clicking a header row you are able to sort on additional properties.

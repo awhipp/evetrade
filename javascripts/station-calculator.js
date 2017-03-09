@@ -92,7 +92,7 @@ function addMarginRow(itemId, itemName, sellPrice, buyPrice){
     var profit_per_item = sellPrice-buyPrice;
     var margin = (sellPrice - buyPrice) / sellPrice;
 
-    if(margin*100 >= threshold_lower && margin*100 <= threshold_upper){
+    if(margin*100 >= threshold_margin_lower && margin*100 <= threshold_margin_upper){
 
         if(!created){
             created = true;

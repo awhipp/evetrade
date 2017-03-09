@@ -9,13 +9,6 @@ var dt;
 
 var station_buy, station_sell1, station_sell2, station_sell3, station_sell4;
 
-function numberWithCommas(val) {
-    while (/(\d+)(\d{3})/.test(val.toString())){
-        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-    }
-    return val;
-}
-
 function getData(data, stationId, orderType, itemId){
     if (typeof(data) == "string")  {
         return [data];
@@ -274,143 +267,145 @@ function checkRow(row_id){
 function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate){
     var id = itemId + "-" + location;
 
-    if(!created){
-        created = true;
-        dt = $('#dataTable').DataTable({
-            "order": [[ PROFIT_INDEX, "desc" ]],
-            "lengthMenu": [[-1], ["All"]]
-        });
+    if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost){
+      if(!created){
+          created = true;
+          dt = $('#dataTable').DataTable({
+              "order": [[ PROFIT_INDEX, "desc" ]],
+              "lengthMenu": [[-1], ["All"]]
+          });
 
-        // for each column in header add a togglevis button in the div
-        var li_counter = 0;
-        $("#dataTable thead th").each( function ( i ) {
-            var name = dt.column( i ).header();
-            var spanelt = document.createElement( "button" );
-            var initial_removed = [];
-            if($(document).width() < 768){
-                initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
-            }
-            spanelt.innerHTML = name.innerHTML;
+          // for each column in header add a togglevis button in the div
+          var li_counter = 0;
+          $("#dataTable thead th").each( function ( i ) {
+              var name = dt.column( i ).header();
+              var spanelt = document.createElement( "button" );
+              var initial_removed = [];
+              if($(document).width() < 768){
+                  initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
+              }
+              spanelt.innerHTML = name.innerHTML;
 
-            $(spanelt).addClass("colvistoggle");
-            $(spanelt).addClass("btn");
-            $(spanelt).addClass("btn-default");
-            $(spanelt).attr("colidx",i);		// store the column idx on the button
+              $(spanelt).addClass("colvistoggle");
+              $(spanelt).addClass("btn");
+              $(spanelt).addClass("btn-default");
+              $(spanelt).attr("colidx",i);		// store the column idx on the button
 
-            $(spanelt).addClass("is-true");
-            var column = dt.column( $(spanelt).attr('colidx') );
-            column.visible( true );
+              $(spanelt).addClass("is-true");
+              var column = dt.column( $(spanelt).attr('colidx') );
+              column.visible( true );
 
-            for(var i = 0; i < initial_removed.length; i++){
-                if(spanelt.innerHTML === initial_removed[i]){
-                    $(spanelt).addClass("is-false");
-                    var column = dt.column( $(spanelt).attr('colidx') );
-                    column.visible( false );
-                    break;
-                }
-            }
+              for(var i = 0; i < initial_removed.length; i++){
+                  if(spanelt.innerHTML === initial_removed[i]){
+                      $(spanelt).addClass("is-false");
+                      var column = dt.column( $(spanelt).attr('colidx') );
+                      column.visible( false );
+                      break;
+                  }
+              }
 
-            $(spanelt).on( 'click', function (e) {
-                e.preventDefault();
-                // Get the column API object
-                var column = dt.column( $(this).attr('colidx') );
-                // Toggle the visibility
-                $(this).removeClass("is-"+column.visible());
-                column.visible( ! column.visible() );
-                $(this).addClass("is-"+column.visible());
+              $(spanelt).on( 'click', function (e) {
+                  e.preventDefault();
+                  // Get the column API object
+                  var column = dt.column( $(this).attr('colidx') );
+                  // Toggle the visibility
+                  $(this).removeClass("is-"+column.visible());
+                  column.visible( ! column.visible() );
+                  $(this).addClass("is-"+column.visible());
 
-            });
-            var li = document.createElement("li");
-            $(li).append($(spanelt));
-            $("#colvis").append($(li));
-        });
+              });
+              var li = document.createElement("li");
+              $(li).append($(spanelt));
+              $("#colvis").append($(li));
+          });
 
-        $("#show-hide").show();
+          $("#show-hide").show();
 
-        // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
-        $('.dropdown').on('show.bs.dropdown', function(e){
-            $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
-        });
+          // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
+          $('.dropdown').on('show.bs.dropdown', function(e){
+              $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+          });
 
-        // ADD SLIDEUP ANIMATION TO DROPDOWN //
-        $('.dropdown').on('hide.bs.dropdown', function(e){
-            $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
-        });
+          // ADD SLIDEUP ANIMATION TO DROPDOWN //
+          $('.dropdown').on('hide.bs.dropdown', function(e){
+              $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+          });
 
-        $('#dataTable tbody').on('mousedown', 'tr', function (event) {
-            if(event.which === 1){
-                if(event.ctrlKey){
-                    var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
-                    if(!$(this).hasClass("row-selected")){
-                        $.each($("."+classToFind), function(){
-                            $(this).addClass("row-selected");
-                        })
-                    }else{
-                        $.each($("."+classToFind), function(){
-                            $(this).removeClass("row-selected");
-                        })
-                    }
-                }else if(event.shiftKey){
-                    open_popup($(this).attr('id').split("-")[0], $(this).children()[0].textContent,$(this).attr('id').split("-")[1]);
-                }else{
-                    if(!$(this).hasClass("row-selected")){
-                        $(this).addClass("row-selected");
-                    }else{
-                        $(this).removeClass("row-selected");
-                    }
-                }
-            }else if(event.which === 3){
-                var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
-                if(document.getElementsByClassName(id)){
-                    var row = $("." + classToFind);
-                    $.each(row, function(){
-                        $(this).addClass("updating");
-                        window.setTimeout(function(){ UPDATING_CHECK.push($(this).attr('id')); checkRow(); }, UPDATING_TIMEOUT);
-                    });
-                }
+          $('#dataTable tbody').on('mousedown', 'tr', function (event) {
+              if(event.which === 1){
+                  if(event.ctrlKey){
+                      var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
+                      if(!$(this).hasClass("row-selected")){
+                          $.each($("."+classToFind), function(){
+                              $(this).addClass("row-selected");
+                          })
+                      }else{
+                          $.each($("."+classToFind), function(){
+                              $(this).removeClass("row-selected");
+                          })
+                      }
+                  }else if(event.shiftKey){
+                      open_popup($(this).attr('id').split("-")[0], $(this).children()[0].textContent,$(this).attr('id').split("-")[1]);
+                  }else{
+                      if(!$(this).hasClass("row-selected")){
+                          $(this).addClass("row-selected");
+                      }else{
+                          $(this).removeClass("row-selected");
+                      }
+                  }
+              }else if(event.which === 3){
+                  var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
+                  if(document.getElementsByClassName(id)){
+                      var row = $("." + classToFind);
+                      $.each(row, function(){
+                          $(this).addClass("updating");
+                          window.setTimeout(function(){ UPDATING_CHECK.push($(this).attr('id')); checkRow(); }, UPDATING_TIMEOUT);
+                      });
+                  }
 
-                getBuyPrice($(this).attr('id').split("-")[0], true);
-            }
-        } );
-        $("label > input").addClass("form-control").addClass("minor-text");
-        $("label > input").attr("placeholder", "Search Results...");
-        $(".loading").hide();
-        $('#dataTable').show();
-    }
+                  getBuyPrice($(this).attr('id').split("-")[0], true);
+              }
+          } );
+          $("label > input").addClass("form-control").addClass("minor-text");
+          $("label > input").attr("placeholder", "Search Results...");
+          $(".loading").hide();
+          $('#dataTable').show();
+      }
 
-    var row_data = [
-        itemName,
-        numberWithCommas(buyPrice.toFixed(2)),
-        numberWithCommas(buyCost.toFixed(2)),
-        buyVolume.split("-")[0],
-        location,
-        buyVolume.split("-")[1],
-        numberWithCommas(profit.toFixed(2)),
-        (iskRatio.toFixed(3)*100).toFixed(1)+"%",
-        numberWithCommas(sellPrice.toFixed(2)),
-        numberWithCommas(itemProfit.toFixed(2))
-    ];
+      var row_data = [
+          itemName,
+          numberWithCommas(buyPrice.toFixed(2)),
+          numberWithCommas(buyCost.toFixed(2)),
+          buyVolume.split("-")[0],
+          location,
+          buyVolume.split("-")[1],
+          numberWithCommas(profit.toFixed(2)),
+          (iskRatio.toFixed(3)*100).toFixed(1)+"%",
+          numberWithCommas(sellPrice.toFixed(2)),
+          numberWithCommas(itemProfit.toFixed(2))
+      ];
 
-    if(isUpdate && document.getElementsByClassName(id).length > 0){
-        var row = $("." + id);
-        var found = false;
-        $.each(row, function(){
-            if(!found && $(this).hasClass("updating")){
-                found = true;
-                var counter = 0;
-                $.each($(this).children(), function(){
-                    $(this).html(row_data[counter]);
-                    counter++;
+      if(isUpdate && document.getElementsByClassName(id).length > 0){
+          var row = $("." + id);
+          var found = false;
+          $.each(row, function(){
+              if(!found && $(this).hasClass("updating")){
+                  found = true;
+                  var counter = 0;
+                  $.each($(this).children(), function(){
+                      $(this).html(row_data[counter]);
+                      counter++;
 
-                });
-                $(this).removeClass("updating");
-            }
-        });
-    }else{
-        var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
-        var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
-        $(row).attr('id', id + "-" + $("." + id).length);
-        $(row).addClass(id);
+                  });
+                  $(this).removeClass("updating");
+              }
+          });
+      }else{
+          var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
+          var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
+          $(row).attr('id', id + "-" + $("." + id).length);
+          $(row).addClass(id);
+      }
     }
 }
 
