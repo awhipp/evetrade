@@ -381,3 +381,10 @@ span.avoidwrap { display:inline-block; }
         margin: 30px auto;
     }
 }
+
+.adsbygoogle > ins{
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  transform: translate(-50%,0) !important;
+}
