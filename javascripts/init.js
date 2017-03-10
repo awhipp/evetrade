@@ -346,8 +346,6 @@ function init(){
         $("#stop").show();
     }
 
-    console.log(destinations[0]);
-    console.log(start_location);
     if(isCustom && (destinations[0] === "None" || start_location === "None")){
         $(".error").show();
         $("#selection").show();
