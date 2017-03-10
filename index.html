@@ -281,14 +281,23 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
     <style>
-    .adsbygoogle{
-      width: 100%;
-    }
+    /* Small devices (tablets, 768px and up) */
     .adsbygoogle > ins{
-      position: fixed !important;
-      bottom: 0 !important;
-      left: 50% !important;
-      transform: translate(-50%,0) !important;
+        position: relative !important;
+        bottom: inherit !important;
+        left: inherit !important;
+        transform: none !important;
+    }
+    @media ( min-width : 768px) {
+        .adsbygoogle{
+          width: 100%;
+        }
+        .adsbygoogle > ins{
+          position: fixed !important;
+          bottom: 0 !important;
+          left: 50% !important;
+          transform: translate(-50%,0) !important;
+        }
     }
     </style>
 
