@@ -64,7 +64,7 @@
         <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
         <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/>
         <b>Shift + left-click the header</b><br/>Multi-sort on that additional column<br/><br/>
-        <b>Margin</b><br/>Ratio between buying to selling<br/>(Sell Price - Buy Price) / (Sell Price)<br/>
+        <b>Margin</b><br/>Ratio between buying to selling<br/>(Sell Price - Buy Price) / (Sell Price)<br/><br/>
         <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
       </div>
     </div>
@@ -153,8 +153,12 @@
             </div>
           </div>
           <br/>
+          <div class="custom_switcher">
+            <input type="button" class="btn btn-default secondary-text" id="custom_select" value="Enable Custom Selection (BETA)"/>
+          </div>
+          <br/>
           <div class="question primary-text"> Station Trade at </div>
-          <span class="avoidwrap">
+          <span class="avoidwrap standard">
             <input type="button" class="btn btn-default secondary-text station-start" id="station_jita" value="Jita"/>
             <input type="button" class="btn btn-default secondary-text station-start" id="station_amarr" value="Amarr"/>
             <span class="avoidwrap">
@@ -163,6 +167,12 @@
               <input type="button" class="btn btn-default secondary-text station-start" id="station_hek" value="Hek"/>
             </span>
           </span>
+          <div class="form-group custom">
+            <!-- <label for="custom_route_start">Custom Start (BETA)</label> -->
+            <select id="custom_station" class="location_dropdown form-control">
+              <option value="None">None</option>
+            </select>
+          </div>
           <hr/>
           <div class="row">
             <div class="question secondary-text"> Only return margins between </div>
@@ -189,21 +199,42 @@
             </div>
           </div>
           <br/>
+          <div class="custom_switcher">
+            <input type="button" class="btn btn-default secondary-text" id="custom_route" value="Enable Custom Route (BETA)"/>
+          </div>
+          <br/>
           <div class="col-lg-2 col-lg-offset-4 col-sm-3 col-sm-offset-3 col-xs-6">
             <div class="question primary-text"> Start </div>
-            <input type="button" class="btn btn-default secondary-text start" id="location_jita" value="Jita"/><br/>
-            <input type="button" class="btn btn-default secondary-text start" id="location_amarr" value="Amarr"/><br/>
-            <input type="button" class="btn btn-default secondary-text start" id="location_dodixie" value="Dodixie"/><br/>
-            <input type="button" class="btn btn-default secondary-text start" id="location_rens" value="Rens"/><br/>
-            <input type="button" class="btn btn-default secondary-text start" id="location_hek" value="Hek"/>
+            <div class="standard">
+              <input type="button" class="btn btn-default secondary-text start" id="location_jita" value="Jita"/><br/>
+              <input type="button" class="btn btn-default secondary-text start" id="location_amarr" value="Amarr"/><br/>
+              <input type="button" class="btn btn-default secondary-text start" id="location_dodixie" value="Dodixie"/><br/>
+              <input type="button" class="btn btn-default secondary-text start" id="location_rens" value="Rens"/><br/>
+              <input type="button" class="btn btn-default secondary-text start" id="location_hek" value="Hek"/>
+            </div>
+            <div class="form-group custom">
+              <!-- <label for="custom_route_start">Custom Start (BETA)</label> -->
+              <select id="custom_route_start" class="location_dropdown form-control">
+                <option value="None">None</option>
+              </select>
+            </div>
+
           </div>
           <div class="col-lg-2 col-sm-3 col-xs-6">
             <div class="question primary-text"> End(s) </div>
-            <input type="button" class="btn btn-default secondary-text end" id="add_jita" value="Jita"/><br/>
-            <input type="button" class="btn btn-default secondary-text end" id="add_amarr" value="Amarr"/><br/>
-            <input type="button" class="btn btn-default secondary-text end" id="add_dodixie" value="Dodixie"/><br/>
-            <input type="button" class="btn btn-default secondary-text end" id="add_rens" value="Rens"/><br/>
-            <input type="button" class="btn btn-default secondary-text end" id="add_hek" value="Hek"/>
+            <div class="standard">
+              <input type="button" class="btn btn-default secondary-text end" id="add_jita" value="Jita"/><br/>
+              <input type="button" class="btn btn-default secondary-text end" id="add_amarr" value="Amarr"/><br/>
+              <input type="button" class="btn btn-default secondary-text end" id="add_dodixie" value="Dodixie"/><br/>
+              <input type="button" class="btn btn-default secondary-text end" id="add_rens" value="Rens"/><br/>
+              <input type="button" class="btn btn-default secondary-text end" id="add_hek" value="Hek"/>
+            </div>
+            <div class="form-group custom">
+              <!-- <label for="custom_route_end">Custom End (BETA)</label> -->
+              <select id="custom_route_end" class="location_dropdown form-control">
+                <option value="None">None</option>
+              </select>
+            </div>
           </div>
         </div>
         <hr/>
@@ -264,7 +295,7 @@
         <!-- <a class="donate" href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> -->
         <br/>
         &copy;2016-2017 Alexander Whipp. All rights reserved.<br/>
-        Version 2.15 |
+        Version 3.0.0b |
         <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a>
           | <a href="https://datatables.net/">DataTables</a>
         </p>
@@ -299,4 +330,5 @@
     </style>
 
   </body>
+  <script src="javascripts/station_ids.min.js"></script>
 </html>

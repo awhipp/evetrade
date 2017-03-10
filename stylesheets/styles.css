@@ -43,6 +43,17 @@ hr {
     display: none;
 }
 
+.custom_switcher input{
+  width: auto !important;
+}
+
+.standard{
+  display: block;
+}
+
+.custom{
+  display: none;
+}
 
 .base {
     text-align: center;
@@ -66,6 +77,13 @@ footer {
     border-top: 1px #ccc solid;
     padding-top: 2em;
     padding-bottom: 4em;
+}
+
+.location_dropdown{
+  width: auto;
+  max-width: 80%;
+  text-align: center;
+  margin: 0 auto;
 }
 
 input[type="button"]{
@@ -158,6 +176,10 @@ input[type="text"]{
 
 .dataTables_info{
     width : 100%;
+}
+
+label{
+  font-weight: 500 !important;
 }
 
 label > input {
@@ -274,6 +296,10 @@ span.avoidwrap { display:inline-block; }
 #selection > .row {
     margin: 0;
     padding: 0.5em;
+}
+
+#selection{
+  display: none;
 }
 
 #unreachable{

@@ -25,8 +25,13 @@ var rensBuy = [];
 var rensSell = [];
 var hekBuy = [];
 var hekSell = [];
+var customBuy = [];
+var customSell = [];
 
 var start_location = "";
+var isCustom = false;
+var customStart;
+var customEnd;
 var popup_table_buy;
 var popup_table_sell;
 
@@ -141,6 +146,46 @@ $( document ).ready(function() {
     });
 
     $("#numberInput").on('blur', updateNumber);
+
+    $("#custom_route").on('click', function(){
+      $(".standard").slideToggle();
+      $(".custom").slideToggle();
+      if($(this).val() === "Enable Custom Route (BETA)"){
+        $(this).val("Disable Custom Route");
+        isCustom = true;
+      }else{
+        $(this).val("Enable Custom Route (BETA)");
+        isCustom = false;
+      }
+
+    });
+
+    $("#custom_select").on('click', function(){
+      $(".standard").slideToggle();
+      $(".custom").slideToggle();
+      if($(this).val() === "Enable Custom Selection (BETA)"){
+        $(this).val("Disable Custom Selection");
+        isCustom = true;
+      }else{
+        $(this).val("Enable Custom Selection (BETA)");
+        isCustom = false;
+      }
+
+    });
+
+    for(var i = 0; i < station_ids.length; i++){
+      $("#custom_route_start").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
+      $("#custom_route_end").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
+      $("#custom_station").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
+    }
+
+    $("#custom_route_start").change(function(){
+      start_location = $("#custom_route_start option[value='" + $('#custom_route_start').val() + "']").text();
+    });
+
+    $("#custom_station").change(function(){
+      start_location = $("#custom_station option[value='" + $('#custom_station').val() + "']").text();
+    });
 });
 
 function updateNumber(){
@@ -174,8 +219,13 @@ function open_popup(itemId, name, location){
     popup_table_buy.clear();
     popup_table_sell.clear();
     $("#popup_itemName").text("Trade info for " + name);
-    $("#buyLocation").text("Buy at " + start_location);
-    $("#sellLocation").text("Sell at " + location);
+    if(isCustom){
+      $("#buyLocation").text("Buy at " + customStart);
+      $("#sellLocation").text("Sell at " + customEnd);
+    }else{
+      $("#buyLocation").text("Buy at " + start_location);
+      $("#sellLocation").text("Sell at " + location);
+    }
     var buyArr;
     var sellArr;
 
@@ -189,6 +239,8 @@ function open_popup(itemId, name, location){
         buyArr = rensBuy[itemId];
     }else if(start_location == "Hek"){
         buyArr = hekBuy[itemId];
+    }else{
+        buyArr = customBuy[itemId];
     }
 
     for(var i = 0; i < buyArr.length; i++){
@@ -207,6 +259,8 @@ function open_popup(itemId, name, location){
         sellArr = rensSell[itemId];
     }else if(location == "Hek"){
         sellArr = hekSell[itemId];
+    }else{
+        sellArr = customSell[itemId];
     }
 
     for(var i = 0; i < sellArr.length; i++){
@@ -233,13 +287,19 @@ function init(){
 
     var destinations = [];
 
-
     if(routeTrading == false){
-        $.each($(".station-selected"), function(){
-            start_location = "Nil";
-            location = $(this).val();
-            destinations.push($(this).val());
-        });
+        if(isCustom){
+          destinations.push($("#custom_station option[value='" + $('#custom_station').val() + "']").text());
+          start_location = "Nil";
+          customStart = location;
+          customEnd = destinations[0];
+        }else{
+          $.each($(".station-selected"), function(){
+              start_location = "Nil";
+              location = $(this).val();
+              destinations.push($(this).val());
+          });
+        }
 
         if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
             threshold_margin_lower = parseInt($("#lower-margin-threshold").val());
@@ -249,9 +309,16 @@ function init(){
             threshold_margin_upper = parseInt($("#upper-margin-threshold").val());
         }
     }else{
-      $.each($(".end-selected"), function(){
-          destinations.push($(this).val());
-      });
+
+      if(isCustom){
+        destinations.push($("#custom_route_end option[value='" + $('#custom_route_end').val() + "']").text());
+        customStart = location;
+        customEnd = destinations[0];
+      }else{
+        $.each($(".end-selected"), function(){
+            destinations.push($(this).val());
+        });
+      }
 
       if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
           threshold_profit = parseInt($("#profit-threshold").val());
@@ -279,43 +346,52 @@ function init(){
         $("#stop").show();
     }
 
-    var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
-    var add_amarr = destinations.indexOf("Amarr") > -1 ? true : false;
-    var add_dodixie = destinations.indexOf("Dodixie") > -1 ? true : false;
-    var add_rens = destinations.indexOf("Rens") > -1 ? true : false;
-    var add_hek = destinations.indexOf("Hek") > -1 ? true : false;
 
-    var station_buy,station_sell1,station_sell2,station_sell3,station_sell4;
-    if(location === "Jita"){
-        station_buy = JITA;
-        station_sell1 = add_amarr ? AMARR : IGNORE;
-        station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-        station_sell3 = add_rens ? RENS : IGNORE;
-        station_sell4 = add_hek ? HEK : IGNORE;
-    }else if(location === "Amarr"){
-        station_buy = AMARR;
-        station_sell1 = add_jita ? JITA : IGNORE;
-        station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-        station_sell3 = add_rens ? RENS : IGNORE;
-        station_sell4 = add_hek ? HEK : IGNORE;
-    }else if(location === "Dodixie"){
-        station_buy = DODIXIE;
-        station_sell1 = add_amarr ? AMARR : IGNORE;
-        station_sell2 = add_jita ? JITA : IGNORE;
-        station_sell3 = add_rens ? RENS : IGNORE;
-        station_sell4 = add_hek ? HEK : IGNORE;
-    }else if(location === "Rens"){
-        station_buy = RENS;
-        station_sell1 = add_amarr ? AMARR : IGNORE;
-        station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-        station_sell3 = add_jita ? JITA : IGNORE;
-        station_sell4 = add_hek ? HEK : IGNORE;
-    }else {
-        station_buy = HEK;
-        station_sell1 = add_amarr ? AMARR : IGNORE;
-        station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-        station_sell3 = add_rens ? RENS : IGNORE;
-        station_sell4 = add_jita ? JITA : IGNORE;
+    if(!isCustom){
+      var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
+      var add_amarr = destinations.indexOf("Amarr") > -1 ? true : false;
+      var add_dodixie = destinations.indexOf("Dodixie") > -1 ? true : false;
+      var add_rens = destinations.indexOf("Rens") > -1 ? true : false;
+      var add_hek = destinations.indexOf("Hek") > -1 ? true : false;
+
+      var station_buy,station_sell1,station_sell2,station_sell3,station_sell4;
+      if(location === "Jita"){
+          station_buy = JITA;
+          station_sell1 = add_amarr ? AMARR : IGNORE;
+          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
+          station_sell3 = add_rens ? RENS : IGNORE;
+          station_sell4 = add_hek ? HEK : IGNORE;
+      }else if(location === "Amarr"){
+          station_buy = AMARR;
+          station_sell1 = add_jita ? JITA : IGNORE;
+          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
+          station_sell3 = add_rens ? RENS : IGNORE;
+          station_sell4 = add_hek ? HEK : IGNORE;
+      }else if(location === "Dodixie"){
+          station_buy = DODIXIE;
+          station_sell1 = add_amarr ? AMARR : IGNORE;
+          station_sell2 = add_jita ? JITA : IGNORE;
+          station_sell3 = add_rens ? RENS : IGNORE;
+          station_sell4 = add_hek ? HEK : IGNORE;
+      }else if(location === "Rens"){
+          station_buy = RENS;
+          station_sell1 = add_amarr ? AMARR : IGNORE;
+          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
+          station_sell3 = add_jita ? JITA : IGNORE;
+          station_sell4 = add_hek ? HEK : IGNORE;
+      }else {
+          station_buy = HEK;
+          station_sell1 = add_amarr ? AMARR : IGNORE;
+          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
+          station_sell3 = add_rens ? RENS : IGNORE;
+          station_sell4 = add_jita ? JITA : IGNORE;
+      }
+    }else{
+      station_buy = $("#custom_route_start").val().split(",");
+      station_sell1 = $("#custom_route_end").val().split(",");
+      station_sell2 = [-1,-1];
+      station_sell3 = [-1,-1];
+      station_sell4 = [-1,-1];
     }
     $("#title-banner").slideToggle();
     if(routeTrading){
@@ -324,20 +400,24 @@ function init(){
         $("#buyingHeader").text("Buying from " + location);
 
         var including = "";
-        if(add_jita && location !== "Jita"){
-            including += "Jita, ";
-        }
-        if(add_amarr && location !== "Amarr"){
-            including += "Amarr, ";
-        }
-        if(add_dodixie && location !== "Dodixie"){
-            including += "Dodixie, ";
-        }
-        if(add_rens && location !== "Rens"){
-            including += "Rens, ";
-        }
-        if(add_hek && location !== "Hek"){
-            including += "Hek, ";
+        if(isCustom){
+          including += destinations[0] + ", ";
+        }else{
+          if(add_jita && location !== "Jita"){
+              including += "Jita, ";
+          }
+          if(add_amarr && location !== "Amarr"){
+              including += "Amarr, ";
+          }
+          if(add_dodixie && location !== "Dodixie"){
+              including += "Dodixie, ";
+          }
+          if(add_rens && location !== "Rens"){
+              including += "Rens, ";
+          }
+          if(add_hek && location !== "Hek"){
+              including += "Hek, ";
+          }
         }
         if(including.length > 0){
             including = "( routes to " + including.substring(0,including.length-2) + " )<br/>";
@@ -355,6 +435,9 @@ function init(){
         $("#buyingFooter").html("Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
+        if(isCustom){
+          station_buy = $("#custom_station").val().split(",");
+        }
 
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Sell Price</th><th>Profit Per Item</th><th>Margin</th></tr></thead>");
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");

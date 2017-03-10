@@ -16,6 +16,11 @@ Select which of the 5 trade hubs you are docked in:
 
 It will return a lazy-loaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
+### V3.0.0b Custom Trading Routes
+* Due to popular demand we have now implemented a 1-to-1 trading drop down for finding the best deals between two stations
+* Also added custom select station trading
+* This feature is in BETA as the EVE CREST API does not currently support getting all these stations so we are working off of a fixed backend, please report any bugs you find
+
 ### V2.15 Implemented Profit filtering
 * Ability to filter profits to show only rows where ISK is greater than N on route trades
 * Ability to filter ROI to show only rows where ROI % is greater than M on route trades

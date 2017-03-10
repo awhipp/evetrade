@@ -90,6 +90,7 @@ function getSellPrice1(itemId, buyPrice, itemName, isUpdate){
                 url: sellMarketUrl_1 + sellTypeUrl_1,
                 success: function(sellData1) {
                     var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
+                    console.log(sellPrice1);
                     getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate);
                 },
                 error: function (request, error) {
@@ -254,7 +255,7 @@ function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, s
 }
 
 function getLocation(location){
-    return (location === JITA[0] ? "Jita" : location === AMARR[0] ? "Amarr" : location === DODIXIE[0] ? "Dodixie" : location === RENS[0] ? "Rens" : "Hek");
+    return (location === JITA[0] ? "Jita" : location === AMARR[0] ? "Amarr" : location === DODIXIE[0] ? "Dodixie" : location === RENS[0] ? "Rens" : location === HEK[0] ? "Hek" : customEnd.split(" ")[0]);
 }
 
 function checkRow(row_id){
@@ -480,6 +481,8 @@ function saveBuyData(stationId, itemId, data){
         dodixieBuy[itemId] = data;
     }else if(stationId == HEK[1]){
         hekBuy[itemId] = data;
+    }else{
+        customBuy[itemId] = data;
     }
 }
 
@@ -494,5 +497,7 @@ function saveSellData(stationId, itemId, data){
         dodixieSell[itemId] = data;
     }else if(stationId == HEK[1]){
         hekSell[itemId] = data;
+    }else{
+        customSell[itemId] = data;
     }
 }
