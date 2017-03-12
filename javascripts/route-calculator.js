@@ -90,7 +90,6 @@ function getSellPrice1(itemId, buyPrice, itemName, isUpdate){
                 url: sellMarketUrl_1 + sellTypeUrl_1,
                 success: function(sellData1) {
                     var sellPrice1 = getData(sellData1, station_sell1[1], "buy", itemId);
-                    console.log(sellPrice1);
                     getSellPrice2(itemId, buyPrice, itemName, sellPrice1, isUpdate);
                 },
                 error: function (request, error) {
