@@ -3,7 +3,7 @@ var AMARR = [10000043,60008494];
 var DODIXIE = [10000032,60011866];
 var RENS = [10000030,60004588];
 var HEK = [10000042,60005686];
-var IGNORE = [-1,-1];
+var IGNORE = null;
 
 var NUMBER_RETURNED = 3;
 
@@ -36,6 +36,7 @@ var popup_table_buy;
 var popup_table_sell;
 
 var routeTrading = null;
+var init_itemIds = 0;
 
 var page = 1;
 var has_shown = false;
@@ -63,31 +64,38 @@ function showAbout(){
 }
 
 function getMoreItems(){
+  var shown = false;
     $.ajax({
         type: "get",
         dataType: "json",
-        url: ENDPOINT + "/market/types/?page=" + page,
-        success: function(data){
-            if(data && data.items){
-                var items = shuffle(data.items);
-                for(var i = 0; i < items.length; i ++){
-                    itemIds.push(items[i].id);
+        url: ENDPOINT + "/market/types/",
+        success: function(market){
+          for(var page = 1; page <= market.pageCount; page++){
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: ENDPOINT + "/market/types/?page=" + page,
+                success: function(data){
+                    if(data && data.items){
+                        if(!data.next){
+                            $("#loading").hide();
+                            $("#selection").show();
+                        }
+                        var items = shuffle(data.items);
+                        init_itemIds = init_itemIds + items.length;
+                        for(var i = 0; i < items.length; i ++){
+                            itemIds.push(items[i].id);
+                        }
+                    }
+                },
+                error: function (request, error) {
+                    // getMoreItems();
                 }
-                page++;
-                if(page == 3){
-                    $("#loading").hide();
-                    $("#selection").show();
-                }
-                if(data.next){
-                    getMoreItems();
-                }else if(page < 3){
-                    $("#loading").hide();
-                    $("#selection").show();
-                }
-            }
+            });
+          }
         },
         error: function (request, error) {
-            getMoreItems();
+            // getMoreItems();
         }
     });
 }
@@ -399,9 +407,9 @@ function init(){
     }else{
       station_buy = $("#custom_route_start").val().split(",");
       station_sell1 = $("#custom_route_end").val().split(",");
-      station_sell2 = [-1,-1];
-      station_sell3 = [-1,-1];
-      station_sell4 = [-1,-1];
+      station_sell2 = IGNORE;
+      station_sell3 = IGNORE;
+      station_sell4 = IGNORE;
     }
     $("#title-banner").slideToggle();
     if(routeTrading){
@@ -432,14 +440,28 @@ function init(){
         if(including.length > 0){
             including = "( routes to " + including.substring(0,including.length-2) + " )<br/>";
         }
-        including += "ROI Greater Than " + threshold_roi + "% | Profits Greater Than " + numberWithCommas(threshold_profit) + " ISK";
+        including += "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% |&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if(threshold_cost !== 999999999999999999){
-          including += " | Buy Costs Less Than " + numberWithCommas(threshold_cost) + " ISK";
+          including += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";
         }
-        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Loading. Please wait...</div>");
+        including += " |&nbsp;<span id='percent-complete'></span>";
+        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Checking Live Prices<br>Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
-        beginRoute(station_buy,station_sell1,station_sell2,station_sell3,station_sell4);
+        var active_stations = [];
+        if( station_sell1 != null ){
+          active_stations.push(station_sell1);
+        }
+        if( station_sell2 != null ){
+          active_stations.push(station_sell2);
+        }
+        if( station_sell3 != null ){
+          active_stations.push(station_sell3);
+        }
+        if( station_sell4 != null ){
+          active_stations.push(station_sell4);
+        }
+        beginRoute(station_buy,active_stations);
     }else{
         $("#buyingHeader").text("Station Trading at " + location);
         $("#buyingFooter").html("Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");

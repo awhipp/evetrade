@@ -40,6 +40,7 @@ function getBuyStationPrice(itemId, isUpdate){
         $.ajax({
             type: "get",
             url: buyMarketUrl + buyTypeUrl,
+            dataType: "json",
             success: function(buyData) {
                 var buyPrice = getSingleData(buyData, station_buy[1], "buy", itemId);
                 if(buyPrice != -1){
@@ -68,6 +69,7 @@ function getSellStationPrice(itemId, buyPrice, itemName, isUpdate){
         $.ajax({
             type: "get",
             url: sellMarketUrl + sellTypeUrl,
+            dataType: "json",
             success: function(sellData) {
                 var sellPrice = getSingleData(sellData, station_buy[1], "sell", itemId);
                 if(sellPrice != -1){

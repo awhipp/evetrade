@@ -1,4 +1,4 @@
-# EVE Trade Finder v2.15
+# EVE Trade Finder v3.0.1
 
 ## About
 Implements the EVE Crest API to find:
@@ -15,6 +15,12 @@ Select which of the 5 trade hubs you are docked in:
 * Jita
 
 It will return a lazy-loaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+### V3.0.1 Improved Performance and Setup
+* Modified requests to abide by rate limit
+* Improved return performance.
+* Simplified request calls to enable future development of cross region trading
+* Progress Bar
 
 ### V3.0.0b Custom Trading Routes
 * Due to popular demand we have now implemented a 1-to-1 trading drop down for finding the best deals between two stations

@@ -233,8 +233,7 @@ td {
 
 .loading {
     color: #336699;
-    font-weight: bolder;
-    margin-top: 2em;
+    margin-top: 1.5em;
     font-size: 200%;
 }
 
@@ -289,6 +288,11 @@ td {
 
 span.avoidwrap { display:inline-block; }
 
+#percent-complete{
+  /*font-weight: bold;*/
+  /*color: #666;*/
+}
+
 #loading{
   padding: 5em;
 }
@@ -300,6 +304,7 @@ span.avoidwrap { display:inline-block; }
 
 #selection{
   display: none;
+  overflow: hidden;
 }
 
 #unreachable{
