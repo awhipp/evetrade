@@ -22,8 +22,6 @@ function getRowsStation(){
     itemIds = itemIds.splice(JUMPS, itemIds.length);
 }
 
-
-
 function getSingleData(data, stationId, orderType, itemId){
     if (typeof(data) == "string")  {
         return data;

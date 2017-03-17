@@ -9,13 +9,22 @@ var dt;
 
 var station_buy, stations;
 
+
 function getData(data, stationId, orderType, itemId){
+  var returnarr = [];
+  var temparr;
   if (typeof(data) == "string")  {
-    return [data];
+    temparr = [data];
   }
   else if (data != null){
-    return getPrice(data, stationId, orderType, itemId)
+    temparr = getPrice(data, stationId, orderType, itemId)
   }
+  for(var i = 0; i < temparr.length; i++){
+    if(temparr[i][0] > 0){
+        returnarr.push(temparr[i]);
+    }
+  }
+  return returnarr;
 }
 
 function goAgain(){
@@ -46,8 +55,7 @@ function getRowsRoute(){
   var i;
   var JUMPS = getRandomInt(6,26);
   for(i = 0; i < itemIds.length && i < JUMPS; i++){
-    var itemId = itemIds[i];
-    getBuyPrice(itemId, false);
+    getBuyPrice(itemIds[i], false);
   }
   length = itemIds[i-1];
   if(i >= itemIds.length){
@@ -70,7 +78,7 @@ function getBuyPrice(itemId, isUpdate){
       contentType: "application/json",
       success: function(buyData) {
         var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
-        if(buyPrice.length > 0 && (buyPrice[0][0] > 0 || buyPrice[1][0] > 0 || buyPrice[2][0] > 0)){
+        if(buyPrice.length > 0){
           var itemName = buyData.items[0].type.name;
           for(var i = 0; i < stations.length; i++){
             getSellPrice(itemId, buyPrice, itemName, stations[i], isUpdate);
@@ -103,7 +111,7 @@ function getSellPrice(itemId, buyPrice, itemName, station, isUpdate){
         contentType: "application/json",
         success: function(sellData) {
           var sellPrice = getData(sellData, station[1], "buy", itemId);
-          if(sellPrice.length > 0 && (sellPrice[0][0] > 0 || sellPrice[1][0] > 0 || sellPrice[2][0] > 0)){
+          if(sellPrice.length > 0){
             getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate);
           }else{
             if(itemId === length){
@@ -128,6 +136,10 @@ function getSellPrice(itemId, buyPrice, itemName, station, isUpdate){
 
 
 function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
+  if(itemId === length){
+    goAgain();
+  }
+
   var rows = [];
 
   for(var i = 0; i < buyPrice.length; i++){
@@ -142,10 +154,6 @@ function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
   rows = rows.sort(rowComparator);
   for(var i = 0; i < rows.length && i < NUMBER_RETURNED; i++){
     addRow(rows[i][0],rows[i][1],rows[i][2],rows[i][3],rows[i][4],rows[i][5],rows[i][6],rows[i][7],rows[i][8],rows[i][9],rows[i][10]);
-  }
-
-  if(itemId === length){
-    goAgain();
   }
 }
 
