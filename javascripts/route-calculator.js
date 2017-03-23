@@ -1,5 +1,6 @@
 var SECOND_DELAY = 0;
 var PROFIT_INDEX = 6;
+var JUMPS = 75;
 var UPDATING_TIMEOUT = 25000;
 var UPDATING_CHECK = [];
 var length;
