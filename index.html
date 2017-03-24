@@ -309,26 +309,8 @@
           | <a href="https://datatables.net/">DataTables</a>
         </p>
     </footer>
-<style>
-
-#desktop-only{
-  display: none !important;
-} 
-/* Small devices (tablets, 768px and up) */  
-@media ( min-width : 768px) {     
-  #desktop-only{     
-    display: block !important;
-    position: fixed !important;     
-    bottom: 0 !important;       
-    left: 50% !important;       
-    transform: translate(-50%,0) !important;        
-  }     
-}
-
-</style>
-
     <!-- evetrade-top -->
-    <ins id="desktop-only" class="adsbygoogle"
+    <ins class="adsbygoogle"
     style="display:block;"
     data-ad-client="ca-pub-0599578547621989"
     data-ad-slot="7378680598"
@@ -336,6 +318,23 @@
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
+    <style>   
+      /* Small devices (tablets, 768px and up) */   
+      .adsbygoogle > ins{   
+          position: relative !important;    
+          bottom: inherit !important;   
+          left: inherit !important;   
+          transform: none !important;   
+      }   
+      @media ( min-width : 768px) {   
+          .adsbygoogle > ins{   
+            position: fixed !important;   
+            bottom: 0 !important;   
+            left: 50% !important;   
+            transform: translate(-50%,0) !important;    
+          }   
+      }   
+    </style>
   </body>
   <script src="javascripts/route-calculator.min.js"></script>
   <script src="javascripts/station-calculator.min.js"></script>
