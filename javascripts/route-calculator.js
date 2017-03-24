@@ -39,7 +39,6 @@ function goAgain(){
 function beginRoute(s_buy, active_stations){
   station_buy = s_buy;
   stations = active_stations;
-  // JUMPS = JUMPS / active_stations.length;
   $("#selection").hide();
   getRowsRoute();
 }
@@ -54,7 +53,7 @@ function getRowsRoute(){
   // $("#percent-complete").text( ((1-itemIds.length/init_itemIds)*100).toFixed(2) + "% Complete");
   $("#percent-complete").text("Items Checked: " + (init_itemIds-itemIds.length) + " of " + init_itemIds );
   var i;
-  var JUMPS = getRandomInt(6,26);
+  JUMPS = getRandomInt(6,26);
   for(i = 0; i < itemIds.length && i < JUMPS; i++){
     getBuyPrice(itemIds[i], false);
   }
@@ -91,7 +90,7 @@ function getBuyPrice(itemId, isUpdate){
         }
       },
       error: function (request, error) {
-        unreachable();
+        unreachable(itemId, length);
       }
     });
   }catch (unknownError){
@@ -121,7 +120,7 @@ function getSellPrice(itemId, buyPrice, itemName, station, isUpdate){
           }
         },
         error: function (request, error) {
-          unreachable();
+          unreachable(itemId, length);
         }
       });
     }catch (unknownError){
@@ -154,7 +153,7 @@ function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
 
   rows = rows.sort(rowComparator);
   for(var i = 0; i < rows.length && i < NUMBER_RETURNED; i++){
-    addRow(rows[i][0],rows[i][1],rows[i][2],rows[i][3],rows[i][4],rows[i][5],rows[i][6],rows[i][7],rows[i][8],rows[i][9],rows[i][10]);
+    addRow(rows[i][0],rows[i][1],rows[i][2],rows[i][3],rows[i][4],rows[i][5],rows[i][6],rows[i][7],rows[i][8],rows[i][9],rows[i][10],rows[i][11]);
   }
 }
 
@@ -179,15 +178,28 @@ function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, s
       profit = b_volume * itemProfit;
       buyCost = b_price * b_volume;
     }
-    var location = getLocation(station[0]);
+    var location = getLocation(station[1]);
     var iskRatio = (s_price-b_price)/b_price;
-    return [itemId, itemName, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, isUpdate];
+    return [itemId, itemName, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, isUpdate, station];
   }
   return [];
 }
 
 function getLocation(location){
-  return (location === JITA[0] ? "Jita" : location === AMARR[0] ? "Amarr" : location === DODIXIE[0] ? "Dodixie" : location === RENS[0] ? "Rens" : location === HEK[0] ? "Hek" : customEnd.split(" ")[0]);
+  if(isCustom){
+    return getCustomEnd(location);
+  }else{
+    return (location === JITA[1] ? "Jita" : location === AMARR[1] ? "Amarr" : location === DODIXIE[1] ? "Dodixie" : location === RENS[1] ? "Rens" : location === HEK[1] ? "Hek" : getCustomEnd(location));
+  }
+}
+
+function getCustomEnd(location){
+  for(var i = 0; i < stations.length; i++){
+    if(location === stations[i][1]){
+      return customEnd[i];
+    }
+  }
+  return 'nil';
 }
 
 function checkRow(row_id){
@@ -197,8 +209,8 @@ function checkRow(row_id){
   }
 }
 
-function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate){
-  var id = itemId + "-" + location;
+function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate, station){
+  var id = itemId + "_" + location + "_" + station[1];
 
   if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost){
     if(!created){
@@ -267,7 +279,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $('#dataTable tbody').on('mousedown', 'tr', function (event) {
         if(event.which === 1){
           if(event.ctrlKey){
-            var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
+            var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
             if(!$(this).hasClass("row-selected")){
               $.each($("."+classToFind), function(){
                 $(this).addClass("row-selected");
@@ -278,7 +290,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
               })
             }
           }else if(event.shiftKey){
-            open_popup($(this).attr('id').split("-")[0], $(this).children()[0].textContent,$(this).attr('id').split("-")[1]);
+            open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, $(this).attr('id').split("_")[1], parseInt($(this).attr('id').split("_")[2]));
           }else{
             if(!$(this).hasClass("row-selected")){
               $(this).addClass("row-selected");
@@ -287,7 +299,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
             }
           }
         }else if(event.which === 3){
-          var classToFind = $(this).attr('id').split("-")[0] + "-" + $(this).attr('id').split("-")[1];
+          var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
           if(document.getElementsByClassName(id)){
             var row = $("." + classToFind);
             $.each(row, function(){
@@ -296,7 +308,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
             });
           }
 
-          getBuyPrice($(this).attr('id').split("-")[0], true);
+          getBuyPrice($(this).attr('id').split("_")[0], true);
         }
       } );
       $("label > input").addClass("form-control").addClass("minor-text");
@@ -336,7 +348,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     }else{
       var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
       var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
-      $(row).attr('id', id + "-" + $("." + id).length);
+      $(row).attr('id', id + "_" + $("." + id).length);
       $(row).addClass(id);
     }
   }
@@ -403,33 +415,47 @@ function getPrice(jsonMarket, stationId, orderType, itemId)
 }
 
 function saveBuyData(stationId, itemId, data){
-  if (stationId == JITA[1]) {
-    jitaBuy[itemId] = data;
-  }else if(stationId == AMARR[1]){
-    amarrBuy[itemId] = data;
-  }else if(stationId == RENS[1]){
-    rensBuy[itemId] = data;
-  }else if(stationId == DODIXIE[1]){
-    dodixieBuy[itemId] = data;
-  }else if(stationId == HEK[1]){
-    hekBuy[itemId] = data;
+  if(customBuy[stationId]){
+    customBuy[stationId][itemId] = data;
   }else{
-    customBuy[itemId] = data;
+    customBuy[stationId] = [];
+    customBuy[stationId][itemId] = data;
   }
+
+  // if (stationId == JITA[1]) {
+  //   jitaBuy[itemId] = data;
+  // }else if(stationId == AMARR[1]){
+  //   amarrBuy[itemId] = data;
+  // }else if(stationId == RENS[1]){
+  //   rensBuy[itemId] = data;
+  // }else if(stationId == DODIXIE[1]){
+  //   dodixieBuy[itemId] = data;
+  // }else if(stationId == HEK[1]){
+  //   hekBuy[itemId] = data;
+  // }else{
+  //   customBuy[itemId] = data;
+  // }
 }
 
 function saveSellData(stationId, itemId, data){
-  if (stationId == JITA[1]) {
-    jitaSell[itemId] = data;
-  }else if(stationId == AMARR[1]){
-    amarrSell[itemId] = data;
-  }else if(stationId == RENS[1]){
-    rensSell[itemId] = data;
-  }else if(stationId == DODIXIE[1]){
-    dodixieSell[itemId] = data;
-  }else if(stationId == HEK[1]){
-    hekSell[itemId] = data;
+  if(customSell[stationId]){
+    customSell[stationId][itemId] = data;
   }else{
-    customSell[itemId] = data;
+    customSell[stationId] = [];
+    customSell[stationId][itemId] = data;
   }
+
+  // if (stationId == JITA[1]) {
+  //   jitaSell[itemId] = data;
+  // }else if(stationId == AMARR[1]){
+  //   amarrSell[itemId] = data;
+  // }else if(stationId == RENS[1]){
+  //   rensSell[itemId] = data;
+  // }else if(stationId == DODIXIE[1]){
+  //   dodixieSell[itemId] = data;
+  // }else if(stationId == HEK[1]){
+  //   hekSell[itemId] = data;
+  // }else{
+  //   customSell[itemId] = data;
+  // }
 }

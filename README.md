@@ -1,20 +1,15 @@
-# EVE Trade Finder v3.0.1.1
+# EVE Trade Finder v3.0.2
 
 ## About
 Implements the EVE Crest API to find:
 
-* the best trades between the major trade hubs.
-* the best margins inside your own station
+* the best trades between stations.
+* the best margins inside your own station.
 
-Select which of the 5 trade hubs you are docked in:
+Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-* Amarr
-* Dodixie
-* Rens
-* Hek
-* Jita
-
-It will return a lazy-loaded table of trades you can make at other trade hubs. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+### V3.0.2 Increased trade station choices
+* You may now select up to 10 destination stations for trade routes
 
 ### V3.0.1.1 Station Trading HOT fix
 * Station trading was broken

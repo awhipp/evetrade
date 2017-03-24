@@ -15,16 +15,16 @@ var threshold_roi = 1;
 var threshold_cost = 999999999999999999;
 
 var itemIds = [];
-var jitaBuy = [];
-var jitaSell = [];
-var amarrBuy = [];
-var amarrSell = [];
-var dodixieBuy = [];
-var dodixieSell = [];
-var rensBuy = [];
-var rensSell = [];
-var hekBuy = [];
-var hekSell = [];
+// var jitaBuy = [];
+// var jitaSell = [];
+// var amarrBuy = [];
+// var amarrSell = [];
+// var dodixieBuy = [];
+// var dodixieSell = [];
+// var rensBuy = [];
+// var rensSell = [];
+// var hekBuy = [];
+// var hekSell = [];
 var customBuy = [];
 var customSell = [];
 
@@ -41,6 +41,8 @@ var init_itemIds = 0;
 var page = 1;
 var has_shown = false;
 var curr;
+
+var stations_checked = 0;
 
 //var ENDPOINT = "https://public-crest.eveonline.com";
 var ENDPOINT = "https://crest-tq.eveonline.com";
@@ -183,9 +185,19 @@ $( document ).ready(function() {
 
     for(var i = 0; i < station_ids.length; i++){
       $("#custom_route_start").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
-      $("#custom_route_end").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
+      $("#custom_route_end").append('<li><input id="end-'+i+'" class="end-selection" type="checkbox" value='+ [station_ids[i][1],station_ids[i][0]] +'><label for="end-'+i+'">' + station_ids[i][2] + '</label></li>');
+      // $("#custom_route_end").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
       $("#custom_station").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
     }
+
+    $(".end-selection").on('click', function(){
+        stations_checked = $(".end-selection:checked").length;
+        if(stations_checked > 10){
+          $(this).prop("checked",false);
+          stations_checked = $(".end-selection:checked").length;
+        }
+        $("#stations_remaining").text(10-stations_checked);
+    });
 
     $("#custom_route_start").change(function(){
       start_location = $("#custom_route_start option[value='" + $('#custom_route_start').val() + "']").text();
@@ -223,33 +235,34 @@ function shuffle(array) {
     return array;
 }
 
-function open_popup(itemId, name, location){
+function open_popup(itemId, name, location, stationid){
     popup_table_buy.clear();
     popup_table_sell.clear();
     $("#popup_itemName").text("Trade info for " + name);
     if(isCustom){
       $("#buyLocation").text("Buy at " + customStart);
-      $("#sellLocation").text("Sell at " + customEnd);
+      $("#sellLocation").text("Sell at " + location);
     }else{
       $("#buyLocation").text("Buy at " + start_location);
       $("#sellLocation").text("Sell at " + location);
     }
-    var buyArr;
-    var sellArr;
+    var buyArr = customBuy[station_buy[1]][itemId];
+    var sellArr = customSell[stationid][itemId];
 
-    if(start_location == "Jita"){
-        buyArr = jitaBuy[itemId];
-    }else if(start_location == "Amarr"){
-        buyArr = amarrBuy[itemId];
-    }else if(start_location == "Dodixie"){
-        buyArr = dodixieBuy[itemId];
-    }else if(start_location == "Rens"){
-        buyArr = rensBuy[itemId];
-    }else if(start_location == "Hek"){
-        buyArr = hekBuy[itemId];
-    }else{
-        buyArr = customBuy[itemId];
-    }
+    // if(start_location == "Jita"){
+    //     buyArr = jitaBuy[itemId];
+    // }else if(start_location == "Amarr"){
+    //     buyArr = amarrBuy[itemId];
+    // }else if(start_location == "Dodixie"){
+    //     buyArr = dodixieBuy[itemId];
+    // }else if(start_location == "Rens"){
+    //     buyArr = rensBuy[itemId];
+    // }else if(start_location == "Hek"){
+    //     buyArr = hekBuy[itemId];
+    // }else{
+    //     buyArr = customBuy[itemId];
+    // }
+
 
     for(var i = 0; i < buyArr.length; i++){
         if(buyArr[i]){
@@ -257,19 +270,19 @@ function open_popup(itemId, name, location){
         }
     }
 
-    if(location == "Jita"){
-        sellArr = jitaSell[itemId];
-    }else if(location == "Amarr"){
-        sellArr = amarrSell[itemId];
-    }else if(location == "Dodixie"){
-        sellArr = dodixieSell[itemId];
-    }else if(location == "Rens"){
-        sellArr = rensSell[itemId];
-    }else if(location == "Hek"){
-        sellArr = hekSell[itemId];
-    }else{
-        sellArr = customSell[itemId];
-    }
+    // if(location == "Jita"){
+    //     sellArr = jitaSell[itemId];
+    // }else if(location == "Amarr"){
+    //     sellArr = amarrSell[itemId];
+    // }else if(location == "Dodixie"){
+    //     sellArr = dodixieSell[itemId];
+    // }else if(location == "Rens"){
+    //     sellArr = rensSell[itemId];
+    // }else if(location == "Hek"){
+    //     sellArr = hekSell[itemId];
+    // }else{
+    //     sellArr = customSell[itemId];
+    // }
 
     for(var i = 0; i < sellArr.length; i++){
         if(sellArr[i]){
@@ -282,11 +295,15 @@ function open_popup(itemId, name, location){
     popup_table_sell.draw();
 }
 
-function unreachable(){
+function unreachable(itemId, length){
     if(!has_shown && $("#unreachable").is(":hidden")){
         $("#unreachable").hide();
         $("#unreachable").slideToggle();
         has_shown = true;
+    }
+
+    if(itemId === length){
+      goAgain();
     }
 }
 
@@ -319,9 +336,17 @@ function init(){
     }else{
 
       if(isCustom){
-        destinations.push($("#custom_route_end option[value='" + $('#custom_route_end').val() + "']").text());
+        if($(".end-selection:checked").length == 0){
+          destinations.push("None");
+        }
+        $.each($(".end-selection:checked"), function(){
+          if(destinations.length < 10){
+            destinations.push($("[for='"+$(this).attr('id')+"']").text());
+          }
+        });
+        // destinations.push($("#custom_route_end option[value='" + $('#custom_route_end').val() + "']").text());
         customStart = location;
-        customEnd = destinations[0];
+        customEnd = destinations;
       }else{
         $.each($(".end-selected"), function(){
             destinations.push($(this).val());
@@ -365,6 +390,7 @@ function init(){
         $("#stop").show();
     }
 
+    var active_stations = [];
     if(!isCustom){
       var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
       var add_amarr = destinations.indexOf("Amarr") > -1 ? true : false;
@@ -406,10 +432,16 @@ function init(){
       }
     }else{
       station_buy = $("#custom_route_start").val().split(",");
-      station_sell1 = $("#custom_route_end").val().split(",");
-      station_sell2 = IGNORE;
-      station_sell3 = IGNORE;
-      station_sell4 = IGNORE;
+
+      $.each($(".end-selection:checked"), function(){
+          if(active_stations.length < 10){
+            active_stations.push($(this).val().split(","));
+          }
+      });
+      // station_sell1 = $("#custom_route_end").val().split(",");
+      // station_sell2 = IGNORE;
+      // station_sell3 = IGNORE;
+      // station_sell4 = IGNORE;
     }
     $("#title-banner").slideToggle();
     if(routeTrading){
@@ -419,7 +451,9 @@ function init(){
 
         var including = "";
         if(isCustom){
-          including += destinations[0] + ", ";
+          $.each(destinations, function(){
+            including += this + ", ";
+          });
         }else{
           if(add_jita && location !== "Jita"){
               including += "Jita, ";
@@ -438,7 +472,7 @@ function init(){
           }
         }
         if(including.length > 0){
-            including = "( routes to " + including.substring(0,including.length-2) + " )<br/>";
+            including = "<div id='route-to'>Routes to " + including.substring(0,including.length-2) + "</div>";
         }
         including += "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% |&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if(threshold_cost !== 999999999999999999){
@@ -448,7 +482,6 @@ function init(){
         $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Checking Live Prices<br>Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
-        var active_stations = [];
         if( station_sell1 != null ){
           active_stations.push(station_sell1);
         }
@@ -460,6 +493,11 @@ function init(){
         }
         if( station_sell4 != null ){
           active_stations.push(station_sell4);
+        }
+        for(var i = 0; i < active_stations.length; i++){
+          for(var j = 0; j < active_stations[i].length; j++){
+            active_stations[i][j] = parseInt(active_stations[i][j]);
+          }
         }
         beginRoute(station_buy,active_stations);
     }else{
