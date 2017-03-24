@@ -17,20 +17,20 @@ hr {
     margin:0;
     padding: 1em;
 }
+   
+ #desktop-only{
+    display: none !important;
+ } 
 
-/* Small devices (tablets, 768px and up) */
-.adsbygoogle > ins{
-    position: relative !important;
-    bottom: inherit !important;
-    left: inherit !important;
-    transform: none !important;
-}
-@media ( min-width : 768px) {
-    #desktop-only{
-      display: none !important;
-      position: absolute !important;
-      top: -1000000px !important;
-    }
+/* Small devices (tablets, 768px and up) */  
+ @media ( min-width : 768px) {     
+     #desktop-only{     
+       display: block !important;
+       position: fixed !important;     
+       bottom: 0 !important;       
+       left: 50% !important;       
+       transform: translate(-50%,0) !important;        
+     }     
 }
 
 .container {
