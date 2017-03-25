@@ -13,18 +13,9 @@ var threshold_margin_upper = 45;
 var threshold_profit = 100000;
 var threshold_roi = 1;
 var threshold_cost = 999999999999999999;
+var threshold_weight = 999999999999999999
 
 var itemIds = [];
-// var jitaBuy = [];
-// var jitaSell = [];
-// var amarrBuy = [];
-// var amarrSell = [];
-// var dodixieBuy = [];
-// var dodixieSell = [];
-// var rensBuy = [];
-// var rensSell = [];
-// var hekBuy = [];
-// var hekSell = [];
 var customBuy = [];
 var customSell = [];
 
@@ -41,6 +32,8 @@ var init_itemIds = 0;
 var page = 1;
 var has_shown = false;
 var curr;
+
+var requestItemWeight = true;
 
 var stations_checked = 0;
 
@@ -249,40 +242,11 @@ function open_popup(itemId, name, location, stationid){
     var buyArr = customBuy[station_buy[1]][itemId];
     var sellArr = customSell[stationid][itemId];
 
-    // if(start_location == "Jita"){
-    //     buyArr = jitaBuy[itemId];
-    // }else if(start_location == "Amarr"){
-    //     buyArr = amarrBuy[itemId];
-    // }else if(start_location == "Dodixie"){
-    //     buyArr = dodixieBuy[itemId];
-    // }else if(start_location == "Rens"){
-    //     buyArr = rensBuy[itemId];
-    // }else if(start_location == "Hek"){
-    //     buyArr = hekBuy[itemId];
-    // }else{
-    //     buyArr = customBuy[itemId];
-    // }
-
-
     for(var i = 0; i < buyArr.length; i++){
         if(buyArr[i]){
             $('#popup-table-buy').dataTable().fnAddData([numberWithCommas(buyArr[i][0].toFixed(2)), numberWithCommas(buyArr[i][1].toFixed())]);
         }
     }
-
-    // if(location == "Jita"){
-    //     sellArr = jitaSell[itemId];
-    // }else if(location == "Amarr"){
-    //     sellArr = amarrSell[itemId];
-    // }else if(location == "Dodixie"){
-    //     sellArr = dodixieSell[itemId];
-    // }else if(location == "Rens"){
-    //     sellArr = rensSell[itemId];
-    // }else if(location == "Hek"){
-    //     sellArr = hekSell[itemId];
-    // }else{
-    //     sellArr = customSell[itemId];
-    // }
 
     for(var i = 0; i < sellArr.length; i++){
         if(sellArr[i]){
@@ -362,6 +326,9 @@ function init(){
       if($("#buy-threshold").val().length > 0 && !isNaN($("#buy-threshold").val())){
           threshold_cost = parseInt($("#buy-threshold").val());
       }
+      if($("#weight-threshold").val().length > 0 && !isNaN($("#weight-threshold").val())){
+          threshold_weight = parseInt($("#weight-threshold").val());
+      }
     }
 
     var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
@@ -438,14 +405,18 @@ function init(){
             active_stations.push($(this).val().split(","));
           }
       });
-      // station_sell1 = $("#custom_route_end").val().split(",");
-      // station_sell2 = IGNORE;
-      // station_sell3 = IGNORE;
-      // station_sell4 = IGNORE;
     }
     $("#title-banner").slideToggle();
     if(routeTrading){
+      if(threshold_weight === 999999999999999999){
+        requestItemWeight = false;
+      }
+      console.log(requestItemWeight);
+      if(requestItemWeight){
+        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th><th>Total Volume (m3)</th></tr></thead>")
+      }else{
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th></tr></thead>")
+      }
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
         $("#buyingHeader").text("Buying from " + location);
 
@@ -477,6 +448,9 @@ function init(){
         including += "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% |&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if(threshold_cost !== 999999999999999999){
           including += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";
+        }
+        if(threshold_weight !== 999999999999999999){
+          including += " |&nbsp;Weight&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
         }
         including += " |&nbsp;<span id='percent-complete'></span>";
         $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Checking Live Prices<br>Please wait...</div>");

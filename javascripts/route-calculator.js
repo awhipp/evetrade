@@ -153,7 +153,31 @@ function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
 
   rows = rows.sort(rowComparator);
   for(var i = 0; i < rows.length && i < NUMBER_RETURNED; i++){
-    addRow(rows[i][0],rows[i][1],rows[i][2],rows[i][3],rows[i][4],rows[i][5],rows[i][6],rows[i][7],rows[i][8],rows[i][9],rows[i][10],rows[i][11]);
+    if(requestItemWeight){
+      getItemWeight(itemId, rows[i]);
+    }else{
+      addRow(rows[i][0],rows[i][1],rows[i][2],rows[i][3],rows[i][4],rows[i][5],rows[i][6],rows[i][7],rows[i][8],rows[i][9],rows[i][10],rows[i][11]);
+    }
+  }
+}
+
+function getItemWeight(itemId, row){
+  var itemWeightUrl = ENDPOINT + "/inventory/types/" + itemId + "/";
+  try{
+    $.ajax({
+      type: "get",
+      url: itemWeightUrl,
+      dataType: "json",
+      contentType: "application/json",
+      success: function(weightData) {
+        addRow(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],weightData['volume']);
+      },
+      error: function (request, error) {
+        getItemWeight(itemId);
+      }
+    });
+  }catch (unknownError){
+    getItemWeight(itemId);
   }
 }
 
@@ -209,10 +233,32 @@ function checkRow(row_id){
   }
 }
 
-function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate, station){
+function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate, station, storage_volume){
   var id = itemId + "_" + location + "_" + station[1];
 
-  if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost){
+  if(storage_volume){
+    var vol1 = buyVolume.split("-")[0];
+    var vol2 = buyVolume.split("-")[1];
+
+    var selectedvol;
+    if(vol1.indexOf("span") >= 0){
+      selectedvol = vol1;
+    }else{
+      selectedvol = vol2;
+    }
+
+    var stage1 = selectedvol.substring(selectedvol.indexOf(">")+1,selectedvol.indexOf("</"));
+    var stage2 = stage1.replace(",","");
+    while(stage2.indexOf(",") >= 0){
+      stage2 = stage2.replace(",","");
+    }
+    storage_volume = storage_volume * parseFloat(stage2);
+  }else{
+    storage_volume = 0;
+  }
+
+  if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost && storage_volume <= threshold_weight){
+
     if(!created){
       created = true;
       dt = $('#dataTable').DataTable({
@@ -317,18 +363,35 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $('#dataTable').show();
     }
 
-    var row_data = [
-      itemName,
-      numberWithCommas(buyPrice.toFixed(2)),
-      numberWithCommas(buyCost.toFixed(2)),
-      buyVolume.split("-")[0],
-      location,
-      buyVolume.split("-")[1],
-      numberWithCommas(profit.toFixed(2)),
-      (iskRatio.toFixed(3)*100).toFixed(1)+"%",
-      numberWithCommas(sellPrice.toFixed(2)),
-      numberWithCommas(itemProfit.toFixed(2))
-    ];
+    var row_data;
+    if(requestItemWeight){
+      row_data = [
+        itemName,
+        numberWithCommas(buyPrice.toFixed(2)),
+        numberWithCommas(buyCost.toFixed(2)),
+        buyVolume.split("-")[0],
+        location,
+        buyVolume.split("-")[1],
+        numberWithCommas(profit.toFixed(2)),
+        (iskRatio.toFixed(3)*100).toFixed(1)+"%",
+        numberWithCommas(sellPrice.toFixed(2)),
+        numberWithCommas(itemProfit.toFixed(2)),
+        numberWithCommas(storage_volume.toFixed(2))
+      ];
+    }else{
+      row_data = [
+        itemName,
+        numberWithCommas(buyPrice.toFixed(2)),
+        numberWithCommas(buyCost.toFixed(2)),
+        buyVolume.split("-")[0],
+        location,
+        buyVolume.split("-")[1],
+        numberWithCommas(profit.toFixed(2)),
+        (iskRatio.toFixed(3)*100).toFixed(1)+"%",
+        numberWithCommas(sellPrice.toFixed(2)),
+        numberWithCommas(itemProfit.toFixed(2))
+      ];
+    }
 
     if(isUpdate && document.getElementsByClassName(id).length > 0){
       var row = $("." + id);
@@ -421,20 +484,6 @@ function saveBuyData(stationId, itemId, data){
     customBuy[stationId] = [];
     customBuy[stationId][itemId] = data;
   }
-
-  // if (stationId == JITA[1]) {
-  //   jitaBuy[itemId] = data;
-  // }else if(stationId == AMARR[1]){
-  //   amarrBuy[itemId] = data;
-  // }else if(stationId == RENS[1]){
-  //   rensBuy[itemId] = data;
-  // }else if(stationId == DODIXIE[1]){
-  //   dodixieBuy[itemId] = data;
-  // }else if(stationId == HEK[1]){
-  //   hekBuy[itemId] = data;
-  // }else{
-  //   customBuy[itemId] = data;
-  // }
 }
 
 function saveSellData(stationId, itemId, data){
@@ -444,18 +493,4 @@ function saveSellData(stationId, itemId, data){
     customSell[stationId] = [];
     customSell[stationId][itemId] = data;
   }
-
-  // if (stationId == JITA[1]) {
-  //   jitaSell[itemId] = data;
-  // }else if(stationId == AMARR[1]){
-  //   amarrSell[itemId] = data;
-  // }else if(stationId == RENS[1]){
-  //   rensSell[itemId] = data;
-  // }else if(stationId == DODIXIE[1]){
-  //   dodixieSell[itemId] = data;
-  // }else if(stationId == HEK[1]){
-  //   hekSell[itemId] = data;
-  // }else{
-  //   customSell[itemId] = data;
-  // }
 }

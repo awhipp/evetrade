@@ -269,6 +269,15 @@
               <input type="text" id="buy-threshold" class="btn btn-default minor-text" placeholder="Default: Infinity"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
             </div>
           </div>
+          <br/>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
+              <div class="question secondary-text"> Max Cargo Capacity* </div>
+              <p class="minor-text">* For ships EVE only provides unpackaged weights</p>
+              <input type="text" id="weight-threshold" class="btn btn-default minor-text" placeholder="Default: Not Included"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+            </div>
+          </div>
+          <br/>
         </div>
         <div class="row">
           <div class="error question secondary-text"> A starting point, and at least one destination is required. </div>
@@ -304,7 +313,7 @@
         <!-- <a class="donate" href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> -->
         <br/>
         &copy;2016-2017 Alexander Whipp. All rights reserved.<br/>
-        Version 3.0.2 |
+        Version 3.1.0 |
         <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a>
           | <a href="https://datatables.net/">DataTables</a>
         </p>
@@ -318,22 +327,22 @@
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-    <style>   
-      /* Small devices (tablets, 768px and up) */   
-      .adsbygoogle > ins{   
-          position: relative !important;    
-          bottom: inherit !important;   
-          left: inherit !important;   
-          transform: none !important;   
-      }   
-      @media ( min-width : 768px) {   
-          .adsbygoogle > ins{   
-            position: fixed !important;   
-            bottom: 0 !important;   
-            left: 50% !important;   
-            transform: translate(-50%,0) !important;    
-          }   
-      }   
+    <style>
+      /* Small devices (tablets, 768px and up) */
+      .adsbygoogle > ins{
+          position: relative !important;
+          bottom: inherit !important;
+          left: inherit !important;
+          transform: none !important;
+      }
+      @media ( min-width : 768px) {
+          .adsbygoogle > ins{
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 50% !important;
+            transform: translate(-50%,0) !important;
+          }
+      }
     </style>
   </body>
   <script src="javascripts/route-calculator.min.js"></script>
