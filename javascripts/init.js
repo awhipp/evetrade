@@ -199,6 +199,17 @@ $( document ).ready(function() {
     $("#custom_station").change(function(){
       start_location = $("#custom_station option[value='" + $('#custom_station').val() + "']").text();
     });
+
+    if($("#numberInput").val().length > 0){
+      NUMBER_RETURNED= parseInt($("#numberInput").val());
+    }
+    $("#numberInput").val(getCookie("numberInput"));
+    $("#lower-margin-threshold").val(getCookie("lower-margin-threshold"));
+    $("#upper-margin-threshold").val(getCookie("upper-margin-threshold"));
+    $("#profit-threshold").val(getCookie("profit-threshold"));
+    $("#roi-threshold").val(getCookie("roi-threshold"));
+    $("#buy-threshold").val(getCookie("buy-threshold"));
+    $("#weight-threshold").val(getCookie("weight-threshold"));
 });
 
 function updateNumber(){
@@ -206,6 +217,7 @@ function updateNumber(){
     if(NUMBER_RETURNED > 10 || NUMBER_RETURNED < 1){
         NUMBER_RETURNED = 1;
         $("#numberInput").val("1");
+        setCookie("numberInput",numberInput);
     }
 }
 
@@ -271,6 +283,29 @@ function unreachable(itemId, length){
     }
 }
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 function init(){
     var location = start_location;
 
@@ -292,10 +327,12 @@ function init(){
 
         if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
             threshold_margin_lower = parseInt($("#lower-margin-threshold").val());
+            setCookie("lower-margin-threshold",threshold_margin_lower,7);
         }
 
         if($("#upper-margin-threshold").val().length > 0 && !isNaN($("#upper-margin-threshold").val())){
             threshold_margin_upper = parseInt($("#upper-margin-threshold").val());
+            setCookie("upper-margin-threshold",threshold_margin_upper,7);
         }
     }else{
 
@@ -319,15 +356,19 @@ function init(){
 
       if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
           threshold_profit = parseInt($("#profit-threshold").val());
+          setCookie("profit-threshold",threshold_profit,7);
       }
       if($("#roi-threshold").val().length > 0 && !isNaN($("#roi-threshold").val())){
           threshold_roi = parseInt($("#roi-threshold").val());
+          setCookie("roi-threshold",threshold_roi,7);
       }
       if($("#buy-threshold").val().length > 0 && !isNaN($("#buy-threshold").val())){
           threshold_cost = parseInt($("#buy-threshold").val());
+          setCookie("buy-threshold",threshold_cost,7);
       }
       if($("#weight-threshold").val().length > 0 && !isNaN($("#weight-threshold").val())){
           threshold_weight = parseInt($("#weight-threshold").val());
+          setCookie("weight-threshold",threshold_weight,7);
       }
     }
 
@@ -411,7 +452,7 @@ function init(){
       if(threshold_weight === 999999999999999999){
         requestItemWeight = false;
       }
-      console.log(requestItemWeight);
+
       if(requestItemWeight){
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th><th>Total Volume (m3)</th></tr></thead>")
       }else{

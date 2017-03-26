@@ -8,7 +8,10 @@ Implements the EVE Crest API to find:
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-### V3.1.0 Enable the abilty to filter based on ship weight
+### V3.1.1 Added cookies
+* Minimize time spent editing forms
+
+### V3.1.0 Enable the ability to filter based on ship weight
 * Downside is that ship weights retrieved by the API are unpackaged weights
 
 ### V3.0.2 Increased trade station choices
