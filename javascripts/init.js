@@ -219,6 +219,9 @@ function updateNumber(){
         $("#numberInput").val("1");
         setCookie("numberInput",numberInput);
     }
+    if(NUMBER_RETURNED===3){
+      setCookie("numberInput","");
+    }
 }
 
 function shuffle(array) {
@@ -328,11 +331,15 @@ function init(){
         if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
             threshold_margin_lower = parseInt($("#lower-margin-threshold").val());
             setCookie("lower-margin-threshold",threshold_margin_lower,7);
+        }else{
+            setCookie("lower-margin-threshold","");
         }
 
         if($("#upper-margin-threshold").val().length > 0 && !isNaN($("#upper-margin-threshold").val())){
             threshold_margin_upper = parseInt($("#upper-margin-threshold").val());
             setCookie("upper-margin-threshold",threshold_margin_upper,7);
+        }else{
+            setCookie("upper-margin-threshold","");
         }
     }else{
 
@@ -357,18 +364,26 @@ function init(){
       if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
           threshold_profit = parseInt($("#profit-threshold").val());
           setCookie("profit-threshold",threshold_profit,7);
+      }else{
+          setCookie("profit-threshold","");
       }
       if($("#roi-threshold").val().length > 0 && !isNaN($("#roi-threshold").val())){
           threshold_roi = parseInt($("#roi-threshold").val());
           setCookie("roi-threshold",threshold_roi,7);
+      }else{
+          setCookie("roi-threshold","");
       }
       if($("#buy-threshold").val().length > 0 && !isNaN($("#buy-threshold").val())){
           threshold_cost = parseInt($("#buy-threshold").val());
           setCookie("buy-threshold",threshold_cost,7);
+      }else{
+          setCookie("buy-threshold","");
       }
       if($("#weight-threshold").val().length > 0 && !isNaN($("#weight-threshold").val())){
           threshold_weight = parseInt($("#weight-threshold").val());
           setCookie("weight-threshold",threshold_weight,7);
+      }else{
+          setCookie("weight-threshold","");
       }
     }
 
