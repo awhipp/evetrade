@@ -183,12 +183,14 @@
           <div class="row">
             <div class="question secondary-text"> Only return margins between </div>
             <span class="avoidwrap">
-              <input type="text" id="lower-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 30"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <input type="text" id="lower-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 30"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+ event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
               <span class="avoidwrap">
                 <div class="question secondary-text"> and </div>
               </span>
             </span>
-            <input type="text" id="upper-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 45"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+            <input type="text" id="upper-margin-threshold" class="btn btn-default minor-text" placeholder="Default: 45"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+ event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
           </div>
           <hr/>
           <div class="row">
@@ -251,22 +253,26 @@
           <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
               <div class="question secondary-text"> Only return profits above </div>
-              <input type="text" id="profit-threshold" class="btn btn-default minor-text" placeholder="Default: 100,000"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <input type="text" id="profit-threshold" class="btn btn-default minor-text" placeholder="Default: 100,000"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+ event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6">
               <div class="question secondary-text"> Number of trades per item (1-10) </div>
-              <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode === 8 ||
+ event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
           </div>
           <br/>
           <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
               <div class="question secondary-text"> Minimum Return on Investment (in %) </div>
-              <input type="text" id="roi-threshold" class="btn btn-default minor-text" placeholder="Default: 1"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <input type="text" id="roi-threshold" class="btn btn-default minor-text" placeholder="Default: 1"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+ event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6">
               <div class="question secondary-text"> How much are you willing to spend? </div>
-              <input type="text" id="buy-threshold" class="btn btn-default minor-text" placeholder="Default: Infinity"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <input type="text" id="buy-threshold" class="btn btn-default minor-text" placeholder="Default: Infinity"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+ event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
           </div>
           <br/>
@@ -274,7 +280,8 @@
             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
               <div class="question secondary-text"> Max Cargo Capacity* </div>
               <p class="minor-text">* For ships EVE only provides unpackaged weights</p>
-              <input type="text" id="weight-threshold" class="btn btn-default minor-text" placeholder="Default: Not Included"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+              <input type="text" id="weight-threshold" class="btn btn-default minor-text" placeholder="Default: Not Included"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+ event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
           </div>
           <br/>
@@ -309,11 +316,11 @@
         <div class="donate">
           <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#336699', 'A180K9');kofiwidget2.draw();</script>
         </div>
-        <a href="release.html" target="_blank">Release Notes</a>
+        <a href="release.html" target="_blank">Release Notes | Updated 23 April 2017</a>
         <!-- <a class="donate" href='https://ko-fi.com/A180K9' target='_blank'><img height='34' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=a' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> -->
         <br/>
-        &copy;2016-2017 <a href="https://venturefocused.com" target="_blank" alt="Venture Focused Consulting">Venture Focused Consulting</a>. All rights reserved.<br/>
-        Version 3.1.1 |
+        &copy;2016-2017 <a href="https://venturefocused.com" target="_blank" alt="Venture Focused Consulting" style="color: inherit">Venture Focused Consulting</a>. All rights reserved.<br/>
+        Version 3.1.2 |
         <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a>
           | <a href="https://datatables.net/">DataTables</a>
         </p>

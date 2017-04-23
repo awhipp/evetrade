@@ -8,6 +8,10 @@ Implements the EVE Crest API to find:
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
+### V3.1.2 Input Bug Fixed
+* Allow for decimals to be entered
+* Fixed bug where backspacing on input dialogues for specific browsers would not work.
+
 ### V3.1.1 Added cookies
 * Minimize time spent editing forms
 
