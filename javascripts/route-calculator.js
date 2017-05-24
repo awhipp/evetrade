@@ -36,11 +36,23 @@ function goAgain(){
   }
 }
 
+var buy_orders, sell_orders;
 function beginRoute(s_buy, active_stations){
   station_buy = s_buy;
+  buy_orders = [false];
+  getOrders(1, "buy", station_buy[0], station_buy[1], buy_orders);
+
   stations = active_stations;
+  sell_orders = [];
+  for(var i = 0; i < active_stations.length; i++){
+      sell_orders[i] = [false];
+      var regionId = active_stations[i][0];
+      var stationId = active_stations[i][1]
+      getOrders(1, "sell", regionId, stationId, sell_orders[i]);
+  }
+
   $("#selection").hide();
-  getRowsRoute();
+  // getRowsRoute();
 }
 
 function getRandomInt(min, max) {
@@ -65,6 +77,60 @@ function getRowsRoute(){
     $(".loading").html("No Deals were found for these stations.<br>Try different search parameters.");
   }
   itemIds = itemIds.splice(JUMPS, itemIds.length);
+}
+
+function getOrders(page, orderType, region, station, composite){
+    region = parseInt(region);
+    station = parseInt(station);
+
+    var url = "https://esi.tech.ccp.is/latest/markets/"+region+"/orders/?datasource=tranquility&order_type="+orderType+"&page="+page;
+    $.ajax({
+      type: "get",
+      url: url,
+      dataType: "json",
+      contentType: "application/json",
+        success: function(data) {
+            if(data.length == 0){
+                console.log("complete");
+                composite[0] = true;
+                var sell_orders_finished = true;
+                for(var i = 0; i < sell_orders.length; i++){
+                    if(sell_orders[0] === false){
+                        sell_orders_finished = false;
+                    }
+                }
+                if(buy_orders[0] === true && sell_orders_finished){
+                    console.log("ALL COMPLETE"); // call here
+                }
+                return;
+            }else{
+                getOrders(page+1, orderType, region, station, composite);
+                for(var i = 0; i < data.length; i++){
+                    if(data[i]["location_id"] === station){
+                        composite.push(data[i]);
+                    }
+                }
+            }
+        },
+        error: function(){
+            console.log("Error getting page");
+        }
+    });
+}
+
+// var comp = [false];
+// getOrders(1, 10000002, 60003760, comp);
+
+function restrictToStation(stationId, orders){
+
+}
+
+function restrictToOrderType(isBuy, orders){
+    if(isBuy){
+
+    }else{
+
+    }
 }
 
 function getBuyPrice(itemId, isUpdate){
