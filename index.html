@@ -51,7 +51,7 @@
       <div id="title-banner"><img class="title" src="logo.png"/></div>
       <input  id="toggle" type="button" class="question btn btn-default secondary-text" onclick="showAbout()" value="About"/>
       <input type="button" id="reset" class="btn btn-default secondary-text" onclick="window.location.reload()" value="Restart"/>
-      <input type="button" id="stop" class="btn btn-default secondary-text" onclick="$('#stop').val('Stopped'); $('#stop').prop('disabled', true); itemIds = [];" value="Stop"></input>
+      <input type="button" id="stop" class="btn btn-default secondary-text" onclick="$('#stop').val('Stopped'); $('#stop').prop('disabled', true); itemIds = []; stopped=true;" value="Stop"></input>
       <div id="howto" class="minor-text howto">
         <b>Select Route or Station</b>
         <br/>Route - Find best trades between multiple trade hubs<br/>

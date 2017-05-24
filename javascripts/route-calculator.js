@@ -60,29 +60,29 @@ function beginRoute(s_buy, active_stations){
   // getRowsRoute();
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+// function getRandomInt(min, max) {
+//   min = Math.ceil(min);
+//   max = Math.floor(max);
+//   return Math.floor(Math.random() * (max - min)) + min;
+// }
 
-function getRowsRoute(){
-  // $("#percent-complete").text( ((1-itemIds.length/init_itemIds)*100).toFixed(2) + "% Complete");
-  $("#percent-complete").text("Items Checked: " + (init_itemIds-itemIds.length) + " of " + init_itemIds );
-  var i;
-  JUMPS = getRandomInt(6,26);
-  for(i = 0; i < itemIds.length && i < JUMPS; i++){
-    getBuyPrice(itemIds[i], false);
-  }
-  length = itemIds[i-1];
-  if(i >= itemIds.length){
-    $('#stop').val('Finished');
-    $('#stop').prop('disabled', true);
-    itemIds = [];
-    $(".loading").html("No Deals were found for these stations.<br>Try different search parameters.");
-  }
-  itemIds = itemIds.splice(JUMPS, itemIds.length);
-}
+// function getRowsRoute(){
+//   // $("#percent-complete").text( ((1-itemIds.length/init_itemIds)*100).toFixed(2) + "% Complete");
+//   $("#percent-complete").text("Items Checked: " + (init_itemIds-itemIds.length) + " of " + init_itemIds );
+//   var i;
+//   JUMPS = getRandomInt(6,26);
+//   for(i = 0; i < itemIds.length && i < JUMPS; i++){
+//     getBuyPrice(itemIds[i], false);
+//   }
+//   length = itemIds[i-1];
+//   if(i >= itemIds.length){
+//     $('#stop').val('Finished');
+//     $('#stop').prop('disabled', true);
+//     itemIds = [];
+//     $(".loading").html("No Deals were found for these stations.<br>Try different search parameters.");
+//   }
+//   itemIds = itemIds.splice(JUMPS, itemIds.length);
+// }
 
 function getOrders(page, orderType, region, station, composite){
     region = parseInt(region);
@@ -100,23 +100,32 @@ function getOrders(page, orderType, region, station, composite){
                 composite["complete"] = true;
                 var sell_orders_finished = true;
                 for(var i = 0; i < sell_orders.length; i++){
-                    if(sell_orders[0]["complete"] === false){
+                    if(sell_orders[i]["complete"] === false){
                         sell_orders_finished = false;
                     }
                 }
                 if(buy_orders["complete"] === true && sell_orders_finished){
                     console.log("ALL COMPLETE"); // call here
+                    var itemids = [];
                     for(itemid in buy_orders){
+                      itemids.push(itemid);
+                    }
+                    var itemids = shuffle(itemids);
+                    for(var i = 0; i < itemids.length; i++){
+                      var itemid = itemids[i];
                       if(itemid !== "complete" || itemid !== "station" || itemid !== "region"){
-                        var buyPrice = getData(buy_orders[itemid], station_buy["station"], "sell", itemid);
-                        for(var i = 0; i < sell_orders.length; i++){
-                          if(sell_orders[i][itemid]){
-                            var sellPrice = getData(sell_orders[i][itemid], sell_orders[i]["station"], "buy", itemid);
-                            var station_info = [sell_orders[i]["region"],sell_orders[i]["station"]];
-                            getItemInfo(itemid, buyPrice, sellPrice, station_info);
+                        var buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
+                        if(buyPrice.length > 0){
+                          for(var i = 0; i < sell_orders.length; i++){
+                            if(sell_orders[i][itemid]){
+                              var sellPrice = getData(sell_orders[i][itemid], sell_orders[i]["station"], "buy", itemid);
+                              var station_info = [sell_orders[i]["region"],sell_orders[i]["station"]];
+                              getItemInfo(itemid, buyPrice, sellPrice, station_info);
+                            }
                           }
                         }
                       }
+
                     }
                 }
                 return;
@@ -139,71 +148,71 @@ function getOrders(page, orderType, region, station, composite){
     });
 }
 
-function getBuyPrice(itemId, isUpdate){
-  var buyMarketUrl = ENDPOINT + "/market/" + station_buy[0] + "/orders/sell/";
-  var buyTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
-  try{
-    $.ajax({
-      type: "get",
-      url: buyMarketUrl + buyTypeUrl,
-      dataType: "json",
-      contentType: "application/json",
-      success: function(buyData) {
-        var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
-        if(buyPrice.length > 0){
-          var itemName = buyData.items[0].type.name;
-          for(var i = 0; i < stations.length; i++){
-            getSellPrice(itemId, buyPrice, itemName, stations[i], isUpdate);
-          }
-        }else{
-          if(itemId === length){
-            goAgain();
-          }
-        }
-      },
-      error: function (request, error) {
-        unreachable(itemId, length);
-      }
-    });
-  }catch (unknownError){
-    getBuyPrice(itemId, isUpdate);
-  }
+// function getBuyPrice(itemId, isUpdate){
+//   var buyMarketUrl = ENDPOINT + "/market/" + station_buy[0] + "/orders/sell/";
+//   var buyTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
+//   try{
+//     $.ajax({
+//       type: "get",
+//       url: buyMarketUrl + buyTypeUrl,
+//       dataType: "json",
+//       contentType: "application/json",
+//       success: function(buyData) {
+//         var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
+//         if(buyPrice.length > 0){
+//           var itemName = buyData.items[0].type.name;
+//           for(var i = 0; i < stations.length; i++){
+//             getSellPrice(itemId, buyPrice, itemName, stations[i], isUpdate);
+//           }
+//         }else{
+//           if(itemId === length){
+//             goAgain();
+//           }
+//         }
+//       },
+//       error: function (request, error) {
+//         unreachable(itemId, length);
+//       }
+//     });
+//   }catch (unknownError){
+//     getBuyPrice(itemId, isUpdate);
+//   }
+//
+// }
 
-}
-
-function getSellPrice(itemId, buyPrice, itemName, station, isUpdate){
-  if(station != null){
-    var sellMarketUrl = ENDPOINT + "/market/" + station[0] + "/orders/buy/";
-    var sellTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
-    try{
-      $.ajax({
-        type: "get",
-        url: sellMarketUrl + sellTypeUrl,
-        dataType: "json",
-        contentType: "application/json",
-        success: function(sellData) {
-          var sellPrice = getData(sellData, station[1], "buy", itemId);
-          if(sellPrice.length > 0){
-            getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate);
-          }else{
-            if(itemId === length){
-              goAgain();
-            }
-          }
-        },
-        error: function (request, error) {
-          unreachable(itemId, length);
-        }
-      });
-    }catch (unknownError){
-      getSellPrice(itemId, buyPrice, itemName, station, isUpdate);
-    }
-  }else{
-    if(itemId === length){
-      goAgain();
-    }
-  }
-}
+// function getSellPrice(itemId, buyPrice, itemName, station, isUpdate){
+//   if(station != null){
+//     var sellMarketUrl = ENDPOINT + "/market/" + station[0] + "/orders/buy/";
+//     var sellTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
+//     try{
+//       $.ajax({
+//         type: "get",
+//         url: sellMarketUrl + sellTypeUrl,
+//         dataType: "json",
+//         contentType: "application/json",
+//         success: function(sellData) {
+//           var sellPrice = getData(sellData, station[1], "buy", itemId);
+//           if(sellPrice.length > 0){
+//             getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate);
+//           }else{
+//             if(itemId === length){
+//               goAgain();
+//             }
+//           }
+//         },
+//         error: function (request, error) {
+//           unreachable(itemId, length);
+//         }
+//       });
+//     }catch (unknownError){
+//       getSellPrice(itemId, buyPrice, itemName, station, isUpdate);
+//     }
+//   }else{
+//     if(itemId === length){
+//       goAgain();
+//     }
+//   }
+// }
 
 function getItemInfo(itemId, buyPrice, sellPrice, station){
   if(itemId === length){
@@ -222,29 +231,44 @@ function getItemInfo(itemId, buyPrice, sellPrice, station){
   }
 
   rows = rows.sort(rowComparator);
-  for(var i = 0; i < rows.length && i < NUMBER_RETURNED; i++){
-      getItemWeight(itemId, rows[i]);
+  if(rows[0]){
+    getItemWeight(itemId, rows[0], false);
+  }
+  for(var i = 1; i < rows.length && i < NUMBER_RETURNED && !stopped; i++){
+      getItemWeight(itemId, rows[i], true);
   }
 }
 
-function getItemWeight(itemId, row){
-  var itemWeightUrl = ENDPOINT + "/inventory/types/" + itemId + "/";
-  try{
-    $.ajax({
-      type: "get",
-      url: itemWeightUrl,
-      dataType: "json",
-      contentType: "application/json",
-      success: function(weightData) {
-        addRow(row[0],"name",row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],weightData['volume']);
-      },
-      error: function (request, error) {
-        getItemWeight(itemId);
-      }
-    });
-  }catch (unknownError){
-    getItemWeight(itemId);
+
+var weightTracker = {};
+
+function getItemWeight(itemId, row, allatonce){
+  if(weightTracker[itemId] !== undefined){
+    var name = weightTracker[itemId][0];
+    var weight = weightTracker[itemId][1];
+    addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+  }else{
+    var itemWeightUrl = ENDPOINT + "/inventory/types/" + itemId + "/";
+    try{
+      $.ajax({
+        type: "get",
+        url: itemWeightUrl,
+        dataType: "json",
+        async: allatonce,
+        contentType: "application/json",
+        success: function(weightData) {
+          weightTracker[itemId] = [weightData['name'],weightData['volume']];
+          addRow(row[0],weightData['name'],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weightData['volume']);
+        },
+        error: function (request, error) {
+          getItemWeight(itemId);
+        }
+      });
+    }catch (unknownError){
+      getItemWeight(itemId);
+    }
   }
+
 }
 
 function rowComparator(a,b){
@@ -459,27 +483,27 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       ];
     }
 
-    if(isUpdate && document.getElementsByClassName(id).length > 0){
-      var row = $("." + id);
-      var found = false;
-      $.each(row, function(){
-        if(!found && $(this).hasClass("updating")){
-          found = true;
-          var counter = 0;
-          $.each($(this).children(), function(){
-            $(this).html(row_data[counter]);
-            counter++;
-
-          });
-          $(this).removeClass("updating");
-        }
-      });
-    }else{
+    // if(isUpdate && document.getElementsByClassName(id).length > 0){
+    //   var row = $("." + id);
+    //   var found = false;
+    //   $.each(row, function(){
+    //     if(!found && $(this).hasClass("updating")){
+    //       found = true;
+    //       var counter = 0;
+    //       $.each($(this).children(), function(){
+    //         $(this).html(row_data[counter]);
+    //         counter++;
+    //
+    //       });
+    //       $(this).removeClass("updating");
+    //     }
+    //   });
+    // }else{
       var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
       var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
       $(row).attr('id', id + "_" + $("." + id).length);
       $(row).addClass(id);
-    }
+    // }
   }
 }
 
@@ -504,20 +528,19 @@ function sellComparator(a,b){
 * @param {orderType} orderType the type of order is either "sell" or "buy"
 * @param {itemId} the item id being bought/sold
 */
-function getPrice(jsonMarket, stationId, orderType, itemId)
+function getPrice(orders, stationId, orderType, itemId)
 {
   var bestPrice = [];
   var bestVolume = [];
 
   // Pull all orders found and start iteration
-  var orders = jsonMarket['items'];
   for (var orderIndex = 0; orderIndex < orders.length; orderIndex++)
   {
     var order = orders[orderIndex];
-    if (stationId == order['location']['id']){
+    if (stationId == order['location_id']){
       // This is the station market we want
       var price = order['price'];
-      var volume = order['volume'];
+      var volume = order['volume_remain'];
       bestPrice.push([price, volume]);
     }
   }

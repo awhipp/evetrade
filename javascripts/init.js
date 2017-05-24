@@ -5,6 +5,8 @@ var RENS = [10000030,60004588];
 var HEK = [10000042,60005686];
 var IGNORE = null;
 
+var stopped = false;
+
 var NUMBER_RETURNED = 3;
 
 var threshold_margin_lower = 30;
