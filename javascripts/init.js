@@ -58,42 +58,42 @@ function showAbout(){
     }
 }
 
-function getMoreItems(){
-  var shown = false;
-    $.ajax({
-        type: "get",
-        dataType: "json",
-        url: ENDPOINT + "/market/types/",
-        success: function(market){
-          for(var page = 1; page <= market.pageCount; page++){
-            $.ajax({
-                type: "get",
-                dataType: "json",
-                url: ENDPOINT + "/market/types/?page=" + page,
-                success: function(data){
-                    if(data && data.items){
-                        if(!data.next){
-                            $("#loading").hide();
-                            $("#selection").show();
-                        }
-                        var items = shuffle(data.items);
-                        init_itemIds = init_itemIds + items.length;
-                        for(var i = 0; i < items.length; i ++){
-                            itemIds.push(items[i].id);
-                        }
-                    }
-                },
-                error: function (request, error) {
-                    // getMoreItems();
-                }
-            });
-          }
-        },
-        error: function (request, error) {
-            // getMoreItems();
-        }
-    });
-}
+// function getMoreItems(){
+//   var shown = false;
+//     $.ajax({
+//         type: "get",
+//         dataType: "json",
+//         url: ENDPOINT + "/market/types/",
+//         success: function(market){
+//           for(var page = 1; page <= market.pageCount; page++){
+//             $.ajax({
+//                 type: "get",
+//                 dataType: "json",
+//                 url: ENDPOINT + "/market/types/?page=" + page,
+//                 success: function(data){
+//                     if(data && data.items){
+//                         if(!data.next){
+//                             $("#loading").hide();
+//                             $("#selection").show();
+//                         }
+//                         var items = shuffle(data.items);
+//                         init_itemIds = init_itemIds + items.length;
+//                         for(var i = 0; i < items.length; i ++){
+//                             itemIds.push(items[i].id);
+//                         }
+//                     }
+//                 },
+//                 error: function (request, error) {
+//                     // getMoreItems();
+//                 }
+//             });
+//           }
+//         },
+//         error: function (request, error) {
+//             // getMoreItems();
+//         }
+//     });
+// }
 
 function setup(tradeType){
     routeTrading = tradeType;
@@ -122,7 +122,9 @@ $( document ).ready(function() {
         "lengthMenu": [[10], ["10"]]
     });
 
-    getMoreItems();
+    // getMoreItems();
+    $("#loading").hide();
+    $("#selection").show();
 
     $(".start").on('click', function(){
         start_location = $(this).val();

@@ -10,7 +10,6 @@ var dt;
 
 var station_buy, stations;
 
-
 function getData(data, stationId, orderType, itemId){
   var returnarr = [];
   var temparr;
@@ -39,15 +38,21 @@ function goAgain(){
 var buy_orders, sell_orders;
 function beginRoute(s_buy, active_stations){
   station_buy = s_buy;
-  buy_orders = [false];
+  buy_orders = {};
+  buy_orders["complete"] = false;
+  buy_orders["region"] = station_buy[0];
+  buy_orders["station"] = station_buy[1];
   getOrders(1, "buy", station_buy[0], station_buy[1], buy_orders);
 
   stations = active_stations;
   sell_orders = [];
   for(var i = 0; i < active_stations.length; i++){
-      sell_orders[i] = [false];
+      sell_orders[i] = {};
+      sell_orders[i]["complete"] = false;
       var regionId = active_stations[i][0];
-      var stationId = active_stations[i][1]
+      var stationId = active_stations[i][1];
+      sell_orders[i]["region"] = regionId;
+      sell_orders[i]["station"] = stationId;
       getOrders(1, "sell", regionId, stationId, sell_orders[i]);
   }
 
@@ -92,22 +97,38 @@ function getOrders(page, orderType, region, station, composite){
         success: function(data) {
             if(data.length == 0){
                 console.log("complete");
-                composite[0] = true;
+                composite["complete"] = true;
                 var sell_orders_finished = true;
                 for(var i = 0; i < sell_orders.length; i++){
-                    if(sell_orders[0] === false){
+                    if(sell_orders[0]["complete"] === false){
                         sell_orders_finished = false;
                     }
                 }
-                if(buy_orders[0] === true && sell_orders_finished){
+                if(buy_orders["complete"] === true && sell_orders_finished){
                     console.log("ALL COMPLETE"); // call here
+                    for(itemid in buy_orders){
+                      if(itemid !== "complete" || itemid !== "station" || itemid !== "region"){
+                        var buyPrice = getData(buy_orders[itemid], station_buy["station"], "sell", itemid);
+                        for(var i = 0; i < sell_orders.length; i++){
+                          if(sell_orders[i][itemid]){
+                            var sellPrice = getData(sell_orders[i][itemid], sell_orders[i]["station"], "buy", itemid);
+                            var station_info = [sell_orders[i]["region"],sell_orders[i]["station"]];
+                            getItemInfo(itemid, buyPrice, sellPrice, station_info);
+                          }
+                        }
+                      }
+                    }
                 }
                 return;
             }else{
                 getOrders(page+1, orderType, region, station, composite);
                 for(var i = 0; i < data.length; i++){
                     if(data[i]["location_id"] === station){
-                        composite.push(data[i]);
+                        var id = data[i]["type_id"];
+                        if(!composite[id]){
+                          composite[id] = [];
+                        }
+                        composite[id].push(data[i]);
                     }
                 }
             }
@@ -116,21 +137,6 @@ function getOrders(page, orderType, region, station, composite){
             console.log("Error getting page");
         }
     });
-}
-
-// var comp = [false];
-// getOrders(1, 10000002, 60003760, comp);
-
-function restrictToStation(stationId, orders){
-
-}
-
-function restrictToOrderType(isBuy, orders){
-    if(isBuy){
-
-    }else{
-
-    }
 }
 
 function getBuyPrice(itemId, isUpdate){
@@ -199,9 +205,7 @@ function getSellPrice(itemId, buyPrice, itemName, station, isUpdate){
   }
 }
 
-
-
-function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
+function getItemInfo(itemId, buyPrice, sellPrice, station){
   if(itemId === length){
     goAgain();
   }
@@ -210,7 +214,7 @@ function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
 
   for(var i = 0; i < buyPrice.length; i++){
     for(var j = 0; j < sellPrice.length; j++){
-      var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice[j][0], sellPrice[j][1], station, isUpdate);
+      var row = calculateRow(itemId, buyPrice[i][0], buyPrice[i][1], sellPrice[j][0], sellPrice[j][1], station);
       if(row.length > 0){
         rows.push(row);
       }
@@ -219,11 +223,7 @@ function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
 
   rows = rows.sort(rowComparator);
   for(var i = 0; i < rows.length && i < NUMBER_RETURNED; i++){
-    if(requestItemWeight){
       getItemWeight(itemId, rows[i]);
-    }else{
-      addRow(rows[i][0],rows[i][1],rows[i][2],rows[i][3],rows[i][4],rows[i][5],rows[i][6],rows[i][7],rows[i][8],rows[i][9],rows[i][10],rows[i][11]);
-    }
   }
 }
 
@@ -236,7 +236,7 @@ function getItemWeight(itemId, row){
       dataType: "json",
       contentType: "application/json",
       success: function(weightData) {
-        addRow(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],weightData['volume']);
+        addRow(row[0],"name",row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],weightData['volume']);
       },
       error: function (request, error) {
         getItemWeight(itemId);
@@ -253,7 +253,7 @@ function rowComparator(a,b){
   return 0;
 }
 
-function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, station, isUpdate){
+function calculateRow(itemId,  b_price, b_volume, s_price, s_volume, station){
   if(b_price < s_price && s_price > 0){
     var itemProfit = s_price - b_price;
     var profit;
@@ -270,7 +270,7 @@ function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, s
     }
     var location = getLocation(station[1]);
     var iskRatio = (s_price-b_price)/b_price;
-    return [itemId, itemName, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, isUpdate, station];
+    return [itemId, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, station];
   }
   return [];
 }
@@ -299,7 +299,7 @@ function checkRow(row_id){
   }
 }
 
-function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate, station, storage_volume){
+function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, station, storage_volume){
   var id = itemId + "_" + location + "_" + station[1];
 
   if(storage_volume){
