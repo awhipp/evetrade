@@ -7,17 +7,16 @@ var IGNORE = null;
 
 var stopped = false;
 
-var NUMBER_RETURNED = 3;
+var NUMBER_RETURNED = 1;
 
 var threshold_margin_lower = 30;
 var threshold_margin_upper = 45;
 
 var threshold_profit = 100000;
-var threshold_roi = 1;
+var threshold_roi = 5;
 var threshold_cost = 999999999999999999;
 var threshold_weight = 999999999999999999
 
-var itemIds = [];
 var customBuy = [];
 var customSell = [];
 
@@ -60,43 +59,6 @@ function showAbout(){
     }
 }
 
-// function getMoreItems(){
-//   var shown = false;
-//     $.ajax({
-//         type: "get",
-//         dataType: "json",
-//         url: ENDPOINT + "/market/types/",
-//         success: function(market){
-//           for(var page = 1; page <= market.pageCount; page++){
-//             $.ajax({
-//                 type: "get",
-//                 dataType: "json",
-//                 url: ENDPOINT + "/market/types/?page=" + page,
-//                 success: function(data){
-//                     if(data && data.items){
-//                         if(!data.next){
-//                             $("#loading").hide();
-//                             $("#selection").show();
-//                         }
-//                         var items = shuffle(data.items);
-//                         init_itemIds = init_itemIds + items.length;
-//                         for(var i = 0; i < items.length; i ++){
-//                             itemIds.push(items[i].id);
-//                         }
-//                     }
-//                 },
-//                 error: function (request, error) {
-//                     // getMoreItems();
-//                 }
-//             });
-//           }
-//         },
-//         error: function (request, error) {
-//             // getMoreItems();
-//         }
-//     });
-// }
-
 function setup(tradeType){
     routeTrading = tradeType;
     $('.howto').toggle(false);
@@ -112,8 +74,6 @@ function setup(tradeType){
 
 
 $( document ).ready(function() {
-    $("#loading").show();
-    $("#selection").hide();
 
     popup_table_buy = $("#popup-table-buy").DataTable({
         "order": [[ 0, "asc" ]],
@@ -123,10 +83,6 @@ $( document ).ready(function() {
         "order": [[ 0, "desc" ]],
         "lengthMenu": [[10], ["10"]]
     });
-
-    // getMoreItems();
-    $("#loading").hide();
-    $("#selection").show();
 
     $(".start").on('click', function(){
         start_location = $(this).val();
@@ -152,7 +108,7 @@ $( document ).ready(function() {
       $(this).addClass("station-selected");
     });
 
-    $("#numberInput").on('blur', updateNumber);
+    // $("#numberInput").on('blur', updateNumber);
 
     $("#custom_route").on('click', function(){
       $(".standard").slideToggle();
@@ -204,10 +160,10 @@ $( document ).ready(function() {
       start_location = $("#custom_station option[value='" + $('#custom_station').val() + "']").text();
     });
 
-    if($("#numberInput").val().length > 0){
-      NUMBER_RETURNED= parseFloat($("#numberInput").val());
-    }
-    $("#numberInput").val(getCookie("numberInput"));
+    // if($("#numberInput").val().length > 0){
+    //   NUMBER_RETURNED= parseFloat($("#numberInput").val());
+    // }
+    // $("#numberInput").val(getCookie("numberInput"));
     $("#lower-margin-threshold").val(getCookie("lower-margin-threshold"));
     $("#upper-margin-threshold").val(getCookie("upper-margin-threshold"));
     $("#profit-threshold").val(getCookie("profit-threshold"));
@@ -216,17 +172,17 @@ $( document ).ready(function() {
     $("#weight-threshold").val(getCookie("weight-threshold"));
 });
 
-function updateNumber(){
-    NUMBER_RETURNED = parseFloat($("#numberInput").val());
-    if(NUMBER_RETURNED > 10 || NUMBER_RETURNED < 1){
-        NUMBER_RETURNED = 1;
-        $("#numberInput").val("1");
-        setCookie("numberInput",numberInput);
-    }
-    if(NUMBER_RETURNED===3){
-      setCookie("numberInput","");
-    }
-}
+// function updateNumber(){
+//     NUMBER_RETURNED = parseFloat($("#numberInput").val());
+//     if(NUMBER_RETURNED > 10 || NUMBER_RETURNED < 1){
+//         NUMBER_RETURNED = 1;
+//         $("#numberInput").val("1");
+//         setCookie("numberInput",numberInput);
+//     }
+//     if(NUMBER_RETURNED===3){
+//       setCookie("numberInput","");
+//     }
+// }
 
 function shuffle(array) {
     var currentIndex = array.length,temporaryValue,randomIndex;
@@ -468,9 +424,9 @@ function init(){
     }
     $("#title-banner").slideToggle();
     if(routeTrading){
-      if(threshold_weight === 999999999999999999){
-        requestItemWeight = false;
-      }
+    //   if(threshold_weight === 999999999999999999){
+    //     requestItemWeight = false;
+    //   }
 
       if(requestItemWeight){
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th><th>Total Volume (m3)</th></tr></thead>")
@@ -512,7 +468,6 @@ function init(){
         if(threshold_weight !== 999999999999999999){
           including += " |&nbsp;Weight&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
         }
-        including += " |&nbsp;<span id='percent-complete'></span>";
         $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Checking Live Prices<br>Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();

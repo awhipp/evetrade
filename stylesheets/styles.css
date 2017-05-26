@@ -39,7 +39,7 @@ hr {
     text-align: left;
 }
 
-#custom_route_end > li{    
+#custom_route_end > li{
     list-style: none;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -313,6 +313,7 @@ span.avoidwrap { display:inline-block; }
 
 #loading{
   padding: 5em;
+  display: none;
 }
 
 #selection > .row {
@@ -321,7 +322,6 @@ span.avoidwrap { display:inline-block; }
 }
 
 #selection{
-  display: none;
   overflow: hidden;
 }
 

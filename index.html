@@ -61,9 +61,9 @@
       <div id="howto-route" class="minor-text howto">
         <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
         <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
-        <b>Shift + left-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
+        <b>Right-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
         <b>Shift + left-click the header</b><br/>Multi-sort on that additional column<br/><br/>
-        <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/>
+        <!-- <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/> -->
         <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
       </div>
       <div id="howto-station" class="minor-text howto">
@@ -137,7 +137,7 @@
     <div id="buyingFooter" class="minor-text"></div>
     <div id="loading">
       <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
-      <div class="primary-text question">Get new market items...</div>
+      <div class="primary-text question">Getting new market items...</div>
     </div>
     <div id="selection" class="secondary-text">
       <div id="initial_choice">
@@ -256,31 +256,28 @@
               <input type="text" id="profit-threshold" class="btn btn-default minor-text" placeholder="Default: 100,000"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
  event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
+              <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="question secondary-text"> Max Cargo Capacity* </div>
+                <p class="minor-text">* For ships EVE only provides unpackaged weights</p>
+                <input type="text" id="weight-threshold" class="btn btn-default minor-text" placeholder="Default: Not Included"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+   event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
+              </div>
+            <!-- <div class="col-lg-4 col-md-4 col-sm-6">
               <div class="question secondary-text"> Number of trades per item (1-10) </div>
               <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode === 8 ||
  event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
-            </div>
+            </div> -->
           </div>
           <br/>
           <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
               <div class="question secondary-text"> Minimum Return on Investment (in %) </div>
-              <input type="text" id="roi-threshold" class="btn btn-default minor-text" placeholder="Default: 1"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+              <input type="text" id="roi-threshold" class="btn btn-default minor-text" placeholder="Default: 5"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
  event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6">
               <div class="question secondary-text"> How much are you willing to spend? </div>
               <input type="text" id="buy-threshold" class="btn btn-default minor-text" placeholder="Default: Infinity"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
- event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
-            </div>
-          </div>
-          <br/>
-          <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
-              <div class="question secondary-text"> Max Cargo Capacity* </div>
-              <p class="minor-text">* For ships EVE only provides unpackaged weights</p>
-              <input type="text" id="weight-threshold" class="btn btn-default minor-text" placeholder="Default: Not Included"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
  event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
             </div>
           </div>
@@ -319,11 +316,11 @@
         <div class="donate">
           <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#336699', 'A180K9');kofiwidget2.draw();</script>
         </div>
-        <a href="release.html" target="_blank">Release Notes | Updated 11 May 2017</a>
+        <a href="release.html" target="_blank">Release Notes | Updated 01 June 2017</a>
         <br/>
         &copy;2016-2017 <a href="https://venturefocused.com" target="_blank" alt="Venture Focused Consulting" style="color: inherit">Venture Focused Consulting</a>. All rights reserved.<br/>
-        Version 3.1.2 |
-        <a href="https://developers.eveonline.com/" title="Rate limit compliant (<150 requests/sec)">EVE Crest</a>
+        Version 4.0.0b |
+        <a href="https://esi.tech.ccp.is/latest/">ESI API</a>
           | <a href="https://datatables.net/">DataTables</a>
         </p>
     </footer>

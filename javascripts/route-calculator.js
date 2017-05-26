@@ -1,12 +1,12 @@
 var SECOND_DELAY = 0;
 var PROFIT_INDEX = 6;
-var JUMPS = 75;
 var UPDATING_TIMEOUT = 25000;
 var UPDATING_CHECK = [];
 var length;
 var stations = [];
 var created = false;
 var dt;
+
 
 var station_buy, stations;
 
@@ -19,21 +19,23 @@ function getData(data, stationId, orderType, itemId){
   else if (data != null){
     temparr = getPrice(data, stationId, orderType, itemId)
   }
-  for(var i = 0; i < temparr.length; i++){
-    if(temparr[i][0] > 0){
-      returnarr.push(temparr[i]);
+  if(temparr){
+      for(var i = 0; i < temparr.length; i++){
+        if(temparr[i][0] > 0){
+          returnarr.push(temparr[i]);
+        }
     }
   }
   return returnarr;
 }
 
-function goAgain(){
-  if(routeTrading){
-    getRowsRoute();
-  }else{
-    getRowsStation();
-  }
-}
+// function goAgain(){
+//   if(routeTrading){
+//     getRowsRoute();
+//   }else{
+//     getRowsStation();
+//   }
+// }
 
 var buy_orders, sell_orders;
 function beginRoute(s_buy, active_stations){
@@ -42,7 +44,10 @@ function beginRoute(s_buy, active_stations){
   buy_orders["complete"] = false;
   buy_orders["region"] = station_buy[0];
   buy_orders["station"] = station_buy[1];
-  getOrders(1, "buy", station_buy[0], station_buy[1], buy_orders);
+  buy_orders["complete_pages"] = 0;
+  for(var j = 1; j <= PAGES; j++){
+      getOrders(j, station_buy[0], station_buy[1], buy_orders);
+  }
 
   stations = active_stations;
   sell_orders = [];
@@ -53,108 +58,37 @@ function beginRoute(s_buy, active_stations){
     var stationId = active_stations[i][1];
     sell_orders[i]["region"] = regionId;
     sell_orders[i]["station"] = stationId;
-    getOrders(1, "sell", regionId, stationId, sell_orders[i]);
+    sell_orders[i]["complete_pages"] = 0;
+    for(var j = 1; j <= PAGES; j++){
+        getOrders(j, regionId, stationId, sell_orders[i]);
+    }
   }
 
   $("#selection").hide();
   // getRowsRoute();
 }
 
-// function getRandomInt(min, max) {
-//   min = Math.ceil(min);
-//   max = Math.floor(max);
-//   return Math.floor(Math.random() * (max - min)) + min;
-// }
+var itemids = [];
 
-function getRowsRoute(){
-  // $("#percent-complete").text( ((1-itemIds.length/init_itemIds)*100).toFixed(2) + "% Complete");
-  $("#percent-complete").text("Items Checked: " + (init_itemIds-itemIds.length) + " of " + init_itemIds );
-  var i;
-  JUMPS = getRandomInt(6,26);
-  for(i = 0; i < itemIds.length && i < JUMPS; i++){
-    getBuyPrice(itemIds[i], false);
-  }
-  length = itemIds[i-1];
-  if(i >= itemIds.length){
-    $('#stop').val('Finished');
-    $('#stop').prop('disabled', true);
-    itemIds = [];
-    $(".loading").html("No Deals were found for these stations.<br>Try different search parameters.");
-  }
-  itemIds = itemIds.splice(JUMPS, itemIds.length);
 }
 
-function getOrders(page, orderType, region, station, composite){
   region = parseInt(region);
   station = parseInt(station);
 
-  var url = "https://esi.tech.ccp.is/latest/markets/"+region+"/orders/?datasource=tranquility&order_type="+orderType+"&page="+page;
   $.ajax({
     type: "get",
     url: url,
     dataType: "json",
     contentType: "application/json",
     success: function(data) {
-      if(data.length == 0){
-        console.log("complete - " + page);
-        composite["complete"] = true;
-        var sell_orders_finished = true;
-        for(var i = 0; i < sell_orders.length; i++){
-          if(sell_orders[i]["complete"] === false){
-            sell_orders_finished = false;
-          }
-        }
-      }
-      if(buy_orders["complete"] === true && sell_orders_finished){
-                    console.log("ALL COMPLETE"); // call here
-                    var itemids = [];
-                    for(itemid in buy_orders){
-                      itemids.push(itemid);
-                    }
-                    console.log(itemids);
-                    // var itemids = shuffle(itemids);
-
-                    for(var i = 0; i < itemids.length; i++){
-                      var itemid = itemids[i];
-                      if(itemid !== "complete" || itemid !== "station" || itemid !== "region"){
-                        var buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
-                        if(buyPrice.length > 0){
-                          for(var j = 0; j < sell_orders.length; j++){
-                            if(sell_orders[j][itemid]){
-                              var sellPrice = getData(sell_orders[j][itemid], sell_orders[j]["station"], "buy", itemid);
-                              if(sellPrice.length > 0){
-                                var station_info = [sell_orders[j]["region"],sell_orders[j]["station"]];
-                                getItemInfo(itemid, buyPrice, sellPrice, station_info);
-                              }
-                            }
-                          }
-                        }
                       }
-                    }
-                    return;
-                  }else{
-                    getOrders(page+1, orderType, region, station, composite);
-                    for(var i = 0; i < data.length; i++){
-                      if(data[i]["location_id"] === station){
-                        var id = data[i]["type_id"];
-                        if(!composite[id]){
-                          composite[id] = [];
-                        }
-                        composite[id].push(data[i]);
-                      }
-                    }
                   }
-                },
-                error: function(){
-                  console.log("Error getting page");
+            }
                 }
-              });
+    }
 }
 
 function getItemInfo(itemId, buyPrice, sellPrice, station){
-  // if(itemId === length){
-  //   goAgain();
-  // }
   var rows = [];
 
   for(var i = 0; i < buyPrice.length; i++){
@@ -167,39 +101,11 @@ function getItemInfo(itemId, buyPrice, sellPrice, station){
   }
 
 
-  if(rows.length > 0){
-    rows = rows.sort(rowComparator);
-    getItemWeight(itemId, rows);
-  }
 }
 
 
 function getItemWeight(itemId, rows){
 
-  for(var i = 0; i < rows.length; i++){
-    var row = rows[i];
-    addRow(row[0],itemId,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],100);
-  }
-  // $.ajax({
-  //   type: "get",
-  //   url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us",
-  //   dataType: "json",
-  //   async: true,
-  //   contentType: "application/json",
-  //   success: function(weightData) {
-  //     var name = weightData['name'];
-  //     var weight = weightData['volume']
-  //     if(weight <= threshold_weight){
-  //       for(var i = 0; i < rows.length; i++){
-  //         var row = rows[i];
-  //         addRow(row[0],weight,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
-  //       }
-  //     }
-  //   },
-  //   error: function (request, error) {
-  //     console.log(error);
-  //   }
-  // });
 }
 
 function rowComparator(a,b){
@@ -286,7 +192,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     created = true;
     dt = $('#dataTable').DataTable({
       "order": [[ PROFIT_INDEX, "desc" ]],
-      "lengthMenu": [[-1], ["All"]]
     });
 
       // for each column in header add a togglevis button in the div
@@ -294,10 +199,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $("#dataTable thead th").each( function ( i ) {
         var name = dt.column( i ).header();
         var spanelt = document.createElement( "button" );
-        var initial_removed = [];
-        if($(document).width() < 768){
-          initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
-        }
         spanelt.innerHTML = name.innerHTML;
 
         $(spanelt).addClass("colvistoggle");
@@ -309,14 +210,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
         var column = dt.column( $(spanelt).attr('colidx') );
         column.visible( true );
 
-        for(var i = 0; i < initial_removed.length; i++){
-          if(spanelt.innerHTML === initial_removed[i]){
-            $(spanelt).addClass("is-false");
-            var column = dt.column( $(spanelt).attr('colidx') );
-            column.visible( false );
-            break;
-          }
-        }
 
         $(spanelt).on( 'click', function (e) {
           e.preventDefault();
@@ -359,7 +252,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
               })
             }
           }else if(event.shiftKey){
-            open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, $(this).attr('id').split("_")[1], parseInt($(this).attr('id').split("_")[2]));
           }else{
             if(!$(this).hasClass("row-selected")){
               $(this).addClass("row-selected");
@@ -367,17 +259,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
               $(this).removeClass("row-selected");
             }
           }
-        }else if(event.which === 3){
-          var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
-          if(document.getElementsByClassName(id)){
-            var row = $("." + classToFind);
-            $.each(row, function(){
-              $(this).addClass("updating");
-              window.setTimeout(function(){ UPDATING_CHECK.push($(this).attr('id')); checkRow(); }, UPDATING_TIMEOUT);
-            });
-          }
 
-          getBuyPrice($(this).attr('id').split("_")[0], true);
         }
       } );
       $("label > input").addClass("form-control").addClass("minor-text");
@@ -416,27 +298,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       ];
     }
 
-    // if(isUpdate && document.getElementsByClassName(id).length > 0){
-    //   var row = $("." + id);
-    //   var found = false;
-    //   $.each(row, function(){
-    //     if(!found && $(this).hasClass("updating")){
-    //       found = true;
-    //       var counter = 0;
-    //       $.each($(this).children(), function(){
-    //         $(this).html(row_data[counter]);
-    //         counter++;
-    //
-    //       });
-    //       $(this).removeClass("updating");
-    //     }
-    //   });
-    // }else{
-      var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
-      var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
-      $(row).attr('id', id + "_" + $("." + id).length);
-      $(row).addClass(id);
-    // }
   }
 
   function buyComparator(a,b){
@@ -469,7 +330,6 @@ function getPrice(orders, stationId, orderType, itemId)
   for (var orderIndex = 0; orderIndex < orders.length; orderIndex++)
   {
     var order = orders[orderIndex];
-    if (stationId == order['location_id']){
       // This is the station market we want
       var price = order['price'];
       var volume = order['volume_remain'];
@@ -481,20 +341,10 @@ function getPrice(orders, stationId, orderType, itemId)
   if (orderType == "sell"){
     saveBuyData(stationId, itemId, $.extend(true, [], bestPrice));
     bestPrice = bestPrice.sort(buyComparator);
-    if(bestPrice.length > NUMBER_RETURNED-1){
-      return bestPrice.splice(0,NUMBER_RETURNED);
-    }else{
-      return bestPrice;
-    }
     /** Buying from Users at this price - ordered low to high **/
   }else{
     saveSellData(stationId, itemId, $.extend(true, [], bestPrice))
     bestPrice = bestPrice.sort(sellComparator);
-    if(bestPrice.length > NUMBER_RETURNED-1){
-      return bestPrice.splice(0,NUMBER_RETURNED);
-    }else{
-      return bestPrice;
-    }
   }
 }
 
