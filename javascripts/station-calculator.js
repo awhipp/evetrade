@@ -6,8 +6,7 @@ function beginStation(s_buy){
     getRowsStation();
 }
 
-function getRowsStation(){
-    $("#selection").hide();
+function goAgain(){
     var i;
     for(i = 0; i < itemIds.length && i < JUMPS; i++){
         var itemId = itemIds[i];
@@ -20,6 +19,40 @@ function getRowsStation(){
         itemIds = [];
     }
     itemIds = itemIds.splice(JUMPS, itemIds.length);
+}
+
+var JUMPS = 75;
+var itemIds = [];
+var pageCount = 0;
+
+function getRowsStation(){
+    $("#selection").hide();
+
+    for(var page = 1; page <= 20; page++){
+       getItemIdPage(page);
+    }
+}
+
+function getItemIdPage(page){
+     $.ajax({
+    type: "get",
+    url: "https://esi.tech.ccp.is/latest/universe/types/?datasource=tranquility&page="+page,
+    dataType: "json",
+    async: true,
+    contentType: "application/json",
+        success: function(items) {
+            pageCount++;
+            for(var i = 0; i < items.length;i++){
+                itemIds.push(items[i]);
+            }
+            if(pageCount == 20){
+                goAgain();
+            }
+        },
+        error: function (request, error) {
+           getItemIdPage(page);
+        }
+    });
 }
 
 function getSingleData(data, stationId, orderType, itemId){

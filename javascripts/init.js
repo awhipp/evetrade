@@ -37,6 +37,7 @@ var curr;
 var requestItemWeight = true;
 
 var stations_checked = 0;
+var MAX_STATIONS = 25;
 
 //var ENDPOINT = "https://public-crest.eveonline.com";
 var ENDPOINT = "https://crest-tq.eveonline.com";
@@ -74,6 +75,7 @@ function setup(tradeType){
 
 
 $( document ).ready(function() {
+    $("#stations_remaining").text(MAX_STATIONS);
 
     popup_table_buy = $("#popup-table-buy").DataTable({
         "order": [[ 0, "asc" ]],
@@ -113,11 +115,11 @@ $( document ).ready(function() {
     $("#custom_route").on('click', function(){
       $(".standard").slideToggle();
       $(".custom").slideToggle();
-      if($(this).val() === "Enable Custom Route (BETA)"){
+      if($(this).val() === "Enable Custom Route"){
         $(this).val("Disable Custom Route");
         isCustom = true;
       }else{
-        $(this).val("Enable Custom Route (BETA)");
+        $(this).val("Enable Custom Route");
         isCustom = false;
       }
 
@@ -126,11 +128,11 @@ $( document ).ready(function() {
     $("#custom_select").on('click', function(){
       $(".standard").slideToggle();
       $(".custom").slideToggle();
-      if($(this).val() === "Enable Custom Selection (BETA)"){
+      if($(this).val() === "Enable Custom Selection"){
         $(this).val("Disable Custom Selection");
         isCustom = true;
       }else{
-        $(this).val("Enable Custom Selection (BETA)");
+        $(this).val("Enable Custom Selection");
         isCustom = false;
       }
 
@@ -145,11 +147,11 @@ $( document ).ready(function() {
 
     $(".end-selection").on('click', function(){
         stations_checked = $(".end-selection:checked").length;
-        if(stations_checked > 10){
+        if(stations_checked > MAX_STATIONS){
           $(this).prop("checked",false);
           stations_checked = $(".end-selection:checked").length;
         }
-        $("#stations_remaining").text(10-stations_checked);
+        $("#stations_remaining").text(MAX_STATIONS-stations_checked);
     });
 
     $("#custom_route_start").change(function(){
@@ -308,7 +310,7 @@ function init(){
           destinations.push("None");
         }
         $.each($(".end-selection:checked"), function(){
-          if(destinations.length < 10){
+          if(destinations.length < MAX_STATIONS){
             destinations.push($("[for='"+$(this).attr('id')+"']").text());
           }
         });
@@ -417,7 +419,7 @@ function init(){
       station_buy = $("#custom_route_start").val().split(",");
 
       $.each($(".end-selection:checked"), function(){
-          if(active_stations.length < 10){
+          if(active_stations.length < MAX_STATIONS){
             active_stations.push($(this).val().split(","));
           }
       });
@@ -468,7 +470,7 @@ function init(){
         if(threshold_weight !== 999999999999999999){
           including += " |&nbsp;Weight&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
         }
-        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Checking Live Prices<br>Please wait...</div>");
+        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'></div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
         if( station_sell1 != null ){

@@ -59,10 +59,10 @@
         <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
       </div>
       <div id="howto-route" class="minor-text howto">
-        <b>Left-click a Result</b><br/>Highlights it to be tracked<br/><br/>
-        <b>Ctrl + left-click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
-        <b>Right-click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
-        <b>Shift + left-click the header</b><br/>Multi-sort on that additional column<br/><br/>
+        <b>Click a Result</b><br/>Highlights it to be tracked<br/><br/>
+        <b>Ctrl + Click a Result</b><br/>Highlights ALL the same items to be tracked<br/><br/>
+        <b>Shift + Click a Result</b><br/>Looks up all trades for that item between those two stations<br/><br/>
+        <b>Shift + CLick the header</b><br/>Multi-sort on that additional column<br/><br/>
         <!-- <b>Right-click a Result</b><br/>Updates that item instantly on the table <br/><br/> -->
         <b>Are character skills taken into consideration?</b><br/>No. Verify that ROI is not negative when considering tax and broker fees.<br/><br/>
       </div>
@@ -161,17 +161,17 @@
           </div>
           <br/>
           <div class="custom_switcher">
-            <input type="button" class="btn btn-default secondary-text" id="custom_select" value="Enable Custom Selection (BETA)"/>
+            <input type="button" class="btn btn-default secondary-text btn-xs" id="custom_select" value="Enable Custom Selection"/>
           </div>
           <br/>
           <div class="question primary-text"> Station Trade at </div>
           <span class="avoidwrap standard">
-            <input type="button" class="btn btn-default secondary-text station-start" id="station_jita" value="Jita"/>
-            <input type="button" class="btn btn-default secondary-text station-start" id="station_amarr" value="Amarr"/>
+            <input type="button" class="btn btn-default secondary-text station-start btn-xs" id="station_jita" value="Jita"/>
+            <input type="button" class="btn btn-default secondary-text station-start btn-xs" id="station_amarr" value="Amarr"/>
             <span class="avoidwrap">
-              <input type="button" class="btn btn-default secondary-text station-start" id="station_dodixie" value="Dodixie"/>
-              <input type="button" class="btn btn-default secondary-text station-start" id="station_rens" value="Rens"/>
-              <input type="button" class="btn btn-default secondary-text station-start" id="station_hek" value="Hek"/>
+              <input type="button" class="btn btn-default secondary-text station-start btn-xs" id="station_dodixie" value="Dodixie"/>
+              <input type="button" class="btn btn-default secondary-text station-start btn-xs" id="station_rens" value="Rens"/>
+              <input type="button" class="btn btn-default secondary-text station-start btn-xs" id="station_hek" value="Hek"/>
             </span>
           </span>
           <div class="form-group custom">
@@ -202,24 +202,20 @@
       <div id="route_trade">
         <div class="row">
           <div class="row">
-            <div class="col-md-offset-2 col-md-8 col-xs-offset-1 col-xs-10">
+            <div class="col-md-offset-1 col-md-10 col-xs-offset-1 col-xs-10">
               <p> Finding the most profitable items to buy low, and then sell high without leaving the station:
                   <em class="custom" style="font-size:0.9em">If nothing appears for a custom route, there might not be any deals for your station criteria.</em></p>
             </div>
           </div>
           <br/>
-          <div class="custom_switcher">
-            <input type="button" class="btn btn-default secondary-text" id="custom_route" value="Enable Custom Route (BETA)"/>
-          </div>
-          <br/>
-          <div class="col-lg-4 col-lg-offset-2 col-sm-4 col-sm-offset-2 col-xs-6">
+          <div class="col-lg-3 col-lg-offset-3 col-sm-4 col-sm-offset-2 col-xs-6">
             <div class="question primary-text"> Start </div>
             <div class="standard">
-              <input type="button" class="btn btn-default secondary-text start" id="location_jita" value="Jita"/><br/>
-              <input type="button" class="btn btn-default secondary-text start" id="location_amarr" value="Amarr"/><br/>
-              <input type="button" class="btn btn-default secondary-text start" id="location_dodixie" value="Dodixie"/><br/>
-              <input type="button" class="btn btn-default secondary-text start" id="location_rens" value="Rens"/><br/>
-              <input type="button" class="btn btn-default secondary-text start" id="location_hek" value="Hek"/>
+              <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_jita" value="Jita"/><br/>
+              <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_amarr" value="Amarr"/><br/>
+              <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_dodixie" value="Dodixie"/><br/>
+              <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_rens" value="Rens"/><br/>
+              <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_hek" value="Hek"/>
             </div>
             <div class="form-group custom">
               <select id="custom_route_start" class="location_dropdown form-control">
@@ -228,61 +224,68 @@
             </div>
 
           </div>
-          <div class="col-lg-4 col-sm-4 col-xs-6">
+          <div class="col-lg-3 col-sm-4 col-xs-6">
             <div class="question primary-text"> End(s) </div>
             <div class="standard">
-              <input type="button" class="btn btn-default secondary-text end" id="add_jita" value="Jita"/><br/>
-              <input type="button" class="btn btn-default secondary-text end" id="add_amarr" value="Amarr"/><br/>
-              <input type="button" class="btn btn-default secondary-text end" id="add_dodixie" value="Dodixie"/><br/>
-              <input type="button" class="btn btn-default secondary-text end" id="add_rens" value="Rens"/><br/>
-              <input type="button" class="btn btn-default secondary-text end" id="add_hek" value="Hek"/>
+              <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_jita" value="Jita"/><br/>
+              <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_amarr" value="Amarr"/><br/>
+              <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_dodixie" value="Dodixie"/><br/>
+              <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_rens" value="Rens"/><br/>
+              <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_hek" value="Hek"/>
             </div>
             <div class="form-group custom">
 
               <ul id="custom_route_end" class="location_checklist form-control">
               </ul>
-              <p class="minor-text">You may select up to <b><span id="stations_remaining">10</span></b> more destination stations.<br/><u>The more stations you select, the slower queries may be</u>.</p>
+              <p class="minor-text">More stations result in slower responses.<br><span id="stations_remaining"></span> stations remaining.</p>
               <!-- <select id="custom_route_end" class="location_checklist form-control">
                 <option value="None">None</option>
               </select> -->
             </div>
           </div>
         </div>
-        <hr/>
+        <br/>
+        <div class="custom_switcher">
+          <input type="button" class="btn btn-default secondary-text btn-xs" id="custom_route" value="Enable Custom Route"/>
+        </div>
+        <br/>
         <div class="wrapper">
           <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
-              <div class="question secondary-text"> Only return profits above </div>
-              <input type="text" id="profit-threshold" class="btn btn-default minor-text" placeholder="Default: 100,000"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+            <div class="col-sm-8 col-sm-offset-2">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label for="profit-threshold" class="col-sm-5 control-label">Only Return Profits Above</label>
+                  <div class="col-sm-7">
+                    <input type="text" id="profit-threshold" class="minor-text form-control" placeholder="Default: 100,000"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
  event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
-            </div>
-              <div class="col-lg-4 col-md-4 col-sm-6">
-                <div class="question secondary-text"> Max Cargo Capacity* </div>
-                <p class="minor-text">* For ships EVE only provides unpackaged weights</p>
-                <input type="text" id="weight-threshold" class="btn btn-default minor-text" placeholder="Default: Not Included"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="weight-threshold" class="col-sm-5 control-label">Max Cargo Capacity (in m3)</label>
+                  <div class="col-sm-7">
+                    <input type="text" id="weight-threshold" class="minor-text form-control" placeholder="Default: Not Included"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
    event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
-              </div>
-            <!-- <div class="col-lg-4 col-md-4 col-sm-6">
-              <div class="question secondary-text"> Number of trades per item (1-10) </div>
-              <input id="numberInput" type="text" class="btn btn-default minor-text" placeholder="Default: 3"  onkeypress="return event.charCode === 8 ||
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="roi-threshold" class="col-sm-5 control-label"> Minimum ROI (in %) </label>
+                  <div class="col-sm-7">
+                    <input type="text" id="roi-threshold" class="minor-text form-control" placeholder="Default: 5"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
  event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
-            </div> -->
-          </div>
-          <br/>
-          <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-6 col-lg-offset-2 col-md-offset-2">
-              <div class="question secondary-text"> Minimum Return on Investment (in %) </div>
-              <input type="text" id="roi-threshold" class="btn btn-default minor-text" placeholder="Default: 5"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="buy-threshold" class="col-sm-5 control-label">Maximum Budget</label>
+                  <div class="col-sm-7">
+                    <input type="text" id="buy-threshold" class="minor-text form-control" placeholder="Default: Infinity"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
  event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6">
-              <div class="question secondary-text"> How much are you willing to spend? </div>
-              <input type="text" id="buy-threshold" class="btn btn-default minor-text" placeholder="Default: Infinity"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
- event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
-            </div>
           </div>
-          <br/>
         </div>
+
         <div class="row">
           <div class="error question secondary-text"> A starting point, and at least one destination is required. </div>
           <input type="button" class="btn btn-default secondary-text" onclick="init()" value="Search"/>
@@ -300,8 +303,8 @@
           <table id="dataTable" class="display minor-text" cellspacing="0" width="100%">
           </table>
           <hr/>
-          Deal finding is dependant on connection speed and number of filters. <br>
-          Please be patient. Best viewed on a laptop or desktop.
+          Deal finding is dependant on connection speed and number of filters.
+          <div class="announcement">New in v4.0.0 - Route trades now execute within seconds instead of minutes.<br><a href="release.html" target="_blank">See patch notes for more information.</a></div>
       </div>
       <div style="border-top: 1px solid lightgrey; margin-top: 1em; padding-top: 1em;">
         <a style="color: grey" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">We are revamping our service. Would you like to provide feedback?</a>
@@ -316,7 +319,7 @@
         <div class="donate">
           <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#336699', 'A180K9');kofiwidget2.draw();</script>
         </div>
-        <a href="release.html" target="_blank">Release Notes | Updated 01 June 2017</a>
+        <a href="release.html" target="_blank">Release Notes | Updated 27 May 2017</a>
         <br/>
         &copy;2016-2017 <a href="https://venturefocused.com" target="_blank" alt="Venture Focused Consulting" style="color: inherit">Venture Focused Consulting</a>. All rights reserved.<br/>
         Version 4.0.0b |

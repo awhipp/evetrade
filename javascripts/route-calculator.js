@@ -34,11 +34,10 @@ function getData(data, stationId, orderType, itemId){
 //   if(routeTrading){
 //     getRowsRoute();
 //   }else{
-//     getRowsStation();
 //   }
 // }
 
-var buy_orders, sell_orders;
+var buy_orders, sell_orders, increment, total_progress;
 function beginRoute(s_buy, active_stations){
   station_buy = s_buy;
   buy_orders = {};
@@ -46,6 +45,10 @@ function beginRoute(s_buy, active_stations){
   buy_orders["region"] = station_buy[0];
   buy_orders["station"] = station_buy[1];
   buy_orders["complete_pages"] = 0;
+
+  increment = 100 / (active_stations.length + 1) / PAGES;
+  total_progress = 0;
+
   for(var j = 1; j <= PAGES; j++){
       getOrders(j, station_buy[0], station_buy[1], buy_orders);
   }
@@ -70,21 +73,16 @@ function beginRoute(s_buy, active_stations){
 }
 
 var itemids = [];
+var executingGet = false;
 
-function next(){
-      var buyPrice = [];
-      while(buyPrice.length == 0){
-          var itemid = itemids.splice(0, 1)[0];
-          buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
-          if(itemids.length == 0){
-              return;
-          }
-      }
-      if(buyPrice.length > 0){
-          executeRowCompute(itemid, buyPrice);
-      }
-
-      return;
+function next(itemid){
+  var buyPrice = [];
+  buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
+  if(buyPrice.length > 0){
+      executeRowCompute(itemid, buyPrice);
+  } else if(itemids.length == 0 && !executingGet && !created){
+      $(".loading").text("No trades found for your filters.");
+  }
 }
 
 function getOrders(page, region, station, composite){
@@ -99,6 +97,9 @@ function getOrders(page, region, station, composite){
     contentType: "application/json",
     success: function(data) {
         composite["complete_pages"] += 1;
+        total_progress+=increment;
+        $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
+
         console.log(composite["region"] + " complete - " + composite["complete_pages"]);
         if(composite["complete_pages"] == PAGES){
 
@@ -117,22 +118,19 @@ function getOrders(page, region, station, composite){
 
             if(buy_orders["complete"] === true && sell_orders_finished){
                 console.log("ALL COMPLETE");
+                total_progress = 100;
+                $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
+
                 for(itemid in buy_orders){
                   itemids.push(itemid);
                 }
 
-              var buyPrice = [];
-              while(buyPrice.length == 0){
+                while(itemids.length != 0){
                   var itemid = itemids.splice(0, 1)[0];
-                  buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
-                  if(itemids.length == 0){
-                      return;
-                  }
-              }
-              if(buyPrice.length > 0){
-                  executeRowCompute(itemid, buyPrice);
-              }
-                return;
+                  next(itemid);
+                }
+
+              return;
             }
         }else{
             for(var i = 0; i < data.length; i++){
@@ -155,7 +153,7 @@ function getOrders(page, region, station, composite){
 function executeRowCompute(itemid, buyPrice){
     if(itemid !== "complete" || itemid !== "station" || itemid !== "region" || itemid != "complete_pages"){
         for(var j = 0; j < sell_orders.length; j++){
-          if(sell_orders[j][itemid]){
+          if(sell_orders[j][itemid] !== undefined){
             var sellPrice = getData(sell_orders[j][itemid], sell_orders[j]["station"], "buy", itemid);
             if(sellPrice.length > 0){
               var station_info = [sell_orders[j]["region"],sell_orders[j]["station"]];
@@ -165,7 +163,6 @@ function executeRowCompute(itemid, buyPrice){
         }
     }
 
-    next();
 }
 
 function getItemInfo(itemId, buyPrice, sellPrice, station){
@@ -181,12 +178,10 @@ function getItemInfo(itemId, buyPrice, sellPrice, station){
   }
 
 
-    if(rows.length > 0){
-        rows = rows.sort(rowComparator);
-        getItemWeight(itemId, rows);
-    }else{
-        next();
-    }
+  if(rows.length > 0){
+      rows = rows.sort(rowComparator);
+      getItemWeight(itemId, rows);
+  }
 }
 
 var itemWeightCache = {};
@@ -195,13 +190,11 @@ function getItemWeight(itemId, rows){
         var name = itemWeightCache[itemId][0];
         var weight = itemWeightCache[itemId][1];
         if(weight <= threshold_weight){
-          for(var i = 0; i < rows.length; i++){
-            var row = rows[0];
-            addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
-            break;
-          }
+          var row = rows[0];
+          addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
         }
     }else{
+        executingGet = true;
         $.ajax({
         type: "get",
         url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us",
@@ -209,17 +202,16 @@ function getItemWeight(itemId, rows){
         async: true,
         contentType: "application/json",
             success: function(weightData) {
+              executingGet = false;
               var name = weightData['name'];
               var weight = weightData['volume']
               itemWeightCache[itemId] = [];
               itemWeightCache[itemId][0] = name;
               itemWeightCache[itemId][1] = weight;
               if(weight <= threshold_weight){
-                for(var i = 0; i < rows.length; i++){
-                  var row = rows[0];
-                  addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
-                  break;
-                }
+                var row = rows[0];
+                addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+
               }
             },
             error: function (request, error) {
@@ -286,6 +278,16 @@ function checkRow(row_id){
 }
 
 function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, station, storage_volume){
+  var full_location = location +"";
+  while(location.indexOf("(") != -1){
+    location = location.replace("(","");
+  }
+
+  while(location.indexOf(")") != -1){
+    location = location.replace(")","");
+  }
+
+
   var id = itemId + "_" + location + "_" + station[1];
 
   if(storage_volume){
@@ -313,8 +315,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     created = true;
     dt = $('#dataTable').DataTable({
       "order": [[ PROFIT_INDEX, "desc" ]],
-      "lengthMenu": [[-1], ["All"]],
-    "pagingType": "full_numbers"
+      "lengthMenu": [[-1], ["All"]]
     });
 
       // for each column in header add a togglevis button in the div
@@ -331,7 +332,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
         $(spanelt).addClass("colvistoggle");
         $(spanelt).addClass("btn");
         $(spanelt).addClass("btn-default");
-        $(spanelt).attr("colidx",i);		// store the column idx on the button
+        $(spanelt).attr("colidx",i);    // store the column idx on the button
 
         $(spanelt).addClass("is-true");
         var column = dt.column( $(spanelt).attr('colidx') );
@@ -387,7 +388,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
               })
             }
           }else if(event.shiftKey){
-            // open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, $(this).attr('id').split("_")[1], parseInt($(this).attr('id').split("_")[2]));
+            open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, $(this).attr('id').split("_")[1], parseInt($(this).attr('id').split("_")[2]));
           }else{
             if(!$(this).hasClass("row-selected")){
               $(this).addClass("row-selected");
@@ -396,8 +397,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
             }
           }
         } else if(event.which === 3){
-            open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, $(this).attr('id').split("_")[1], parseInt($(this).attr('id').split("_")[2]));
-            event.preventDefault();
         //   var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
         //   if(document.getElementsByClassName(id)){
         //     var row = $("." + classToFind);
@@ -415,15 +414,12 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $(".loading").hide();
       $('#dataTable').show();
     }
-
-    var row_data;
-    if(requestItemWeight){
-      row_data = [
+    var row_data = [
       itemName,
       numberWithCommas(buyPrice.toFixed(2)),
       numberWithCommas(buyCost.toFixed(2)),
       buyVolume.split("-")[0],
-      location,
+      full_location,
       buyVolume.split("-")[1],
       numberWithCommas(profit.toFixed(2)),
       (iskRatio.toFixed(3)*100).toFixed(1)+"%",
@@ -431,27 +427,11 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       numberWithCommas(itemProfit.toFixed(2)),
       numberWithCommas(storage_volume.toFixed(2))
       ];
-    }else{
-      row_data = [
-      itemName,
-      numberWithCommas(buyPrice.toFixed(2)),
-      numberWithCommas(buyCost.toFixed(2)),
-      buyVolume.split("-")[0],
-      location,
-      buyVolume.split("-")[1],
-      numberWithCommas(profit.toFixed(2)),
-      (iskRatio.toFixed(3)*100).toFixed(1)+"%",
-      numberWithCommas(sellPrice.toFixed(2)),
-      numberWithCommas(itemProfit.toFixed(2))
-      ];
-    }
 
     var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
     var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
     $(row).attr('id', id + "_" + $("." + id).length);
     $(row).addClass(id);
-
-    next();
   }
 
   function buyComparator(a,b){
