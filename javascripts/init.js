@@ -13,7 +13,7 @@ var threshold_margin_lower = 30;
 var threshold_margin_upper = 45;
 
 var threshold_profit = 100000;
-var threshold_roi = 5;
+var threshold_roi = 1;
 var threshold_cost = 999999999999999999;
 var threshold_weight = 999999999999999999
 
