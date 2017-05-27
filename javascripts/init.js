@@ -5,17 +5,18 @@ var RENS = [10000030,60004588];
 var HEK = [10000042,60005686];
 var IGNORE = null;
 
-var NUMBER_RETURNED = 3;
+var stopped = false;
+
+var NUMBER_RETURNED = 1;
 
 var threshold_margin_lower = 30;
 var threshold_margin_upper = 45;
 
 var threshold_profit = 100000;
-var threshold_roi = 1;
+var threshold_roi = 5;
 var threshold_cost = 999999999999999999;
 var threshold_weight = 999999999999999999
 
-var itemIds = [];
 var customBuy = [];
 var customSell = [];
 
@@ -36,6 +37,7 @@ var curr;
 var requestItemWeight = true;
 
 var stations_checked = 0;
+var MAX_STATIONS = 25;
 
 //var ENDPOINT = "https://public-crest.eveonline.com";
 var ENDPOINT = "https://crest-tq.eveonline.com";
@@ -58,43 +60,6 @@ function showAbout(){
     }
 }
 
-function getMoreItems(){
-  var shown = false;
-    $.ajax({
-        type: "get",
-        dataType: "json",
-        url: ENDPOINT + "/market/types/",
-        success: function(market){
-          for(var page = 1; page <= market.pageCount; page++){
-            $.ajax({
-                type: "get",
-                dataType: "json",
-                url: ENDPOINT + "/market/types/?page=" + page,
-                success: function(data){
-                    if(data && data.items){
-                        if(!data.next){
-                            $("#loading").hide();
-                            $("#selection").show();
-                        }
-                        var items = shuffle(data.items);
-                        init_itemIds = init_itemIds + items.length;
-                        for(var i = 0; i < items.length; i ++){
-                            itemIds.push(items[i].id);
-                        }
-                    }
-                },
-                error: function (request, error) {
-                    // getMoreItems();
-                }
-            });
-          }
-        },
-        error: function (request, error) {
-            // getMoreItems();
-        }
-    });
-}
-
 function setup(tradeType){
     routeTrading = tradeType;
     $('.howto').toggle(false);
@@ -110,8 +75,7 @@ function setup(tradeType){
 
 
 $( document ).ready(function() {
-    $("#loading").show();
-    $("#selection").hide();
+    $("#stations_remaining").text(MAX_STATIONS);
 
     popup_table_buy = $("#popup-table-buy").DataTable({
         "order": [[ 0, "asc" ]],
@@ -121,8 +85,6 @@ $( document ).ready(function() {
         "order": [[ 0, "desc" ]],
         "lengthMenu": [[10], ["10"]]
     });
-
-    getMoreItems();
 
     $(".start").on('click', function(){
         start_location = $(this).val();
@@ -148,16 +110,16 @@ $( document ).ready(function() {
       $(this).addClass("station-selected");
     });
 
-    $("#numberInput").on('blur', updateNumber);
+    // $("#numberInput").on('blur', updateNumber);
 
     $("#custom_route").on('click', function(){
       $(".standard").slideToggle();
       $(".custom").slideToggle();
-      if($(this).val() === "Enable Custom Route (BETA)"){
+      if($(this).val() === "Enable Custom Route"){
         $(this).val("Disable Custom Route");
         isCustom = true;
       }else{
-        $(this).val("Enable Custom Route (BETA)");
+        $(this).val("Enable Custom Route");
         isCustom = false;
       }
 
@@ -166,11 +128,11 @@ $( document ).ready(function() {
     $("#custom_select").on('click', function(){
       $(".standard").slideToggle();
       $(".custom").slideToggle();
-      if($(this).val() === "Enable Custom Selection (BETA)"){
+      if($(this).val() === "Enable Custom Selection"){
         $(this).val("Disable Custom Selection");
         isCustom = true;
       }else{
-        $(this).val("Enable Custom Selection (BETA)");
+        $(this).val("Enable Custom Selection");
         isCustom = false;
       }
 
@@ -185,11 +147,11 @@ $( document ).ready(function() {
 
     $(".end-selection").on('click', function(){
         stations_checked = $(".end-selection:checked").length;
-        if(stations_checked > 10){
+        if(stations_checked > MAX_STATIONS){
           $(this).prop("checked",false);
           stations_checked = $(".end-selection:checked").length;
         }
-        $("#stations_remaining").text(10-stations_checked);
+        $("#stations_remaining").text(MAX_STATIONS-stations_checked);
     });
 
     $("#custom_route_start").change(function(){
@@ -200,10 +162,10 @@ $( document ).ready(function() {
       start_location = $("#custom_station option[value='" + $('#custom_station').val() + "']").text();
     });
 
-    if($("#numberInput").val().length > 0){
-      NUMBER_RETURNED= parseFloat($("#numberInput").val());
-    }
-    $("#numberInput").val(getCookie("numberInput"));
+    // if($("#numberInput").val().length > 0){
+    //   NUMBER_RETURNED= parseFloat($("#numberInput").val());
+    // }
+    // $("#numberInput").val(getCookie("numberInput"));
     $("#lower-margin-threshold").val(getCookie("lower-margin-threshold"));
     $("#upper-margin-threshold").val(getCookie("upper-margin-threshold"));
     $("#profit-threshold").val(getCookie("profit-threshold"));
@@ -212,17 +174,17 @@ $( document ).ready(function() {
     $("#weight-threshold").val(getCookie("weight-threshold"));
 });
 
-function updateNumber(){
-    NUMBER_RETURNED = parseFloat($("#numberInput").val());
-    if(NUMBER_RETURNED > 10 || NUMBER_RETURNED < 1){
-        NUMBER_RETURNED = 1;
-        $("#numberInput").val("1");
-        setCookie("numberInput",numberInput);
-    }
-    if(NUMBER_RETURNED===3){
-      setCookie("numberInput","");
-    }
-}
+// function updateNumber(){
+//     NUMBER_RETURNED = parseFloat($("#numberInput").val());
+//     if(NUMBER_RETURNED > 10 || NUMBER_RETURNED < 1){
+//         NUMBER_RETURNED = 1;
+//         $("#numberInput").val("1");
+//         setCookie("numberInput",numberInput);
+//     }
+//     if(NUMBER_RETURNED===3){
+//       setCookie("numberInput","");
+//     }
+// }
 
 function shuffle(array) {
     var currentIndex = array.length,temporaryValue,randomIndex;
@@ -348,7 +310,7 @@ function init(){
           destinations.push("None");
         }
         $.each($(".end-selection:checked"), function(){
-          if(destinations.length < 10){
+          if(destinations.length < MAX_STATIONS){
             destinations.push($("[for='"+$(this).attr('id')+"']").text());
           }
         });
@@ -457,16 +419,16 @@ function init(){
       station_buy = $("#custom_route_start").val().split(",");
 
       $.each($(".end-selection:checked"), function(){
-          if(active_stations.length < 10){
+          if(active_stations.length < MAX_STATIONS){
             active_stations.push($(this).val().split(","));
           }
       });
     }
     $("#title-banner").slideToggle();
     if(routeTrading){
-      if(threshold_weight === 999999999999999999){
-        requestItemWeight = false;
-      }
+    //   if(threshold_weight === 999999999999999999){
+    //     requestItemWeight = false;
+    //   }
 
       if(requestItemWeight){
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th><th>Total Volume (m3)</th></tr></thead>")
@@ -508,8 +470,7 @@ function init(){
         if(threshold_weight !== 999999999999999999){
           including += " |&nbsp;Weight&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
         }
-        including += " |&nbsp;<span id='percent-complete'></span>";
-        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'>Checking Live Prices<br>Please wait...</div>");
+        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'></div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
         if( station_sell1 != null ){

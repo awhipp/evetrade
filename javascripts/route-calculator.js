@@ -1,6 +1,6 @@
 var SECOND_DELAY = 0;
 var PROFIT_INDEX = 6;
-var JUMPS = 75;
+var PAGES = 40;
 var UPDATING_TIMEOUT = 25000;
 var UPDATING_CHECK = [];
 var length;
@@ -8,8 +8,8 @@ var stations = [];
 var created = false;
 var dt;
 
-var station_buy, stations;
 
+var station_buy, stations;
 
 function getData(data, stationId, orderType, itemId){
   var returnarr = [];
@@ -20,165 +20,205 @@ function getData(data, stationId, orderType, itemId){
   else if (data != null){
     temparr = getPrice(data, stationId, orderType, itemId)
   }
-  for(var i = 0; i < temparr.length; i++){
-    if(temparr[i][0] > 0){
-        returnarr.push(temparr[i]);
+  if(temparr){
+      for(var i = 0; i < temparr.length; i++){
+        if(temparr[i][0] > 0){
+          returnarr.push(temparr[i]);
+        }
     }
   }
   return returnarr;
 }
 
-function goAgain(){
-  if(routeTrading){
-    getRowsRoute();
-  }else{
-    getRowsStation();
-  }
-}
+// function goAgain(){
+//   if(routeTrading){
+//     getRowsRoute();
+//   }else{
+//   }
+// }
 
+var buy_orders, sell_orders, increment, total_progress;
 function beginRoute(s_buy, active_stations){
   station_buy = s_buy;
+  buy_orders = {};
+  buy_orders["complete"] = false;
+  buy_orders["region"] = station_buy[0];
+  buy_orders["station"] = station_buy[1];
+  buy_orders["complete_pages"] = 0;
+
+  increment = 100 / (active_stations.length + 1) / PAGES;
+  total_progress = 0;
+
+  for(var j = 1; j <= PAGES; j++){
+      getOrders(j, station_buy[0], station_buy[1], buy_orders);
+  }
+
   stations = active_stations;
+  sell_orders = [];
+  for(var i = 0; i < active_stations.length; i++){
+    sell_orders[i] = {};
+    sell_orders[i]["complete"] = false;
+    var regionId = active_stations[i][0];
+    var stationId = active_stations[i][1];
+    sell_orders[i]["region"] = regionId;
+    sell_orders[i]["station"] = stationId;
+    sell_orders[i]["complete_pages"] = 0;
+    for(var j = 1; j <= PAGES; j++){
+        getOrders(j, regionId, stationId, sell_orders[i]);
+    }
+  }
+
   $("#selection").hide();
-  getRowsRoute();
+  // getRowsRoute();
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+var itemids = [];
+var executingGet = false;
 
-function getRowsRoute(){
-  // $("#percent-complete").text( ((1-itemIds.length/init_itemIds)*100).toFixed(2) + "% Complete");
-  $("#percent-complete").text("Items Checked: " + (init_itemIds-itemIds.length) + " of " + init_itemIds );
-  var i;
-  JUMPS = getRandomInt(6,26);
-  for(i = 0; i < itemIds.length && i < JUMPS; i++){
-    getBuyPrice(itemIds[i], false);
+function next(itemid){
+  var buyPrice = [];
+  buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
+  if(buyPrice.length > 0){
+      executeRowCompute(itemid, buyPrice);
+  } else if(itemids.length == 0 && !executingGet && !created){
+      $(".loading").text("No trades found for your filters.");
   }
-  length = itemIds[i-1];
-  if(i >= itemIds.length){
-    $('#stop').val('Finished');
-    $('#stop').prop('disabled', true);
-    itemIds = [];
-    $(".loading").html("No Deals were found for these stations.<br>Try different search parameters.");
-  }
-  itemIds = itemIds.splice(JUMPS, itemIds.length);
 }
 
-function getBuyPrice(itemId, isUpdate){
-  var buyMarketUrl = ENDPOINT + "/market/" + station_buy[0] + "/orders/sell/";
-  var buyTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
-  try{
-    $.ajax({
-      type: "get",
-      url: buyMarketUrl + buyTypeUrl,
-      dataType: "json",
-      contentType: "application/json",
-      success: function(buyData) {
-        var buyPrice = getData(buyData, station_buy[1], "sell", itemId);
-        if(buyPrice.length > 0){
-          var itemName = buyData.items[0].type.name;
-          for(var i = 0; i < stations.length; i++){
-            getSellPrice(itemId, buyPrice, itemName, stations[i], isUpdate);
-          }
+function getOrders(page, region, station, composite){
+  region = parseInt(region);
+  station = parseInt(station);
+
+  var url = "https://esi.tech.ccp.is/latest/markets/"+region+"/orders/?datasource=tranquility&page="+page;
+  $.ajax({
+    type: "get",
+    url: url,
+    dataType: "json",
+    contentType: "application/json",
+    success: function(data) {
+        composite["complete_pages"] += 1;
+        total_progress+=increment;
+        $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
+
+        console.log(composite["region"] + " complete - " + composite["complete_pages"]);
+        if(composite["complete_pages"] == PAGES){
+
+            var sell_orders_finished = true;
+            for(var i = 0; i < sell_orders.length; i++){
+                if(sell_orders[i]["complete_pages"] !== PAGES){
+                    sell_orders_finished = false;
+                }else{
+                    sell_orders[i]["complete"] = true;
+                }
+            }
+
+            if(buy_orders["complete_pages"] === PAGES){
+                buy_orders["complete"] = true;
+            }
+
+            if(buy_orders["complete"] === true && sell_orders_finished){
+                console.log("ALL COMPLETE");
+                total_progress = 100;
+                $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
+
+                for(itemid in buy_orders){
+                  itemids.push(itemid);
+                }
+
+                while(itemids.length != 0){
+                  var itemid = itemids.splice(0, 1)[0];
+                  next(itemid);
+                }
+
+              return;
+            }
         }else{
-          if(itemId === length){
-            goAgain();
-          }
+            for(var i = 0; i < data.length; i++){
+              if(data[i]["location_id"] === station){
+                var id = data[i]["type_id"];
+                if(!composite[id]){
+                  composite[id] = [];
+                }
+                composite[id].push(data[i]);
+              }
+            }
         }
-      },
-      error: function (request, error) {
-        unreachable(itemId, length);
-      }
-    });
-  }catch (unknownError){
-    getBuyPrice(itemId, isUpdate);
-  }
-
+    },
+    error: function(){
+      getOrders(page, region, station, composite);
+    }
+  });
 }
 
-function getSellPrice(itemId, buyPrice, itemName, station, isUpdate){
-  if(station != null){
-    var sellMarketUrl = ENDPOINT + "/market/" + station[0] + "/orders/buy/";
-    var sellTypeUrl = "?type=" + ENDPOINT + "/inventory/types/" + itemId + "/";
-    try{
-      $.ajax({
-        type: "get",
-        url: sellMarketUrl + sellTypeUrl,
-        dataType: "json",
-        contentType: "application/json",
-        success: function(sellData) {
-          var sellPrice = getData(sellData, station[1], "buy", itemId);
-          if(sellPrice.length > 0){
-            getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate);
-          }else{
-            if(itemId === length){
-              goAgain();
+function executeRowCompute(itemid, buyPrice){
+    if(itemid !== "complete" || itemid !== "station" || itemid !== "region" || itemid != "complete_pages"){
+        for(var j = 0; j < sell_orders.length; j++){
+          if(sell_orders[j][itemid] !== undefined){
+            var sellPrice = getData(sell_orders[j][itemid], sell_orders[j]["station"], "buy", itemid);
+            if(sellPrice.length > 0){
+              var station_info = [sell_orders[j]["region"],sell_orders[j]["station"]];
+              getItemInfo(itemid, buyPrice, sellPrice, station_info);
             }
           }
-        },
-        error: function (request, error) {
-          unreachable(itemId, length);
         }
-      });
-    }catch (unknownError){
-      getSellPrice(itemId, buyPrice, itemName, station, isUpdate);
     }
-  }else{
-    if(itemId === length){
-      goAgain();
-    }
-  }
+
 }
 
-
-
-function getItemName(itemId, buyPrice, itemName, sellPrice, station, isUpdate){
-  if(itemId === length){
-    goAgain();
-  }
-
+function getItemInfo(itemId, buyPrice, sellPrice, station){
   var rows = [];
 
   for(var i = 0; i < buyPrice.length; i++){
     for(var j = 0; j < sellPrice.length; j++){
-      var row = calculateRow(itemId, itemName, buyPrice[i][0], buyPrice[i][1], sellPrice[j][0], sellPrice[j][1], station, isUpdate);
+      var row = calculateRow(itemId, buyPrice[i][0], buyPrice[i][1], sellPrice[j][0], sellPrice[j][1], station);
       if(row.length > 0){
         rows.push(row);
       }
     }
   }
 
-  rows = rows.sort(rowComparator);
-  for(var i = 0; i < rows.length && i < NUMBER_RETURNED; i++){
-    if(requestItemWeight){
-      getItemWeight(itemId, rows[i]);
-    }else{
-      addRow(rows[i][0],rows[i][1],rows[i][2],rows[i][3],rows[i][4],rows[i][5],rows[i][6],rows[i][7],rows[i][8],rows[i][9],rows[i][10],rows[i][11]);
-    }
+
+  if(rows.length > 0){
+      rows = rows.sort(rowComparator);
+      getItemWeight(itemId, rows);
   }
 }
 
-function getItemWeight(itemId, row){
-  var itemWeightUrl = ENDPOINT + "/inventory/types/" + itemId + "/";
-  try{
-    $.ajax({
-      type: "get",
-      url: itemWeightUrl,
-      dataType: "json",
-      contentType: "application/json",
-      success: function(weightData) {
-        addRow(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],weightData['volume']);
-      },
-      error: function (request, error) {
-        getItemWeight(itemId);
-      }
-    });
-  }catch (unknownError){
-    getItemWeight(itemId);
-  }
+var itemWeightCache = {};
+function getItemWeight(itemId, rows){
+    if(itemWeightCache[itemId]){
+        var name = itemWeightCache[itemId][0];
+        var weight = itemWeightCache[itemId][1];
+        if(weight <= threshold_weight){
+          var row = rows[0];
+          addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+        }
+    }else{
+        executingGet = true;
+        $.ajax({
+        type: "get",
+        url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us",
+        dataType: "json",
+        async: true,
+        contentType: "application/json",
+            success: function(weightData) {
+              executingGet = false;
+              var name = weightData['name'];
+              var weight = weightData['volume']
+              itemWeightCache[itemId] = [];
+              itemWeightCache[itemId][0] = name;
+              itemWeightCache[itemId][1] = weight;
+              if(weight <= threshold_weight){
+                var row = rows[0];
+                addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+
+              }
+            },
+            error: function (request, error) {
+              console.log(error);
+            }
+        });
+    }
 }
 
 function rowComparator(a,b){
@@ -187,7 +227,7 @@ function rowComparator(a,b){
   return 0;
 }
 
-function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, station, isUpdate){
+function calculateRow(itemId,  b_price, b_volume, s_price, s_volume, station){
   if(b_price < s_price && s_price > 0){
     var itemProfit = s_price - b_price;
     var profit;
@@ -204,7 +244,11 @@ function calculateRow(itemId, itemName,  b_price, b_volume, s_price, s_volume, s
     }
     var location = getLocation(station[1]);
     var iskRatio = (s_price-b_price)/b_price;
-    return [itemId, itemName, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, isUpdate, station];
+    if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
+      return [itemId, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, station];
+    }else{
+      return [];
+    }
   }
   return [];
 }
@@ -233,7 +277,17 @@ function checkRow(row_id){
   }
 }
 
-function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, isUpdate, station, storage_volume){
+function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, station, storage_volume){
+  var full_location = location +"";
+  while(location.indexOf("(") != -1){
+    location = location.replace("(","");
+  }
+
+  while(location.indexOf(")") != -1){
+    location = location.replace(")","");
+  }
+
+
   var id = itemId + "_" + location + "_" + station[1];
 
   if(storage_volume){
@@ -257,43 +311,41 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     storage_volume = 0;
   }
 
-  if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost && storage_volume <= threshold_weight){
-
-    if(!created){
-      created = true;
-      dt = $('#dataTable').DataTable({
-        "order": [[ PROFIT_INDEX, "desc" ]],
-        "lengthMenu": [[-1], ["All"]]
-      });
+  if(!created){
+    created = true;
+    dt = $('#dataTable').DataTable({
+      "order": [[ PROFIT_INDEX, "desc" ]],
+      "lengthMenu": [[-1], ["All"]]
+    });
 
       // for each column in header add a togglevis button in the div
       var li_counter = 0;
       $("#dataTable thead th").each( function ( i ) {
         var name = dt.column( i ).header();
         var spanelt = document.createElement( "button" );
-        var initial_removed = [];
-        if($(document).width() < 768){
-          initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
-        }
+        // var initial_removed = [];
+        // if($(document).width() < 768){
+        //   initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
+        // }
         spanelt.innerHTML = name.innerHTML;
 
         $(spanelt).addClass("colvistoggle");
         $(spanelt).addClass("btn");
         $(spanelt).addClass("btn-default");
-        $(spanelt).attr("colidx",i);		// store the column idx on the button
+        $(spanelt).attr("colidx",i);    // store the column idx on the button
 
         $(spanelt).addClass("is-true");
         var column = dt.column( $(spanelt).attr('colidx') );
         column.visible( true );
 
-        for(var i = 0; i < initial_removed.length; i++){
-          if(spanelt.innerHTML === initial_removed[i]){
-            $(spanelt).addClass("is-false");
-            var column = dt.column( $(spanelt).attr('colidx') );
-            column.visible( false );
-            break;
-          }
-        }
+        // for(var i = 0; i < initial_removed.length; i++){
+        //   if(spanelt.innerHTML === initial_removed[i]){
+        //     $(spanelt).addClass("is-false");
+        //     var column = dt.column( $(spanelt).attr('colidx') );
+        //     column.visible( false );
+        //     break;
+        //   }
+        // }
 
         $(spanelt).on( 'click', function (e) {
           e.preventDefault();
@@ -344,17 +396,17 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
               $(this).removeClass("row-selected");
             }
           }
-        }else if(event.which === 3){
-          var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
-          if(document.getElementsByClassName(id)){
-            var row = $("." + classToFind);
-            $.each(row, function(){
-              $(this).addClass("updating");
-              window.setTimeout(function(){ UPDATING_CHECK.push($(this).attr('id')); checkRow(); }, UPDATING_TIMEOUT);
-            });
-          }
-
-          getBuyPrice($(this).attr('id').split("_")[0], true);
+        } else if(event.which === 3){
+        //   var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
+        //   if(document.getElementsByClassName(id)){
+        //     var row = $("." + classToFind);
+        //     $.each(row, function(){
+        //       $(this).addClass("updating");
+        //       window.setTimeout(function(){ UPDATING_CHECK.push($(this).attr('id')); checkRow(); }, UPDATING_TIMEOUT);
+        //     });
+        //   }
+        //
+        //   getBuyPrice($(this).attr('id').split("_")[0], true);
         }
       } );
       $("label > input").addClass("form-control").addClass("minor-text");
@@ -362,72 +414,37 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $(".loading").hide();
       $('#dataTable').show();
     }
-
-    var row_data;
-    if(requestItemWeight){
-      row_data = [
-        itemName,
-        numberWithCommas(buyPrice.toFixed(2)),
-        numberWithCommas(buyCost.toFixed(2)),
-        buyVolume.split("-")[0],
-        location,
-        buyVolume.split("-")[1],
-        numberWithCommas(profit.toFixed(2)),
-        (iskRatio.toFixed(3)*100).toFixed(1)+"%",
-        numberWithCommas(sellPrice.toFixed(2)),
-        numberWithCommas(itemProfit.toFixed(2)),
-        numberWithCommas(storage_volume.toFixed(2))
+    var row_data = [
+      itemName,
+      numberWithCommas(buyPrice.toFixed(2)),
+      numberWithCommas(buyCost.toFixed(2)),
+      buyVolume.split("-")[0],
+      full_location,
+      buyVolume.split("-")[1],
+      numberWithCommas(profit.toFixed(2)),
+      (iskRatio.toFixed(3)*100).toFixed(1)+"%",
+      numberWithCommas(sellPrice.toFixed(2)),
+      numberWithCommas(itemProfit.toFixed(2)),
+      numberWithCommas(storage_volume.toFixed(2))
       ];
-    }else{
-      row_data = [
-        itemName,
-        numberWithCommas(buyPrice.toFixed(2)),
-        numberWithCommas(buyCost.toFixed(2)),
-        buyVolume.split("-")[0],
-        location,
-        buyVolume.split("-")[1],
-        numberWithCommas(profit.toFixed(2)),
-        (iskRatio.toFixed(3)*100).toFixed(1)+"%",
-        numberWithCommas(sellPrice.toFixed(2)),
-        numberWithCommas(itemProfit.toFixed(2))
-      ];
-    }
 
-    if(isUpdate && document.getElementsByClassName(id).length > 0){
-      var row = $("." + id);
-      var found = false;
-      $.each(row, function(){
-        if(!found && $(this).hasClass("updating")){
-          found = true;
-          var counter = 0;
-          $.each($(this).children(), function(){
-            $(this).html(row_data[counter]);
-            counter++;
-
-          });
-          $(this).removeClass("updating");
-        }
-      });
-    }else{
-      var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
-      var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
-      $(row).attr('id', id + "_" + $("." + id).length);
-      $(row).addClass(id);
-    }
+    var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
+    var row = $('#dataTable').dataTable().fnGetNodes(rowIndex);
+    $(row).attr('id', id + "_" + $("." + id).length);
+    $(row).addClass(id);
   }
-}
 
-function buyComparator(a,b){
-  if (a[0] < b[0]) return -1;
-  if (a[0] > b[0]) return 1;
-  return 0;
-}
+  function buyComparator(a,b){
+    if (a[0] < b[0]) return -1;
+    if (a[0] > b[0]) return 1;
+    return 0;
+  }
 
-function sellComparator(a,b){
-  if (a[0] < b[0]) return 1;
-  if (a[0] > b[0]) return -1;
-  return 0;
-}
+  function sellComparator(a,b){
+    if (a[0] < b[0]) return 1;
+    if (a[0] > b[0]) return -1;
+    return 0;
+  }
 
 /**
 * Private helper method that will determine the best price for a given item from the
@@ -438,43 +455,44 @@ function sellComparator(a,b){
 * @param {orderType} orderType the type of order is either "sell" or "buy"
 * @param {itemId} the item id being bought/sold
 */
-function getPrice(jsonMarket, stationId, orderType, itemId)
+function getPrice(orders, stationId, orderType, itemId)
 {
   var bestPrice = [];
   var bestVolume = [];
 
   // Pull all orders found and start iteration
-  var orders = jsonMarket['items'];
   for (var orderIndex = 0; orderIndex < orders.length; orderIndex++)
   {
     var order = orders[orderIndex];
-    if (stationId == order['location']['id']){
+
+    var orderAlignsWithType = false;
+    if(order['is_buy_order'] === true && orderType === "buy"){
+        orderAlignsWithType = true;
+    }else if(order['is_buy_order'] === false && orderType === "sell"){
+        orderAlignsWithType = true;
+    }
+
+    if (stationId == order['location_id']
+        && order['min_volume'] === 1
+        && orderAlignsWithType ){
       // This is the station market we want
       var price = order['price'];
-      var volume = order['volume'];
+      var volume = order['volume_remain'];
       bestPrice.push([price, volume]);
     }
   }
+
 
   /** Selling to Users at this price - ordered high to low **/
   if (orderType == "sell"){
     saveBuyData(stationId, itemId, $.extend(true, [], bestPrice));
     bestPrice = bestPrice.sort(buyComparator);
-    if(bestPrice.length > NUMBER_RETURNED-1){
-      return bestPrice.splice(0,NUMBER_RETURNED);
-    }else{
-      return bestPrice;
-    }
     /** Buying from Users at this price - ordered low to high **/
   }else{
     saveSellData(stationId, itemId, $.extend(true, [], bestPrice))
     bestPrice = bestPrice.sort(sellComparator);
-    if(bestPrice.length > NUMBER_RETURNED-1){
-      return bestPrice.splice(0,NUMBER_RETURNED);
-    }else{
-      return bestPrice;
-    }
   }
+  return bestPrice;
 }
 
 function saveBuyData(stationId, itemId, data){

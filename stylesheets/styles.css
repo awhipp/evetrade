@@ -39,7 +39,7 @@ hr {
     text-align: left;
 }
 
-#custom_route_end > li{    
+#custom_route_end > li{
     list-style: none;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -121,6 +121,13 @@ input[type="text"]{
     border: none;
     background: transparent;
     border-bottom: 1px solid grey;
+    text-align: center;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+small{
+    font-size: 75%;
 }
 
 #show-hide{
@@ -184,10 +191,9 @@ input[type="text"]{
 
 .dataTables_wrapper {
     padding: 0;
-    overflow-y: none;
     overflow-x: auto;
     padding-bottom: 1em;
-    width: 95%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -244,7 +250,7 @@ td {
     display: none;
 }
 
-#reset:hover, #toggle:hover {
+#reset:hover, #toggle:hover, #stop:hover {
     color: #336699;
     background-color: white;
 }
@@ -313,6 +319,7 @@ span.avoidwrap { display:inline-block; }
 
 #loading{
   padding: 5em;
+  display: none;
 }
 
 #selection > .row {
@@ -321,7 +328,6 @@ span.avoidwrap { display:inline-block; }
 }
 
 #selection{
-  display: none;
   overflow: hidden;
 }
 
@@ -428,5 +434,15 @@ span.avoidwrap { display:inline-block; }
     .modal-dialog {
         width: 950px;
         margin: 30px auto;
+    }
+}
+
+.announcement{
+    color: #e54a35; 
+    font-weight: bold;
+
+    a{
+        color: inherit;
+        font-weight: normal;
     }
 }

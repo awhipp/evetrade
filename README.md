@@ -1,12 +1,20 @@
-# EVE Trade Finder v3.1.0
+# EVE Trade Finder v4.0.0 Beta
 
 ## About
-Implements the EVE Crest API to find:
+Implements the EVE ESI API to find:
 
 * the best trades between stations.
 * the best margins inside your own station.
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+### V4.0.0b Implements new ESI API
+* Cut down load times to seconds instead of minutes (instead of 7 minutes)
+* Currently only applies to Route trading (Station trading update to come but its still pretty fast)
+* No longer show scams (filters by min volume required = 1)
+* Updating rows currently disabled
+* Restricted to 25 stations in custom route trading instead of 10.
+* Slightly updated UI
 
 ### V3.1.2 Input Bug Fixed
 * Allow for decimals to be entered
