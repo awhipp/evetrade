@@ -468,7 +468,7 @@ function init(){
           including += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";
         }
         if(threshold_weight !== 999999999999999999){
-          including += " |&nbsp;Weight&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
+          including += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
         }
         $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'></div>");
         $("#buyingFooter").show();

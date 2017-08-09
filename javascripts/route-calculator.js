@@ -100,7 +100,7 @@ function getOrders(page, region, station, composite){
         total_progress+=increment;
         $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
 
-        console.log(composite["region"] + " complete - " + composite["complete_pages"]);
+        //console.log(composite["region"] + " complete - " + composite["complete_pages"]);
         if(composite["complete_pages"] == PAGES){
 
             var sell_orders_finished = true;
@@ -117,7 +117,7 @@ function getOrders(page, region, station, composite){
             }
 
             if(buy_orders["complete"] === true && sell_orders_finished){
-                console.log("ALL COMPLETE");
+                //console.log("ALL COMPLETE");
                 total_progress = 100;
                 $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
 
@@ -189,10 +189,8 @@ function getItemWeight(itemId, rows){
     if(itemWeightCache[itemId]){
         var name = itemWeightCache[itemId][0];
         var weight = itemWeightCache[itemId][1];
-        if(weight <= threshold_weight){
-          var row = rows[0];
-          addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
-        }
+        var row = rows[0];
+        addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
     }else{
         executingGet = true;
         $.ajax({
@@ -208,11 +206,8 @@ function getItemWeight(itemId, rows){
               itemWeightCache[itemId] = [];
               itemWeightCache[itemId][0] = name;
               itemWeightCache[itemId][1] = weight;
-              if(weight <= threshold_weight){
-                var row = rows[0];
-                addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
-
-              }
+              var row = rows[0];
+              addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
             },
             error: function (request, error) {
               console.log(error);
@@ -233,6 +228,7 @@ function calculateRow(itemId,  b_price, b_volume, s_price, s_volume, station){
     var profit;
     var buyCost;
     var volume;
+    var selectedvol;
     if(b_volume >= s_volume){
       volume = numberWithCommas(b_volume.toFixed()) + "-<span class='selected_volume'>" + numberWithCommas(s_volume.toFixed()) + "</span>";
       profit = s_volume * itemProfit;
@@ -245,7 +241,7 @@ function calculateRow(itemId,  b_price, b_volume, s_price, s_volume, station){
     var location = getLocation(station[1]);
     var iskRatio = (s_price-b_price)/b_price;
     if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
-      return [itemId, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, station];
+      return [itemId, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, station, selectedvol];
     }else{
       return [];
     }
@@ -306,7 +302,12 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     while(stage2.indexOf(",") >= 0){
       stage2 = stage2.replace(",","");
     }
-    storage_volume = storage_volume * parseFloat(stage2);
+    var modified_weight = storage_volume * parseFloat(stage2);
+    if(modified_weight <= threshold_weight) {
+      storage_volume = modified_weight;
+    }else{
+      return;
+    }
   }else{
     storage_volume = 0;
   }

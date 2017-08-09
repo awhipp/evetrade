@@ -1,4 +1,4 @@
-# EVE Trade Finder v4.0.0 Beta
+# EVE Trade Finder v4.0.1
 
 ## About
 Implements the EVE ESI API to find:
@@ -7,6 +7,10 @@ Implements the EVE ESI API to find:
 * the best margins inside your own station.
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+
+### V4.0.1 Volume Weight Bug Fix
+* Correctly calculates the weight. It used to be per item rather than the total weight. Thanks to Nikolay for this report.
 
 ### V4.0.0b Implements new ESI API
 * Cut down load times to seconds instead of minutes (instead of 7 minutes)
