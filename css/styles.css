@@ -89,7 +89,6 @@ nav {
 }
 
 .bg-header {
-  min-height: 550px;
   background: black;
   background: -webkit-linear-gradient(black 75%,#33b5e5);
   background: -o-linear-gradient(black 75%,#33b5e5);
