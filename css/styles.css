@@ -66,11 +66,30 @@ a {
   background: #e7e7e7 !important;
 }
 
+.donate{
+    position: fixed;
+    top: 6em;
+    left: 1em;
+    z-index: 100000;
+}
+
+.donate > img {
+    border-radius: 2em;
+    height: 34px;
+    transition: all 0.3s;
+}
+
+.donate > img:hover {
+    opacity: 0.8;
+    height: 38px;
+}
+
 nav {
   border-bottom: 2px solid #33b5e5;
 }
 
 .bg-header {
+  min-height: 550px;
   background: black;
   background: -webkit-linear-gradient(black 75%,#33b5e5);
   background: -o-linear-gradient(black 75%,#33b5e5);

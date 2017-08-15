@@ -69,13 +69,16 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" id="about" onclick="$('#howto').modal('show');">About/Help</a>
+                    <a class="nav-link" id="about" onclick="$('#howto').modal('show');">Help</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="stop" onclick="$('#stop').text('Stopped'); $('#stop').prop('disabled', true); itemIds = []; stopped=true;">Stop Search</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="reset" onclick="window.location.reload()">Restart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>
             </ul>
         </div>
@@ -276,7 +279,11 @@
     <footer class="py-5 bg-dark">
         <div class="container">
             <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.1 | Updated 15 August 2017</a></p>
-            <p class="m-0 text-center text-white">&copy; 2016-2017 Venture Focused Consulting. All rights reserved.</p>
+            <p class="m-0 text-center text-white">&copy; 2016-2017 <a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">Venture Focused</a>. All rights reserved.</p>
+        </div>
+
+        <div class="donate">
+          <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Us a Coffee', '#336699', 'A180K9');kofiwidget2.draw();</script>
         </div>
         <!-- /.container -->
     </footer>
