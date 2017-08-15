@@ -1,4 +1,4 @@
-# EVE Trade Finder v4.0.1
+# EVE Trade Finder v4.1
 
 ## About
 Implements the EVE ESI API to find:
@@ -8,6 +8,9 @@ Implements the EVE ESI API to find:
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
+### V4.1 UI Overhaul / Filtering Added
+* Due to popular demand and crowdsourced requests we have overhauled the theme and overall look of the website
+* We have added filtering to the table to enable users to filter on station, item, or any other text within the table
 
 ### V4.0.1 Volume Weight Bug Fix
 * Correctly calculates the weight. It used to be per item rather than the total weight. Thanks to Nikolay for this report.

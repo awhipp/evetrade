@@ -98,7 +98,7 @@ function getOrders(page, region, station, composite){
     success: function(data) {
         composite["complete_pages"] += 1;
         total_progress+=increment;
-        $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
+        $(".loading").html("<b>Getting orders: " + total_progress.toFixed(2) + "% complete</b>");
 
         //console.log(composite["region"] + " complete - " + composite["complete_pages"]);
         if(composite["complete_pages"] == PAGES){
@@ -414,6 +414,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $("label > input").attr("placeholder", "Search Results...");
       $(".loading").hide();
       $('#dataTable').show();
+      $(".data_options").append($("#dataTable_filter"));
     }
     var row_data = [
       itemName,

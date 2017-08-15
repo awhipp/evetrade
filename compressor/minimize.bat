@@ -1,7 +1,7 @@
 echo "Compressing Javascript..."
-java -jar yui.jar ../javascripts/route-calculator.js -o ../javascripts/route-calculator.min.js
-java -jar yui.jar ../javascripts/station-calculator.js -o ../javascripts/station-calculator.min.js
-java -jar yui.jar ../javascripts/init.js -o ../javascripts/init.min.js
+java -jar yui.jar ../js/route-calculator.js -o ../js/route-calculator.min.js
+java -jar yui.jar ../js/station-calculator.js -o ../js/station-calculator.min.js
+java -jar yui.jar ../js/init.js -o ../js/init.min.js
 
 echo "Compressing Stylesheets..."
-java -jar yui.jar ../stylesheets/styles.css -o ../stylesheets/styles.min.css
+java -jar yui.jar ../css/styles.css -o ../css/styles.min.css
