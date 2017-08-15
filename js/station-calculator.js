@@ -131,7 +131,11 @@ function addMarginRow(itemId, itemName, sellPrice, buyPrice){
             dt = $('#dataTable').DataTable({
                 "order": [[ MARGIN_INDEX, "desc" ]],
                 "lengthMenu": [[-1], ["All"]],
-                "responsive": true
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
 
             // for each column in header add a togglevis button in the div
@@ -207,6 +211,9 @@ function addMarginRow(itemId, itemName, sellPrice, buyPrice){
             $(".loading").hide();
             $('#dataTable').show();
             $(".data_options").append($("#dataTable_filter"));
+            $(".data_options").append($(".dt-buttons"));
+            $(".dt-button").addClass("btn");
+            $(".dt-button").addClass("btn-default");
         }
 
         var row_data = [

@@ -316,7 +316,12 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     created = true;
     dt = $('#dataTable').DataTable({
       "order": [[ PROFIT_INDEX, "desc" ]],
-      "lengthMenu": [[-1], ["All"]]
+      "lengthMenu": [[-1], ["All"]],
+      responsive: true,
+      dom: 'Bfrtip',
+      buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
     });
 
       // for each column in header add a togglevis button in the div
@@ -415,6 +420,10 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $(".loading").hide();
       $('#dataTable').show();
       $(".data_options").append($("#dataTable_filter"));
+
+      $(".data_options").append($(".dt-buttons"));
+      $(".dt-button").addClass("btn");
+      $(".dt-button").addClass("btn-default");
     }
     var row_data = [
       itemName,

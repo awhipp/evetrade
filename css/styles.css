@@ -135,6 +135,18 @@ section {
 /** END CORE **/
 
 /** START DATATABLES **/
+
+.dt-buttons {
+  text-align: center;
+}
+
+.dt-button {
+    background: #666;
+    color: white !important;
+    border: white 1px solid;
+    margin-bottom: 1em;
+}
+
 #show-hide, #dataTable_length, #dataTable_paginate, #core{
   display: none;
 }
@@ -193,7 +205,7 @@ td {
 }
 
 #show-hide{
-  background-color: #33b5e5 !important;
+  background-color: #336699 !important;
   border-color: black !important;
 }
 
