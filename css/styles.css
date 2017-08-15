@@ -43,6 +43,7 @@ header {
 /** START CORE **/
 body{
   background: black;
+  font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
 }
 
 h3 {
@@ -114,8 +115,16 @@ section {
   margin-bottom: 1em;
 }
 
-.container {
+.overflow_scroll {
   overflow: scroll !important;
+}
+
+.overflow_scroll::-webkit-scrollbar { 
+    display: none !important; 
+}
+
+.overflow_none {
+  overflow: hidden !important;
 }
 
 @media (min-width: 1200px) {
