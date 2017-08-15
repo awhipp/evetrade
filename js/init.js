@@ -9,8 +9,8 @@ var stopped = false;
 
 var NUMBER_RETURNED = 1;
 
-var threshold_margin_lower = 30;
-var threshold_margin_upper = 45;
+var threshold_margin_lower = 25;
+var threshold_margin_upper = 75;
 
 var threshold_profit = 100000;
 var threshold_roi = 1;
@@ -65,9 +65,17 @@ function setup(tradeType){
     $('.howto').toggle(false);
 
     if(routeTrading == true){
+
+        $("#about")[0].onclick = function() {
+          $('#howto-route').modal('show');
+        };
         $("#initial_choice").hide();
         $("#route_trade").slideToggle();
     }else{
+
+        $("#about")[0].onclick = function() {
+          $('#howto-station').modal('show');
+        };
         $("#initial_choice").hide();
         $("#station_trade").slideToggle();
     }
@@ -122,7 +130,6 @@ $( document ).ready(function() {
         $(this).val("Enable Custom Route");
         isCustom = false;
       }
-
     });
 
     $("#custom_select").on('click', function(){
@@ -361,7 +368,6 @@ function init(){
     }else{
         $(".error").hide();
         $("#selection").hide();
-        $("#stop").show();
     }
 
     if(isCustom && (destinations[0] === "None" || start_location === "None")){
@@ -372,7 +378,6 @@ function init(){
     }else{
         $(".error").hide();
         $("#selection").hide();
-        $("#stop").show();
     }
 
     var active_stations = [];
@@ -426,9 +431,6 @@ function init(){
     }
     $("#title-banner").slideToggle();
     if(routeTrading){
-    //   if(threshold_weight === 999999999999999999){
-    //     requestItemWeight = false;
-    //   }
 
       if(requestItemWeight){
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th><th>Total Volume (m3)</th></tr></thead>")
@@ -473,6 +475,7 @@ function init(){
         $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'></div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
+        $("#core").slideToggle();
         if( station_sell1 != null ){
           active_stations.push(station_sell1);
         }
@@ -496,6 +499,8 @@ function init(){
         $("#buyingFooter").html("Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
+        $("#stop").css("display","block");
+        $("#core").slideToggle();
         if(isCustom){
           station_buy = $("#custom_station").val().split(",");
         }

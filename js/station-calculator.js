@@ -2,7 +2,6 @@ var MARGIN_INDEX = 4;
 
 function beginStation(s_buy){
     station_buy = s_buy;
-
     getRowsStation();
 }
 
@@ -131,7 +130,8 @@ function addMarginRow(itemId, itemName, sellPrice, buyPrice){
             created = true;
             dt = $('#dataTable').DataTable({
                 "order": [[ MARGIN_INDEX, "desc" ]],
-                "lengthMenu": [[-1], ["All"]]
+                "lengthMenu": [[-1], ["All"]],
+                "responsive": true
             });
 
             // for each column in header add a togglevis button in the div
@@ -206,6 +206,7 @@ function addMarginRow(itemId, itemName, sellPrice, buyPrice){
             $("label > input").attr("placeholder", "Search Results...");
             $(".loading").hide();
             $('#dataTable').show();
+            $(".data_options").append($("#dataTable_filter"));
         }
 
         var row_data = [
