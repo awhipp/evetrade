@@ -85,6 +85,12 @@ a {
     height: 38px;
 }
 
+@media (max-width : 768px) {
+    .donate {
+      display: none !important;
+    }
+}
+
 nav {
   border-bottom: 2px solid #33b5e5;
 }
@@ -219,6 +225,11 @@ td {
   margin: 0 !important;
 }
 
+.selected_volume {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 #colvis {
   padding: 0;
 }
@@ -322,25 +333,4 @@ td {
 .modal-header{
   margin-bottom: 1em;
 }
-/*@media ( min-width : 450px) {
-    .modal-dialog {
-        width: 415px;
-        margin: 30px auto;
-    }
-}
-
-@media ( min-width : 768px) {
-    .modal-dialog {
-        width: 720px;
-        margin: 30px auto;
-    }
-}
-
-@media ( min-width : 992px) {
-    .modal-dialog {
-        width: 950px;
-        margin: 30px auto;
-    }
-}*/
-
 /** END MODAL **/
