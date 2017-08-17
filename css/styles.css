@@ -46,9 +46,14 @@ header {
   padding: 1em;
   background: #f7f7f7;
   font-weight: bold;
-  border: #ff6666 2px solid;
+  border: darkred 2px solid;
   display: none;
   z-index:1000;
+  color: darkred;
+}
+
+.announcement > a {
+  color: black !important;
 }
 
 
