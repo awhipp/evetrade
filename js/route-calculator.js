@@ -30,13 +30,6 @@ function getData(data, stationId, orderType, itemId){
   return returnarr;
 }
 
-// function goAgain(){
-//   if(routeTrading){
-//     getRowsRoute();
-//   }else{
-//   }
-// }
-
 var buy_orders, sell_orders, increment, total_progress;
 function beginRoute(s_buy, active_stations){
   station_buy = s_buy;
@@ -85,6 +78,22 @@ function next(itemid){
   }
 }
 
+var shown = false;
+
+function displayError(){
+  if(!shown){
+    $("#connectEVE").slideToggle(true);
+    shown = true;
+  }
+}
+
+function hideError(){
+  if(shown){
+    $("#connectEVE").slideToggle();
+    shown = false;
+  }
+}
+
 function getOrders(page, region, station, composite){
   region = parseInt(region);
   station = parseInt(station);
@@ -129,7 +138,7 @@ function getOrders(page, region, station, composite){
                   var itemid = itemids.splice(0, 1)[0];
                   next(itemid);
                 }
-
+              hideError();
               return;
             }
         }else{
@@ -145,6 +154,7 @@ function getOrders(page, region, station, composite){
         }
     },
     error: function(){
+      displayError();
       getOrders(page, region, station, composite);
     }
   });
