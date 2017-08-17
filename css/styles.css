@@ -48,6 +48,7 @@ header {
   font-weight: bold;
   border: #ff6666 2px solid;
   display: none;
+  z-index:1000;
 }
 
 
