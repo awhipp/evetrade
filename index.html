@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>EVE Online Market Trading Tool | Realtime Hauling &amp; Station Trading</title>
-    <meta name="Description" content="The EVE Online trading tool that allows you to find out what to trade between stations. This tool enables making millions of ISK through hauling or station trading.">
+    <meta name="Description" content="The EVE Online trading tool that allows you to find out what to trade between stations. This tool enables making ISK through hauling or station trading.">
     <meta name="Keywords" content="eve, eve online, isk, market, eve market, jita, amarr, dodixie, rens, hek, trade, trade finder, tradefinder, help, hauling, haul, route, buy, sell, tool, tools">
     <meta name="google-site-verification" content="g0f9bRd7w4GdyAXj5bzHhlW725kHswcpIgkzqdEum9s" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -88,19 +88,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>
+                <li class="nav-item">          
+					<div class="donate">
+						<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Donate', 'transparent', 'A180K9');kofiwidget2.draw();</script>
+					</div>
+				</li>
             </ul>
         </div>
     </nav>
-
+	
     <header class="bg-header text-white">
         <div class="container text-center overflow_none">
-
             <h1 id="buyingHeader"></h1>
             <p id="buyingFooter"></p>
 
             <div id="selection">
               <div id="initial_choice">
-                <h1>How do you trade?</h1>
+                <h2>How do you trade?</h2>
                 <p>
                   <input type="button" class="btn btn-default" onclick="setup(true)" value="Between Two Stations"/>
                 </p>
@@ -111,9 +115,9 @@
 
               <!-- Start Station Trading Dialogue -->
               <div id="station_trade">
-                <h1>
+                <h2>
                   Station Trading
-                </h1>
+                </h2>
                 <div class="col-md-12 col-xs-12 mx-auto">
                     <p> Finding the most profitable items to buy low, and then sell high without leaving the station
                       <em class="custom" style="font-size:0.9em"><br/>If nothing appears for a custom route, there might not be any deals for your station criteria.
@@ -181,7 +185,7 @@
               <!-- Start Route Trading Dialogue -->
               <div id="route_trade">
                 <div class="col-xs-12 mx-auto">
-                  <h1> Route / Hauler Trading </h2>
+                  <h2> Route / Hauler Trading </h2>
                   <p> Finding the most profitable items to buy low, and then sell high without leaving the station
                       <em class="custom" style="font-size:0.9em"><br>If nothing appears for a custom route, there might not be any deals for your station criteria.
                         <br>It is rare to find good deals outside of the major trade hubs. You might need to relax the filters on the search.</em></p>
@@ -286,12 +290,9 @@
     <!-- Footer -->
     <footer class="py-5 bg-dark">
         <div class="container overflow_none">
+			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
             <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.1.2 | Updated 17 August 2017</a></p>
-            <p class="m-0 text-center text-white">&copy; 2016-2017 <a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">Venture Focused</a>. All rights reserved.</p>
-        </div>
-
-        <div class="donate">
-          <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Buy Us a Coffee', '#336699', 'A180K9');kofiwidget2.draw();</script>
+            <p class="m-0 text-center text-white">&copy; 2016-2017 <a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">Venture Focused Consulting</a>. All rights reserved.</p>
         </div>
         <!-- /.container -->
     </footer>

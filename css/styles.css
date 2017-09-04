@@ -1,3 +1,7 @@
+h2{
+	margin-bottom: 1.5rem !important;
+}
+
 /** START HEADER **/
 header {
     padding: 154px 0 75px;
@@ -86,28 +90,12 @@ a {
   background: #e7e7e7 !important;
 }
 
-.donate{
-    position: fixed;
-    top: 6em;
-    left: 1em;
-    z-index: 100000;
+.donate {
+	text-align: center;
 }
 
-.donate > img {
-    border-radius: 2em;
-    height: 34px;
-    transition: all 0.3s;
-}
-
-.donate > img:hover {
-    opacity: 0.8;
-    height: 38px;
-}
-
-@media (max-width : 768px) {
-    .donate {
-      display: none !important;
-    }
+.kofitext {
+    color: #ccc !important;
 }
 
 nav {
@@ -353,3 +341,10 @@ td {
   margin-bottom: 1em;
 }
 /** END MODAL **/
+
+/** FOOTER **/
+footer h1 {
+    font-size: 1rem;
+    color: #ccc;
+    text-align: center;
+}
