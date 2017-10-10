@@ -432,13 +432,10 @@ function init(){
     $("#title-banner").slideToggle();
     if(routeTrading){
 
-      if(requestItemWeight){
-        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th><th>Total Volume (m3)</th></tr></thead>")
-      }else{
-        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Total Cost</th><th>Buy Quantity</th><th>Sell At</th><th>Sell Quantity</th><th>Total Profit</th><th>R.O.I.</th><th>Sell Price</th><th>Profit Per Item</th></tr></thead>")
-      }
+        $('#dataTable').append("<thead><tr><th>Item</th><th>Sell Order</th><th>Quantity</th><th>Total Cost</th><th>Take To</th><th>Buy Order</th><th>Quantity</th><th>Total Profit</th><th>Profit Per Item</th><th>R.O.I.</th><th>Total Volume (m3)</th></tr></thead>")
+      
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
-        $("#buyingHeader").text("Buying from " + location);
+        $("#buyingHeader").text("Buying Sell Orders from " + location);
 
         var including = "";
         if(isCustom){
@@ -463,7 +460,7 @@ function init(){
           }
         }
         if(including.length > 0){
-            including = "<div id='route-to'>Routes to " + including.substring(0,including.length-2) + "</div>";
+            including = "<div id='route-to'>Selling to the Buy Orders at " + including.substring(0,including.length-2) + "</div>";
         }
         including += "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% |&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if(threshold_cost !== 999999999999999999){
@@ -505,7 +502,7 @@ function init(){
           station_buy = $("#custom_station").val().split(",");
         }
 
-        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Price</th><th>Sell Price</th><th>Profit Per Item</th><th>Margin</th></tr></thead>");
+        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Order</th><th>Sell Order</th><th>Profit Per Item</th><th>Margin</th></tr></thead>");
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
         beginStation(station_buy);
     }

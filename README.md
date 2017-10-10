@@ -8,6 +8,9 @@ Implements the EVE ESI API to find:
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
+### V4.1.2.1 Minor Text Update
+* Users were being confused with the sell/buy terminology so it now reads whether you are looking at the buy orders or the sell orders
+
 ### V4.1.2 EVE Connect announcement
 * Announce when EVE servers are not connecting properly
 

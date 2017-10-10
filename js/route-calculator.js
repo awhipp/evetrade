@@ -1,5 +1,5 @@
 var SECOND_DELAY = 0;
-var PROFIT_INDEX = 6;
+var PROFIT_INDEX = 7;
 var PAGES = 40;
 var UPDATING_TIMEOUT = 25000;
 var UPDATING_CHECK = [];
@@ -438,14 +438,14 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
     var row_data = [
       itemName,
       numberWithCommas(buyPrice.toFixed(2)),
-      numberWithCommas(buyCost.toFixed(2)),
       buyVolume.split("-")[0],
+      numberWithCommas(buyCost.toFixed(2)),
       full_location,
+      numberWithCommas(sellPrice.toFixed(2)),
       buyVolume.split("-")[1],
       numberWithCommas(profit.toFixed(2)),
-      (iskRatio.toFixed(3)*100).toFixed(1)+"%",
-      numberWithCommas(sellPrice.toFixed(2)),
       numberWithCommas(itemProfit.toFixed(2)),
+      (iskRatio.toFixed(3)*100).toFixed(1)+"%",
       numberWithCommas(storage_volume.toFixed(2))
       ];
 
