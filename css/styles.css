@@ -164,6 +164,11 @@ section {
   display: none;
 }
 
+.dataTables_info {
+  width: 100%;
+  text-align: center;
+}
+
 #dataTable_filter > label {
   color: transparent;
   margin-top: -1em;

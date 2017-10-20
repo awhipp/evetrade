@@ -88,11 +88,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>
+                <li class="nav-item" style="text-align: center; cursor: pointer;" onclick="$('#fork-code').modal()">
+                  <img src="contribute.png" alt="Contribute to the codebase"/>
+                </li>
                 <li class="nav-item">          
-					<div class="donate">
-						<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Donate', 'transparent', 'A180K9');kofiwidget2.draw();</script>
-					</div>
-				</li>
+        					<div class="donate">
+        						<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Donate', 'transparent', 'A180K9');kofiwidget2.draw();</script>
+        					</div>
+				        </li>
             </ul>
         </div>
     </nav>
@@ -281,7 +284,7 @@
               <ul id="colvis" class="dropdown-menu"></ul>
             </div>
           </div>
-          <div class="container noselect overflow_scroll" oncontextmenu="return false;">
+          <div class="noselect overflow_scroll" oncontextmenu="return false;">
               <table id="dataTable" class="display">
               </table>
           </div>
@@ -291,7 +294,7 @@
     <footer class="py-5 bg-dark">
         <div class="container overflow_none">
 			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.1.2.1 | Updated 10 Oct 2017</a></p>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.1.3 | Updated 19 Oct 2017</a></p>
             <p class="m-0 text-center text-white">&copy; 2016-2017 <a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">VFC</a>. All rights reserved.</p>
         </div>
         <!-- /.container -->
@@ -327,7 +330,7 @@
             <h4 class="modal-title" id="popup_itemName">Item Name</h4>
           </div>
 
-          <div class="row">
+          <div class="row modal-dialog">
             <div class="col-md-6">
               <h3 id="buyLocation">Location A</h3>
               <table id="popup-table-buy" class="display modal-body" cellspacing="0" width="100%">
@@ -370,7 +373,7 @@
             <h4 class="modal-title" id="popup_itemName">Route or Station Trading?</h4>
           </div>
 
-          <div>
+          <div class="modal-dialog">
             <h5> Route / Hauler Trading </h5>
             <p> Find best trades between two trade hubs. Buying sell orders at one, and selling them directly to buyers at the other. These trades can happen immediately. </p>
             <p> For more information see: <a href="https://wiki.eveuniversity.org/Hauling_101" target="_blank"> Hauling 101 </a></p>
@@ -407,7 +410,7 @@
             <h4 class="modal-title" id="popup_itemName">Route Trading UI Information</h4>
           </div>
 
-          <div>
+          <div class="modal-dialog">
             <h5> Highlight an item to be tracked </h5>
             <p> Right click the row </p>
 
@@ -442,7 +445,7 @@
             <h4 class="modal-title" id="popup_itemName">Station Trading UI Information</h4>
           </div>
 
-          <div>
+          <div class="modal-dialog">
             <h5> Highlight an item to be tracked </h5>
             <p> Right click the row </p>
 
@@ -463,6 +466,36 @@
       </div>
     </div>
 
+    <!-- END MODAL -->
+
+
+    <!-- Modal for checking items -->
+    <div class="modal fade container" id="fork-code" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="popup_itemName">Contributing to EVETrade</h4>
+          </div>
+
+          <div class="modal-dialog">
+            <div>
+              EVETrade was originally a sloppy and hacky creation amongst 3 friends to improve our experience when playing EVE Online back in 2014. The code has slowly improved since then and it is currently now under the sole development of one of those friends. With my full time job I have been able to make small changes and improvements, but with the recent explosion of EVE Online due to free memberships I have been unable to keep up with demand. With this I've decided to open it up to you all.
+            </div>
+
+            <br>
+
+            <div>
+              By downloading/forking the codebase please remember that this application was built when we when we were inexperienced with development. Due to lack of time, I have left things as they lay because they "just work". If you intend to add features to the code base and wish to see them on the webpage please submit a pull request and I will gladly add the changes once they are reviewed.
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <a target="_blank" href="https://github.com/awhipp/evetrade" style="margin:0 auto;"><button type="button" class="btn btn-default" style="background: #009688; color: white;">I agree. Take me to the code.</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- END MODAL -->
 
     <!-- evetrade-top -->
@@ -491,7 +524,7 @@
           }
       }
     </style>
-	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57782df29803928a"></script> 
+	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57782df29803928a" async defer></script>
 </body>
 
 </html>
