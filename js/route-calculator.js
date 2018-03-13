@@ -33,6 +33,9 @@ function getData(data, stationId, orderType, itemId){
 }
 
 var buy_orders, sell_orders, increment, total_progress;
+function beginStation(a) {
+	beginRoute(a,a);
+}
 function beginRoute(s_buy, active_stations){
   if(s_buy==active_stations){
     isStationBuying = true;
