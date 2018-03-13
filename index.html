@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
     <!-- Favicon -->
-    <link rel='shortcut icon' href='favicon.png' type='image/x-icon'/ >
+    <link rel='shortcut icon' href='images/favicon.png' type='image/x-icon'/ >
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -35,14 +35,6 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-0599578547621989",
-        enable_page_level_ads: true
-      });
-    </script>
 
     <!-- Google Analytics -->
     <script>
@@ -66,9 +58,9 @@
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="https://evetrade.space/">
           <div class="branding">
-            <img src="logo.png"/>
+            <img src="images/logo.png"/>
           </div>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,10 +69,10 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" id="about" onclick="$('#howto').modal('show');">Help</a>
+                    <a class="nav-link" id="about" href="https://ko-fi.com/A180K9" target="_blank">Donate</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="stop" onclick="$('#stop').text('Stopped'); $('#stop').prop('disabled', true); itemIds = []; stopped=true;">Stop Search</a>
+                    <a class="nav-link" id="about" onclick="$('#howto').modal('show');">Help</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="reset" onclick="window.location.reload()">Restart</a>
@@ -88,14 +80,6 @@
                 <!--<li class="nav-item">
                     <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>-->
-                <li class="nav-item" style="text-align: center; cursor: pointer;" onclick="$('#fork-code').modal()">
-                  <img src="contribute.png" alt="Contribute to the codebase"/>
-                </li>
-                <!--<li class="nav-item">          
-        					<div class="donate">
-        						<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Donate', 'transparent', 'A180K9');kofiwidget2.draw();</script>
-        					</div>
-				        </li>-->
             </ul>
         </div>
     </nav>
@@ -160,7 +144,7 @@
                     <p> Return margins above <br/>
                       <input type="text" id="lower-margin-threshold"
                     class="btn btn-default"
-                    placeholder="Default: 25"
+                    placeholder="Default: 50"
                     onkeypress="return event.charCode === 8 || event.charCode === 46 ||
                         event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
                     </p>
@@ -293,33 +277,14 @@
     <!-- Footer -->
     <footer class="py-5 bg-dark">
         <div class="container overflow_none">
-			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.1.3 | Updated 19 Oct 2017</a></p>
-            <p class="m-0 text-center text-white">&copy; 2016-2017 <a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">VFC</a>. All rights reserved.</p>
+      			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
+            <h2> <a href="https://developers.eveonline.com" target="_blank">EVE Swagger Interface</a> Compliant </h2>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.2.0 | Updated 13 Mar 2018</a></p>
+            <p class="m-0 text-center text-white"><a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">&copy; 2016-2018 VFC. All rights reserved.</a></p>
+            <p class="m-0 text-center text-white"><a href="#" onclick="$('#fork-code').modal()"><img src="images/contribute.png"/></a></p>
         </div>
         <!-- /.container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/popper/popper.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom JavaScript for this theme -->
-    <script src="js/station-calculator.min.js"></script>
-    <script src="js/route-calculator.min.js"></script>
-    <script src="js/station_ids.min.js"></script>
-
-    <!-- Export -->
-    <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js"></script>
 
     <!-- Modal for checking items -->
     <div class="modal fade container" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -498,33 +463,74 @@
     </div>
     <!-- END MODAL -->
 
-    <!-- evetrade-top -->
-    <ins class="adsbygoogle"
-    style="display:block;"
-    data-ad-client="ca-pub-0599578547621989"
-    data-ad-slot="7378680598"
-    data-ad-format="auto"></ins>
-    <script>
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/popper/popper.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom JavaScript for this theme -->
+  <script src="js/route-calculator.min.js"></script>
+  <script src="js/station_ids.min.js"></script>
+
+  <!-- Export -->
+  <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.flash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
+  <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js"></script>
+
+  <!-- evetrade-top -->
+  <ins class="adsbygoogle"
+  style="display:block;"
+  data-ad-client="ca-pub-0599578547621989"
+  data-ad-slot="7378680598"
+  data-ad-format="auto"></ins>
+  <script type='text/javascript'>
+  (function() {
+  var done = false;
+  var script = document.createElement('script');
+  script.async = true;
+  script.type = 'text/javascript';
+  script.src = '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+
+  var createScript = setTimeout(
+  function(){
+  document.getElementsByTagName('HEAD').item(0).appendChild(script);
+  }, 5000
+  );
+
+  script.onreadystatechange = script.onload = function(e) {
+  if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-pub-0599578547621989",
+      enable_page_level_ads: true
+    });
     (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    <style>
-      /* Small devices (tablets, 768px and up) */
-      .adsbygoogle > ins{
-          position: relative !important;
-          bottom: inherit !important;
-          left: inherit !important;
-          transform: none !important;
-      }
-      @media ( min-width : 768px) {
-          .adsbygoogle > ins{
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 50% !important;
-            transform: translate(-50%,0) !important;
-          }
-      }
-    </style>
-	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57782df29803928a" async defer></script>
+  }
+  };
+  })();
+  </script>
+  <style>
+    /* Small devices (tablets, 768px and up) */
+    .adsbygoogle > ins{
+        position: relative !important;
+        bottom: inherit !important;
+        left: inherit !important;
+        transform: none !important;
+    }
+    @media ( min-width : 768px) {
+        .adsbygoogle > ins{
+          position: fixed !important;
+          bottom: 0 !important;
+          left: 50% !important;
+          transform: translate(-50%,0) !important;
+        }
+    }
+  </style>
 </body>
 
 </html>

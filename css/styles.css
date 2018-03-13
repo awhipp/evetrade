@@ -348,8 +348,9 @@ td {
 /** END MODAL **/
 
 /** FOOTER **/
-footer h1 {
+footer h1, footer h2 {
     font-size: 1rem;
     color: #ccc;
     text-align: center;
+    margin-bottom: 0.5rem !important;
 }

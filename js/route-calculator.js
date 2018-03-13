@@ -1,5 +1,6 @@
 var SECOND_DELAY = 0;
 var PROFIT_INDEX = 7;
+var MARGIN_INDEX = 4;
 var PAGES = 40;
 var UPDATING_TIMEOUT = 25000;
 var UPDATING_CHECK = [];
@@ -8,6 +9,7 @@ var stations = [];
 var created = false;
 var dt;
 
+var isStationBuying=false;
 
 var station_buy, stations;
 
@@ -32,6 +34,10 @@ function getData(data, stationId, orderType, itemId){
 
 var buy_orders, sell_orders, increment, total_progress;
 function beginRoute(s_buy, active_stations){
+  if(s_buy==active_stations){
+    isStationBuying = true;
+    active_stations = [active_stations];
+  }
   station_buy = s_buy;
   buy_orders = {};
   buy_orders["complete"] = false;
@@ -62,11 +68,11 @@ function beginRoute(s_buy, active_stations){
   }
 
   $("#selection").hide();
-  // getRowsRoute();
 }
 
 var itemids = [];
 var executingGet = false;
+var numberOfRequests = 0;
 
 function next(itemid){
   var buyPrice = [];
@@ -177,13 +183,40 @@ function executeRowCompute(itemid, buyPrice){
 
 function getItemInfo(itemId, buyPrice, sellPrice, station){
   var rows = [];
+  var bestBuyPrice = sellPrice[0][0];
+  var bestSellPrice = buyPrice[0][0];
 
   for(var i = 0; i < buyPrice.length; i++){
     for(var j = 0; j < sellPrice.length; j++){
-      var row = calculateRow(itemId, buyPrice[i][0], buyPrice[i][1], sellPrice[j][0], sellPrice[j][1], station);
-      if(row.length > 0){
-        rows.push(row);
+      if(!isStationBuying){
+        var row = calculateRow(itemId, buyPrice[i][0], buyPrice[i][1], sellPrice[j][0], sellPrice[j][1], station);
+        if(row.length > 0){
+          rows.push(row);
+        }
+      } else {
+        if(sellPrice[j][0] > bestSellPrice) {
+          bestSellPrice = sellPrice[j][0];
+        }
+        if(buyPrice[i][0] < bestBuyPrice) {
+          bestBuyPrice = buyPrice[i][0];
+        }
       }
+    }
+  }
+
+  if(isStationBuying && (numberOfRequests < 1000)){
+    var row = {};
+    var buyPrice = bestBuyPrice;
+    var sellPrice = bestSellPrice;
+
+    var profit_per_item = sellPrice-buyPrice;
+    var margin = (sellPrice - buyPrice) / sellPrice;
+
+    if(margin*100 >= threshold_margin_lower && margin*100 <= threshold_margin_upper && profit_per_item > 1000){
+      numberOfRequests++;
+      row.buyPrice = buyPrice;
+      row.sellPrice = sellPrice;
+      rows.push(row);
     }
   }
 
@@ -200,9 +233,13 @@ function getItemWeight(itemId, rows){
         var name = itemWeightCache[itemId][0];
         var weight = itemWeightCache[itemId][1];
         var row = rows[0];
-        addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+        if(isStationBuying) {
+          addMarginRow(itemId, name, row.buyPrice, row.sellPrice);
+        } else {
+          addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+        }
     }else{
-        executingGet = true;
+        executingGet = true;   
         $.ajax({
         type: "get",
         url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us",
@@ -217,7 +254,11 @@ function getItemWeight(itemId, rows){
               itemWeightCache[itemId][0] = name;
               itemWeightCache[itemId][1] = weight;
               var row = rows[0];
-              addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+              if(isStationBuying) {
+                addMarginRow(itemId, name, row.buyPrice, row.sellPrice);
+              } else {
+                addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
+              }
             },
             error: function (request, error) {
               console.log(error);
@@ -339,10 +380,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $("#dataTable thead th").each( function ( i ) {
         var name = dt.column( i ).header();
         var spanelt = document.createElement( "button" );
-        // var initial_removed = [];
-        // if($(document).width() < 768){
-        //   initial_removed = ["Total Cost", "R.O.I.", "Sell Price", "Profit Per Item"];
-        // }
         spanelt.innerHTML = name.innerHTML;
 
         $(spanelt).addClass("colvistoggle");
@@ -353,15 +390,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
         $(spanelt).addClass("is-true");
         var column = dt.column( $(spanelt).attr('colidx') );
         column.visible( true );
-
-        // for(var i = 0; i < initial_removed.length; i++){
-        //   if(spanelt.innerHTML === initial_removed[i]){
-        //     $(spanelt).addClass("is-false");
-        //     var column = dt.column( $(spanelt).attr('colidx') );
-        //     column.visible( false );
-        //     break;
-        //   }
-        // }
 
         $(spanelt).on( 'click', function (e) {
           e.preventDefault();
@@ -412,17 +440,6 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
               $(this).removeClass("row-selected");
             }
           }
-        } else if(event.which === 3){
-        //   var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
-        //   if(document.getElementsByClassName(id)){
-        //     var row = $("." + classToFind);
-        //     $.each(row, function(){
-        //       $(this).addClass("updating");
-        //       window.setTimeout(function(){ UPDATING_CHECK.push($(this).attr('id')); checkRow(); }, UPDATING_TIMEOUT);
-        //     });
-        //   }
-        //
-        //   getBuyPrice($(this).attr('id').split("_")[0], true);
         }
       } );
       $("label > input").addClass("form-control").addClass("minor-text");
@@ -532,4 +549,110 @@ function saveSellData(stationId, itemId, data){
     customSell[stationId] = [];
     customSell[stationId][itemId] = data;
   }
+}
+
+function addMarginRow(itemId, itemName, buyPrice, sellPrice){
+
+    var profit_per_item = sellPrice-buyPrice;
+    var margin = (sellPrice - buyPrice) / sellPrice;
+
+    if(!created){
+        created = true;
+        dt = $('#dataTable').DataTable({
+            "order": [[ MARGIN_INDEX, "desc" ]],
+            "lengthMenu": [[-1], ["All"]],
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+        // for each column in header add a togglevis button in the div
+        var li_counter = 0;
+        $("#dataTable thead th").each( function ( i ) {
+            var name = dt.column( i ).header();
+            var spanelt = document.createElement( "button" );
+
+            var initial_removed = [];
+            if($(document).width() < 768){
+                initial_removed = ["Profit Per Item"];
+            }
+
+            spanelt.innerHTML = name.innerHTML;
+
+            $(spanelt).addClass("colvistoggle");
+            $(spanelt).addClass("btn");
+            $(spanelt).addClass("btn-default");
+            $(spanelt).attr("colidx",i);    // store the column idx on the button
+
+            $(spanelt).addClass("is-true");
+            var column = dt.column( $(spanelt).attr('colidx') );
+            column.visible( true );
+
+            for(var i = 0; i < initial_removed.length; i++){
+                if(spanelt.innerHTML === initial_removed[i]){
+                    $(spanelt).addClass("is-false");
+                    var column = dt.column( $(spanelt).attr('colidx') );
+                    column.visible( false );
+                    break;
+                }
+            }
+
+            $(spanelt).on( 'click', function (e) {
+                e.preventDefault();
+                // Get the column API object
+                var column = dt.column( $(this).attr('colidx') );
+                // Toggle the visibility
+                $(this).removeClass("is-"+column.visible());
+                column.visible( ! column.visible() );
+                $(this).addClass("is-"+column.visible());
+
+            });
+            var li = document.createElement("li");
+            $(li).append($(spanelt));
+            $("#colvis").append($(li));
+        });
+
+        $("#show-hide").show();
+
+        // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
+        $('.dropdown').on('show.bs.dropdown', function(e){
+            $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+        });
+
+        // ADD SLIDEUP ANIMATION TO DROPDOWN //
+        $('.dropdown').on('hide.bs.dropdown', function(e){
+            $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+        });
+
+        $('#dataTable tbody').on('mousedown', 'tr', function (event) {
+            if(event.which === 1){
+                if(!$(this).hasClass("row-selected")){
+                    $(this).addClass("row-selected");
+                }else{
+                    $(this).removeClass("row-selected");
+                }
+            }
+        } );
+
+        $("label > input").addClass("form-control").addClass("minor-text");
+        $("label > input").attr("placeholder", "Search Results...");
+        $(".loading").hide();
+        $('#dataTable').show();
+        $(".data_options").append($("#dataTable_filter"));
+        $(".data_options").append($(".dt-buttons"));
+        $(".dt-button").addClass("btn");
+        $(".dt-button").addClass("btn-default");
+    }
+
+    var row_data = [
+        itemName,
+        numberWithCommas(buyPrice.toFixed(2)),
+        numberWithCommas(sellPrice.toFixed(2)),
+        numberWithCommas(profit_per_item.toFixed(2)),
+        (margin.toFixed(3)*100).toFixed(1)+"%"
+    ];
+
+    var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
 }

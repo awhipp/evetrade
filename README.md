@@ -1,4 +1,4 @@
-# EVE Trade Finder v4.1.3
+# EVE Trade Finder v4.2.0
 
 ## About
 Implements the EVE ESI API to find:
@@ -7,6 +7,10 @@ Implements the EVE ESI API to find:
 * the best margins inside your own station.
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+### V4.2.0 ESI Compliant
+* In light of EVE Crest being shutdown soon. The entire website is now ESI compliant.
+* Also reduced amount of network traffic required.
 
 ### V4.1.3 Open Sourced
 * Allowing users to submit their own code changes.

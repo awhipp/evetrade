@@ -9,7 +9,7 @@ var stopped = false;
 
 var NUMBER_RETURNED = 1;
 
-var threshold_margin_lower = 25;
+var threshold_margin_lower = 50;
 var threshold_margin_upper = 75;
 
 var threshold_profit = 100000;
@@ -38,10 +38,6 @@ var requestItemWeight = true;
 
 var stations_checked = 0;
 var MAX_STATIONS = 25;
-
-//var ENDPOINT = "https://public-crest.eveonline.com";
-var ENDPOINT = "https://crest-tq.eveonline.com";
-
 
 function numberWithCommas(val) {
     while (/(\d+)(\d{3})/.test(val.toString())){
@@ -169,10 +165,6 @@ $( document ).ready(function() {
       start_location = $("#custom_station option[value='" + $('#custom_station').val() + "']").text();
     });
 
-    // if($("#numberInput").val().length > 0){
-    //   NUMBER_RETURNED= parseFloat($("#numberInput").val());
-    // }
-    // $("#numberInput").val(getCookie("numberInput"));
     $("#lower-margin-threshold").val(getCookie("lower-margin-threshold"));
     $("#upper-margin-threshold").val(getCookie("upper-margin-threshold"));
     $("#profit-threshold").val(getCookie("profit-threshold"));
@@ -180,18 +172,6 @@ $( document ).ready(function() {
     $("#buy-threshold").val(getCookie("buy-threshold"));
     $("#weight-threshold").val(getCookie("weight-threshold"));
 });
-
-// function updateNumber(){
-//     NUMBER_RETURNED = parseFloat($("#numberInput").val());
-//     if(NUMBER_RETURNED > 10 || NUMBER_RETURNED < 1){
-//         NUMBER_RETURNED = 1;
-//         $("#numberInput").val("1");
-//         setCookie("numberInput",numberInput);
-//     }
-//     if(NUMBER_RETURNED===3){
-//       setCookie("numberInput","");
-//     }
-// }
 
 function shuffle(array) {
     var currentIndex = array.length,temporaryValue,randomIndex;
@@ -321,7 +301,6 @@ function init(){
             destinations.push($("[for='"+$(this).attr('id')+"']").text());
           }
         });
-        // destinations.push($("#custom_route_end option[value='" + $('#custom_route_end').val() + "']").text());
         customStart = location;
         customEnd = destinations;
       }else{
@@ -373,7 +352,6 @@ function init(){
     if(isCustom && (destinations[0] === "None" || start_location === "None")){
         $(".error").show();
         $("#selection").show();
-        $("#stop").hide();
         return;
     }else{
         $(".error").hide();
@@ -496,7 +474,6 @@ function init(){
         $("#buyingFooter").html("Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
-        $("#stop").css("display","block");
         $("#core").slideToggle();
         if(isCustom){
           station_buy = $("#custom_station").val().split(",");
@@ -504,7 +481,7 @@ function init(){
 
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Order</th><th>Sell Order</th><th>Profit Per Item</th><th>Margin</th></tr></thead>");
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
-        beginStation(station_buy);
+        beginRoute(station_buy, station_buy);
     }
 
 
