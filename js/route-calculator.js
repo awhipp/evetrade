@@ -1,5 +1,5 @@
 var SECOND_DELAY = 0;
-var PROFIT_INDEX = 7;
+var PROFIT_INDEX = 5;
 var MARGIN_INDEX = 4;
 var PAGES = 40;
 var UPDATING_TIMEOUT = 25000;
@@ -118,7 +118,6 @@ function getOrders(page, region, station, composite){
         total_progress+=increment;
         $(".loading").html("<b>Getting orders: " + total_progress.toFixed(2) + "% complete</b>");
 
-        //console.log(composite["region"] + " complete - " + composite["complete_pages"]);
         if(composite["complete_pages"] == PAGES){
 
             var sell_orders_finished = true;
@@ -135,7 +134,6 @@ function getOrders(page, region, station, composite){
             }
 
             if(buy_orders["complete"] === true && sell_orders_finished){
-                //console.log("ALL COMPLETE");
                 total_progress = 100;
                 $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
 
@@ -476,14 +474,14 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
   }
 
   function buyComparator(a,b){
-    if (a[0] < b[0]) return -1;
-    if (a[0] > b[0]) return 1;
+    if (a[0] > b[0]) return -1;
+    if (a[0] < b[0]) return 1;
     return 0;
   }
 
   function sellComparator(a,b){
-    if (a[0] < b[0]) return 1;
-    if (a[0] > b[0]) return -1;
+    if (a[0] > b[0]) return 1;
+    if (a[0] < b[0]) return -1;
     return 0;
   }
 
@@ -526,12 +524,12 @@ function getPrice(orders, stationId, orderType, itemId)
 
   /** Selling to Users at this price - ordered high to low **/
   if (orderType == "sell"){
-    saveBuyData(stationId, itemId, $.extend(true, [], bestPrice));
     bestPrice = bestPrice.sort(buyComparator);
+    saveBuyData(stationId, itemId, $.extend(true, [], bestPrice));
     /** Buying from Users at this price - ordered low to high **/
   }else{
-    saveSellData(stationId, itemId, $.extend(true, [], bestPrice))
     bestPrice = bestPrice.sort(sellComparator);
+    saveSellData(stationId, itemId, $.extend(true, [], bestPrice));
   }
   return bestPrice;
 }
