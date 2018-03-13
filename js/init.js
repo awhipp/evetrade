@@ -481,7 +481,8 @@ function init(){
 
         $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Order</th><th>Sell Order</th><th>Profit Per Item</th><th>Margin</th></tr></thead>");
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
-        beginRoute(station_buy, station_buy);
+
+        beginRoute(station_buy,station_buy);
     }
 
 
