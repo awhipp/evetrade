@@ -1,10 +1,5 @@
 var SECOND_DELAY = 0;
-var PROFIT_INDEX = 5;
-var MARGIN_INDEX = 4;
 var PAGES = 40;
-var UPDATING_TIMEOUT = 25000;
-var UPDATING_CHECK = [];
-var length;
 var stations = [];
 var created = false;
 var dt;
@@ -268,9 +263,12 @@ function getItemWeight(itemId, rows){
     }
 }
 
+/**
+* Comparing the buy order index
+*/
 function rowComparator(a,b){
-  if (a[PROFIT_INDEX] < b[PROFIT_INDEX]) return 1;
-  if (a[PROFIT_INDEX] > b[PROFIT_INDEX]) return -1;
+  if (a[5] < b[5]) return 1;
+  if (a[5] > b[5]) return -1;
   return 0;
 }
 
@@ -318,13 +316,6 @@ function getCustomEnd(location){
   return 'nil';
 }
 
-function checkRow(row_id){
-  var next = UPDATING_CHECK[UPDATING_CHECK.length-1];
-  if($("#"+next).hasClass("updating")){
-    $("#"+next).remove();
-  }
-}
-
 function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, station, storage_volume){
   var full_location = location +"";
   while(location.indexOf("(") != -1){
@@ -366,8 +357,9 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
 
   if(!created){
     created = true;
+	  // sorting on total profit
     dt = $('#dataTable').DataTable({
-      "order": [[ PROFIT_INDEX, "desc" ]],
+      "order": [[ 7, "desc" ]],
       "lengthMenu": [[-1], ["All"]],
       responsive: true,
       dom: 'Bfrtip',
@@ -559,8 +551,9 @@ function addMarginRow(itemId, itemName, buyPrice, sellPrice){
 
     if(!created){
         created = true;
+	    // sorting on margin index
         dt = $('#dataTable').DataTable({
-            "order": [[ MARGIN_INDEX, "desc" ]],
+            "order": [[ 4, "desc" ]],
             "lengthMenu": [[-1], ["All"]],
             responsive: true,
             dom: 'Bfrtip',
