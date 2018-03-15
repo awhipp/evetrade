@@ -9,8 +9,8 @@ var stopped = false;
 
 var NUMBER_RETURNED = 1;
 
-var threshold_margin_lower = 50;
-var threshold_margin_upper = 75;
+var threshold_margin_lower = 30;
+var threshold_margin_upper = 40;
 
 var threshold_profit = 100000;
 var threshold_roi = 1;
@@ -411,7 +411,7 @@ function init(){
     if(routeTrading){
 
         $('#dataTable').append("<thead><tr><th>Item</th><th>Sell Order</th><th>Quantity</th><th>Total Cost</th><th>Take To</th><th>Buy Order</th><th>Quantity</th><th>Total Profit</th><th>Profit Per Item</th><th>R.O.I.</th><th>Total Volume (m3)</th></tr></thead>")
-      
+
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
         $("#buyingHeader").text("Buying Sell Orders from " + location);
 
