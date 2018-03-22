@@ -171,6 +171,18 @@ $( document ).ready(function() {
     $("#roi-threshold").val(getCookie("roi-threshold"));
     $("#buy-threshold").val(getCookie("buy-threshold"));
     $("#weight-threshold").val(getCookie("weight-threshold"));
+
+    
+    $('input[type="number"]').keypress(function(e) {
+      var theEvent = e || window.event;
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode( key );
+      var regex = /[0-9]|\./;
+      if(!regex.test(key) && theEvent.charCode !== 8 && theEvent.charCode !== 0) {
+        theEvent.returnValue = false;
+        if(theEvent.preventDefault) theEvent.preventDefault();
+      }
+    });
 });
 
 function shuffle(array) {

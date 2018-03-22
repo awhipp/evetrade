@@ -123,6 +123,11 @@ section {
     padding: 2em 0;
 }
 
+.threshold-margin {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
 .mx-auto {
   margin-top: 1em;
   margin-bottom: 1em;
@@ -285,7 +290,7 @@ td {
     color: white;
   }
 
-  input[type="text"]{
+  input[type="text"], input[type="number"]{
     text-align: center;
   }
 

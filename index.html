@@ -142,19 +142,15 @@
 
                   <div class="col-xs-12 mx-auto">
                     <p> Return margins above <br/>
-                      <input type="text" id="lower-margin-threshold"
-                    class="btn btn-default"
-                    placeholder="Default: 30"
-                    onkeypress="return event.charCode === 8 || event.charCode === 46 ||
-                        event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
+                      <input type="number" id="lower-margin-threshold"
+                    class="minor-text form-control threshold-margin"
+                    placeholder="Default: 30"/>
                     </p>
 
                     <p>and below <br/>
-                      <input type="text" id="upper-margin-threshold"
-                      class="btn btn-default"
-                      placeholder="Default: 40"
-                      onkeypress="return event.charCode === 8 || event.charCode === 46 ||
-                         event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/>
+                      <input type="number" id="upper-margin-threshold"
+                      class="minor-text form-control threshold-margin"
+                      placeholder="Default: 40"/>
                      </p>
                   </div>
 
@@ -223,25 +219,21 @@
                   <div class="row">
                     <div class="col-sm-6 col-xs-12">
                       <p><label for="profit-threshold" class="control-label">Only Return Profits Above</label>
-                      <input type="text" id="profit-threshold" class="minor-text form-control" placeholder="Default: 100,000"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
-     event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/></p>
+                      <input type="number" id="profit-threshold" class="minor-text form-control" placeholder="Default: 100,000"/></p>
                     </div>
                     <div class="col-sm-6 col-xs-12">
                       <p><label for="weight-threshold" class="control-label">Max Cargo Capacity (in m3)</label>
-                      <input type="text" id="weight-threshold" class="minor-text form-control" placeholder="Default: Not Included"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
-       event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/></p>
+                      <input type="number" id="weight-threshold" class="minor-text form-control" placeholder="Default: Not Included"/></p>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-6 col-xs-12">
                       <p><label for="roi-threshold" class="control-label"> Minimum ROI (in %) </label>
-                      <input type="text" id="roi-threshold" class="minor-text form-control" placeholder="Default: 1"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
-     event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/></p>
+                      <input type="number" id="roi-threshold" class="minor-text form-control" placeholder="Default: 1"/></p>
                     </div>
                     <div class="col-sm-6 col-xs-12">
                       <p><label for="buy-threshold" class="control-label">Maximum Budget</label>
-                      <input type="text" id="buy-threshold" class="minor-text form-control" placeholder="Default: Infinity"  onkeypress="return event.charCode === 8 || event.charCode === 46 ||
-     event.charCode === 110 || (event.charCode >= 48 && event.charCode <= 57)"/></p>
+                      <input type="number" id="buy-threshold" class="minor-text form-control" placeholder="Default: Infinity"/></p>
                     </div>
                   </div>
                 </div>
@@ -278,7 +270,7 @@
     <footer class="py-5 bg-dark">
         <div class="container overflow_none">
       			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.2.1 | Updated 13 Mar 2018</a></p>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.2.2 | Updated 22 Mar 2018</a></p>
             <p class="m-0 text-center text-white"><a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">&copy; 2016-2018 VFC. All rights reserved.</a></p>
         </div>
         <!-- /.container -->
