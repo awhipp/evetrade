@@ -11,11 +11,8 @@
     <meta name="google-site-verification" content="g0f9bRd7w4GdyAXj5bzHhlW725kHswcpIgkzqdEum9s" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="vendor/jquery/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
-    <!-- CDN Javascript -->
-    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
     <!-- CDN CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
@@ -30,7 +27,7 @@
 
     <!-- Custom styles/javascript for this page -->
     <link href="css/styles.min.css" rel="stylesheet">
-    <script src="js/init.min.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -69,7 +66,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" id="about" href="https://ko-fi.com/A180K9" target="_blank">Donate</a>
+                    <a class="nav-link" id="about" href="https://ko-fi.com/EVETrade" target="_blank">Donate</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="about" onclick="$('#howto').modal('show');">Help</a>
@@ -141,16 +138,22 @@
                   </div>
 
                   <div class="col-xs-12 mx-auto">
+                    <p>Volume Above <br/>
+                      <input type="number" id="volume-threshold"
+                      class="minor-text form-control threshold-margin"
+                      placeholder="Default: 1,000"/>
+                     </p>
+
                     <p> Return margins above <br/>
                       <input type="number" id="lower-margin-threshold"
                     class="minor-text form-control threshold-margin"
-                    placeholder="Default: 30"/>
+                    placeholder="Default: 20"/>
                     </p>
 
                     <p>and below <br/>
                       <input type="number" id="upper-margin-threshold"
                       class="minor-text form-control threshold-margin"
-                      placeholder="Default: 40"/>
+                      placeholder="Default: 70"/>
                      </p>
                   </div>
 
@@ -214,7 +217,6 @@
                   </div>
                 </div>
 
-
                 <div class="col-xs-12 mx-auto">
                   <div class="row">
                     <div class="col-sm-6 col-xs-12">
@@ -260,7 +262,7 @@
               <ul id="colvis" class="dropdown-menu"></ul>
             </div>
           </div>
-          <div class="noselect overflow_scroll" oncontextmenu="return false;" style="max-width: 95%; margin: 0 auto;">
+          <div class="noselect overflow_scroll" oncontextmenu="return false;" style="max-width: 98%; margin: 0 auto;">
               <table id="dataTable" class="display">
               </table>
           </div>
@@ -270,8 +272,11 @@
     <footer class="py-5 bg-dark">
         <div class="container overflow_none">
       			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.2.2 | Updated 22 Mar 2018</a></p>
-            <p class="m-0 text-center text-white"><a style="color: grey" href="https://venturefocused.com" target="_blank" alt="Venture Focused">&copy; 2016-2018 VFC. All rights reserved.</a></p>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.3.0 | Updated 23 Mar 2018</a></p>
+            <p class="m-0 text-center text-white">&copy; 2016-2018 <a href='https://EVETrade.space'> EVE Trade</a>. All rights reserved.</p>
+            <div style="position: absolute !important; top: -1000px !important; left: -1000px !important; z-index: -100 !important; width:0 !important; height: 0 !important; opacity: 0 !important;">
+              <a href="https://venturefocused.com" data-ytta-id="-">Developed in part with the help of Venture Focused Consulting</a>
+            </div>
         </div>
         <!-- /.container -->
     </footer>
@@ -453,6 +458,8 @@
     </div>
     <!-- END MODAL -->
 
+  <!-- CDN Javascript -->
+  <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/popper/popper.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -460,9 +467,6 @@
   <!-- Plugin JavaScript -->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Custom JavaScript for this theme -->
-  <script src="js/route-calculator.min.js"></script>
-  <script src="js/station_ids.min.js"></script>
 
   <!-- Export -->
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js"></script>
@@ -472,6 +476,11 @@
   <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js"></script>
+
+  <script src="js/init.min.js" async defer></script>
+  <!-- Custom JavaScript for this theme -->
+  <script src="js/route-calculator.min.js" async defer></script>
+  <script src="js/station_ids.min.js" async defer></script>
 
   <ins class="adsbygoogle"
   style="display:block;"
@@ -501,6 +510,7 @@
   </style>
 
   <script async src="vendor/blockadblock/blockadblock.min.js"></script>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57782df29803928a" async defer></script>
 </body>
 
 </html>

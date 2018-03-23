@@ -200,7 +200,7 @@ function getItemInfo(itemId, buyPrice, sellPrice, station){
     }
   }
 
-  if(isStationBuying && (numberOfRequests < 1000)){
+  if(isStationBuying){
     var row = {};
     var buyPrice = bestBuyPrice;
     var sellPrice = bestSellPrice;
@@ -209,18 +209,70 @@ function getItemInfo(itemId, buyPrice, sellPrice, station){
     var margin = (sellPrice - buyPrice) / sellPrice;
 
     if(margin*100 >= threshold_margin_lower && margin*100 <= threshold_margin_upper && profit_per_item > 1000){
-      numberOfRequests++;
       row.buyPrice = buyPrice;
       row.sellPrice = sellPrice;
       rows.push(row);
+      if(rows.length > 0){
+          rows = rows.sort(rowComparator);
+          getItemVolume(itemId, rows)
+      }
+    }
+  }else {
+    if(rows.length > 0){
+        rows = rows.sort(rowComparator);
+        getItemWeight(itemId, rows);
     }
   }
+}
 
+var count = 0;
+var filteringInterval;
+function updateFilterCount() {
+  filteringInterval = setInterval(function(){ 
+    count ++;
+    var ellipses = "";
+    for(var i = 0; i < (count%5) ; i++){
+      ellipses += ".";
+    }
+    $("#filtering-data").html("Filtering Data. Please wait" + ellipses);
 
-  if(rows.length > 0){
-      rows = rows.sort(rowComparator);
-      getItemWeight(itemId, rows);
+    if(executingGet == false) {
+      clearInterval(filteringInterval);
+      $("#filtering-data").remove();
+    }
+  },
+  1000);
+}
+
+var filtered=false;
+function getItemVolume(itemId, rows){
+  executingGet = true; 
+  if(!filtered){
+    filtered = true;
+    $("#buyingFooter").append("<div id='filtering-data'>Filtering Data. Please wait.</div>");  
+    updateFilterCount();
   }
+  $.ajax({
+  type: "get",
+  url: "https://esi.tech.ccp.is/latest/markets/" + stations[0][0] + "/history/?datasource=tranquility&type_id=" + itemId + "&language=en-us",
+  dataType: "json",
+  async: true,
+  contentType: "application/json",
+      success: function(volumeData) {
+        var row = rows[0];
+        row.volume = volumeData[volumeData.length-1].volume;
+        if(row.volume >= volume_threshold && numberOfRequests < 1000){
+          numberOfRequests++;
+          getItemWeight(itemId, rows);
+        }
+      },
+      error: function (request, error) {
+        if(request.status != 404) {
+          console.log(request);
+          getItemVolume(itemId, rows);
+        }
+      }
+  });
 }
 
 var itemWeightCache = {};
@@ -251,13 +303,16 @@ function getItemWeight(itemId, rows){
               itemWeightCache[itemId][1] = weight;
               var row = rows[0];
               if(isStationBuying) {
-                addMarginRow(itemId, name, row.buyPrice, row.sellPrice);
+                addMarginRow(itemId, name, row.buyPrice, row.sellPrice, row.volume);
               } else {
                 addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
               }
             },
             error: function (request, error) {
-              console.log(error);
+              if(request.status != 404) {
+                console.log(request);
+                getItemWeight(itemId, rows);
+              }
             }
         });
     }
@@ -544,7 +599,7 @@ function saveSellData(stationId, itemId, data){
   }
 }
 
-function addMarginRow(itemId, itemName, buyPrice, sellPrice){
+function addMarginRow(itemId, itemName, buyPrice, sellPrice, volume){
 
     var profit_per_item = sellPrice-buyPrice;
     var margin = (sellPrice - buyPrice) / sellPrice;
@@ -553,7 +608,7 @@ function addMarginRow(itemId, itemName, buyPrice, sellPrice){
         created = true;
 	    // sorting on margin index
         dt = $('#dataTable').DataTable({
-            "order": [[ 4, "desc" ]],
+            "order": [[ 5, "desc" ]],
             "lengthMenu": [[-1], ["All"]],
             responsive: true,
             dom: 'Bfrtip',
@@ -569,9 +624,9 @@ function addMarginRow(itemId, itemName, buyPrice, sellPrice){
             var spanelt = document.createElement( "button" );
 
             var initial_removed = [];
-            if($(document).width() < 768){
-                initial_removed = ["Profit Per Item"];
-            }
+            // if($(document).width() < 768){
+            //     initial_removed = ["Profit Per Item"];
+            // }
 
             spanelt.innerHTML = name.innerHTML;
 
@@ -645,8 +700,9 @@ function addMarginRow(itemId, itemName, buyPrice, sellPrice){
         numberWithCommas(buyPrice.toFixed(2)),
         numberWithCommas(sellPrice.toFixed(2)),
         numberWithCommas(profit_per_item.toFixed(2)),
-        (margin.toFixed(3)*100).toFixed(1)+"%"
+        (margin.toFixed(3)*100).toFixed(1)+"%",
+        numberWithCommas(volume)
     ];
-
     var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
+
 }

@@ -9,8 +9,10 @@ var stopped = false;
 
 var NUMBER_RETURNED = 1;
 
-var threshold_margin_lower = 30;
-var threshold_margin_upper = 40;
+var threshold_margin_lower = 20;
+var threshold_margin_upper = 70;
+var volume_threshold = 1000;
+
 
 var threshold_profit = 100000;
 var threshold_roi = 1;
@@ -167,11 +169,11 @@ $( document ).ready(function() {
 
     $("#lower-margin-threshold").val(getCookie("lower-margin-threshold"));
     $("#upper-margin-threshold").val(getCookie("upper-margin-threshold"));
+    $("#volume-threshold").val(getCookie("volume-threshold"));
     $("#profit-threshold").val(getCookie("profit-threshold"));
     $("#roi-threshold").val(getCookie("roi-threshold"));
     $("#buy-threshold").val(getCookie("buy-threshold"));
     $("#weight-threshold").val(getCookie("weight-threshold"));
-
     
     $('input[type="number"]').keypress(function(e) {
       var theEvent = e || window.event;
@@ -301,6 +303,13 @@ function init(){
             setCookie("upper-margin-threshold",threshold_margin_upper,7);
         }else{
             setCookie("upper-margin-threshold","");
+        }
+
+        if($("#volume-threshold").val().length > 0 && !isNaN($("#volume-threshold").val())){
+            volume_threshold = parseFloat($("#volume-threshold").val());
+            setCookie("volume-threshold",volume_threshold,7);
+        }else{
+            setCookie("volume-threshold","");
         }
     }else{
 
@@ -483,7 +492,7 @@ function init(){
         beginRoute(station_buy,active_stations);
     }else{
         $("#buyingHeader").text("Station Trading at " + location);
-        $("#buyingFooter").html("Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");
+        $("#buyingFooter").html("Volume greater than: " + numberWithCommas(volume_threshold) + " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");
         $("#buyingFooter").show();
         $("#buyingHeader").show();
         $("#core").slideToggle();
@@ -491,7 +500,7 @@ function init(){
           station_buy = $("#custom_station").val().split(",");
         }
 
-        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Order</th><th>Sell Order</th><th>Profit Per Item</th><th>Margin</th></tr></thead>");
+        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Order</th><th>Sell Order</th><th>Profit Per Item</th><th>Margin</th><th>Volume</th></tr></thead>");
         $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
 
         beginRoute(station_buy,station_buy);

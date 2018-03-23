@@ -189,6 +189,7 @@ table.dataTable {
 
 #dataTable {
   display: none;
+  width: auto !important;
 }
 
 .row-selected {
@@ -358,4 +359,17 @@ footer h1, footer h2 {
     color: #ccc;
     text-align: center;
     margin-bottom: 0.5rem !important;
+}
+
+
+/** Add This **/
+.addthis_bar_message, .addthis_bar_x {
+  display: none !important;
+}
+
+.addthis_bar_fixed {
+  width: 250px !important;
+  background-color: transparent !important;
+  margin: 0 auto !important;
+  height: 0 !important;
 }
