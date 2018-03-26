@@ -521,14 +521,24 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
   }
 
   function buyComparator(a,b){
-    if (a[0] > b[0]) return -1;
-    if (a[0] < b[0]) return 1;
+    if(isStationBuying){
+      if (a[0] > b[0]) return 1;
+      if (a[0] < b[0]) return -1;
+    }else{
+      if (a[0] > b[0]) return -1;
+      if (a[0] < b[0]) return 1;
+    }
     return 0;
   }
 
   function sellComparator(a,b){
-    if (a[0] > b[0]) return 1;
-    if (a[0] < b[0]) return -1;
+    if(isStationBuying){
+      if (a[0] > b[0]) return -1;
+      if (a[0] < b[0]) return 1;
+    }else{
+      if (a[0] > b[0]) return 1;
+      if (a[0] < b[0]) return -1;
+    }
     return 0;
   }
 
