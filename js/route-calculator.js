@@ -98,6 +98,8 @@ function hideError(){
   }
 }
 
+var errorPages = {};
+
 function getOrders(page, region, station, composite){
   region = parseInt(region);
   station = parseInt(station);
@@ -114,35 +116,7 @@ function getOrders(page, region, station, composite){
         $(".loading").html("<b>Getting orders: " + total_progress.toFixed(2) + "% complete</b>");
 
         if(composite["complete_pages"] == PAGES){
-
-            var sell_orders_finished = true;
-            for(var i = 0; i < sell_orders.length; i++){
-                if(sell_orders[i]["complete_pages"] !== PAGES){
-                    sell_orders_finished = false;
-                }else{
-                    sell_orders[i]["complete"] = true;
-                }
-            }
-
-            if(buy_orders["complete_pages"] === PAGES){
-                buy_orders["complete"] = true;
-            }
-
-            if(buy_orders["complete"] === true && sell_orders_finished){
-                total_progress = 100;
-                $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
-
-                for(itemid in buy_orders){
-                  itemids.push(itemid);
-                }
-
-                while(itemids.length != 0){
-                  var itemid = itemids.splice(0, 1)[0];
-                  next(itemid);
-                }
-              hideError();
-              return;
-            }
+          executeOrders();
         }else{
             for(var i = 0; i < data.length; i++){
               if(data[i]["location_id"] === station){
@@ -157,9 +131,58 @@ function getOrders(page, region, station, composite){
     },
     error: function(){
       displayError();
-      getOrders(page, region, station, composite);
+
+      if(errorPages[""+page]) {
+        errorPages[""+page] += 1;
+      } else {
+        errorPages[""+page] = 1;
+      }
+
+      if(errorPages[""+page] > 3){
+        composite["complete_pages"] += 1;
+        total_progress+=increment;
+        $(".loading").html("<b>Getting orders: " + total_progress.toFixed(2) + "% complete</b>");
+        if(composite["complete_pages"] == PAGES){
+          executeOrders();
+        }
+      }else{
+        getOrders(page, region, station, composite);
+      }
     }
   });
+}
+
+function executeOrders(){
+
+
+  var sell_orders_finished = true;
+  for(var i = 0; i < sell_orders.length; i++){
+      if(sell_orders[i]["complete_pages"] !== PAGES){
+          sell_orders_finished = false;
+      }else{
+          sell_orders[i]["complete"] = true;
+      }
+  }
+
+  if(buy_orders["complete_pages"] === PAGES){
+      buy_orders["complete"] = true;
+  }
+
+  if(buy_orders["complete"] === true && sell_orders_finished){
+      total_progress = 100;
+      $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
+
+      for(itemid in buy_orders){
+        itemids.push(itemid);
+      }
+
+      while(itemids.length != 0){
+        var itemid = itemids.splice(0, 1)[0];
+        next(itemid);
+      }
+    hideError();
+    return;
+  }
 }
 
 function executeRowCompute(itemid, buyPrice){
