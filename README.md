@@ -10,6 +10,7 @@ Select which of the station you are docked in. It will return a lazy-loaded tabl
 
 ### V4.3.2 Hotfix to limit the number of error requests being sent to 3
 * If an endpoint fails that many times that means its probably not up.
+* Improved number of results for station trading
 
 ### V4.3.1 Hotfix to resolve bug with station trading numbers
 * Numbers were flipped for buy and sell orders

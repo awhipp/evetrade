@@ -68,19 +68,6 @@ function beginRoute(s_buy, active_stations){
   $("#selection").hide();
 }
 
-var itemids = [];
-var executingGet = false;
-var numberOfRequests = 0;
-
-function next(itemid){
-  var buyPrice = [];
-  buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
-  if(buyPrice.length > 0){
-      executeRowCompute(itemid, buyPrice);
-  } else if(itemids.length == 0 && !executingGet && !created){
-      $(".loading").text("No trades found for your filters.");
-  }
-}
 
 var shown = false;
 
@@ -153,8 +140,6 @@ function getOrders(page, region, station, composite){
 }
 
 function executeOrders(){
-
-
   var sell_orders_finished = true;
   for(var i = 0; i < sell_orders.length; i++){
       if(sell_orders[i]["complete_pages"] !== PAGES){
@@ -169,33 +154,65 @@ function executeOrders(){
   }
 
   if(buy_orders["complete"] === true && sell_orders_finished){
-      total_progress = 100;
-      $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
+    total_progress = 100;
+    $(".loading").text("Getting orders: " + total_progress.toFixed(2) + "% complete");
 
-      for(itemid in buy_orders){
-        itemids.push(itemid);
-      }
+    for(itemid in buy_orders){
+      itemids.push(itemid);
+    }
 
-      while(itemids.length != 0){
-        var itemid = itemids.splice(0, 1)[0];
-        next(itemid);
-      }
+    executeNext();
     hideError();
     return;
   }
 }
 
+var executingCount = 0;
+var itemids = [];
+var executingInterval;
+function executeNext() {
+  executingInterval = setInterval(function(){ 
+    while(itemids.length != 0 && executingCount < 1500){
+      executingCount++;
+      var itemid = itemids.splice(0, 1)[0];
+      next(itemid);
+    }
+
+    if(itemids.length == 0 && executingCount == 0) {
+      clearInterval(executingInterval);
+      $(".loading").text("No trades found for your filters.");
+    }
+  },
+  1000);
+}
+
+function next(itemid){
+  var buyPrice = [];
+  buyPrice = getData(buy_orders[itemid], buy_orders["station"], "sell", itemid);
+  if(buyPrice.length > 0){
+    executeRowCompute(itemid, buyPrice);
+  } else {
+    executingCount--;
+  } 
+}
+
 function executeRowCompute(itemid, buyPrice){
+    var executed = false
     if(itemid !== "complete" || itemid !== "station" || itemid !== "region" || itemid != "complete_pages"){
         for(var j = 0; j < sell_orders.length; j++){
           if(sell_orders[j][itemid] !== undefined){
             var sellPrice = getData(sell_orders[j][itemid], sell_orders[j]["station"], "buy", itemid);
             if(sellPrice.length > 0){
               var station_info = [sell_orders[j]["region"],sell_orders[j]["station"]];
+              executed = true;
               getItemInfo(itemid, buyPrice, sellPrice, station_info);
             }
           }
         }
+    }
+
+    if(!executed){
+      executingCount--;
     }
 
 }
@@ -238,12 +255,18 @@ function getItemInfo(itemId, buyPrice, sellPrice, station){
       if(rows.length > 0){
           rows = rows.sort(rowComparator);
           getItemVolume(itemId, rows)
+      }else{
+        executingCount--;
       }
+    }else {
+      executingCount--;
     }
   }else {
     if(rows.length > 0){
         rows = rows.sort(rowComparator);
         getItemWeight(itemId, rows);
+    }else {
+      executingCount--;
     }
   }
 }
@@ -257,9 +280,9 @@ function updateFilterCount() {
     for(var i = 0; i < (count%5) ; i++){
       ellipses += ".";
     }
-    $("#filtering-data").html("Filtering Data. Please wait" + ellipses);
+    $("#filtering-data").html("<b>Filtering Results. Please wait" + ellipses + "</b></br>If it takes too long try a smaller margin range.");
 
-    if(executingGet == false) {
+    if(executingCount == 0) {
       clearInterval(filteringInterval);
       $("#filtering-data").remove();
     }
@@ -269,10 +292,9 @@ function updateFilterCount() {
 
 var filtered=false;
 function getItemVolume(itemId, rows){
-  executingGet = true; 
   if(!filtered){
     filtered = true;
-    $("#buyingFooter").append("<div id='filtering-data'>Filtering Data. Please wait.</div>");  
+    $("#buyingFooter").append("<div id='filtering-data'><b>Filtering Results. Please wait.</b></br>If it takes too long try a smaller margin range.</div>");  
     updateFilterCount();
   }
   $.ajax({
@@ -283,16 +305,22 @@ function getItemVolume(itemId, rows){
   contentType: "application/json",
       success: function(volumeData) {
         var row = rows[0];
-        row.volume = volumeData[volumeData.length-1].volume;
-        if(row.volume >= volume_threshold && numberOfRequests < 1000){
-          numberOfRequests++;
-          getItemWeight(itemId, rows);
+        if(volumeData && volumeData[volumeData.length-1] && volumeData[volumeData.length-1].volume){
+          row.volume = volumeData[volumeData.length-1].volume;
+          if(row.volume >= volume_threshold){
+            getItemWeight(itemId, rows);
+          }else{
+            executingCount--;
+          }
+        }else{
+            executingCount--;
         }
       },
       error: function (request, error) {
-        if(request.status != 404) {
-          console.log(request);
+        if(request.status != 404 && request.statusText !== "parsererror") {
           getItemVolume(itemId, rows);
+        } else {
+          executingCount--;
         }
       }
   });
@@ -309,8 +337,8 @@ function getItemWeight(itemId, rows){
         } else {
           addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
         }
+        executingCount--;
     }else{
-        executingGet = true;   
         $.ajax({
         type: "get",
         url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us",
@@ -318,7 +346,7 @@ function getItemWeight(itemId, rows){
         async: true,
         contentType: "application/json",
             success: function(weightData) {
-              executingGet = false;
+              executingCount--;
               var name = weightData['name'];
               var weight = weightData['volume']
               itemWeightCache[itemId] = [];
@@ -332,9 +360,10 @@ function getItemWeight(itemId, rows){
               }
             },
             error: function (request, error) {
-              if(request.status != 404) {
-                console.log(request);
+              if(request.status != 404 && request.statusText !== "parsererror") {
                 getItemWeight(itemId, rows);
+              } else {
+                executingCount--;
               }
             }
         });

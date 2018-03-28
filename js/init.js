@@ -10,7 +10,7 @@ var stopped = false;
 var NUMBER_RETURNED = 1;
 
 var threshold_margin_lower = 20;
-var threshold_margin_upper = 70;
+var threshold_margin_upper = 40;
 var volume_threshold = 1000;
 
 
