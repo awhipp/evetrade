@@ -63,19 +63,19 @@ function setup(tradeType){
     $('.howto').toggle(false);
 
     if(routeTrading == true){
-
         $("#about")[0].onclick = function() {
           $('#howto-route').modal('show');
         };
         $("#initial_choice").hide();
         $("#route_trade").slideToggle();
+        ga('send', 'event', 'Trade Style', 'Hauler', 'User Preference Campaign');
     }else{
-
         $("#about")[0].onclick = function() {
           $('#howto-station').modal('show');
         };
         $("#initial_choice").hide();
         $("#station_trade").slideToggle();
+        ga('send', 'event', 'Trade Style', 'Station Trader', 'User Preference Campaign');
     }
 }
 
