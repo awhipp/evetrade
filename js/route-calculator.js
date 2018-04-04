@@ -176,7 +176,7 @@ var itemids = [];
 var executingInterval;
 
 var refreshInterval;
-var secondsToRefresh = 90;
+var secondsToRefresh = 120;
 function executeNext() {
   executingInterval = setInterval(function(){ 
     while(itemids.length != 0 && executingCount < 1500){
@@ -799,7 +799,7 @@ function refresh() {
     $(".dataTables_filter").remove();
     $(".dt-buttons").remove();
     $("#refresh-button").remove();
-    secondsToRefresh=90;
+    secondsToRefresh=120;
     created=false;
     filtered=false;
     itemids = [];
