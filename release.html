@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title>EVE Trade Release Notes v4.3.3</title>
+<title>EVE Trade Release Notes v4.4.0</title>
 
 <xmp theme="cyborg" style="display:none;">
 ## About
@@ -11,46 +11,49 @@ Implements the EVE ESI API to find:
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-### V4.3.3 User Preference Analytics
+## V4.4.0 Refresh Table Scan
+* Allow users to refresh the table with the last query they submitted.
+
+## V4.3.3 User Preference Analytics
 * Added user analytics when selecting different options to better track user perferences and prioritize bugs.
 
-### V4.3.2 Hotfix to limit the number of error requests being sent to 3
+## V4.3.2 Hotfix to limit the number of error requests being sent to 3
 * If an endpoint fails that many times that means its probably not up.
 * Improved number of results for station trading
 
-### V4.3.1 Hotfix to resolve bug with station trading numbers
+## V4.3.1 Hotfix to resolve bug with station trading numbers
 * Numbers were flipped for buy and sell orders
 
-### V4.3.0 Volume NOW AVAILBLE for station trading
+## V4.3.0 Volume NOW AVAILBLE for station trading
 * Probably the biggest request of the server has finally been added. You may now station trade and filter by the current daily volume.
 
-### V4.2.2 Browser Input Number Compatibility
+## V4.2.2 Browser Input Number Compatibility
 * Bug fixes for firefox where backspace would not work
 * Bug fixes for safari where you could not use margin
 
-### V4.2.1 ESI Compliant
+## V4.2.1 ESI Compliant
 * In light of EVE Crest being shutdown soon. The entire website is now ESI compliant.
 * Also reduced amount of network traffic required.
 * Fixed a bug where the best price was not actually returned.
 
-### V4.1.2.1 Minor Text Update
+## V4.1.2.1 Minor Text Update
 * Users were being confused with the sell/buy terminology so it now reads whether you are looking at the buy orders or the sell orders
 
-### V4.1.2 EVE Connect announcement
+## V4.1.2 EVE Connect announcement
 * Announce when EVE servers are not connecting properly
 
-### V4.1.1 Export Functionality
+## V4.1.1 Export Functionality
 * Able to export the tables to CSV, Excel, or PDF
 * Able to print or copy to clipboard as well
 
-### V4.1 UI Overhaul / Filtering Added
+## V4.1 UI Overhaul / Filtering Added
 * Due to popular demand and crowdsourced requests we have overhauled the theme and overall look of the website
 * We have added filtering to the table to enable users to filter on station, item, or any other text within the table
 
-### V4.0.1 Volume Weight Bug Fix
+## V4.0.1 Volume Weight Bug Fix
 * Correctly calculates the weight. It used to be per item rather than the total weight. Thanks to Nikolay for this report.
 
-### V4.0.0b Implements new ESI API
+## V4.0.0b Implements new ESI API
 * Cut down load times to seconds instead of minutes (instead of 7 minutes)
 * Currently only applies to Route trading (Station trading overhaul to come but its still pretty fast)
 * No longer show scams (filters by min volume required = 1)
@@ -58,63 +61,63 @@ Select which of the station you are docked in. It will return a lazy-loaded tabl
 * Restricted to 25 stations in custom route trading instead of 10.
 * Slightly updated UI
 
-### V3.1.2 Input Bug Fixed
+## V3.1.2 Input Bug Fixed
 * Allow for decimals to be entered
 * Fixed bug where backspacing on input dialogues for specific browsers would not work.
 
-### V3.1.1 Added cookies
+## V3.1.1 Added cookies
 * Minimize time spent editing forms
 
-### V3.1.0 Enable the ability to filter based on ship weight
+## V3.1.0 Enable the ability to filter based on ship weight
 * Downside is that ship weights retrieved by the API are unpackaged weights
 
-### V3.0.2 Increased trade station choices
+## V3.0.2 Increased trade station choices
 * You may now select up to 10 destination stations for trade routes
 
-### V3.0.1.1 Station Trading HOT fix
+## V3.0.1.1 Station Trading HOT fix
 * Station trading was broken
 
-### V3.0.1 Improved Performance and Setup
+## V3.0.1 Improved Performance and Setup
 * Modified requests to abide by rate limit
 * Improved return performance.
 * Simplified request calls to enable future development of cross region trading
 * Progress Bar
 
-### V3.0.0b Custom Trading Routes
+## V3.0.0b Custom Trading Routes
 * Due to popular demand we have now implemented a 1-to-1 trading drop down for finding the best deals between two stations
 * Also added custom select station trading
 * These features is in BETA as the EVE CREST API does not currently support getting all these stations so we are working off of a fixed backend, please report any bugs you find
 
-### V2.15 Implemented Profit filtering
+## V2.15 Implemented Profit filtering
 * Ability to filter profits to show only rows where ISK is greater than N on route trades
 * Ability to filter ROI to show only rows where ROI % is greater than M on route trades
 * Ability to filter Buy Cost to show only rows where Cost is less than O on route trades
 * Fixed a bug with station trading where it shows the wrong station's information
 * Updated UI to appear a little more clean
 
-### V2.14 Implemented Multi-sorting tables
+## V2.14 Implemented Multi-sorting tables
 * Now by shift + clicking a header row you are able to sort on additional properties.
 * Added a Release Notes page
 
-### V2.13 Updated UI
+## V2.13 Updated UI
 * Easier to select intro button
 * Added description of each selector
 
-### V2.12 Minor tweaks
+## V2.12 Minor tweaks
 * Removed minified files as they are minified automatically on the server
 * Updated wording and about pages to be more concise
 * Added designed and developed by fields
 
-### V2.11 Emergency Hotfix
+## V2.11 Emergency Hotfix
 * Route changed to https://crest-tq.eveonline.com/market/{ID}/orders/sell/?type=https://crest-tq.eveonline.com**/INVENTORY**/types/{TYPE}/
 
-### V2.1 Filter Patch
+## V2.1 Filter Patch
 * Addition of filtering of columns with preset columns to make tables a little more mobile responsive on small width screens.
 
-### "Margin Trading" Update v2.0
+## "Margin Trading" Update v2.0
 * Added functionality for margin trading within a station
 
-### The "App-in-an-App" Update v1.2
+## The "App-in-an-App" Update v1.2
 * Allows user to view all active orders - buy and sell for a specific item on shift + click
 * Only ctrl + click selects all now
 * Updates algorithm to return better profit results

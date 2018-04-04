@@ -3,6 +3,7 @@ var PAGES = 40;
 var stations = [];
 var created = false;
 var dt;
+var iteration=0;
 
 var isStationBuying=false;
 
@@ -31,6 +32,7 @@ var buy_orders, sell_orders, increment, total_progress;
 function beginStation(a) {
 	beginRoute(a,a);
 }
+
 function beginRoute(s_buy, active_stations){
   if(s_buy==active_stations){
     isStationBuying = true;
@@ -91,12 +93,14 @@ function getOrders(page, region, station, composite){
   region = parseInt(region);
   station = parseInt(station);
 
-  var url = "https://esi.tech.ccp.is/latest/markets/"+region+"/orders/?datasource=tranquility&page="+page;
+  var url = "https://esi.tech.ccp.is/latest/markets/"+region+"/orders/?datasource=tranquility&page="+page+"&language=en-us&iteration="+iteration;
   $.ajax({
     type: "get",
     url: url,
     dataType: "json",
     contentType: "application/json",
+    async: true,
+    cache: false,
     success: function(data) {
         composite["complete_pages"] += 1;
         total_progress+=increment;
@@ -170,6 +174,9 @@ function executeOrders(){
 var executingCount = 0;
 var itemids = [];
 var executingInterval;
+
+var refreshInterval;
+var secondsToRefresh = 90;
 function executeNext() {
   executingInterval = setInterval(function(){ 
     while(itemids.length != 0 && executingCount < 1500){
@@ -181,6 +188,20 @@ function executeNext() {
     if(itemids.length == 0 && executingCount == 0) {
       clearInterval(executingInterval);
       $(".loading").text("No trades found for your filters.");
+      $("#buyingFooter").append('<div id="refresh-timer"></div>');
+      refreshInterval = setInterval(function(){
+        if(secondsToRefresh <= 0){
+          clearInterval(refreshInterval);
+          $("#refresh-timer").remove();
+          $("#buyingFooter").append('<div id="refresh-button"><br>' +
+              '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
+              '</div>');
+        } else {
+          $("#refresh-timer").html("<br><p>Refresh allowed in: " + secondsToRefresh + " seconds.");
+            secondsToRefresh--;
+        }
+      }, 1000);
+      iteration++;
     }
   },
   1000);
@@ -299,9 +320,10 @@ function getItemVolume(itemId, rows){
   }
   $.ajax({
   type: "get",
-  url: "https://esi.tech.ccp.is/latest/markets/" + stations[0][0] + "/history/?datasource=tranquility&type_id=" + itemId + "&language=en-us",
+  url: "https://esi.tech.ccp.is/latest/markets/" + stations[0][0] + "/history/?datasource=tranquility&type_id=" + itemId + "&language=en-us&iteration="+iteration,
   dataType: "json",
   async: true,
+  cache: false,
   contentType: "application/json",
       success: function(volumeData) {
         var row = rows[0];
@@ -333,7 +355,7 @@ function getItemWeight(itemId, rows){
         var weight = itemWeightCache[itemId][1];
         var row = rows[0];
         if(isStationBuying) {
-          addMarginRow(itemId, name, row.buyPrice, row.sellPrice);
+          addMarginRow(itemId, name, row.buyPrice, row.sellPrice, row.volume);
         } else {
           addRow(row[0],name,row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],weight);
         }
@@ -341,14 +363,15 @@ function getItemWeight(itemId, rows){
     }else{
         $.ajax({
         type: "get",
-        url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us",
+        url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us&iteration="+iteration,
         dataType: "json",
         async: true,
+        cache: false,
         contentType: "application/json",
             success: function(weightData) {
               executingCount--;
               var name = weightData['name'];
-              var weight = weightData['volume']
+              var weight = weightData['volume'];
               itemWeightCache[itemId] = [];
               itemWeightCache[itemId][0] = name;
               itemWeightCache[itemId][1] = weight;
@@ -551,6 +574,7 @@ function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit
       $(".data_options").append($(".dt-buttons"));
       $(".dt-button").addClass("btn");
       $(".dt-button").addClass("btn-default");
+      $("#core").css('display','block');
     }
     var row_data = [
       itemName,
@@ -663,108 +687,121 @@ function saveSellData(stationId, itemId, data){
 
 function addMarginRow(itemId, itemName, buyPrice, sellPrice, volume){
 
-    var profit_per_item = sellPrice-buyPrice;
-    var margin = (sellPrice - buyPrice) / sellPrice;
+  var profit_per_item = sellPrice-buyPrice;
+  var margin = (sellPrice - buyPrice) / sellPrice;
 
-    if(!created){
-        created = true;
-	    // sorting on margin index
-        dt = $('#dataTable').DataTable({
-            "order": [[ 5, "desc" ]],
-            "lengthMenu": [[-1], ["All"]],
-            responsive: true,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
-        });
+  if(!created){
+      created = true;
+      // sorting on margin index
+      dt = $('#dataTable').DataTable({
+          "order": [[ 5, "desc" ]],
+          "lengthMenu": [[-1], ["All"]],
+          responsive: true,
+          dom: 'Bfrtip',
+          buttons: [
+              'copy', 'csv', 'excel', 'pdf', 'print'
+          ]
+      });
 
-        // for each column in header add a togglevis button in the div
-        var li_counter = 0;
-        $("#dataTable thead th").each( function ( i ) {
-            var name = dt.column( i ).header();
-            var spanelt = document.createElement( "button" );
+      // for each column in header add a togglevis button in the div
+      var li_counter = 0;
+      $("#dataTable thead th").each( function ( i ) {
+          var name = dt.column( i ).header();
+          var spanelt = document.createElement( "button" );
 
-            var initial_removed = [];
-            // if($(document).width() < 768){
-            //     initial_removed = ["Profit Per Item"];
-            // }
+          var initial_removed = [];
+          // if($(document).width() < 768){
+          //     initial_removed = ["Profit Per Item"];
+          // }
 
-            spanelt.innerHTML = name.innerHTML;
+          spanelt.innerHTML = name.innerHTML;
 
-            $(spanelt).addClass("colvistoggle");
-            $(spanelt).addClass("btn");
-            $(spanelt).addClass("btn-default");
-            $(spanelt).attr("colidx",i);    // store the column idx on the button
+          $(spanelt).addClass("colvistoggle");
+          $(spanelt).addClass("btn");
+          $(spanelt).addClass("btn-default");
+          $(spanelt).attr("colidx",i);    // store the column idx on the button
 
-            $(spanelt).addClass("is-true");
-            var column = dt.column( $(spanelt).attr('colidx') );
-            column.visible( true );
+          $(spanelt).addClass("is-true");
+          var column = dt.column( $(spanelt).attr('colidx') );
+          column.visible( true );
 
-            for(var i = 0; i < initial_removed.length; i++){
-                if(spanelt.innerHTML === initial_removed[i]){
-                    $(spanelt).addClass("is-false");
-                    var column = dt.column( $(spanelt).attr('colidx') );
-                    column.visible( false );
-                    break;
-                }
-            }
+          for(var i = 0; i < initial_removed.length; i++){
+              if(spanelt.innerHTML === initial_removed[i]){
+                  $(spanelt).addClass("is-false");
+                  var column = dt.column( $(spanelt).attr('colidx') );
+                  column.visible( false );
+                  break;
+              }
+          }
 
-            $(spanelt).on( 'click', function (e) {
-                e.preventDefault();
-                // Get the column API object
-                var column = dt.column( $(this).attr('colidx') );
-                // Toggle the visibility
-                $(this).removeClass("is-"+column.visible());
-                column.visible( ! column.visible() );
-                $(this).addClass("is-"+column.visible());
+          $(spanelt).on( 'click', function (e) {
+              e.preventDefault();
+              // Get the column API object
+              var column = dt.column( $(this).attr('colidx') );
+              // Toggle the visibility
+              $(this).removeClass("is-"+column.visible());
+              column.visible( ! column.visible() );
+              $(this).addClass("is-"+column.visible());
 
-            });
-            var li = document.createElement("li");
-            $(li).append($(spanelt));
-            $("#colvis").append($(li));
-        });
+          });
+          var li = document.createElement("li");
+          $(li).append($(spanelt));
+          $("#colvis").append($(li));
+      });
 
-        $("#show-hide").show();
+      $("#show-hide").show();
 
-        // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
-        $('.dropdown').on('show.bs.dropdown', function(e){
-            $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
-        });
+      // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
+      $('.dropdown').on('show.bs.dropdown', function(e){
+          $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+      });
 
-        // ADD SLIDEUP ANIMATION TO DROPDOWN //
-        $('.dropdown').on('hide.bs.dropdown', function(e){
-            $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
-        });
+      // ADD SLIDEUP ANIMATION TO DROPDOWN //
+      $('.dropdown').on('hide.bs.dropdown', function(e){
+          $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+      });
 
-        $('#dataTable tbody').on('mousedown', 'tr', function (event) {
-            if(event.which === 1){
-                if(!$(this).hasClass("row-selected")){
-                    $(this).addClass("row-selected");
-                }else{
-                    $(this).removeClass("row-selected");
-                }
-            }
-        } );
+      $('#dataTable tbody').on('mousedown', 'tr', function (event) {
+          if(event.which === 1){
+              if(!$(this).hasClass("row-selected")){
+                  $(this).addClass("row-selected");
+              }else{
+                  $(this).removeClass("row-selected");
+              }
+          }
+      } );
 
-        $("label > input").addClass("form-control").addClass("minor-text");
-        $("label > input").attr("placeholder", "Search Results...");
-        $(".loading").hide();
-        $('#dataTable').show();
-        $(".data_options").append($("#dataTable_filter"));
-        $(".data_options").append($(".dt-buttons"));
-        $(".dt-button").addClass("btn");
-        $(".dt-button").addClass("btn-default");
-    }
+      $("label > input").addClass("form-control").addClass("minor-text");
+      $("label > input").attr("placeholder", "Search Results...");
+      $(".loading").hide();
+      $('#dataTable').show();
+      $(".data_options").append($("#dataTable_filter"));
+      $(".data_options").append($(".dt-buttons"));
+      $(".dt-button").addClass("btn");
+      $(".dt-button").addClass("btn-default");
+      $("#core").css('display','block');
+  }
 
-    var row_data = [
-        itemName,
-        numberWithCommas(buyPrice.toFixed(2)),
-        numberWithCommas(sellPrice.toFixed(2)),
-        numberWithCommas(profit_per_item.toFixed(2)),
-        (margin.toFixed(3)*100).toFixed(1)+"%",
-        numberWithCommas(volume)
-    ];
-    var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
+  var row_data = [
+      itemName,
+      numberWithCommas(buyPrice.toFixed(2)),
+      numberWithCommas(sellPrice.toFixed(2)),
+      numberWithCommas(profit_per_item.toFixed(2)),
+      (margin.toFixed(3)*100).toFixed(1)+"%",
+      numberWithCommas(volume)
+  ];
+  var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
 
+}
+
+function refresh() {
+    $('#noselect-object').html('<table id="dataTable" class="display"></table>');
+    $(".dataTables_filter").remove();
+    $(".dt-buttons").remove();
+    $("#refresh-button").remove();
+    secondsToRefresh=90;
+    created=false;
+    filtered=false;
+    itemids = [];
+    init();
 }

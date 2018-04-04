@@ -4,13 +4,13 @@ h2{
 
 /** START HEADER **/
 header {
-    padding: 154px 0 75px;
+    padding: 154px 0 50px;
 
 }
 
 @media (min-width: 992px) {
     header {
-        padding: 156px 0 75px;
+        padding: 156px 0 50px;
     }
 }
 /** END HEADER **/
@@ -188,8 +188,8 @@ table.dataTable {
 }
 
 #dataTable {
-  display: none;
-  width: auto !important;
+    width: 100% !important;
+    display: none;
 }
 
 .row-selected {

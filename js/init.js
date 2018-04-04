@@ -30,7 +30,6 @@ var popup_table_buy;
 var popup_table_sell;
 
 var routeTrading = null;
-var init_itemIds = 0;
 
 var page = 1;
 var has_shown = false;
@@ -187,25 +186,6 @@ $( document ).ready(function() {
     });
 });
 
-function shuffle(array) {
-    var currentIndex = array.length,temporaryValue,randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
-
 function open_popup(itemId, name, location, stationid){
     popup_table_buy.clear();
     popup_table_sell.clear();
@@ -235,18 +215,6 @@ function open_popup(itemId, name, location, stationid){
     $('#popup').modal('show');
     popup_table_buy.draw();
     popup_table_sell.draw();
-}
-
-function unreachable(itemId, length){
-    if(!has_shown && $("#unreachable").is(":hidden")){
-        $("#unreachable").hide();
-        $("#unreachable").slideToggle();
-        has_shown = true;
-    }
-
-    if(itemId === length){
-      goAgain();
-    }
 }
 
 function setCookie(cname, cvalue, exdays) {
