@@ -370,8 +370,8 @@ footer h1, footer h2 {
 .addthis_bar_fixed {
     background-color: transparent !important;
     height: 0 !important;
-    width: 80% !important;
-    left: 50%;
+    width: 50% !important;
+    left: 50% !important;
     margin: 0 !important;
     transform: translateX(-50%) !important;
 }
