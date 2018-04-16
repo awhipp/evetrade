@@ -363,12 +363,15 @@ footer h1, footer h2 {
 
 
 /** Add This **/
-.addthis_bar_message, .addthis_bar_x {
+.addthis_bar_message, .addthis_bar_x, .addthis_bar_logo_container {
   display: none !important;
 }
 
 .addthis_bar_fixed {
-  background-color: transparent !important;
-  margin: 0 auto !important;
-  height: 0 !important;
+    background-color: transparent !important;
+    height: 0 !important;
+    width: 80% !important;
+    left: 50%;
+    margin: 0 !important;
+    transform: translateX(-50%) !important;
 }
