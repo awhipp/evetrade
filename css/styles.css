@@ -301,6 +301,8 @@ td {
       height: auto;
       overflow: scroll;
       text-align: left;
+      max-width: 700px;
+      margin: 0 auto;
   }
 
   #custom_route_end > li{

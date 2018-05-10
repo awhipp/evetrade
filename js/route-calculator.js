@@ -66,10 +66,8 @@ function beginRoute(s_buy, active_stations){
         getOrders(j, regionId, stationId, sell_orders[i]);
     }
   }
-
   $("#selection").hide();
 }
-
 
 var shown = false;
 
@@ -167,7 +165,6 @@ function executeOrders(){
 
     executeNext();
     hideError();
-    return;
   }
 }
 
@@ -185,7 +182,7 @@ function executeNext() {
       next(itemid);
     }
 
-    if(itemids.length == 0 && executingCount == 0) {
+    if(itemids.length == 0 && executingCount <= 0) {
       clearInterval(executingInterval);
       $(".loading").text("No trades found for your filters.");
       $("#buyingFooter").append('<div id="refresh-timer"></div>');
@@ -430,20 +427,13 @@ function calculateRow(itemId,  b_price, b_volume, s_price, s_volume, station){
 }
 
 function getLocation(location){
-  if(isCustom){
-    return getCustomEnd(location);
-  }else{
-    return (location === JITA[1] ? "Jita" : location === AMARR[1] ? "Amarr" : location === DODIXIE[1] ? "Dodixie" : location === RENS[1] ? "Rens" : location === HEK[1] ? "Hek" : getCustomEnd(location));
-  }
-}
-
-function getCustomEnd(location){
-  for(var i = 0; i < stations.length; i++){
-    if(location === stations[i][1]){
-      return customEnd[i];
+  var locationFound = "";
+  $.each(endCoordinates, function(){
+    if(locationFound.length === 0 && this.station === location) {
+      locationFound = this.name;
     }
-  }
-  return 'nil';
+  });
+  return locationFound;
 }
 
 function addRow(itemId, itemName, buyPrice, buyVolume, buyCost, location, profit, iskRatio, sellPrice, itemProfit, station, storage_volume){

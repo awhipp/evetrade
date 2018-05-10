@@ -1,83 +1,25 @@
-var JITA = [10000002,60003760];
-var AMARR = [10000043,60008494];
-var DODIXIE = [10000032,60011866];
-var RENS = [10000030,60004588];
-var HEK = [10000042,60005686];
-var IGNORE = null;
-
-var stopped = false;
-
-var NUMBER_RETURNED = 1;
-
 var threshold_margin_lower = 20;
 var threshold_margin_upper = 40;
 var volume_threshold = 1000;
-
-
 var threshold_profit = 100000;
 var threshold_roi = 1;
 var threshold_cost = 999999999999999999;
-var threshold_weight = 999999999999999999
+var threshold_weight = 999999999999999999;
+
+var routeTrading = null;
+var isCustom = false;
 
 var customBuy = [];
 var customSell = [];
+var page = 1;
 
-var start_location = "";
-var isCustom = false;
-var customStart;
-var customEnd;
 var popup_table_buy;
 var popup_table_sell;
-
-var routeTrading = null;
-
-var page = 1;
-var has_shown = false;
-var curr;
-
-var requestItemWeight = true;
 
 var stations_checked = 0;
 var MAX_STATIONS = 25;
 
-function numberWithCommas(val) {
-    while (/(\d+)(\d{3})/.test(val.toString())){
-        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-    }
-    return val;
-}
-
-function showAbout(){
-    if(routeTrading == null){
-        $('#howto').slideToggle();
-    }else if(routeTrading){
-        $('#howto-route').slideToggle();
-    }else{
-        $('#howto-station').slideToggle();
-    }
-}
-
-function setup(tradeType){
-    routeTrading = tradeType;
-    $('.howto').toggle(false);
-
-    if(routeTrading == true){
-        $("#about")[0].onclick = function() {
-          $('#howto-route').modal('show');
-        };
-        $("#initial_choice").hide();
-        $("#route_trade").slideToggle();
-        ga('send', 'event', 'Trade Style', 'Hauler', 'User Preference Campaign');
-    }else{
-        $("#about")[0].onclick = function() {
-          $('#howto-station').modal('show');
-        };
-        $("#initial_choice").hide();
-        $("#station_trade").slideToggle();
-        ga('send', 'event', 'Trade Style', 'Station Trader', 'User Preference Campaign');
-    }
-}
-
+var universeList = {};
 
 $( document ).ready(function() {
     $("#stations_remaining").text(MAX_STATIONS);
@@ -86,86 +28,154 @@ $( document ).ready(function() {
         "order": [[ 0, "asc" ]],
         "lengthMenu": [[10], ["10"]]
     });
+
     popup_table_sell = $("#popup-table-sell").DataTable({
         "order": [[ 0, "desc" ]],
         "lengthMenu": [[10], ["10"]]
     });
 
-    $(".start").on('click', function(){
-        start_location = $(this).val();
-        $(".start").removeClass("start-selected");
-        $(this).addClass("start-selected");
-        start_location == "Jita" ? $("#add_jita").removeClass("end-selected") : "";
-        start_location == "Amarr" ? $("#add_amarr").removeClass("end-selected") : "";
-        start_location == "Dodixie" ? $("#add_dodixie").removeClass("end-selected") : "";
-        start_location == "Rens" ? $("#add_rens").removeClass("end-selected") : "";
-        start_location == "Hek" ? $("#add_hek").removeClass("end-selected") : "";
-    });
+    onClickListeners();
 
-    $(".end").on('click', function(){
-        if($(this).hasClass("end-selected")){
-            $(this).removeClass("end-selected");
-        }else{
-            $(this).addClass("end-selected");
+    setupCustomDropdown();
+
+    $('input[type="number"]').keypress(function(e) {
+        var theEvent = e || window.event;
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode( key );
+        var regex = /[0-9]|\./;
+        if(!regex.test(key) && theEvent.charCode !== 8 && theEvent.charCode !== 0) {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
         }
     });
 
-    $(".station-start").on('click', function(){
-      $(".station-start").removeClass("station-selected");
-      $(this).addClass("station-selected");
-    });
+    setAbout();
+    setupCookies();
+});
 
-    // $("#numberInput").on('blur', updateNumber);
-
-    $("#custom_route").on('click', function(){
-      $(".standard").slideToggle();
-      $(".custom").slideToggle();
-      if($(this).val() === "Enable Custom Route"){
-        $(this).val("Disable Custom Route");
-        isCustom = true;
-      }else{
-        $(this).val("Enable Custom Route");
-        isCustom = false;
-      }
-    });
-
-    $("#custom_select").on('click', function(){
-      $(".standard").slideToggle();
-      $(".custom").slideToggle();
-      if($(this).val() === "Enable Custom Selection"){
-        $(this).val("Disable Custom Selection");
-        isCustom = true;
-      }else{
-        $(this).val("Enable Custom Selection");
-        isCustom = false;
-      }
-
-    });
-
+function setupCustomDropdown() {
     for(var i = 0; i < station_ids.length; i++){
-      $("#custom_route_start").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
-      $("#custom_route_end").append('<li><input id="end-'+i+'" class="end-selection" type="checkbox" value='+ [station_ids[i][1],station_ids[i][0]] +'><label for="end-'+i+'">' + station_ids[i][2] + '</label></li>');
-      // $("#custom_route_end").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
-      $("#custom_station").append('<option value='+ [station_ids[i][1],station_ids[i][0]] +'>' + station_ids[i][2] + '</option>');
+        $("#custom_route_start").append('<option>' + station_ids[i][2] + '</option>');
+
+        $("#custom_route_end").append('<li>' +
+            '<input id="echeck-' + i + '" class="end-selection" type="checkbox" value="'+ station_ids[i][2] +'">' +
+            '<label for="echeck-' + i + '">' + station_ids[i][2] + '</label>' +
+            '</li>');
+
+        $("#custom_station").append('<option>' + station_ids[i][2] + '</option>');
+
+        universeList[station_ids[i][2]] = {};
+        universeList[station_ids[i][2]].region = station_ids[i][1];
+        universeList[station_ids[i][2]].station = station_ids[i][0];
     }
 
     $(".end-selection").on('click', function(){
         stations_checked = $(".end-selection:checked").length;
         if(stations_checked > MAX_STATIONS){
-          $(this).prop("checked",false);
-          stations_checked = $(".end-selection:checked").length;
+            $(this).prop("checked",false);
+            stations_checked = $(".end-selection:checked").length;
         }
         $("#stations_remaining").text(MAX_STATIONS-stations_checked);
     });
+}
 
-    $("#custom_route_start").change(function(){
-      start_location = $("#custom_route_start option[value='" + $('#custom_route_start').val() + "']").text();
+function onClickListeners() {
+
+    $(".start").on('click', function(){
+        $(".start").removeClass("start-selected");
+        $(this).addClass("start-selected");
+        checkStartSelection();
     });
 
-    $("#custom_station").change(function(){
-      start_location = $("#custom_station option[value='" + $('#custom_station').val() + "']").text();
+    $(".end").on('click', function(){
+        $(this).hasClass("end-selected") ? $(this).removeClass("end-selected") : $(this).addClass("end-selected");
+        checkEndSelection();
     });
 
+    $(".route-trader").on('click', function(){
+        setupTradeOptions(true);
+    });
+
+    $(".station-trader").on('click', function(){
+        setupTradeOptions(false);
+    });
+
+    $(".station-start").on('click', function(){
+        $(".station-start").removeClass("station-selected");
+        $(this).addClass("station-selected");
+    });
+
+    $("#custom_route").on('click', function(){
+        $(".standard").slideToggle();
+        $(".custom").slideToggle();
+        if($(this).val() === "Enable Custom Route"){
+            $(this).val("Disable Custom Route");
+            isCustom = true;
+        }else{
+            $(this).val("Enable Custom Route");
+            isCustom = false;
+        }
+    });
+
+    $("#custom_select").on('click', function(){
+        $(".standard").slideToggle();
+        $(".custom").slideToggle();
+        if($(this).val() === "Enable Custom Selection"){
+            $(this).val("Disable Custom Selection");
+            isCustom = true;
+        }else{
+            $(this).val("Enable Custom Selection");
+            isCustom = false;
+        }
+    });
+}
+
+function checkStartSelection() {
+    $.each($(".start-selected"), function(){
+        var startSelected = this;
+        $.each($(".end-selected"), function() {
+            if(this.dataset.station === startSelected.dataset.station) {
+                $(this).removeClass("end-selected");
+            }
+        });
+    });
+}
+
+function checkEndSelection() {
+    $.each($(".start-selected"), function(){
+        var startSelected = this;
+        $.each($(".end-selected"), function() {
+            if(this.dataset.station === startSelected.dataset.station) {
+                $(startSelected).removeClass("start-selected");
+            }
+        });
+    });
+}
+
+function numberWithCommas(val) {
+    while (/(\d+)(\d{3})/.test(val.toString())){
+        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
+}
+
+function setAbout() {
+    if (routeTrading == null) {
+        $("#about")[0].onclick = function() {
+            $('#howto').modal('show');
+        };
+    } else if (routeTrading) {
+        $("#about")[0].onclick = function() {
+            $('#howto-route').modal('show');
+        };
+    } else {
+        $("#about")[0].onclick = function() {
+            $('#howto-station').modal('show');
+        };
+    }
+}
+
+function setupCookies() {
     $("#lower-margin-threshold").val(getCookie("lower-margin-threshold"));
     $("#upper-margin-threshold").val(getCookie("upper-margin-threshold"));
     $("#volume-threshold").val(getCookie("volume-threshold"));
@@ -173,25 +183,82 @@ $( document ).ready(function() {
     $("#roi-threshold").val(getCookie("roi-threshold"));
     $("#buy-threshold").val(getCookie("buy-threshold"));
     $("#weight-threshold").val(getCookie("weight-threshold"));
-    
-    $('input[type="number"]').keypress(function(e) {
-      var theEvent = e || window.event;
-      var key = theEvent.keyCode || theEvent.which;
-      key = String.fromCharCode( key );
-      var regex = /[0-9]|\./;
-      if(!regex.test(key) && theEvent.charCode !== 8 && theEvent.charCode !== 0) {
-        theEvent.returnValue = false;
-        if(theEvent.preventDefault) theEvent.preventDefault();
-      }
-    });
-});
+}
+
+function updateCookies() {
+    if(routeTrading) {
+        if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
+            threshold_profit = parseFloat($("#profit-threshold").val());
+            setCookie("profit-threshold",threshold_profit,7);
+        }else{
+            setCookie("profit-threshold","");
+        }
+        if($("#roi-threshold").val().length > 0 && !isNaN($("#roi-threshold").val())){
+            threshold_roi = parseFloat($("#roi-threshold").val());
+            setCookie("roi-threshold",threshold_roi,7);
+        }else{
+            setCookie("roi-threshold","");
+        }
+        if($("#buy-threshold").val().length > 0 && !isNaN($("#buy-threshold").val())){
+            threshold_cost = parseFloat($("#buy-threshold").val());
+            setCookie("buy-threshold",threshold_cost,7);
+        }else{
+            setCookie("buy-threshold","");
+        }
+        if($("#weight-threshold").val().length > 0 && !isNaN($("#weight-threshold").val())){
+            threshold_weight = parseFloat($("#weight-threshold").val());
+            setCookie("weight-threshold",threshold_weight,7);
+        }else{
+            setCookie("weight-threshold","");
+        }
+    } else {
+        if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
+            threshold_margin_lower = parseFloat($("#lower-margin-threshold").val());
+            setCookie("lower-margin-threshold",threshold_margin_lower,7);
+        }else{
+            setCookie("lower-margin-threshold","");
+        }
+
+        if($("#upper-margin-threshold").val().length > 0 && !isNaN($("#upper-margin-threshold").val())){
+            threshold_margin_upper = parseFloat($("#upper-margin-threshold").val());
+            setCookie("upper-margin-threshold",threshold_margin_upper,7);
+        }else{
+            setCookie("upper-margin-threshold","");
+        }
+
+        if($("#volume-threshold").val().length > 0 && !isNaN($("#volume-threshold").val())){
+            volume_threshold = parseFloat($("#volume-threshold").val());
+            setCookie("volume-threshold",volume_threshold,7);
+        }else{
+            setCookie("volume-threshold","");
+        }
+    }
+}
+
+function setupTradeOptions(tradeType){
+    routeTrading = tradeType;
+    $('.howto').toggle(false);
+
+    $("#initial_choice").hide();
+
+    setAbout();
+
+    if(routeTrading){
+        $("#route_trade").slideToggle();
+        ga('send', 'event', 'Trade Style', 'Hauler', 'User Preference Campaign');
+    }else{
+        $("#station_trade").slideToggle();
+        ga('send', 'event', 'Trade Style', 'Station Trader', 'User Preference Campaign');
+    }
+}
 
 function open_popup(itemId, name, location, stationid){
     popup_table_buy.clear();
     popup_table_sell.clear();
+
     $("#popup_itemName").text("Trade info for " + name);
     if(isCustom){
-      $("#buyLocation").text("Buy at " + customStart);
+      $("#buyLocation").text("Buy at " + startLocation);
       $("#sellLocation").text("Sell at " + location);
     }else{
       $("#buyLocation").text("Buy at " + start_location);
@@ -240,240 +307,181 @@ function getCookie(cname) {
     return "";
 }
 
-function init(){
-    var location = start_location;
+var startCoordinates = {};
+var endCoordinates = [];
+var startLocation;
+var endLocations = [];
 
-    var destinations = [];
+function setStationTradingLocations() {
+    var start_region, start_station;
 
-    if(routeTrading == false){
-        if(isCustom){
-          destinations.push($("#custom_station option[value='" + $('#custom_station').val() + "']").text());
-          start_location = "Nil";
-          customStart = location;
-          customEnd = destinations[0];
-        }else{
-          $.each($(".station-selected"), function(){
-              start_location = "Nil";
-              location = $(this).val();
-              destinations.push($(this).val());
-          });
-        }
-
-        if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
-            threshold_margin_lower = parseFloat($("#lower-margin-threshold").val());
-            setCookie("lower-margin-threshold",threshold_margin_lower,7);
-        }else{
-            setCookie("lower-margin-threshold","");
-        }
-
-        if($("#upper-margin-threshold").val().length > 0 && !isNaN($("#upper-margin-threshold").val())){
-            threshold_margin_upper = parseFloat($("#upper-margin-threshold").val());
-            setCookie("upper-margin-threshold",threshold_margin_upper,7);
-        }else{
-            setCookie("upper-margin-threshold","");
-        }
-
-        if($("#volume-threshold").val().length > 0 && !isNaN($("#volume-threshold").val())){
-            volume_threshold = parseFloat($("#volume-threshold").val());
-            setCookie("volume-threshold",volume_threshold,7);
-        }else{
-            setCookie("volume-threshold","");
-        }
+    if(isCustom){
+        startLocation = $("#custom_station").val();
+        start_region = universeList[startLocation].region;
+        start_station = universeList[startLocation].station;
     }else{
+        var selectedStation = $(".station-selected")[0];
+        startLocation = selectedStation.value;
+        start_region = selectedStation.dataset.region;
+        start_station =selectedStation.dataset.station;
+    }
 
-      if(isCustom){
-        if($(".end-selection:checked").length == 0){
-          destinations.push("None");
-        }
+    endLocations = [startLocation];
+    startCoordinates.region = start_region;
+    startCoordinates.station = start_station;
+}
+
+function setRouteTradingLocations() {
+    var start_region, start_station;
+
+    if(isCustom){
+        startLocation = $("#custom_route_start").val();
+        start_region = universeList[startLocation].region;
+        start_station = universeList[startLocation].station;
+
         $.each($(".end-selection:checked"), function(){
-          if(destinations.length < MAX_STATIONS){
-            destinations.push($("[for='"+$(this).attr('id')+"']").text());
-          }
+            var endCoordinate = {};
+            endCoordinate.name = this.value;
+            endCoordinate.region = universeList[endCoordinate.name].region;
+            endCoordinate.station = universeList[endCoordinate.name].station;
+            endLocations.push(endCoordinate.name);
+            endCoordinates.push(endCoordinate);
         });
-        customStart = location;
-        customEnd = destinations;
-      }else{
-        $.each($(".end-selected"), function(){
-            destinations.push($(this).val());
+    }else{
+        var selectedStation = $(".start-selected")[0];
+        if(selectedStation){
+            start_region = selectedStation.dataset.region;
+            start_station = selectedStation.dataset.station;
+            startLocation = selectedStation.value;
+
+            $.each($(".end-selected"), function(){
+                var endCoordinate = {};
+                endCoordinate.region = $(this)[0].dataset.region;
+                endCoordinate.station = $(this)[0].dataset.station;
+                endCoordinate.name = $(this)[0].value;
+                endLocations.push(endCoordinate.name);
+                endCoordinates.push(endCoordinate);
+            });
+        }
+    }
+
+    startCoordinates.region = start_region;
+    startCoordinates.station = start_station;
+}
+
+function createDataTable() {
+    var buyingFooter;
+    var buyingHeaderDOM = $("#buyingHeader");
+    var buyingFooterDOM = $("#buyingFooter");
+    var coreDOM = $("#core");
+    var dataTableDOM = $("#dataTable");
+
+    if(routeTrading) {
+        dataTableDOM.append("<thead><tr>" +
+            "<th>Item</th>" +
+            "<th>Sell Order</th>" +
+            "<th>Quantity</th>" +
+            "<th>Total Cost</th>" +
+            "<th>Take To</th>" +
+            "<th>Buy Order</th>" +
+            "<th>Quantity</th>" +
+            "<th>Total Profit</th>" +
+            "<th>Profit Per Item</th>" +
+            "<th>R.O.I.</th>" +
+            "<th>Total Volume (m3)</th>" +
+            "</tr></thead>" +
+            "<tbody id='tableBody'></tbody>");
+
+
+        buyingHeaderDOM.text("Buying Sell Orders from " + startLocation);
+
+        var sellingTo = "";
+        $.each(endLocations, function(){
+            sellingTo += this + ", ";
         });
-      }
+        sellingTo = sellingTo.substring(0,sellingTo.length-2);
 
-      if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
-          threshold_profit = parseFloat($("#profit-threshold").val());
-          setCookie("profit-threshold",threshold_profit,7);
-      }else{
-          setCookie("profit-threshold","");
-      }
-      if($("#roi-threshold").val().length > 0 && !isNaN($("#roi-threshold").val())){
-          threshold_roi = parseFloat($("#roi-threshold").val());
-          setCookie("roi-threshold",threshold_roi,7);
-      }else{
-          setCookie("roi-threshold","");
-      }
-      if($("#buy-threshold").val().length > 0 && !isNaN($("#buy-threshold").val())){
-          threshold_cost = parseFloat($("#buy-threshold").val());
-          setCookie("buy-threshold",threshold_cost,7);
-      }else{
-          setCookie("buy-threshold","");
-      }
-      if($("#weight-threshold").val().length > 0 && !isNaN($("#weight-threshold").val())){
-          threshold_weight = parseFloat($("#weight-threshold").val());
-          setCookie("weight-threshold",threshold_weight,7);
-      }else{
-          setCookie("weight-threshold","");
-      }
-    }
+        var extraData = "<div id='route-to'>Selling to the Buy Orders at " + sellingTo + "</div> " +
+            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
+            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
 
-    var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
-    var add_amarr = destinations.indexOf("Amarr") > -1 ? true : false;
-    var add_dodixie = destinations.indexOf("Dodixie") > -1 ? true : false;
-    var add_rens = destinations.indexOf("Rens") > -1 ? true : false;
-    var add_hek = destinations.indexOf("Hek") > -1 ? true : false;
-
-    if((destinations.indexOf(start_location) > -1 && destinations.length == 1) || (destinations.length == 0 || start_location === "")){
-        $(".error").show();
-        return;
-    }else{
-        $(".error").hide();
-        $("#selection").hide();
-    }
-
-    if(isCustom && (destinations[0] === "None" || start_location === "None")){
-        $(".error").show();
-        $("#selection").show();
-        return;
-    }else{
-        $(".error").hide();
-        $("#selection").hide();
-    }
-
-    var active_stations = [];
-    if(!isCustom){
-      var add_jita = destinations.indexOf("Jita") > -1 ? true : false;
-      var add_amarr = destinations.indexOf("Amarr") > -1 ? true : false;
-      var add_dodixie = destinations.indexOf("Dodixie") > -1 ? true : false;
-      var add_rens = destinations.indexOf("Rens") > -1 ? true : false;
-      var add_hek = destinations.indexOf("Hek") > -1 ? true : false;
-
-      var station_buy,station_sell1,station_sell2,station_sell3,station_sell4;
-      if(location === "Jita"){
-          station_buy = JITA;
-          station_sell1 = add_amarr ? AMARR : IGNORE;
-          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-          station_sell3 = add_rens ? RENS : IGNORE;
-          station_sell4 = add_hek ? HEK : IGNORE;
-      }else if(location === "Amarr"){
-          station_buy = AMARR;
-          station_sell1 = add_jita ? JITA : IGNORE;
-          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-          station_sell3 = add_rens ? RENS : IGNORE;
-          station_sell4 = add_hek ? HEK : IGNORE;
-      }else if(location === "Dodixie"){
-          station_buy = DODIXIE;
-          station_sell1 = add_amarr ? AMARR : IGNORE;
-          station_sell2 = add_jita ? JITA : IGNORE;
-          station_sell3 = add_rens ? RENS : IGNORE;
-          station_sell4 = add_hek ? HEK : IGNORE;
-      }else if(location === "Rens"){
-          station_buy = RENS;
-          station_sell1 = add_amarr ? AMARR : IGNORE;
-          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-          station_sell3 = add_jita ? JITA : IGNORE;
-          station_sell4 = add_hek ? HEK : IGNORE;
-      }else {
-          station_buy = HEK;
-          station_sell1 = add_amarr ? AMARR : IGNORE;
-          station_sell2 = add_dodixie ? DODIXIE : IGNORE;
-          station_sell3 = add_rens ? RENS : IGNORE;
-          station_sell4 = add_jita ? JITA : IGNORE;
-      }
-    }else{
-      station_buy = $("#custom_route_start").val().split(",");
-
-      $.each($(".end-selection:checked"), function(){
-          if(active_stations.length < MAX_STATIONS){
-            active_stations.push($(this).val().split(","));
-          }
-      });
-    }
-    $("#title-banner").slideToggle();
-    if(routeTrading){
-
-        $('#dataTable').append("<thead><tr><th>Item</th><th>Sell Order</th><th>Quantity</th><th>Total Cost</th><th>Take To</th><th>Buy Order</th><th>Quantity</th><th>Total Profit</th><th>Profit Per Item</th><th>R.O.I.</th><th>Total Volume (m3)</th></tr></thead>")
-
-        $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
-        $("#buyingHeader").text("Buying Sell Orders from " + location);
-
-        var including = "";
-        if(isCustom){
-          $.each(destinations, function(){
-            including += this + ", ";
-          });
-        }else{
-          if(add_jita && location !== "Jita"){
-              including += "Jita, ";
-          }
-          if(add_amarr && location !== "Amarr"){
-              including += "Amarr, ";
-          }
-          if(add_dodixie && location !== "Dodixie"){
-              including += "Dodixie, ";
-          }
-          if(add_rens && location !== "Rens"){
-              including += "Rens, ";
-          }
-          if(add_hek && location !== "Hek"){
-              including += "Hek, ";
-          }
-        }
-        if(including.length > 0){
-            including = "<div id='route-to'>Selling to the Buy Orders at " + including.substring(0,including.length-2) + "</div>";
-        }
-        including += "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% |&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if(threshold_cost !== 999999999999999999){
-          including += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";
+            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";
         }
         if(threshold_weight !== 999999999999999999){
-          including += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
-        }
-        $("#buyingFooter").html(including + "<br/>*Profit is not guaranteed. <span class='avoidwrap'>Use at your own risk. <span class='avoidwrap'>Verify in game that prices are accurate.</span></span><div class='loading'></div>");
-        $("#buyingFooter").show();
-        $("#buyingHeader").show();
-        $("#core").slideToggle();
-        if( station_sell1 != null ){
-          active_stations.push(station_sell1);
-        }
-        if( station_sell2 != null ){
-          active_stations.push(station_sell2);
-        }
-        if( station_sell3 != null ){
-          active_stations.push(station_sell3);
-        }
-        if( station_sell4 != null ){
-          active_stations.push(station_sell4);
-        }
-        for(var i = 0; i < active_stations.length; i++){
-          for(var j = 0; j < active_stations[i].length; j++){
-            active_stations[i][j] = parseInt(active_stations[i][j]);
-          }
-        }
-        beginRoute(station_buy,active_stations);
-    }else{
-        $("#buyingHeader").text("Station Trading at " + location);
-        $("#buyingFooter").html("Volume greater than: " + numberWithCommas(volume_threshold) + " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%<div class='loading'>Loading. Please wait...</div>");
-        $("#buyingFooter").show();
-        $("#buyingHeader").show();
-        $("#core").slideToggle();
-        if(isCustom){
-          station_buy = $("#custom_station").val().split(",");
+            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
         }
 
-        $('#dataTable').append("<thead><tr><th>Item</th><th>Buy Order</th><th>Sell Order</th><th>Profit Per Item</th><th>Margin</th><th>Volume</th></tr></thead>");
-        $('#dataTable thead:last').after("<tbody id='tableBody'></tbody>");
+        buyingHeaderDOM.show();
 
-        beginRoute(station_buy,station_buy);
+        buyingFooter = extraData +
+            "<br/>*Profit is not guaranteed. " +
+            "<span class='avoidwrap'>Use at your own risk. " +
+            "<span class='avoidwrap'>Verify in game that prices are accurate.</span></span>" +
+            "<div class='loading'></div>";
+
+        buyingFooterDOM.html(buyingFooter);
+        buyingFooterDOM.show();
+        coreDOM.slideToggle();
+    } else {
+        buyingHeaderDOM.text("Station Trading at " + startLocation);
+        buyingHeaderDOM.show();
+
+        buyingFooter = "Volume greater than: " + numberWithCommas(volume_threshold) +
+            " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%" +
+            "<div class='loading'>Loading. Please wait...</div>";
+        buyingFooterDOM.html(buyingFooter);
+        buyingFooterDOM.show();
+
+        coreDOM.slideToggle();
+
+        dataTableDOM.append("<thead><tr>" +
+            "<th>Item</th>" +
+            "<th>Buy Order</th>" +
+            "<th>Sell Order</th>" +
+            "<th>Profit Per Item</th>" +
+            "<th>Margin</th>" +
+            "<th>Volume</th>" +
+            "</tr></thead>" +
+            "<tbody id='tableBody'></tbody>");
+    }
+}
+
+function execute() {
+    var buyingStation;
+    var endStations;
+
+    if(routeTrading) {
+        buyingStation = [startCoordinates.region, startCoordinates.station];
+        endStations = [];
+        $.each(endCoordinates, function(){
+            endStations.push([this.region, this.station]);
+        });
+    } else {
+        buyingStation = [startCoordinates.region, startCoordinates.station];
+        endStations = buyingStation;
     }
 
+    beginRoute(buyingStation, endStations);
+}
 
+function init(){
+    updateCookies();
 
+    if(routeTrading){
+        setRouteTradingLocations();
+    }else{
+        setStationTradingLocations();
+    }
+
+    if(startLocation && startLocation.length > 0 && endLocations.length > 0){
+        $(".error").hide();
+        $("#selection").hide();
+    }else{
+        $(".error").show();
+        return;
+    }
+
+    createDataTable();
+    execute();
 }

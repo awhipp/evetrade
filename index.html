@@ -13,11 +13,9 @@
     <meta http-equiv='cache-control' content='no-cache'>
     <meta http-equiv='expires' content='0'>
     <meta http-equiv='pragma' content='no-cache'>
-    <meta name="verifyownership" 
- content="ad5d78275d2b9a27c28dca30959b986d"/>
+    <meta name="verifyownership" content="ad5d78275d2b9a27c28dca30959b986d"/>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-
 
     <!-- CDN CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
@@ -71,10 +69,11 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" style="position: fixed; top: 6em; right: 1em;">
-                    <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Donate', '#000000', 'evetrade');kofiwidget2.draw();</script> 
+                    <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
+                    <script type='text/javascript'>kofiwidget2.init('Donate', '#000000', 'evetrade');kofiwidget2.draw();</script>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="about" onclick="$('#howto').modal('show');">Help</a>
+                    <a class="nav-link" id="about">Help</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="reset" onclick="window.location.reload()">Restart</a>
@@ -95,10 +94,10 @@
               <div id="initial_choice">
                 <h2>How do you trade?</h2>
                 <p>
-                  <input type="button" class="btn btn-default" onclick="setup(true)" value="Between Two Stations"/>
+                  <input type="button" class="btn btn-default route-trader" value="Between Two Stations"/>
                 </p>
                 <p>
-                  <input type="button" class="btn btn-default" onclick="setup(false)" value="Staying in One Station"/>
+                  <input type="button" class="btn btn-default station-trader" value="Staying in One Station"/>
                 </p>
               </div>
 
@@ -126,11 +125,11 @@
 
                   <div class="col-xs-12 mx-auto">
                     <div class="standard">
-                      <input type="button" class="btn btn-default station-start" id="station_jita" value="Jita"/>
-                      <input type="button" class="btn btn-default station-start" id="station_amarr" value="Amarr"/>
-                      <input type="button" class="btn btn-default station-start" id="station_dodixie" value="Dodixie"/>
-                      <input type="button" class="btn btn-default station-start" id="station_rens" value="Rens"/>
-                      <input type="button" class="btn btn-default station-start" id="station_hek" value="Hek"/>
+                      <input type="button" class="btn btn-default station-start" data-region="10000002" data-station="60003760" value="Jita"/>
+                      <input type="button" class="btn btn-default station-start" data-region="10000043" data-station="60008494" value="Amarr"/>
+                      <input type="button" class="btn btn-default station-start" data-region="10000032" data-station="60011866" value="Dodixie"/>
+                      <input type="button" class="btn btn-default station-start" data-region="10000030" data-station="60004588" value="Rens"/>
+                      <input type="button" class="btn btn-default station-start" data-region="10000042" data-station="60005686" value="Hek"/>
                     </div>
                   </div>
 
@@ -192,11 +191,11 @@
                 <div class="col-xs-12 mx-auto">
                   <p> Starting Point </p>
                   <div class="standard">
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_jita" value="Jita"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_amarr" value="Amarr"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_dodixie" value="Dodixie"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_rens" value="Rens"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" id="location_hek" value="Hek"/>
+                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000002" data-station="60003760" value="Jita"/>
+                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000043" data-station="60008494" value="Amarr"/>
+                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000032" data-station="60011866" value="Dodixie"/>
+                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000030" data-station="60004588" value="Rens"/>
+                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000042" data-station="60005686" value="Hek"/>
                   </div>
                   <div class="form-group custom">
                     <select id="custom_route_start" class="location_dropdown form-control">
@@ -209,11 +208,11 @@
                 <div class="col-xs-12 mx-auto">
                   <p> End Point(s) </p>
                   <div class="standard">
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_jita" value="Jita"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_amarr" value="Amarr"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_dodixie" value="Dodixie"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_rens" value="Rens"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" id="add_hek" value="Hek"/>
+                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000002" data-station="60003760" value="Jita"/>
+                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000043" data-station="60008494" value="Amarr"/>
+                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000032" data-station="60011866" value="Dodixie"/>
+                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000030" data-station="60004588" value="Rens"/>
+                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000042" data-station="60005686" value="Hek"/>
                   </div>
                   <div class="form-group custom">
                     <ul id="custom_route_end" class="location_checklist form-control">
@@ -277,7 +276,7 @@
     <footer class="py-5 bg-dark">
         <div class="container overflow_none">
       			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.4.0 | Updated 04 Apr 2018</a></p>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.4.1 | Updated 09 May 2018</a></p>
             <p class="m-0 text-center text-white">&copy; 2016-2018 <a href='https://EVETrade.space'> EVE Trade</a>. All rights reserved.</p>
             <div style="position: absolute !important; top: -1000px !important; left: -1000px !important; z-index: -100 !important; width:0 !important; height: 0 !important; opacity: 0 !important;">
               <a href="https://venturefocused.com" data-ytta-id="-">Developed in part with the help of Venture Focused Consulting</a>
@@ -459,13 +458,13 @@
 
   <!-- CDN Javascript -->
   <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/popper/popper.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
   <!-- Plugin JavaScript -->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
 
   <!-- Export -->
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js"></script>
@@ -476,10 +475,10 @@
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js"></script>
 
+  <script src="js/station_ids.min.js"></script>
+
   <script src="js/init.min.js" async defer></script>
-  <!-- Custom JavaScript for this theme -->
   <script src="js/route-calculator.min.js" async defer></script>
-  <script src="js/station_ids.min.js" async defer></script>
 
   <ins class="adsbygoogle"
   style="display:block;"
