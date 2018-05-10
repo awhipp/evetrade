@@ -261,7 +261,7 @@ function open_popup(itemId, name, location, stationid){
       $("#buyLocation").text("Buy at " + startLocation);
       $("#sellLocation").text("Sell at " + location);
     }else{
-      $("#buyLocation").text("Buy at " + start_location);
+      $("#buyLocation").text("Buy at " + startLocation);
       $("#sellLocation").text("Sell at " + location);
     }
     var buyArr = customBuy[station_buy[1]][itemId];
