@@ -8,6 +8,7 @@ var threshold_weight = 999999999999999999;
 
 var routeTrading = null;
 var isCustom = false;
+var errorShown = false;
 
 var customBuy = [];
 var customSell = [];
@@ -452,17 +453,13 @@ function execute() {
     var endStations;
 
     if(routeTrading) {
-        buyingStation = [startCoordinates.region, startCoordinates.station];
-        endStations = [];
-        $.each(endCoordinates, function(){
-            endStations.push([this.region, this.station]);
-        });
+        new Route(startCoordinates, endCoordinates).startRoute();
     } else {
         buyingStation = [startCoordinates.region, startCoordinates.station];
         endStations = buyingStation;
+        beginRoute(buyingStation, endStations);
     }
 
-    beginRoute(buyingStation, endStations);
 }
 
 function init(){
@@ -484,4 +481,18 @@ function init(){
 
     createDataTable();
     execute();
+}
+
+function displayError(){
+    if(!errorShown){
+        $("#connectEVE").slideToggle(true);
+        errorShown = true;
+    }
+}
+
+function hideError(){
+    if(errorShown){
+        $("#connectEVE").slideToggle();
+        errorShown = false;
+    }
 }

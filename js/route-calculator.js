@@ -69,22 +69,6 @@ function beginRoute(s_buy, active_stations){
   $("#selection").hide();
 }
 
-var shown = false;
-
-function displayError(){
-  if(!shown){
-    $("#connectEVE").slideToggle(true);
-    shown = true;
-  }
-}
-
-function hideError(){
-  if(shown){
-    $("#connectEVE").slideToggle();
-    shown = false;
-  }
-}
-
 var errorPages = {};
 
 function getOrders(page, region, station, composite){
