@@ -1,10 +1,4 @@
 
-.vs/ProjectSettings.json
-.vs/RealEVEMarket/v15/.suo
-.vs/VSWorkspaceState.json
-.vs/slnx.sqlite
-.idea/evetrade.iml
-.idea/modules.xml
-.idea/workspace.xml
-.idea/vcs.xml
+.vs/*
+.idea/*
 .DS_Store

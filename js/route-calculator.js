@@ -1,5 +1,5 @@
 var SECOND_DELAY = 0;
-var PAGES = 40;
+var PAGES = 300;
 var stations = [];
 var created = false;
 var dt;
@@ -91,7 +91,7 @@ function getOrders(page, region, station, composite){
   region = parseInt(region);
   station = parseInt(station);
 
-  var url = "https://esi.tech.ccp.is/latest/markets/"+region+"/orders/?datasource=tranquility&page="+page+"&language=en-us&iteration="+iteration;
+  var url = "https://esi.evetech.net/latest/markets/"+region+"/orders/?datasource=tranquility&page="+page+"&language=en-us&iteration="+iteration;
   $.ajax({
     type: "get",
     url: url,
@@ -317,7 +317,7 @@ function getItemVolume(itemId, rows){
   }
   $.ajax({
   type: "get",
-  url: "https://esi.tech.ccp.is/latest/markets/" + stations[0][0] + "/history/?datasource=tranquility&type_id=" + itemId + "&language=en-us&iteration="+iteration,
+  url: "https://esi.evetech.net/latest/markets/" + stations[0][0] + "/history/?datasource=tranquility&type_id=" + itemId + "&language=en-us&iteration="+iteration,
   dataType: "json",
   async: true,
   cache: false,
@@ -360,7 +360,7 @@ function getItemWeight(itemId, rows){
     }else{
         $.ajax({
         type: "get",
-        url: "https://esi.tech.ccp.is/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us&iteration="+iteration,
+        url: "https://esi.evetech.net/latest/universe/types/" + itemId + "/?datasource=tranquility&language=en-us&iteration="+iteration,
         dataType: "json",
         async: true,
         cache: false,
@@ -634,7 +634,7 @@ function getPrice(orders, stationId, orderType, itemId)
         orderAlignsWithType = true;
     }
 
-    if (stationId == order['location_id']
+    if ( (stationId == order['location_id'] || parseInt(stationId) == order['location_id'])
         && order['min_volume'] === 1
         && orderAlignsWithType ){
       // This is the station market we want
