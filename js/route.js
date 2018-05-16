@@ -25,11 +25,13 @@ function Route(startLocation, endLocations) {
 
     this.asyncChecker = null;
     this.asyncCalculator = null;
+    this.asyncRefresher = null;
 }
 
 Route.prototype.className = function() {
     return "Route";
 };
+
 
 /**
  * Begins the process for finding route information and displaying the best trades for the route.
@@ -210,6 +212,15 @@ Route.prototype.getOrders = function(region, station, page, composite, orderType
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 displayError();
                 thiz.incrementProgress(composite, page);
+
+                if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
+                    var _page = page + 1;
+                    composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
+
+                    for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
+                        thiz.getOrders(region, station, _page, composite, orderType);
+                    }
+                }
             }
         });
     }
@@ -279,8 +290,31 @@ Route.prototype.refresh = function() {
     $(".dt-buttons").remove();
     $("#refresh-button").remove();
     iteration += 1;
-
+    this.clear();
     init();
+};
+
+Route.prototype.clear = function() {
+    this.startLocation = null;
+    this.endLocations = null;
+
+    this.buyOrders = {};
+    this.buyOrders.completePages = [];
+    this.buyOrders.complete = false;
+    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+
+    this.sellOrders = {};
+    this.itemCache = {};
+
+    this.totalProgress = 0;
+    this.itemIds = [];
+    this.executingCount = 0;
+    this.secondsToRefresh = 60;
+    this.tableCreated = false;
+
+    clearInterval(this.asyncChecker);
+    clearInterval(this.asyncCalculator);
+    clearInterval(this.asyncRefresher);
 };
 
 /**
@@ -291,7 +325,7 @@ Route.prototype.asyncRefresh = function() {
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh-timer").remove();
-            $("#buyingFooter").append('<div id="refresh-button"><br>' +
+            $("#buyingFooter").append('<div id="refresh-button">' +
                 '<input type="button" class="btn btn-default" onclick="thiz.refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -514,7 +548,7 @@ Route.prototype.createTable = function() {
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'pdf'
         ]
     });
 

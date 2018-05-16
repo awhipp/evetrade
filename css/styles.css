@@ -2,16 +2,14 @@ h2{
 	margin-bottom: 1.5rem !important;
 }
 
-/** START HEADER **/
-header {
-    padding: 154px 0 50px;
-
+p {
+    margin-bottom: 0 !important;
 }
 
-@media (min-width: 992px) {
-    header {
-        padding: 156px 0 50px;
-    }
+/** START HEADER **/
+header {
+    padding: 120px 0 20px;
+
 }
 /** END HEADER **/
 
@@ -33,7 +31,7 @@ header {
 }
 
 #reset:hover, #toggle:hover, #stop:hover {
-    color: #33b5e5;
+    color: #00aeff;
 }
 
 .nav-link {
@@ -42,7 +40,7 @@ header {
 }
 
 .announcement {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   text-align: center;
@@ -64,9 +62,26 @@ header {
 /** END NAV BAR **/
 
 /** START CORE **/
-body{
-  background: black;
-  font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
+body {
+    background: black;
+    background: url(../images/evetrade-background-min.png);
+    font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
+    background-repeat: repeat-y;
+    background-size: 100%;
+    position: relative;
+    padding-bottom: 10em;
+    min-height: 800px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+    width: 100%;
+    background: rgba(22,29,38,0.4);
+    padding-top: 2em !important;
+    padding-bottom: 2em !important;
 }
 
 h3 {
@@ -78,8 +93,8 @@ a {
 }
 
 #core {
-  background: #e7e7e7;
-  border-top:black 1px solid;
+    background: rgba(22,29,38,0.4);
+    color: white;
 }
 
 .bg-dark {
@@ -99,28 +114,28 @@ a {
 }
 
 nav {
-  border-bottom: 2px solid #33b5e5;
+  border-bottom: 2px solid #00aeff;
 }
 
 .bg-header {
-  background: black;
-  background: -webkit-linear-gradient(black 75%,#33b5e5);
-  background: -o-linear-gradient(black 75%,#33b5e5);
-  background: -moz-linear-gradient(black 75%,#33b5e5);
-  background: linear-gradient(black 75%,#33b5e5);
-  color: white;
+    background: rgba(22,29,38,0.4);
+    color: white;
 }
 
 input[type="button"]{
-  background: #eee;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    min-width: 100px;
+    border: 1px solid #333;
+    margin: 0.5em auto;
 }
 
 input[type="button"]:hover {
-  opacity:0.8;
+  opacity: 0.7;
 }
 
 section {
-    padding: 2em 0;
+    padding-bottom: 1em;
 }
 
 .threshold-margin {
@@ -159,19 +174,24 @@ section {
 }
 
 .dt-button {
-    background: #666;
+    background: rgba(0,0,0,0.5);
     color: white !important;
     border: white 1px solid;
-    margin-bottom: 1em;
+    margin: 0.5em;
 }
 
 #show-hide, #dataTable_length, #dataTable_paginate, #core{
   display: none;
 }
 
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: white !important;
+}
+
 .dataTables_info {
   width: 100%;
   text-align: center;
+    color: white !important;
 }
 
 #dataTable_filter > label {
@@ -192,10 +212,6 @@ table.dataTable {
     display: none;
 }
 
-.row-selected {
-    color: white !important;
-    background-color: #33b5e5 !important;
-}
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -208,16 +224,37 @@ table.dataTable {
 }
 
 td {
-  border-right: 1px solid #999;
-  border-left: 1px solid #999;
-  text-align: center;
+    border: 1px rgba(0,0,0,0.1) solid !important;
+    text-align: center;
 }
 
 .sorting, .sorting_desc, .sorting_asc {
     text-align: center;
-    border: 1px #ccc solid;
-    background-color: #333;
+    border: 1px rgba(0,0,0,0.1) solid;
+    background-color: rgba(22,29,38,0.8);
     color: white;
+}
+
+table.dataTable.display tbody tr.odd {
+     background-color: rgba(64,64,64,0.7);
+ }
+
+
+table.dataTable.display tbody tr.even {
+    background-color: rgba(32,32,32,0.7);
+}
+
+table.dataTable.display tbody tr:hover {
+    background-color: rgba(64,64,64,0.9);
+}
+
+tr.odd.row-selected, tr.even.row-selected {
+    color: white !important;
+    background-color: #00aeff !important;
+}
+
+table.dataTable.display tbody tr > td {
+    background-color: transparent !important;
 }
 
 .row-selected td {
@@ -229,8 +266,9 @@ td {
 }
 
 #show-hide{
-  background-color: #336699 !important;
-  border-color: black !important;
+    background-color: rgba(0,0,100,0.7) !important;
+    border-color: black !important;
+    min-width: 200px !important;
 }
 
 .dataTables_filter {
@@ -241,6 +279,8 @@ td {
 
 .dataTables_filter input {
   margin: 0 !important;
+    color: white !important;
+    background: rgba(0,0,0,0.5) !important;
 }
 
 .selected_volume {
@@ -254,6 +294,10 @@ td {
 
 .deal_note {
   text-align: center;
+}
+
+.colvistoggle {
+    min-width: 200px;
 }
 
 .is-true{
@@ -287,12 +331,17 @@ td {
   }
 
   .station-selected, .start-selected, .end-selected {
-    background: #33b5e5 !important;
+    background: #00aeff !important;
     color: white;
   }
 
   input[type="text"], input[type="number"]{
-    text-align: center;
+      text-align: center;
+      background: rgba(0,0,0,0.5) !important;
+      color: white !important;
+      max-width: 350px;
+      border: 1px solid #333 !important;
+      margin: 0 auto 1em auto;
   }
 
   /** START CUSTOM FEATURE **/
@@ -303,6 +352,9 @@ td {
       text-align: left;
       max-width: 700px;
       margin: 0 auto;
+      background: rgba(0,0,0,0.5);
+      color: white !important;
+      overflow-x: hidden;
   }
 
   #custom_route_end > li{
@@ -329,6 +381,8 @@ td {
     max-width: 80%;
     text-align: center;
     margin: 0 auto;
+      background: rgba(0,0,0,0.5) !important;
+      color: white !important;
   }
 
   /** END CUSTOM FEATURE **/
@@ -338,6 +392,13 @@ td {
 
 .howto {
   text-align: center;
+}
+
+
+.modal-content {
+    background: black;
+    color: white !important;
+    border: 1px solid white !important;
 }
 
 .modal-dialog {
@@ -353,12 +414,21 @@ td {
 .modal-header{
   margin-bottom: 1em;
 }
+
+.modal-header .close {
+    color: white;
+    text-shadow: 0 3px 0 #00aeff;
+}
+
+.modal-open {
+    overflow-y: hidden !important;
+}
 /** END MODAL **/
 
 /** FOOTER **/
 footer h1, footer h2 {
     font-size: 1rem;
-    color: #ccc;
+    color: white !important;
     text-align: center;
     margin-bottom: 0.5rem !important;
 }
@@ -376,4 +446,26 @@ footer h1, footer h2 {
     left: 50% !important;
     margin: 0 !important;
     transform: translateX(-50%) !important;
+}
+
+.loadingIcon {
+    opacity: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    top: 40%;
+    color: white;
+}
+
+.loadingIcon .fa {
+    font-size: 10em;
+    color: white;
+}
+
+header {
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
 }

@@ -24,7 +24,8 @@ function Station(stationLocation) {
 
     this.asyncChecker = null;
     this.asyncCalculator = null;
-    this.asyncFilter = null;
+    this.asyncFilter = null
+    this.asyncRefresher = null;
 }
 
 Station.prototype.className = function() {
@@ -183,6 +184,15 @@ Station.prototype.getOrders = function(region, station, page, composite, orderTy
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 displayError();
                 thiz.incrementProgress(composite, page);
+
+                if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
+                    var _page = page + 1;
+                    composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
+
+                    for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
+                        thiz.getOrders(region, station, _page, composite, orderType);
+                    }
+                }
             }
         });
     }
@@ -247,8 +257,32 @@ Station.prototype.refresh = function() {
     $(".dt-buttons").remove();
     $("#refresh-button").remove();
     iteration += 1;
-
+    this.clear();
     init();
+};
+
+Station.prototype.clear = function() {
+    this.stationLocation = null;
+
+    this.allOrders = {};
+    this.allOrders.completePages = [];
+    this.allOrders.complete = false;
+    this.allOrders.pageBookend = PAGE_MULTIPLE;
+
+    this.itemCache = {};
+
+    this.totalProgress = 0;
+    this.itemIds = [];
+    this.executingCount = 0;
+    this.secondsToRefresh = 60;
+    this.tableCreated = false;
+    this.filtered = false;
+    this.filterCount = 0;
+
+    clearInterval(this.asyncChecker);
+    clearInterval(this.asyncCalculator);
+    clearInterval(this.asyncFilter);
+    clearInterval(this.asyncRefresher);
 };
 
 /**
@@ -259,7 +293,7 @@ Station.prototype.asyncRefresh = function() {
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh-timer").remove();
-            $("#buyingFooter").append('<div id="refresh-button"><br>' +
+            $("#buyingFooter").append('<div id="refresh-button">' +
                 '<input type="button" class="btn btn-default" onclick="thiz.refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -355,11 +389,12 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
 
 Station.prototype.asyncFiltering = function() {
     this.asyncFilter = setInterval(function(){
-            thiz.filterCount ++;
+            thiz.filterCount += 1;
             var ellipses = "";
             for(var i = 0; i < ( thiz.filterCount % 5) ; i++){
                 ellipses += ".";
             }
+            
             $("#filtering-data").html("<b>Filtering Results. Please wait" + ellipses + "</b></br>If it takes too long try a smaller margin range.");
 
             if(thiz.executingCount == 0) {
@@ -478,7 +513,7 @@ Station.prototype.createTable = function() {
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'pdf'
         ]
     });
 

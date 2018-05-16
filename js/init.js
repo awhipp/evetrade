@@ -17,6 +17,11 @@ var stations_checked = 0;
 var MAX_STATIONS = 25;
 
 var universeList = {};
+var startCoordinates;
+var endCoordinates;
+var startLocation;
+var endLocations;
+
 
 $( document ).ready(function() {
     $("#stations_remaining").text(MAX_STATIONS);
@@ -33,7 +38,6 @@ $( document ).ready(function() {
 
     onClickListeners();
 
-    setupCustomDropdown();
 
     $('input[type="number"]').keypress(function(e) {
         var theEvent = e || window.event;
@@ -48,32 +52,41 @@ $( document ).ready(function() {
 
     setAbout();
     setupCookies();
+
+    setupCustomDropdown();
 });
 
 function setupCustomDropdown() {
-    for(var i = 0; i < station_ids.length; i++){
-        $("#custom_route_start").append('<option>' + station_ids[i][2] + '</option>');
+    var customDropdown = setInterval(function(){
+        if(station_ids) {
+            clearInterval(customDropdown);
+            for(var i = 0; i < station_ids.length; i++){
+                $("#custom_route_start").append('<option>' + station_ids[i][2] + '</option>');
 
-        $("#custom_route_end").append('<li>' +
-            '<input id="echeck-' + i + '" class="end-selection" type="checkbox" value="'+ station_ids[i][2] +'">' +
-            '<label for="echeck-' + i + '">' + station_ids[i][2] + '</label>' +
-            '</li>');
+                $("#custom_route_end").append('<li>' +
+                    '<input id="echeck-' + i + '" class="end-selection" type="checkbox" value="'+ station_ids[i][2] +'">' +
+                    '<label for="echeck-' + i + '">' + station_ids[i][2] + '</label>' +
+                    '</li>');
 
-        $("#custom_station").append('<option>' + station_ids[i][2] + '</option>');
+                $("#custom_station").append('<option>' + station_ids[i][2] + '</option>');
 
-        universeList[station_ids[i][2]] = {};
-        universeList[station_ids[i][2]].region = station_ids[i][1];
-        universeList[station_ids[i][2]].station = station_ids[i][0];
-    }
+                universeList[station_ids[i][2]] = {};
+                universeList[station_ids[i][2]].region = station_ids[i][1];
+                universeList[station_ids[i][2]].station = station_ids[i][0];
+            }
 
-    $(".end-selection").on('click', function(){
-        stations_checked = $(".end-selection:checked").length;
-        if(stations_checked > MAX_STATIONS){
-            $(this).prop("checked",false);
-            stations_checked = $(".end-selection:checked").length;
+            $(".end-selection").on('click', function(){
+                stations_checked = $(".end-selection:checked").length;
+                if(stations_checked > MAX_STATIONS){
+                    $(this).prop("checked",false);
+                    stations_checked = $(".end-selection:checked").length;
+                }
+                $("#stations_remaining").text(MAX_STATIONS-stations_checked);
+            });
+            $(".loadingIcon").remove();
+            $("header").css("opacity", 1);
         }
-        $("#stations_remaining").text(MAX_STATIONS-stations_checked);
-    });
+    }, 1000);
 }
 
 function onClickListeners() {
@@ -103,14 +116,16 @@ function onClickListeners() {
     });
 
     $("#custom_route").on('click', function(){
-        $(".standard").slideToggle();
-        $(".custom").slideToggle();
         if($(this).val() === "Enable Custom Route"){
             $(this).val("Disable Custom Route");
             isCustom = true;
+            $(".standard").hide();
+            $(".custom").show();
         }else{
             $(this).val("Enable Custom Route");
             isCustom = false;
+            $(".standard").show();
+            $(".custom").hide();
         }
     });
 
@@ -120,9 +135,13 @@ function onClickListeners() {
         if($(this).val() === "Enable Custom Selection"){
             $(this).val("Disable Custom Selection");
             isCustom = true;
+            $(".standard").hide();
+            $(".custom").show();
         }else{
             $(this).val("Enable Custom Selection");
             isCustom = false;
+            $(".standard").show();
+            $(".custom").hide();
         }
     });
 }
@@ -293,11 +312,6 @@ function getCookie(cname) {
     return "";
 }
 
-var startCoordinates = {};
-var endCoordinates = [];
-var startLocation;
-var endLocations = [];
-
 function setStationTradingLocations() {
     var start_region, start_station;
 
@@ -441,6 +455,14 @@ function execute() {
 }
 
 function init(){
+    customBuy = [];
+    customSell = [];
+    startCoordinates = {};
+    endCoordinates = [];
+    startLocation;
+    endLocations = [];
+    page = 1;
+
     updateCookies();
 
     if(routeTrading){

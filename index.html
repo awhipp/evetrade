@@ -18,18 +18,18 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
     <!-- CDN CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.0.0/normalize.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
 
     <!-- Favicon -->
-    <link rel='shortcut icon' href='images/favicon.png' type='image/x-icon'/ >
+    <link rel='shortcut icon' href='images/favicon.png' type='image/x-icon'/>
 
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/styles.min.css" rel="stylesheet"/>
 
     <!-- Custom styles/javascript for this page -->
-    <link href="css/styles.min.css" rel="stylesheet">
     <script src="vendor/jquery/jquery.min.js"></script>
 
     <!--[if lt IE 9]>
@@ -49,12 +49,14 @@
 </head>
 
 <body id="page-top">
+
+    <div class="loadingIcon">
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+    </div>
+
     <!-- Navigation -->
-    <div id="connectEVE" class="announcement"> Having difficulties reaching EVE's Servers. Results may take longer than normal to appear.
-      <br>
-      <a href="https://esi.tech.ccp.is/" target="_blank" style="color:black">
-        If this website is down or slow then EVE's servers are down.
-      </a>
+    <div id="connectEVE" class="announcement">
+        Having difficulties reaching EVE's Servers. Results may take longer than normal to appear.
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
@@ -81,11 +83,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="release.html" target="_blank">V4.5.0</a>
+                </li>
             </ul>
         </div>
     </nav>
 
-    <header class="bg-header text-white">
+    <header class="bg-header text-white" style="opacity: 0">
         <div class="container text-center overflow_none">
             <h1 id="buyingHeader"></h1>
             <p id="buyingFooter"></p>
@@ -223,21 +228,21 @@
 
                 <div class="col-xs-12 mx-auto">
                   <div class="row">
-                    <div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-12 col-xs-12">
                       <p><label for="profit-threshold" class="control-label">Only Return Profits Above</label>
                       <input type="number" id="profit-threshold" class="minor-text form-control" placeholder="Default: 100,000"/></p>
                     </div>
-                    <div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-12 col-xs-12">
                       <p><label for="weight-threshold" class="control-label">Max Cargo Capacity (in m3)</label>
                       <input type="number" id="weight-threshold" class="minor-text form-control" placeholder="Default: Not Included"/></p>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-12 col-xs-12">
                       <p><label for="roi-threshold" class="control-label"> Minimum ROI (in %) </label>
                       <input type="number" id="roi-threshold" class="minor-text form-control" placeholder="Default: 1"/></p>
                     </div>
-                    <div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-12 col-xs-12">
                       <p><label for="buy-threshold" class="control-label">Maximum Budget</label>
                       <input type="number" id="buy-threshold" class="minor-text form-control" placeholder="Default: Infinity"/></p>
                     </div>
@@ -273,10 +278,10 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-5 bg-dark">
+    <footer>
         <div class="container overflow_none">
       			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 5.0 | Updated XX May 2018</a></p>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.5.0 | Updated 16 May 2018</a></p>
             <p class="m-0 text-center text-white">&copy; 2016-2018 <a href='https://EVETrade.space'> EVE Trade</a>. All rights reserved.</p>
             <div style="position: absolute !important; top: -1000px !important; left: -1000px !important; z-index: -100 !important; width:0 !important; height: 0 !important; opacity: 0 !important;">
               <a href="https://venturefocused.com" data-ytta-id="-">Developed in part with the help of Venture Focused Consulting</a>
@@ -426,36 +431,6 @@
 
     <!-- END MODAL -->
 
-
-    <!-- Modal for checking items -->
-    <div class="modal fade container" id="fork-code" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="popup_itemName">Contributing to EVETrade</h4>
-          </div>
-
-          <div class="modal-dialog">
-            <div>
-              EVETrade was originally a sloppy and hacky creation amongst 3 friends to improve our experience when playing EVE Online back in 2014. The code has slowly improved since then and it is currently now under the sole development of one of those friends. With my full time job I have been able to make small changes and improvements, but with the recent explosion of EVE Online due to free memberships I have been unable to keep up with demand. With this I've decided to open it up to you all.
-            </div>
-
-            <br>
-
-            <div>
-              By downloading/forking the codebase please remember that this application was built when we when we were inexperienced with development. Due to lack of time, I have left things as they lay because they "just work". If you intend to add features to the code base and wish to see them on the webpage please submit a pull request and I will gladly add the changes once they are reviewed.
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <a target="_blank" href="https://github.com/awhipp/evetrade" style="margin:0 auto;"><button type="button" class="btn btn-default" style="background: #009688; color: white;">I agree. Take me to the code.</button></a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END MODAL -->
-
   <!-- CDN Javascript -->
   <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
@@ -475,41 +450,41 @@
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js"></script>
 
-  <script src="js/station_ids.min.js"></script>
 
-  <script src="js/init.js" async defer></script>
-  <script src="js/common.js" async defer></script>
-  <script src="js/route.js" async defer></script>
-  <script src="js/station.js" async defer></script>
+  <script src="js/init.min.js" async defer></script>
+  <script src="js/common.min.js" async defer></script>
+  <script src="js/route.min.js" async defer></script>
+  <script src="js/station.min.js" async defer></script>
+    <script src="js/station_ids.min.js" async defer></script>
 
-  <!--<ins class="adsbygoogle"-->
-  <!--style="display:block;"-->
-  <!--data-ad-client="ca-pub-0599578547621989"-->
-  <!--data-ad-slot="7378680598"-->
-  <!--data-ad-format="auto"></ins>-->
-  <!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
-  <!--<script async>-->
-    <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
-  <!--</script>-->
-  <!--<style>-->
-    <!--/* Small devices (tablets, 768px and up) */-->
-    <!--.adsbygoogle > ins{-->
-        <!--position: relative !important;-->
-        <!--bottom: inherit !important;-->
-        <!--left: inherit !important;-->
-        <!--transform: none !important;-->
-    <!--}-->
-    <!--@media ( min-width : 768px) {-->
-        <!--.adsbygoogle > ins{-->
-          <!--position: fixed !important;-->
-          <!--bottom: 0 !important;-->
-          <!--left: 50% !important;-->
-          <!--transform: translate(-50%,0) !important;-->
-        <!--}-->
-    <!--}-->
-  <!--</style>-->
+  <ins class="adsbygoogle"
+  style="display:block;"
+  data-ad-client="ca-pub-0599578547621989"
+  data-ad-slot="7378680598"
+  data-ad-format="auto"></ins>
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script async>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <style>
+    /* Small devices (tablets, 768px and up) */
+    .adsbygoogle > ins{
+        position: relative !important;
+        bottom: inherit !important;
+        left: inherit !important;
+        transform: none !important;
+    }
+    @media ( min-width : 768px) {
+        .adsbygoogle > ins{
+          position: fixed !important;
+          bottom: 0 !important;
+          left: 50% !important;
+          transform: translate(-50%,0) !important;
+        }
+    }
+  </style>
 
-  <!--<script async defer src="vendor/blockadblock/blockadblock.min.js"></script>-->
+  <script async defer src="vendor/blockadblock/blockadblock.min.js"></script>
 </body>
 
 </html>

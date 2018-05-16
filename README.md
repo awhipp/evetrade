@@ -1,22 +1,21 @@
-# EVE Trade Finder v5.0
+# EVE Trade Finder v4.5.0
 
 ## About
 Implements the EVE ESI API to find:
 
 * the best trades between stations.
-* the best trades between regions.
 * the best margins inside your own station.
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-## V5.0
-    * Complete back and front end refactoring to promote future feature viability.
-    * Revised frontend for a better user experience.
-    * Improved performance and results.
-    * Introducing region to region trade finding.
+## V4.5.0
+    * Complete back and front end refactoring to promote future feature viability and allow for region to region trading in the next update.
+    * Revised frontend based on user feedback (moving away from brighter colors).
+    * Improved performance and provides more results.
     * Packaged volumes are now taken into consideration.
+    * Loading icon to appear to ensure all assets are loaded before clicks take place.
 
-## V4.X
+## V4.0 - V4.4.X
     * Minor performance gains due to refactoring 3-year old code.
     * Allow users to refresh the table with the last query they submitted.
     * Added user analytics when selecting different options to better track user perferences and prioritize bugs.
