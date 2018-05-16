@@ -14,6 +14,7 @@ Select which of the station you are docked in. It will return a lazy-loaded tabl
     * Revised frontend for a better user experience.
     * Improved performance and results.
     * Introducing region to region trade finding.
+    * Packaged volumes are now taken into consideration.
 
 ## V4.X
     * Minor performance gains due to refactoring 3-year old code.

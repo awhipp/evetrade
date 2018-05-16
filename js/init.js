@@ -10,10 +10,6 @@ var routeTrading = null;
 var isCustom = false;
 var errorShown = false;
 
-var customBuy = [];
-var customSell = [];
-var page = 1;
-
 var popup_table_buy;
 var popup_table_sell;
 
@@ -379,13 +375,12 @@ function createDataTable() {
 
     if(routeTrading) {
         dataTableDOM.append("<thead><tr>" +
-            "<th>Item</th>" +
-            "<th>Sell Order</th>" +
+            "<th>Buy Item</th>" +
             "<th>Quantity</th>" +
+            "<th>At Sell Price</th>" +
             "<th>Total Cost</th>" +
             "<th>Take To</th>" +
-            "<th>Buy Order</th>" +
-            "<th>Quantity</th>" +
+            "<th>At Buy Price</th>" +
             "<th>Total Profit</th>" +
             "<th>Profit Per Item</th>" +
             "<th>R.O.I.</th>" +

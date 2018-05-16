@@ -159,33 +159,33 @@ var executingInterval;
 var refreshInterval;
 var secondsToRefresh = 60;
 function executeNext() {
-  executingInterval = setInterval(function(){ 
-    while(itemids.length != 0 && executingCount < 1500){
-      executingCount++;
-      var itemid = itemids.splice(0, 1)[0];
-      next(itemid);
-    }
+executingInterval = setInterval(function(){
+  while(itemids.length != 0 && executingCount < 1500){
+    executingCount++;
+    var itemid = itemids.splice(0, 1)[0];
+    next(itemid);
+  }
 
-    if(itemids.length == 0 && executingCount <= 0) {
-      clearInterval(executingInterval);
-      $(".loading").text("No trades found for your filters.");
-      $("#buyingFooter").append('<div id="refresh-timer"></div>');
-      refreshInterval = setInterval(function(){
-        if(secondsToRefresh <= 0){
-          clearInterval(refreshInterval);
-          $("#refresh-timer").remove();
-          $("#buyingFooter").append('<div id="refresh-button"><br>' +
-              '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
-              '</div>');
-        } else {
-          $("#refresh-timer").html("<br><p>Refresh allowed in: " + secondsToRefresh + " seconds.");
-            secondsToRefresh--;
-        }
-      }, 1000);
-      iteration++;
-    }
-  },
-  1000);
+  if(itemids.length == 0 && executingCount <= 0) {
+    clearInterval(executingInterval);
+    $(".loading").text("No trades found for your filters.");
+    $("#buyingFooter").append('<div id="refresh-timer"></div>');
+    refreshInterval = setInterval(function(){
+      if(secondsToRefresh <= 0){
+        clearInterval(refreshInterval);
+        $("#refresh-timer").remove();
+        $("#buyingFooter").append('<div id="refresh-button"><br>' +
+            '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
+            '</div>');
+      } else {
+        $("#refresh-timer").html("<br><p>Refresh allowed in: " + secondsToRefresh + " seconds.");
+          secondsToRefresh--;
+      }
+    }, 1000);
+    iteration++;
+  }
+},
+1000);
 }
 
 function next(itemid){
@@ -199,7 +199,7 @@ function next(itemid){
 }
 
 function executeRowCompute(itemid, buyPrice){
-    var executed = false
+    var executed = false;
     if(itemid !== "complete" || itemid !== "station" || itemid !== "region" || itemid != "complete_pages"){
         for(var j = 0; j < sell_orders.length; j++){
           if(sell_orders[j][itemid] !== undefined){
@@ -402,7 +402,7 @@ function calculateRow(itemId,  b_price, b_volume, s_price, s_volume, station){
     var location = getLocation(station[1]);
     var iskRatio = (s_price-b_price)/b_price;
     if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
-      return [itemId, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, station, selectedvol];
+      return [itemId, b_price, volume, buyCost, location, profit, iskRatio, s_price, itemProfit, station];
     }else{
       return [];
     }
