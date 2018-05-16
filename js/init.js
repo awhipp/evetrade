@@ -149,13 +149,6 @@ function checkEndSelection() {
     });
 }
 
-function numberWithCommas(val) {
-    while (/(\d+)(\d{3})/.test(val.toString())){
-        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-    }
-    return val;
-}
-
 function setAbout() {
     if (routeTrading == null) {
         $("#about")[0].onclick = function() {
@@ -319,7 +312,6 @@ function setStationTradingLocations() {
         start_station =selectedStation.dataset.station;
     }
 
-    endLocations = [startLocation];
     startCoordinates.region = start_region;
     startCoordinates.station = start_station;
 }
@@ -440,15 +432,10 @@ function createDataTable() {
 }
 
 function execute() {
-    var buyingStation;
-    var endStations;
-
     if(routeTrading) {
         new Route(startCoordinates, endCoordinates).startRoute();
     } else {
-        buyingStation = [startCoordinates.region, startCoordinates.station];
-        endStations = buyingStation;
-        beginRoute(buyingStation, endStations);
+        new Station(startCoordinates).startStation();
     }
 
 }
@@ -462,7 +449,10 @@ function init(){
         setStationTradingLocations();
     }
 
-    if(startLocation && startLocation.length > 0 && endLocations.length > 0){
+    var startCondition = (startLocation && startLocation.length > 0);
+    var endCondition = (routeTrading && endLocations.length > 0) || !routeTrading;
+
+    if(startCondition && endCondition){
         $(".error").hide();
         $("#selection").hide();
     }else{

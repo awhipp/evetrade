@@ -1,20 +1,17 @@
 /**
- * Creates a Route object
+ * Creates a Station object
  *
- * @param startLocation a json object that contains the region and station of the start location
- * @param endLocations a json object array that contains the region and station of the end locations
+ * @param stationLocation a json object that contains the region and station of the start location
  * @constructor
  */
-function Route(startLocation, endLocations) {
-    this.startLocation = startLocation;
-    this.endLocations = endLocations;
+function Station(stationLocation) {
+    this.stationLocation = stationLocation;
 
-    this.buyOrders = {};
-    this.buyOrders.completePages = [];
-    this.buyOrders.complete = false;
-    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+    this.allOrders = {};
+    this.allOrders.completePages = [];
+    this.allOrders.complete = false;
+    this.allOrders.pageBookend = PAGE_MULTIPLE;
 
-    this.sellOrders = {};
     this.itemCache = {};
 
     this.totalProgress = 0;
@@ -22,41 +19,30 @@ function Route(startLocation, endLocations) {
     this.executingCount = 0;
     this.secondsToRefresh = 60;
     this.tableCreated = false;
+    this.filtered = false;
+    this.filterCount = 0;
 
     this.asyncChecker = null;
     this.asyncCalculator = null;
+    this.asyncFilter = null;
 }
 
-Route.prototype.className = function() {
-    return "Route";
+Station.prototype.className = function() {
+    return "Station";
 };
 
 /**
- * Begins the process for finding route information and displaying the best trades for the route.
+ * Begins the process for finding station information and displaying the best trades for the station.
  */
-Route.prototype.startRoute = function() {
+Station.prototype.startStation = function() {
     thiz = this;
 
     var page;
-    var regionId = parseInt(this.startLocation.region);
-    var stationId = parseInt(this.startLocation.station);
+    var regionId = parseInt(this.stationLocation.region);
+    var stationId = parseInt(this.stationLocation.station);
 
     for(page = 1; page <= PAGE_MULTIPLE; page++){
-        this.getSellOrders(regionId, stationId, page, this.buyOrders);
-    }
-
-    for(var i = 0; i < this.endLocations.length; i++){
-        this.sellOrders[i] = {};
-        this.sellOrders[i].completePages = [];
-        this.sellOrders[i].complete = false;
-        this.sellOrders[i].pageBookend = PAGE_MULTIPLE;
-
-        regionId = parseInt(this.endLocations[i].region);
-        stationId = parseInt(this.endLocations[i].station);
-
-        for(page = 1; page <= PAGE_MULTIPLE; page++){
-            this.getBuyOrders(regionId, stationId, page, this.sellOrders[i]);
-        }
+        this.getOrders(regionId, stationId, page, this.allOrders, ALL_ORDER);
     }
 
     $("#selection").hide();
@@ -66,7 +52,7 @@ Route.prototype.startRoute = function() {
 /**
  * Asynchronous checking function that periodically checks all of the orders to ensure they are still running
  */
-Route.prototype.asyncCheck = function() {
+Station.prototype.asyncCheck = function() {
     this.asyncChecker = setInterval(function(){
         thiz.executeOrders();
     }, 1000);
@@ -80,7 +66,7 @@ Route.prototype.asyncCheck = function() {
  * @param orderType The order type to get orders for.
  * @returns {string} Returns a URL for the ESI EVE Market Endpoint.
  */
-Route.prototype.marketEndpointBuilder = function(region, page, orderType) {
+Station.prototype.marketEndpointBuilder = function(region, page, orderType) {
     var url = ESI_ENDPOINT + "/latest/markets/" + region + "/orders/" +
         "?datasource=tranquility" +
         "&page=" + page +
@@ -95,9 +81,24 @@ Route.prototype.marketEndpointBuilder = function(region, page, orderType) {
  * @param itemId The item ID in question.
  * @returns {string} Returns a URL for the ESI EVE Item Type Endpoint.
  */
-Route.prototype.getWeightEndpointBuilder = function(itemId) {
+Station.prototype.getWeightEndpointBuilder = function(itemId) {
     var url = ESI_ENDPOINT + "/latest/universe/types/" + itemId + "/" +
         "?datasource=tranquility" +
+        "&language=en-us" +
+        "&iteration=" + iteration;
+    return url.replace(/\s/g, '');
+};
+
+/**
+ * The builder for the volume endpoint
+ *
+ * @param itemId The item ID in question.
+ * @returns {string} Returns a URL for the ESI EVE Volume History Endpoint.
+ */
+Station.prototype.getVolumeEndpointBuilder = function(itemId) {
+    var url = ESI_ENDPOINT + "/latest/markets/" + this.stationLocation.region + "/history/" +
+        "?datasource=tranquility" +
+        "&type_id=" + itemId +
         "&language=en-us" +
         "&iteration=" + iteration;
     return url.replace(/\s/g, '');
@@ -108,12 +109,8 @@ Route.prototype.getWeightEndpointBuilder = function(itemId) {
  *
  * @returns {number}
  */
-Route.prototype.recalculateProgress = function() {
-    var progressUpdate = this.getNumberOfCompletePages(this.buyOrders);
-
-    for (var i = 0; i < this.endLocations.length; i++) {
-        progressUpdate += this.getNumberOfCompletePages(this.sellOrders[i]);
-    }
+Station.prototype.recalculateProgress = function() {
+    var progressUpdate = this.getNumberOfCompletePages(this.allOrders);
 
     return progressUpdate === 0 ? 1 : progressUpdate;
 };
@@ -124,7 +121,7 @@ Route.prototype.recalculateProgress = function() {
  * @param composite The running buy or sell order list object.
  * @param page The page that is now completed.
  */
-Route.prototype.incrementProgress = function(composite, page) {
+Station.prototype.incrementProgress = function(composite, page) {
 
     if(this.totalProgress !== 100) {
         this.totalProgress = 35.0 * Math.log10(this.recalculateProgress());
@@ -137,30 +134,6 @@ Route.prototype.incrementProgress = function(composite, page) {
 };
 
 /**
- * Helper function that gets buy orders only.
- *
- * @param region The region ID in question.
- * @param station The station ID in question.
- * @param page The market page number.
- * @param composite The running buy or sell order list object.
- */
-Route.prototype.getBuyOrders = function(region, station, page, composite) {
-    this.getOrders(region, station, page, composite, BUY_ORDER);
-};
-
-/**
- * Helper function that gets sell orders only.
- *
- * @param region The region ID in question.
- * @param station The station ID in question.
- * @param page The market page number.
- * @param composite The running buy or sell order list object.
- */
-Route.prototype.getSellOrders = function(region, station, page, composite) {
-    this.getOrders(region, station, page, composite, SELL_ORDER);
-};
-
-/**
  * Getting the orders for a specific region, station, and page number.
  *
  * @param region The region ID in question.
@@ -169,7 +142,7 @@ Route.prototype.getSellOrders = function(region, station, page, composite) {
  * @param composite The running buy or sell order list object.
  * @param orderType The order type to get orders for.
  */
-Route.prototype.getOrders = function(region, station, page, composite, orderType) {
+Station.prototype.getOrders = function(region, station, page, composite, orderType) {
     var url = this.marketEndpointBuilder(region, page, orderType);
 
     if(!composite.completePages[page]) {
@@ -221,7 +194,7 @@ Route.prototype.getOrders = function(region, station, page, composite, orderType
  * @param order The specific buy or sell order
  * @returns {number} The number of completed pages
  */
-Route.prototype.getNumberOfCompletePages = function(order) {
+Station.prototype.getNumberOfCompletePages = function(order) {
     var numberOfCompletedPages = 0;
     for(var i = 0; i < order.completePages.length; i++) {
         if (order.completePages[i]) {
@@ -237,14 +210,9 @@ Route.prototype.getNumberOfCompletePages = function(order) {
  *
  * @returns {boolean|*}
  */
-Route.prototype.checkOrdersComplete = function() {
-    var orderFull = (this.getNumberOfCompletePages(this.buyOrders) === this.buyOrders.pageBookend);
-    var ordersComplete = this.buyOrders.complete;
-
-    for (var i = 0; i < this.endLocations.length; i++) {
-        orderFull = orderFull && (this.getNumberOfCompletePages(this.sellOrders[i]) === this.sellOrders[i].pageBookend);
-        ordersComplete = ordersComplete && this.sellOrders[i].complete;
-    }
+Station.prototype.checkOrdersComplete = function() {
+    var orderFull = (this.getNumberOfCompletePages(this.allOrders) === this.allOrders.pageBookend);
+    var ordersComplete = this.allOrders.complete;
 
     return (orderFull && ordersComplete);
 };
@@ -252,13 +220,13 @@ Route.prototype.checkOrdersComplete = function() {
 /**
  * If all the active orders are complete then it begins processing them
  */
-Route.prototype.executeOrders = function() {
+Station.prototype.executeOrders = function() {
     if (this.checkOrdersComplete()) {
 
         clearInterval(this.asyncChecker);
         hideError();
 
-        for(itemId in this.buyOrders){
+        for(itemId in this.allOrders){
             if(itemId !== "completePages" && itemId !== "complete" && itemId !== "pageBookend")
                 this.itemIds.push(itemId);
         }
@@ -273,7 +241,7 @@ Route.prototype.executeOrders = function() {
 /**
  * Refreshes and re-reruns the query.
  */
-Route.prototype.refresh = function() {
+Station.prototype.refresh = function() {
     $('#noselect-object').html('<table id="dataTable" class="display"></table>');
     $(".dataTables_filter").remove();
     $(".dt-buttons").remove();
@@ -286,7 +254,7 @@ Route.prototype.refresh = function() {
 /**
  * The asynchronous function that calculated when a refresh can occur.
  */
-Route.prototype.asyncRefresh = function() {
+Station.prototype.asyncRefresh = function() {
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
@@ -304,7 +272,7 @@ Route.prototype.asyncRefresh = function() {
 /**
  * The function that asynchronously calculates trades.
  */
-Route.prototype.asyncCalculate = function() {
+Station.prototype.asyncCalculate = function() {
     this.asyncCalculator = setInterval(function(){
         while(thiz.itemIds.length != 0 && thiz.executingCount < 1500){
             thiz.executingCount++;
@@ -328,27 +296,20 @@ Route.prototype.asyncCalculate = function() {
  *
  * @param itemId The itemId to calculate for.
  */
-Route.prototype.calculateNext = function(itemId) {
+Station.prototype.calculateNext = function(itemId) {
 
-    var buyPrice = getMarketData(this.buyOrders[itemId], this.startLocation.station, SELL_ORDER, itemId);
+    var buyPrice = getMarketData(this.allOrders[itemId], this.stationLocation.station, SELL_ORDER, itemId);
 
     if (buyPrice.length > 0) {
         var executed = false;
 
-        for(var i = 0; i < this.endLocations.length; i++){
-            var sellOrder = this.sellOrders[i];
-            var endLocation = this.endLocations[i];
 
-            if(sellOrder[itemId]){
-                var sellPrice = getMarketData(sellOrder[itemId], endLocation.station, BUY_ORDER, itemId);
-                if(sellPrice.length > 0){
-                    var locationInfo = {};
-                    locationInfo.region = endLocation.region;
-                    locationInfo.station = endLocation.station;
-                    executed = true;
+        if(this.allOrders[itemId]){
+            var sellPrice = getMarketData(this.allOrders[itemId], this.stationLocation.station, BUY_ORDER, itemId);
+            if(sellPrice.length > 0){
+                executed = true;
 
-                    this.getItemInfo(itemId, buyPrice, sellPrice, locationInfo);
-                }
+                this.getItemInfo(itemId, buyPrice, sellPrice);
             }
         }
 
@@ -360,63 +321,96 @@ Route.prototype.calculateNext = function(itemId) {
     }
 };
 
-Route.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, locationInfo){
-    var rows = [];
+Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
+    var bestBuyPrice = sellPrice[0][0];
+    var bestSellPrice = buyPrice[0][0];
 
     for(var i = 0; i < buyPrice.length; i++){
         for(var j = 0; j < sellPrice.length; j++){
-            var row = this.calculateRow(itemId, buyPrice[i][0], buyPrice[i][1], sellPrice[j][0], sellPrice[j][1], locationInfo);
-            if(row.length > 0){
-                rows.push(row);
+            if(sellPrice[j][0] > bestSellPrice) {
+                bestSellPrice = sellPrice[j][0];
+            }
+            if(buyPrice[i][0] < bestBuyPrice) {
+                bestBuyPrice = buyPrice[i][0];
             }
         }
     }
 
-    if(rows.length > 0){
-        rows = rows.sort(bestRowComparator);
-        this.getItemWeight(itemId, this.createRowObject(rows[0]));
+    var row = {};
+    buyPrice = bestBuyPrice;
+    sellPrice = bestSellPrice;
+
+    var profit_per_item = sellPrice-buyPrice;
+    var margin = (sellPrice - buyPrice) / sellPrice;
+
+    if(margin*100 >= threshold_margin_lower && margin*100 <= threshold_margin_upper && profit_per_item > 1000){
+        row.buyPrice = buyPrice;
+        row.sellPrice = sellPrice;
+        row.itemId = itemId;
+        this.getItemVolume(itemId, row);
     }else {
         this.executingCount--;
     }
 };
 
-Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, locationInfo){
-    if(buyPrice < sellPrice && sellPrice > 0){
-        var itemProfit = sellPrice - buyPrice;
+Station.prototype.asyncFiltering = function() {
+    this.asyncFilter = setInterval(function(){
+            thiz.filterCount ++;
+            var ellipses = "";
+            for(var i = 0; i < ( thiz.filterCount % 5) ; i++){
+                ellipses += ".";
+            }
+            $("#filtering-data").html("<b>Filtering Results. Please wait" + ellipses + "</b></br>If it takes too long try a smaller margin range.");
 
-        var profit;
-        var buyCost;
-        var volume;
-
-        if(buyVolume >= sellVolume){
-            volume = sellVolume;
-            profit = sellVolume * itemProfit;
-            buyCost = buyPrice * sellVolume;
-        }else{
-            volume = buyVolume;
-            profit = buyVolume * itemProfit;
-            buyCost = buyPrice * buyVolume;
-        }
-
-        var iskRatio = (sellPrice-buyPrice)/buyPrice;
-
-        if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
-            return [itemId, buyPrice, volume, buyCost, locationInfo, profit, iskRatio, sellPrice, itemProfit];
-        }else{
-            return [];
-        }
-    }
-    return [];
+            if(thiz.executingCount == 0) {
+                clearInterval(thiz.asyncFilter);
+                $("#filtering-data").remove();
+            }
+        },
+        1000);
 };
 
-Route.prototype.getItemWeight = function(itemId, row){
+Station.prototype.getItemVolume = function(itemId, row){
+    if(!this.filtered){
+        this.filtered = true;
+        $("#buyingFooter").append("<div id='filtering-data'><b>Filtering Results. Please wait.</b></br>If it takes too long try a smaller margin range.</div>");
+        this.asyncFiltering();
+    }
+
+    var url = this.getVolumeEndpointBuilder(itemId);
+    $.ajax({
+        type: "get",
+        url: url,
+        dataType: "json",
+        async: true,
+        cache: false,
+        contentType: "application/json",
+        success: function(volumeData) {
+            if(volumeData && volumeData[volumeData.length-1] && volumeData[volumeData.length-1].volume){
+                row.volume = volumeData[volumeData.length-1].volume;
+                if(row.volume >= volume_threshold){
+                    thiz.getItemWeight(itemId, row);
+                }else{
+                    thiz.executingCount--;
+                }
+            }else{
+                thiz.executingCount--;
+            }
+        },
+        error: function (request, error) {
+            if(request.status != 404 && request.statusText !== "parsererror") {
+                thiz.getItemVolume(itemId, rows);
+            } else {
+                thiz.executingCount--;
+            }
+        }
+    });
+};
+
+Station.prototype.getItemWeight = function(itemId, row){
 
     if(this.itemCache[itemId]){
-        var name = this.itemCache[itemId].name;
-        var weight = this.itemCache[itemId].weight;
-
-        row.itemName = name;
-        row.itemWeight = weight;
+        row.itemName = this.itemCache[itemId].name;
 
         this.addRow(row);
 
@@ -434,14 +428,11 @@ Route.prototype.getItemWeight = function(itemId, row){
                 thiz.executingCount--;
 
                 var name = weightData.name;
-                var weight = weightData.packaged_volume;
 
                 thiz.itemCache[itemId] = {};
                 thiz.itemCache[itemId].name = name;
-                thiz.itemCache[itemId].weight = weight;
 
                 row.itemName = name;
-                row.itemWeight = weight;
 
                 thiz.addRow(row);
             },
@@ -456,29 +447,11 @@ Route.prototype.getItemWeight = function(itemId, row){
     }
 };
 
-Route.prototype.createRowObject = function(row) {
-    var rowObject = {};
-    rowObject.itemId = row[0];
-    rowObject.buyPrice = row[1];
-    rowObject.quantity = row[2];
-    rowObject.buyCost = row[3];
-    rowObject.sellToStation = row[4];
-    rowObject.totalProfit = row[5];
-    rowObject.roi = row[6];
-    rowObject.sellPrice = row[7];
-    rowObject.perItemProfit = row[8];
-    return rowObject;
-};
+Station.prototype.addRow = function(row) {
 
-Route.prototype.addRow = function(row) {
-
-    var storageVolume = row.itemWeight * row.quantity;
-
-    if(storageVolume > threshold_weight) {
-        return;
-    }
-
-    var uniqueRowId = row.itemId + "_" + row.sellToStation.station;
+    var profitPerItem = row.sellPrice - row.buyPrice;
+    var margin = (row.sellPrice - row.buyPrice) / row.sellPrice;
+    margin = (margin.toFixed(3)*100).toFixed(1)+"%";
 
     if(!this.tableCreated) {
         this.createTable();
@@ -486,30 +459,21 @@ Route.prototype.addRow = function(row) {
 
     var row_data = [
         row.itemName,
-        numberWithCommas(row.quantity),
         numberWithCommas(row.buyPrice.toFixed(2)),
-        numberWithCommas(row.buyCost.toFixed(2)),
-        getStationName(row.sellToStation.station),
         numberWithCommas(row.sellPrice.toFixed(2)),
-        numberWithCommas(row.totalProfit.toFixed(2)),
-        numberWithCommas(row.perItemProfit.toFixed(2)),
-        (row.roi.toFixed(3)*100).toFixed(1)+"%",
-        numberWithCommas(storageVolume.toFixed(2))
+        numberWithCommas(profitPerItem.toFixed(2)),
+        margin,
+        numberWithCommas(row.volume)
     ];
 
-    var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
-    var tableRow = $('#dataTable').dataTable().fnGetNodes(rowIndex);
-
-    $(tableRow).attr('id', uniqueRowId + "_" + $("." + uniqueRowId).length);
-    $(tableRow).addClass(uniqueRowId);
+    $('#dataTable').dataTable().fnAddData(row_data);
 };
 
-Route.prototype.createTable = function() {
+Station.prototype.createTable = function() {
     this.tableCreated = true;
-
-    // sorting on total profit
+    // sorting on margin index
     dt = $('#dataTable').DataTable({
-        "order": [[ 6, "desc" ]],
+        "order": [[ 5, "desc" ]],
         "lengthMenu": [[-1], ["All"]],
         responsive: true,
         dom: 'Bfrtip',
@@ -523,6 +487,12 @@ Route.prototype.createTable = function() {
     $("#dataTable thead th").each( function ( i ) {
         var name = dt.column( i ).header();
         var spanelt = document.createElement( "button" );
+
+        var initial_removed = [];
+        // if($(document).width() < 768){
+        //     initial_removed = ["Profit Per Item"];
+        // }
+
         spanelt.innerHTML = name.innerHTML;
 
         $(spanelt).addClass("colvistoggle");
@@ -533,6 +503,15 @@ Route.prototype.createTable = function() {
         $(spanelt).addClass("is-true");
         var column = dt.column( $(spanelt).attr('colidx') );
         column.visible( true );
+
+        for(var i = 0; i < initial_removed.length; i++){
+            if(spanelt.innerHTML === initial_removed[i]){
+                $(spanelt).addClass("is-false");
+                var column = dt.column( $(spanelt).attr('colidx') );
+                column.visible( false );
+                break;
+            }
+        }
 
         $(spanelt).on( 'click', function (e) {
             e.preventDefault();
@@ -563,34 +542,19 @@ Route.prototype.createTable = function() {
 
     $('#dataTable tbody').on('mousedown', 'tr', function (event) {
         if(event.which === 1){
-            if(event.ctrlKey){
-                var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1]
-                if(!$(this).hasClass("row-selected")){
-                    $.each($("."+classToFind), function(){
-                        $(this).addClass("row-selected");
-                    })
-                }else{
-                    $.each($("."+classToFind), function(){
-                        $(this).removeClass("row-selected");
-                    })
-                }
-            }else if(event.shiftKey){
-                open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, parseInt($(this).attr('id').split("_")[1]));
+            if(!$(this).hasClass("row-selected")){
+                $(this).addClass("row-selected");
             }else{
-                if(!$(this).hasClass("row-selected")){
-                    $(this).addClass("row-selected");
-                }else{
-                    $(this).removeClass("row-selected");
-                }
+                $(this).removeClass("row-selected");
             }
         }
     } );
+
     $("label > input").addClass("form-control").addClass("minor-text");
     $("label > input").attr("placeholder", "Search Results...");
     $(".loading").hide();
     $('#dataTable').show();
     $(".data_options").append($("#dataTable_filter"));
-
     $(".data_options").append($(".dt-buttons"));
     $(".dt-button").addClass("btn");
     $(".dt-button").addClass("btn-default");

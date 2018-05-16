@@ -2,6 +2,7 @@ var thiz;
 
 var BUY_ORDER = "buy";
 var SELL_ORDER = "sell";
+var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
 
 var PAGE_MULTIPLE = 50;
@@ -9,6 +10,7 @@ var PAGE_MULTIPLE = 50;
 var customBuy = [];
 var customSell = [];
 var page = 1;
+var iteration = 1;
 
 function getMarketData(data, stationId, orderType, itemId){
     var tempArray;
@@ -119,4 +121,11 @@ function getStationName(stationId){
         }
     });
     return stationFound;
+}
+
+function numberWithCommas(val) {
+    while (/(\d+)(\d{3})/.test(val.toString())){
+        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+    }
+    return val;
 }
