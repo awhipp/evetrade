@@ -8,10 +8,7 @@ var threshold_weight = 999999999999999999;
 
 var routeTrading = null;
 var isCustom = false;
-
-var customBuy = [];
-var customSell = [];
-var page = 1;
+var errorShown = false;
 
 var popup_table_buy;
 var popup_table_sell;
@@ -20,6 +17,11 @@ var stations_checked = 0;
 var MAX_STATIONS = 25;
 
 var universeList = {};
+var startCoordinates;
+var endCoordinates;
+var startLocation;
+var endLocations;
+
 
 $( document ).ready(function() {
     $("#stations_remaining").text(MAX_STATIONS);
@@ -36,7 +38,6 @@ $( document ).ready(function() {
 
     onClickListeners();
 
-    setupCustomDropdown();
 
     $('input[type="number"]').keypress(function(e) {
         var theEvent = e || window.event;
@@ -51,32 +52,41 @@ $( document ).ready(function() {
 
     setAbout();
     setupCookies();
+
+    setupCustomDropdown();
 });
 
 function setupCustomDropdown() {
-    for(var i = 0; i < station_ids.length; i++){
-        $("#custom_route_start").append('<option>' + station_ids[i][2] + '</option>');
+    var customDropdown = setInterval(function(){
+        if(station_ids) {
+            clearInterval(customDropdown);
+            for(var i = 0; i < station_ids.length; i++){
+                $("#custom_route_start").append('<option>' + station_ids[i][2] + '</option>');
 
-        $("#custom_route_end").append('<li>' +
-            '<input id="echeck-' + i + '" class="end-selection" type="checkbox" value="'+ station_ids[i][2] +'">' +
-            '<label for="echeck-' + i + '">' + station_ids[i][2] + '</label>' +
-            '</li>');
+                $("#custom_route_end").append('<li>' +
+                    '<input id="echeck-' + i + '" class="end-selection" type="checkbox" value="'+ station_ids[i][2] +'">' +
+                    '<label for="echeck-' + i + '">' + station_ids[i][2] + '</label>' +
+                    '</li>');
 
-        $("#custom_station").append('<option>' + station_ids[i][2] + '</option>');
+                $("#custom_station").append('<option>' + station_ids[i][2] + '</option>');
 
-        universeList[station_ids[i][2]] = {};
-        universeList[station_ids[i][2]].region = station_ids[i][1];
-        universeList[station_ids[i][2]].station = station_ids[i][0];
-    }
+                universeList[station_ids[i][2]] = {};
+                universeList[station_ids[i][2]].region = station_ids[i][1];
+                universeList[station_ids[i][2]].station = station_ids[i][0];
+            }
 
-    $(".end-selection").on('click', function(){
-        stations_checked = $(".end-selection:checked").length;
-        if(stations_checked > MAX_STATIONS){
-            $(this).prop("checked",false);
-            stations_checked = $(".end-selection:checked").length;
+            $(".end-selection").on('click', function(){
+                stations_checked = $(".end-selection:checked").length;
+                if(stations_checked > MAX_STATIONS){
+                    $(this).prop("checked",false);
+                    stations_checked = $(".end-selection:checked").length;
+                }
+                $("#stations_remaining").text(MAX_STATIONS-stations_checked);
+            });
+            $(".loadingIcon").remove();
+            $("header").css("opacity", 1);
         }
-        $("#stations_remaining").text(MAX_STATIONS-stations_checked);
-    });
+    }, 1000);
 }
 
 function onClickListeners() {
@@ -106,14 +116,16 @@ function onClickListeners() {
     });
 
     $("#custom_route").on('click', function(){
-        $(".standard").slideToggle();
-        $(".custom").slideToggle();
         if($(this).val() === "Enable Custom Route"){
             $(this).val("Disable Custom Route");
             isCustom = true;
+            $(".standard").hide();
+            $(".custom").show();
         }else{
             $(this).val("Enable Custom Route");
             isCustom = false;
+            $(".standard").show();
+            $(".custom").hide();
         }
     });
 
@@ -123,9 +135,13 @@ function onClickListeners() {
         if($(this).val() === "Enable Custom Selection"){
             $(this).val("Disable Custom Selection");
             isCustom = true;
+            $(".standard").hide();
+            $(".custom").show();
         }else{
             $(this).val("Enable Custom Selection");
             isCustom = false;
+            $(".standard").show();
+            $(".custom").hide();
         }
     });
 }
@@ -150,13 +166,6 @@ function checkEndSelection() {
             }
         });
     });
-}
-
-function numberWithCommas(val) {
-    while (/(\d+)(\d{3})/.test(val.toString())){
-        val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-    }
-    return val;
 }
 
 function setAbout() {
@@ -252,20 +261,16 @@ function setupTradeOptions(tradeType){
     }
 }
 
-function open_popup(itemId, name, location, stationid){
+function open_popup(itemId, name, stationId){
     popup_table_buy.clear();
     popup_table_sell.clear();
 
     $("#popup_itemName").text("Trade info for " + name);
-    if(isCustom){
-      $("#buyLocation").text("Buy at " + startLocation);
-      $("#sellLocation").text("Sell at " + location);
-    }else{
-      $("#buyLocation").text("Buy at " + startLocation);
-      $("#sellLocation").text("Sell at " + location);
-    }
-    var buyArr = customBuy[station_buy[1]][itemId];
-    var sellArr = customSell[stationid][itemId];
+    $("#buyLocation").text("Buy at " + startLocation);
+    $("#sellLocation").text("Sell at " + getStationName(stationId));
+
+    var buyArr = customBuy[thiz.startLocation.station][itemId];
+    var sellArr = customSell[stationId][itemId];
 
     for(var i = 0; i < buyArr.length; i++){
         if(buyArr[i]){
@@ -307,11 +312,6 @@ function getCookie(cname) {
     return "";
 }
 
-var startCoordinates = {};
-var endCoordinates = [];
-var startLocation;
-var endLocations = [];
-
 function setStationTradingLocations() {
     var start_region, start_station;
 
@@ -326,7 +326,6 @@ function setStationTradingLocations() {
         start_station =selectedStation.dataset.station;
     }
 
-    endLocations = [startLocation];
     startCoordinates.region = start_region;
     startCoordinates.station = start_station;
 }
@@ -378,13 +377,12 @@ function createDataTable() {
 
     if(routeTrading) {
         dataTableDOM.append("<thead><tr>" +
-            "<th>Item</th>" +
-            "<th>Sell Order</th>" +
+            "<th>Buy Item</th>" +
             "<th>Quantity</th>" +
+            "<th>At Sell Price</th>" +
             "<th>Total Cost</th>" +
             "<th>Take To</th>" +
-            "<th>Buy Order</th>" +
-            "<th>Quantity</th>" +
+            "<th>At Buy Price</th>" +
             "<th>Total Profit</th>" +
             "<th>Profit Per Item</th>" +
             "<th>R.O.I.</th>" +
@@ -448,24 +446,23 @@ function createDataTable() {
 }
 
 function execute() {
-    var buyingStation;
-    var endStations;
-
     if(routeTrading) {
-        buyingStation = [startCoordinates.region, startCoordinates.station];
-        endStations = [];
-        $.each(endCoordinates, function(){
-            endStations.push([this.region, this.station]);
-        });
+        new Route(startCoordinates, endCoordinates).startRoute();
     } else {
-        buyingStation = [startCoordinates.region, startCoordinates.station];
-        endStations = buyingStation;
+        new Station(startCoordinates).startStation();
     }
 
-    beginRoute(buyingStation, endStations);
 }
 
 function init(){
+    customBuy = [];
+    customSell = [];
+    startCoordinates = {};
+    endCoordinates = [];
+    startLocation;
+    endLocations = [];
+    page = 1;
+
     updateCookies();
 
     if(routeTrading){
@@ -474,7 +471,10 @@ function init(){
         setStationTradingLocations();
     }
 
-    if(startLocation && startLocation.length > 0 && endLocations.length > 0){
+    var startCondition = (startLocation && startLocation.length > 0);
+    var endCondition = (routeTrading && endLocations.length > 0) || !routeTrading;
+
+    if(startCondition && endCondition){
         $(".error").hide();
         $("#selection").hide();
     }else{
@@ -484,4 +484,18 @@ function init(){
 
     createDataTable();
     execute();
+}
+
+function displayError(){
+    if(!errorShown){
+        $("#connectEVE").slideToggle(true);
+        errorShown = true;
+    }
+}
+
+function hideError(){
+    if(errorShown){
+        $("#connectEVE").slideToggle();
+        errorShown = false;
+    }
 }
