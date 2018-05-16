@@ -249,20 +249,16 @@ function setupTradeOptions(tradeType){
     }
 }
 
-function open_popup(itemId, name, location, stationid){
+function open_popup(itemId, name, stationId){
     popup_table_buy.clear();
     popup_table_sell.clear();
 
     $("#popup_itemName").text("Trade info for " + name);
-    if(isCustom){
-      $("#buyLocation").text("Buy at " + startLocation);
-      $("#sellLocation").text("Sell at " + location);
-    }else{
-      $("#buyLocation").text("Buy at " + startLocation);
-      $("#sellLocation").text("Sell at " + location);
-    }
-    var buyArr = customBuy[station_buy[1]][itemId];
-    var sellArr = customSell[stationid][itemId];
+    $("#buyLocation").text("Buy at " + startLocation);
+    $("#sellLocation").text("Sell at " + getStationName(stationId));
+
+    var buyArr = customBuy[thiz.startLocation.station][itemId];
+    var sellArr = customSell[stationId][itemId];
 
     for(var i = 0; i < buyArr.length; i++){
         if(buyArr[i]){

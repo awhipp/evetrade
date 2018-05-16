@@ -114,7 +114,7 @@ function bestRowComparator(a,b){
 function getStationName(stationId){
     var stationFound = "";
     $.each(endCoordinates, function(){
-        if(stationFound.length === 0 && this.station === stationId) {
+        if(stationFound.length == 0 && this.station == stationId) {
             stationFound = this.name;
         }
     });

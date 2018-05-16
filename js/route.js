@@ -466,7 +466,7 @@ Route.prototype.addRow = function(row) {
         return;
     }
 
-    var uniqueRowId = itemId + "_" + row.sellToStation.station;
+    var uniqueRowId = row.itemId + "_" + row.sellToStation.station;
 
     if(!this.tableCreated) {
         this.createTable();
@@ -552,7 +552,7 @@ Route.prototype.createTable = function() {
     $('#dataTable tbody').on('mousedown', 'tr', function (event) {
         if(event.which === 1){
             if(event.ctrlKey){
-                var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1] + "_" + $(this).attr('id').split("_")[2];
+                var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1]
                 if(!$(this).hasClass("row-selected")){
                     $.each($("."+classToFind), function(){
                         $(this).addClass("row-selected");
@@ -563,7 +563,7 @@ Route.prototype.createTable = function() {
                     })
                 }
             }else if(event.shiftKey){
-                open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, $(this).attr('id').split("_")[1], parseInt($(this).attr('id').split("_")[2]));
+                open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, parseInt($(this).attr('id').split("_")[1]));
             }else{
                 if(!$(this).hasClass("row-selected")){
                     $(this).addClass("row-selected");
