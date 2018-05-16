@@ -394,7 +394,7 @@ Station.prototype.asyncFiltering = function() {
             for(var i = 0; i < ( thiz.filterCount % 5) ; i++){
                 ellipses += ".";
             }
-            
+
             $("#filtering-data").html("<b>Filtering Results. Please wait" + ellipses + "</b></br>If it takes too long try a smaller margin range.");
 
             if(thiz.executingCount == 0) {
