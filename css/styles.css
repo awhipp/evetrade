@@ -65,7 +65,7 @@ header {
 body {
     background: black;
     background: url(../images/evetrade-background-min.png);
-    font-family: "Roboto","Helvetica Neue",Arial,sans-serif;
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
     background-repeat: repeat-y;
     background-size: 100%;
     position: relative;
@@ -232,21 +232,21 @@ td {
 .sorting, .sorting_desc, .sorting_asc {
     text-align: center;
     border: 1px rgba(0,0,0,0.1) solid;
-    background-color: rgba(22,29,38,0.8);
+    background-color: rgba(22,29,38,0.85);
     color: white;
 }
 
 table.dataTable.display tbody tr.odd {
-     background-color: rgba(64,64,64,0.7);
+     background-color: rgba(64,64,64,0.85);
  }
 
 
 table.dataTable.display tbody tr.even {
-    background-color: rgba(32,32,32,0.7);
+    background-color: rgba(32,32,32,0.85);
 }
 
 table.dataTable.display tbody tr:hover {
-    background-color: rgba(64,64,64,0.9);
+    background-color: rgba(22, 29, 38,1);
 }
 
 tr.odd.row-selected, tr.even.row-selected {
@@ -256,6 +256,15 @@ tr.odd.row-selected, tr.even.row-selected {
 
 table.dataTable.display tbody tr > td {
     background-color: transparent !important;
+    position: relative;
+}
+
+tr > td:first-child {
+    cursor: pointer;
+}
+
+.sorting_disabled, tr > td:first-child {
+    width: 1px !important;
 }
 
 .row-selected td {
@@ -345,17 +354,29 @@ table.dataTable.display tbody tr > td {
       margin: 0 auto 1em auto;
   }
 
+  #custom_station, #start_station, #end_station {
+      width: 800px;
+      margin: 0 auto;
+  }
+
+    #custom_station input[type="text"], #start_station input[type="text"], #end_station input[type="text"] {
+        text-align: left !important;
+        max-width: unset !important;
+        padding: 0 1em !important;
+    }
+
   /** START CUSTOM FEATURE **/
   #custom_route_end{
       max-height: 250px;
       height: auto;
       overflow: scroll;
-      text-align: left;
+      text-align: center;
       max-width: 700px;
       margin: 0 auto;
       background: rgba(0,0,0,0.5);
       color: white !important;
       overflow-x: hidden;
+      display: none;
   }
 
   #custom_route_end > li{
@@ -423,6 +444,12 @@ table.dataTable.display tbody tr > td {
 
 .modal-open {
     overflow-y: hidden !important;
+}
+
+.closeStation {
+    color: white;
+    text-shadow: 0 3px 0 #00aeff;
+    cursor:pointer;
 }
 /** END MODAL **/
 

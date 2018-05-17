@@ -434,7 +434,7 @@ Station.prototype.getItemVolume = function(itemId, row){
         },
         error: function (request, error) {
             if(request.status != 404 && request.statusText !== "parsererror") {
-                thiz.getItemVolume(itemId, rows);
+                thiz.getItemVolume(itemId, row);
             } else {
                 thiz.executingCount--;
             }

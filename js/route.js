@@ -518,7 +518,10 @@ Route.prototype.addRow = function(row) {
         this.createTable();
     }
 
+    var investigateId = uniqueRowId + "_investigate";
+
     var row_data = [
+        "<span id='"+ investigateId +"' title='All Orders for " + row.itemName + "'><i class='fa fa-search-plus'></i></span>",
         row.itemName,
         numberWithCommas(row.quantity),
         numberWithCommas(row.buyPrice.toFixed(2)),
@@ -536,20 +539,28 @@ Route.prototype.addRow = function(row) {
 
     $(tableRow).attr('id', uniqueRowId + "_" + $("." + uniqueRowId).length);
     $(tableRow).addClass(uniqueRowId);
+
+    $("#" + investigateId).on('click', function(){
+        open_popup(row.itemId, row.itemName, row.sellToStation.station);
+    });
 };
 
 Route.prototype.createTable = function() {
     this.tableCreated = true;
 
     // sorting on total profit
-    dt = $('#dataTable').DataTable({
-        "order": [[ 6, "desc" ]],
+    var dt = $('#dataTable').DataTable({
+        "order": [[ 7, "desc" ]],
         "lengthMenu": [[-1], ["All"]],
         responsive: true,
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf'
-        ]
+        ],
+        "columnDefs": [{
+            "targets": 0,
+            "orderable": false
+        }]
     });
 
     // for each column in header add a togglevis button in the div
@@ -596,7 +607,11 @@ Route.prototype.createTable = function() {
     });
 
     $('#dataTable tbody').on('mousedown', 'tr', function (event) {
-        if(event.which === 1){
+        var investigateButton = (event.target.id.indexOf("investigate") >= 0
+        || (event.target.children[0] && event.target.children[0].id.indexOf("investigate") >= 0)
+        || (event.target.classList.contains("fa")));
+
+        if(event.which === 1 && !investigateButton){
             if(event.ctrlKey){
                 var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1]
                 if(!$(this).hasClass("row-selected")){

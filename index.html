@@ -56,7 +56,7 @@
 
     <!-- Navigation -->
     <div id="connectEVE" class="announcement">
-        Having difficulties reaching EVE's Servers. Results may take longer than normal to appear.
+        Slow results from EVE's Servers. Results may take longer than normal to appear.
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
@@ -84,7 +84,7 @@
                     <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="release.html" target="_blank">V4.5.0</a>
+                    <a class="nav-link" href="release.html" target="_blank">V4.5.1</a>
                 </li>
             </ul>
         </div>
@@ -117,32 +117,14 @@
                         <br>It is rare to find good deals outside of the major trade hubs. You might need to relax the filters on the search.</em>
                     </p>
                 </div>
-                <div class="col-xs-12 mx-auto">
-                  <div class="custom_switcher">
-                    <input type="button" class="btn btn-default secondary-text btn-xs" id="custom_select" value="Enable Custom Selection"/>
-                  </div>
-                </div>
 
                 <!-- Inner Dialogue -->
                 <div class="col-xs-12 mx-auto">
                   <div class="question primary-text"> Station Trade at </div>
 
-
                   <div class="col-xs-12 mx-auto">
-                    <div class="standard">
-                      <input type="button" class="btn btn-default station-start" data-region="10000002" data-station="60003760" value="Jita"/>
-                      <input type="button" class="btn btn-default station-start" data-region="10000043" data-station="60008494" value="Amarr"/>
-                      <input type="button" class="btn btn-default station-start" data-region="10000032" data-station="60011866" value="Dodixie"/>
-                      <input type="button" class="btn btn-default station-start" data-region="10000030" data-station="60004588" value="Rens"/>
-                      <input type="button" class="btn btn-default station-start" data-region="10000042" data-station="60005686" value="Hek"/>
-                    </div>
-                  </div>
-
-                  <div class="col-xs-12 mx-auto">
-                    <div class="form-group custom">
-                      <select id="custom_station" class="location_dropdown form-control">
-                        <option value="None">None</option>
-                      </select>
+                    <div class="form-group standard">
+                        <div id='custom_station' style='border:1px solid #999;'></div>
                     </div>
                   </div>
 
@@ -181,50 +163,33 @@
               <div id="route_trade">
                 <div class="col-xs-12 mx-auto">
                   <h2> Route / Hauler Trading </h2>
-                  <p> Finding the most profitable trade routes based on given filter parameters.
-                      <em class="custom" style="font-size:0.9em"><br>If nothing appears for a custom route, there might not be any deals for your station criteria.
-                        <br>It is rare to find good deals outside of the major trade hubs. You might need to relax the filters on the search.</em></p>
+                  <p> Finding the most profitable trade routes based on given filter parameters.</p>
                 </div>
 
                 <div class="col-xs-12 mx-auto">
-                  <div class="custom_switcher">
-                    <input type="button" class="btn btn-default secondary-text btn-xs" id="custom_route" value="Enable Custom Route"/>
-                  </div>
-                </div>
-
-
-                <div class="col-xs-12 mx-auto">
-                  <p> Starting Point </p>
+                  <p> Starting Station </p>
                   <div class="standard">
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000002" data-station="60003760" value="Jita"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000043" data-station="60008494" value="Amarr"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000032" data-station="60011866" value="Dodixie"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000030" data-station="60004588" value="Rens"/>
-                    <input type="button" class="btn btn-default secondary-text start btn-xs" data-region="10000042" data-station="60005686" value="Hek"/>
-                  </div>
-                  <div class="form-group custom">
-                    <select id="custom_route_start" class="location_dropdown form-control">
-                      <option value="None">None</option>
-                    </select>
+                    <div id='start_station' style='border:1px solid #999;'></div>
                   </div>
                 </div>
 
 
                 <div class="col-xs-12 mx-auto">
                   <p> End Point(s) </p>
-                  <div class="standard">
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000002" data-station="60003760" value="Jita"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000043" data-station="60008494" value="Amarr"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000032" data-station="60011866" value="Dodixie"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000030" data-station="60004588" value="Rens"/>
-                    <input type="button" class="btn btn-default secondary-text end btn-xs" data-region="10000042" data-station="60005686" value="Hek"/>
+                  <div class="form-group standard">
+
+                  <div id="addingToEndStationList" class="header">
+                      <div id='end_station' style='border:1px solid #999;'></div>
+                      <input type="button" class="btn btn-default" onclick="newStationToList()" value="Add Station">
                   </div>
-                  <div class="form-group custom">
-                    <ul id="custom_route_end" class="location_checklist form-control">
-                    </ul>
-                    <p>More stations result in slower responses.<br><span id="stations_remaining"></span> stations remaining.</p>
+
+                  <ul id="custom_route_end" class="location_checklist form-control">
+                  </ul>
+
                   </div>
                 </div>
+
+                  <hr>
 
                 <div class="col-xs-12 mx-auto">
                   <div class="row">
@@ -250,7 +215,7 @@
                 </div>
 
                 <div class="col-xs-12 mx-auto">
-                  <div class="error"> A starting point, and at least one destination is required. </div>
+                  <div class="error"> A starting point, and at least one destination is required. Starting point cannot equal Destination. </div>
                   <input type="button" class="btn btn-default" onclick="init()" value="Search"/>
                 </div>
               </div>
@@ -281,7 +246,7 @@
     <footer>
         <div class="container overflow_none">
       			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.5.0 | Updated 16 May 2018</a></p>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.5.1 | Updated 17 May 2018</a></p>
             <p class="m-0 text-center text-white">&copy; 2016-2018 <a href='https://EVETrade.space'> EVE Trade</a>. All rights reserved.</p>
             <div style="position: absolute !important; top: -1000px !important; left: -1000px !important; z-index: -100 !important; width:0 !important; height: 0 !important; opacity: 0 !important;">
               <a href="https://venturefocused.com" data-ytta-id="-">Developed in part with the help of Venture Focused Consulting</a>
@@ -451,40 +416,41 @@
   <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js"></script>
 
 
-  <script src="js/init.min.js" async defer></script>
+  <script src="vendor/complete.ly/complete.ly.js"></script>
+  <script src="js/init.js" async defer></script>
   <script src="js/common.min.js" async defer></script>
   <script src="js/route.min.js" async defer></script>
   <script src="js/station.min.js" async defer></script>
-    <script src="js/station_ids.min.js" async defer></script>
+  <script src="js/station_ids.min.js" async defer></script>
 
-  <ins class="adsbygoogle"
-  style="display:block;"
-  data-ad-client="ca-pub-0599578547621989"
-  data-ad-slot="7378680598"
-  data-ad-format="auto"></ins>
-  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <script async>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-  <style>
-    /* Small devices (tablets, 768px and up) */
-    .adsbygoogle > ins{
-        position: relative !important;
-        bottom: inherit !important;
-        left: inherit !important;
-        transform: none !important;
-    }
-    @media ( min-width : 768px) {
-        .adsbygoogle > ins{
-          position: fixed !important;
-          bottom: 0 !important;
-          left: 50% !important;
-          transform: translate(-50%,0) !important;
-        }
-    }
-  </style>
+  <!--<ins class="adsbygoogle"-->
+  <!--style="display:block;"-->
+  <!--data-ad-client="ca-pub-0599578547621989"-->
+  <!--data-ad-slot="7378680598"-->
+  <!--data-ad-format="auto"></ins>-->
+  <!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+  <!--<script async>-->
+    <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+  <!--</script>-->
+  <!--<style>-->
+    <!--/* Small devices (tablets, 768px and up) */-->
+    <!--.adsbygoogle > ins{-->
+        <!--position: relative !important;-->
+        <!--bottom: inherit !important;-->
+        <!--left: inherit !important;-->
+        <!--transform: none !important;-->
+    <!--}-->
+    <!--@media ( min-width : 768px) {-->
+        <!--.adsbygoogle > ins{-->
+          <!--position: fixed !important;-->
+          <!--bottom: 0 !important;-->
+          <!--left: 50% !important;-->
+          <!--transform: translate(-50%,0) !important;-->
+        <!--}-->
+    <!--}-->
+  <!--</style>-->
 
-  <script async defer src="vendor/blockadblock/blockadblock.min.js"></script>
+  <!--<script async defer src="vendor/blockadblock/blockadblock.min.js"></script>-->
 </body>
 
 </html>

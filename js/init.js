@@ -56,24 +56,79 @@ $( document ).ready(function() {
     setupCustomDropdown();
 });
 
+function getTradeHubName(stationName) {
+
+    if (stationName == "Jita IV - Moon 4 - Caldari Navy Assembly Plant") {
+        return "Jita";
+    } else if (stationName == "Amarr VIII (Oris) - Emperor Family Academy") {
+        return "Amarr";
+    } else if (stationName == "Rens VI - Moon 8 - Brutor Tribe Treasury") {
+        return "Rens";
+    } else if (stationName == "Dodixie IX - Moon 20 - Federation Navy Assembly Plant") {
+        return "Dodixie";
+    } else if (stationName == "Hek VIII - Moon 12 - Boundless Creation Factory") {
+        return "Hek";
+    }
+
+    return stationName;
+}
+
+function initCompletely(domId, stationList) {
+    var completelyInput = completely(document.getElementById(domId), {
+        fontSize: '18px',
+        fontFamily: "Roboto",
+        color: '#333',
+        ignoreCase: true
+    });
+    completelyInput.options = stationList;
+    completelyInput.repaint();
+
+
+    if (domId == "end_station") {
+        $($("#" + domId + " input")[1]).on('keydown', function (e) {
+            if (e.keyCode == 13) {
+                newStationToList();
+            }
+        });
+    }
+}
+
 function setupCustomDropdown() {
     var customDropdown = setInterval(function(){
         if(station_ids) {
             clearInterval(customDropdown);
+            var stationList = [""];
+
             for(var i = 0; i < station_ids.length; i++){
-                $("#custom_route_start").append('<option>' + station_ids[i][2] + '</option>');
 
-                $("#custom_route_end").append('<li>' +
-                    '<input id="echeck-' + i + '" class="end-selection" type="checkbox" value="'+ station_ids[i][2] +'">' +
-                    '<label for="echeck-' + i + '">' + station_ids[i][2] + '</label>' +
-                    '</li>');
+                var stationName = station_ids[i][2];
 
-                $("#custom_station").append('<option>' + station_ids[i][2] + '</option>');
+                // add trade hubs for easy of use
+                var tradeHubName = getTradeHubName(stationName);
+                if (stationName !== tradeHubName) {
+                    var lowerCaseStationName = tradeHubName.toLowerCase();
 
-                universeList[station_ids[i][2]] = {};
-                universeList[station_ids[i][2]].region = station_ids[i][1];
-                universeList[station_ids[i][2]].station = station_ids[i][0];
+                    universeList[lowerCaseStationName] = {};
+                    universeList[lowerCaseStationName].region = station_ids[i][1];
+                    universeList[lowerCaseStationName].station = station_ids[i][0];
+                    universeList[lowerCaseStationName].name = tradeHubName;
+                    stationList.push(tradeHubName);
+                }
+
+                var lowerCaseStationName = stationName.toLowerCase();
+                universeList[lowerCaseStationName] = {};
+                universeList[lowerCaseStationName].region = station_ids[i][1];
+                universeList[lowerCaseStationName].station = station_ids[i][0];
+                universeList[lowerCaseStationName].name = stationName;
+                stationList.push(stationName);
+
             }
+
+            stationList.sort();
+
+            initCompletely("custom_station", stationList);
+            initCompletely("start_station", stationList);
+            initCompletely("end_station", stationList);
 
             $(".end-selection").on('click', function(){
                 stations_checked = $(".end-selection:checked").length;
@@ -85,21 +140,16 @@ function setupCustomDropdown() {
             });
             $(".loadingIcon").remove();
             $("header").css("opacity", 1);
+
         }
     }, 1000);
 }
 
 function onClickListeners() {
 
-    $(".start").on('click', function(){
-        $(".start").removeClass("start-selected");
-        $(this).addClass("start-selected");
-        checkStartSelection();
-    });
-
-    $(".end").on('click', function(){
+    $(".end").on('click', function () {
         $(this).hasClass("end-selected") ? $(this).removeClass("end-selected") : $(this).addClass("end-selected");
-        checkEndSelection();
+        // checkEndSelection();
     });
 
     $(".route-trader").on('click', function(){
@@ -113,58 +163,6 @@ function onClickListeners() {
     $(".station-start").on('click', function(){
         $(".station-start").removeClass("station-selected");
         $(this).addClass("station-selected");
-    });
-
-    $("#custom_route").on('click', function(){
-        if($(this).val() === "Enable Custom Route"){
-            $(this).val("Disable Custom Route");
-            isCustom = true;
-            $(".standard").hide();
-            $(".custom").show();
-        }else{
-            $(this).val("Enable Custom Route");
-            isCustom = false;
-            $(".standard").show();
-            $(".custom").hide();
-        }
-    });
-
-    $("#custom_select").on('click', function(){
-        $(".standard").slideToggle();
-        $(".custom").slideToggle();
-        if($(this).val() === "Enable Custom Selection"){
-            $(this).val("Disable Custom Selection");
-            isCustom = true;
-            $(".standard").hide();
-            $(".custom").show();
-        }else{
-            $(this).val("Enable Custom Selection");
-            isCustom = false;
-            $(".standard").show();
-            $(".custom").hide();
-        }
-    });
-}
-
-function checkStartSelection() {
-    $.each($(".start-selected"), function(){
-        var startSelected = this;
-        $.each($(".end-selected"), function() {
-            if(this.dataset.station === startSelected.dataset.station) {
-                $(this).removeClass("end-selected");
-            }
-        });
-    });
-}
-
-function checkEndSelection() {
-    $.each($(".start-selected"), function(){
-        var startSelected = this;
-        $.each($(".end-selected"), function() {
-            if(this.dataset.station === startSelected.dataset.station) {
-                $(startSelected).removeClass("start-selected");
-            }
-        });
     });
 }
 
@@ -313,18 +311,11 @@ function getCookie(cname) {
 }
 
 function setStationTradingLocations() {
-    var start_region, start_station;
+    startLocation = $("#custom_station input")[0].value.toLowerCase();
 
-    if(isCustom){
-        startLocation = $("#custom_station").val();
-        start_region = universeList[startLocation].region;
-        start_station = universeList[startLocation].station;
-    }else{
-        var selectedStation = $(".station-selected")[0];
-        startLocation = selectedStation.value;
-        start_region = selectedStation.dataset.region;
-        start_station =selectedStation.dataset.station;
-    }
+    var start_region = universeList[startLocation].region;
+    var start_station = universeList[startLocation].station;
+    startLocation = universeList[startLocation].name;
 
     startCoordinates.region = start_region;
     startCoordinates.station = start_station;
@@ -333,35 +324,32 @@ function setStationTradingLocations() {
 function setRouteTradingLocations() {
     var start_region, start_station;
 
-    if(isCustom){
-        startLocation = $("#custom_route_start").val();
-        start_region = universeList[startLocation].region;
-        start_station = universeList[startLocation].station;
+    var selectedStation = $("#start_station input")[0].value.toLowerCase();
+    if(selectedStation){
+        start_region = universeList[selectedStation].region;
+        start_station = universeList[selectedStation].station;
+        startLocation = universeList[selectedStation].name;
 
-        $.each($(".end-selection:checked"), function(){
+        var existingEndpoints = [];
+
+        $.each($("#custom_route_end > li"), function () {
             var endCoordinate = {};
-            endCoordinate.name = this.value;
-            endCoordinate.region = universeList[endCoordinate.name].region;
-            endCoordinate.station = universeList[endCoordinate.name].station;
-            endLocations.push(endCoordinate.name);
-            endCoordinates.push(endCoordinate);
-        });
-    }else{
-        var selectedStation = $(".start-selected")[0];
-        if(selectedStation){
-            start_region = selectedStation.dataset.region;
-            start_station = selectedStation.dataset.station;
-            startLocation = selectedStation.value;
+            var unrefined = $(this).text();
+            var endLocation = unrefined.substring(0, unrefined.length - 2).toLowerCase();
 
-            $.each($(".end-selected"), function(){
-                var endCoordinate = {};
-                endCoordinate.region = $(this)[0].dataset.region;
-                endCoordinate.station = $(this)[0].dataset.station;
-                endCoordinate.name = $(this)[0].value;
+            var universeItem = universeList[endLocation];
+
+
+            endCoordinate.region = universeItem.region;
+            endCoordinate.station = universeItem.station;
+            endCoordinate.name = universeItem.name;
+
+            if (endCoordinate.station != start_station && existingEndpoints.indexOf(endCoordinate.station) == -1) {
                 endLocations.push(endCoordinate.name);
                 endCoordinates.push(endCoordinate);
-            });
-        }
+                existingEndpoints.push(endCoordinate.station);
+            }
+        });
     }
 
     startCoordinates.region = start_region;
@@ -377,6 +365,7 @@ function createDataTable() {
 
     if(routeTrading) {
         dataTableDOM.append("<thead><tr>" +
+                "<th></th>" +
             "<th>Buy Item</th>" +
             "<th>Quantity</th>" +
             "<th>At Sell Price</th>" +
@@ -497,5 +486,47 @@ function hideError(){
     if(errorShown){
         $("#connectEVE").slideToggle();
         errorShown = false;
+    }
+}
+
+
+var addedToList = [];
+
+function newStationToList() {
+
+    var li = document.createElement("li");
+    var inputValue = universeList[$("#end_station input")[0].value.toLowerCase()].name;
+    var t = document.createTextNode(inputValue);
+
+    if (addedToList.indexOf(inputValue) == -1) {
+        addedToList.push(inputValue);
+
+        li.appendChild(t);
+        if (inputValue === '') {
+            alert("You must choose a station!");
+        } else {
+            document.getElementById("custom_route_end").style.display = "block";
+            document.getElementById("custom_route_end").appendChild(li);
+        }
+
+        $("#end_station input")[0].value = "";
+        $("#end_station input")[1].value = "";
+
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode(" \u00D7");
+        span.className = "closeStation";
+        span.title = "Remove: " + inputValue;
+        span.appendChild(txt);
+        li.appendChild(span);
+    }
+
+    var close = document.getElementsByClassName("closeStation");
+    var i;
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function () {
+            var data = $(this)[0].previousSibling.data;
+            addedToList[addedToList.indexOf(data)] = "";
+            $(this.parentElement).remove();
+        }
     }
 }
