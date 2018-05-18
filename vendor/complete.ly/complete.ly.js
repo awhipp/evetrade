@@ -7,6 +7,7 @@
  * This Software shall be used for doing good things, not bad things.
  *
  **/
+var locationInputId = 1;
 function completely(container, config) {
     config = config || {};
     config.fontSize = config.fontSize || '16px';
@@ -45,6 +46,9 @@ function completely(container, config) {
     txtInput.style.backgroundColor = 'transparent';
     txtInput.style.verticalAlign = 'top';
     txtInput.style.position = 'relative';
+    txtInput.classList.add("location-input");
+    txtInput.id = "location-input-" + locationInputId;
+    locationInputId += 1;
 
     var wrapper = document.createElement('div');
     wrapper.style.position = 'relative';

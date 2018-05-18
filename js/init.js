@@ -7,8 +7,8 @@ var threshold_cost = 999999999999999999;
 var threshold_weight = 999999999999999999;
 
 var routeTrading = null;
-var isCustom = false;
 var errorShown = false;
+var addedToList = [];
 
 var popup_table_buy;
 var popup_table_sell;
@@ -94,12 +94,12 @@ function initCompletely(domId, stationList) {
 }
 
 function setupCustomDropdown() {
-    var customDropdown = setInterval(function(){
-        if(station_ids) {
+    var customDropdown = setInterval(function () {
+        if (station_ids) {
             clearInterval(customDropdown);
             var stationList = [""];
 
-            for(var i = 0; i < station_ids.length; i++){
+            for (var i = 0; i < station_ids.length; i++) {
 
                 var stationName = station_ids[i][2];
 
@@ -130,19 +130,83 @@ function setupCustomDropdown() {
             initCompletely("start_station", stationList);
             initCompletely("end_station", stationList);
 
-            $(".end-selection").on('click', function(){
+            $(".end-selection").on('click', function () {
                 stations_checked = $(".end-selection:checked").length;
-                if(stations_checked > MAX_STATIONS){
-                    $(this).prop("checked",false);
+                if (stations_checked > MAX_STATIONS) {
+                    $(this).prop("checked", false);
                     stations_checked = $(".end-selection:checked").length;
                 }
-                $("#stations_remaining").text(MAX_STATIONS-stations_checked);
+                $("#stations_remaining").text(MAX_STATIONS - stations_checked);
             });
+
+            $(function() {
+                var tabindex = 1;
+                $('input').each(function() {
+                    if (this.type != "hidden") {
+                        var $input = $(this);
+                        $input.attr("tabindex", tabindex);
+                        tabindex++;
+                    }
+                });
+            });
+
+            $(".location-input").keyup(function(event){
+                if(event.keyCode=='9') { //9 is the tab key
+                    var lastChar = parseInt(event.target.id.charAt(event.target.id.length-1));
+                    if (lastChar == 1) {
+                        $("#volume-threshold").focus();
+                    } else if (lastChar == 2) {
+                        $("#location-input-" + (lastChar+1)).focus();
+                    } else if (lastChar == 3) {
+                        $("#profit-threshold").focus();
+                    }
+                }
+            });
+
             $(".loadingIcon").remove();
             $("header").css("opacity", 1);
 
         }
     }, 1000);
+}
+
+function newStationToList() {
+
+    var li = document.createElement("li");
+    var inputValue = universeList[$("#end_station input")[0].value.toLowerCase()].name;
+    var t = document.createTextNode(inputValue);
+
+    if (addedToList.indexOf(inputValue) == -1) {
+        addedToList.push(inputValue);
+
+        li.appendChild(t);
+        if (inputValue === '') {
+            alert("You must choose a station!");
+        } else {
+            document.getElementById("custom_route_end").style.display = "block";
+            document.getElementById("custom_route_end").appendChild(li);
+        }
+
+        $("#end_station input")[0].value = "";
+        $("#end_station input")[1].value = "";
+
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode(" \u00D7");
+        span.className = "closeStation";
+        span.title = "Remove: " + inputValue;
+        span.appendChild(txt);
+        li.appendChild(span);
+    }
+
+    var close = document.getElementsByClassName("closeStation");
+    var i;
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function () {
+            var data = $(this)[0].previousSibling.data;
+            addedToList[addedToList.indexOf(data)] = "";
+            $(this.parentElement).remove();
+        }
+    }
 }
 
 function onClickListeners() {
@@ -339,7 +403,6 @@ function setRouteTradingLocations() {
 
             var universeItem = universeList[endLocation];
 
-
             endCoordinate.region = universeItem.region;
             endCoordinate.station = universeItem.station;
             endCoordinate.name = universeItem.name;
@@ -350,6 +413,19 @@ function setRouteTradingLocations() {
                 existingEndpoints.push(endCoordinate.station);
             }
         });
+
+        var universeItem = universeList[$("#end_station input")[0].value.toLowerCase()];
+
+        var endCoordinate = {};
+        endCoordinate.region = universeItem.region;
+        endCoordinate.station = universeItem.station;
+        endCoordinate.name = universeItem.name;
+
+        if (endCoordinate.station != start_station && existingEndpoints.indexOf(endCoordinate.station) == -1) {
+            endLocations.push(endCoordinate.name);
+            endCoordinates.push(endCoordinate);
+            existingEndpoints.push(endCoordinate.station);
+        }
     }
 
     startCoordinates.region = start_region;
@@ -486,47 +562,5 @@ function hideError(){
     if(errorShown){
         $("#connectEVE").slideToggle();
         errorShown = false;
-    }
-}
-
-
-var addedToList = [];
-
-function newStationToList() {
-
-    var li = document.createElement("li");
-    var inputValue = universeList[$("#end_station input")[0].value.toLowerCase()].name;
-    var t = document.createTextNode(inputValue);
-
-    if (addedToList.indexOf(inputValue) == -1) {
-        addedToList.push(inputValue);
-
-        li.appendChild(t);
-        if (inputValue === '') {
-            alert("You must choose a station!");
-        } else {
-            document.getElementById("custom_route_end").style.display = "block";
-            document.getElementById("custom_route_end").appendChild(li);
-        }
-
-        $("#end_station input")[0].value = "";
-        $("#end_station input")[1].value = "";
-
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode(" \u00D7");
-        span.className = "closeStation";
-        span.title = "Remove: " + inputValue;
-        span.appendChild(txt);
-        li.appendChild(span);
-    }
-
-    var close = document.getElementsByClassName("closeStation");
-    var i;
-    for (i = 0; i < close.length; i++) {
-        close[i].onclick = function () {
-            var data = $(this)[0].previousSibling.data;
-            addedToList[addedToList.indexOf(data)] = "";
-            $(this.parentElement).remove();
-        }
     }
 }

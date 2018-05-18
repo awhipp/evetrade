@@ -355,9 +355,15 @@ tr > td:first-child {
   }
 
   #custom_station, #start_station, #end_station {
-      width: 800px;
+      max-width: 100%;
       margin: 0 auto;
   }
+
+.standard {
+    width: 800px;
+    max-width: 100%;
+    margin: 0 auto;
+}
 
     #custom_station input[type="text"], #start_station input[type="text"], #end_station input[type="text"] {
         text-align: left !important;
