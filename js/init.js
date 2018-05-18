@@ -416,15 +416,17 @@ function setRouteTradingLocations() {
 
         var universeItem = universeList[$("#end_station input")[0].value.toLowerCase()];
 
-        var endCoordinate = {};
-        endCoordinate.region = universeItem.region;
-        endCoordinate.station = universeItem.station;
-        endCoordinate.name = universeItem.name;
+        if (universeItem) {
+            var endCoordinate = {};
+            endCoordinate.region = universeItem.region;
+            endCoordinate.station = universeItem.station;
+            endCoordinate.name = universeItem.name;
 
-        if (endCoordinate.station != start_station && existingEndpoints.indexOf(endCoordinate.station) == -1) {
-            endLocations.push(endCoordinate.name);
-            endCoordinates.push(endCoordinate);
-            existingEndpoints.push(endCoordinate.station);
+            if (endCoordinate.station != start_station && existingEndpoints.indexOf(endCoordinate.station) == -1) {
+                endLocations.push(endCoordinate.name);
+                endCoordinates.push(endCoordinate);
+                existingEndpoints.push(endCoordinate.station);
+            }
         }
     }
 
