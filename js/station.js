@@ -16,9 +16,7 @@ function Station(stationLocation) {
 
     this.totalProgress = 0;
     this.itemIds = [];
-    this.executingCount = 0;
     this.secondsToRefresh = 60;
-    this.tableCreated = false;
     this.filtered = false;
     this.filterCount = 0;
 
@@ -26,6 +24,8 @@ function Station(stationLocation) {
     this.asyncCalculator = null;
     this.asyncFilter = null
     this.asyncRefresher = null;
+
+    routes.push(this);
 }
 
 Station.prototype.className = function() {
@@ -36,8 +36,6 @@ Station.prototype.className = function() {
  * Begins the process for finding station information and displaying the best trades for the station.
  */
 Station.prototype.startStation = function() {
-    thiz = this;
-
     var page;
     var regionId = parseInt(this.stationLocation.region);
     var stationId = parseInt(this.stationLocation.station);
@@ -54,6 +52,7 @@ Station.prototype.startStation = function() {
  * Asynchronous checking function that periodically checks all of the orders to ensure they are still running
  */
 Station.prototype.asyncCheck = function() {
+    var thiz = this;
     this.asyncChecker = setInterval(function(){
         thiz.executeOrders();
     }, 1000);
@@ -145,6 +144,7 @@ Station.prototype.incrementProgress = function(composite, page) {
  */
 Station.prototype.getOrders = function(region, station, page, composite, orderType) {
     var url = this.marketEndpointBuilder(region, page, orderType);
+    var thiz = this;
 
     if(!composite.completePages[page]) {
         $.ajax({
@@ -248,19 +248,6 @@ Station.prototype.executeOrders = function() {
     }
 };
 
-/**
- * Refreshes and re-reruns the query.
- */
-Station.prototype.refresh = function() {
-    $('#noselect-object').html('<table id="dataTable" class="display"></table>');
-    $(".dataTables_filter").remove();
-    $(".dt-buttons").remove();
-    $("#refresh-button").remove();
-    iteration += 1;
-    this.clear();
-    init();
-};
-
 Station.prototype.clear = function() {
     this.stationLocation = null;
 
@@ -273,9 +260,7 @@ Station.prototype.clear = function() {
 
     this.totalProgress = 0;
     this.itemIds = [];
-    this.executingCount = 0;
     this.secondsToRefresh = 60;
-    this.tableCreated = false;
     this.filtered = false;
     this.filterCount = 0;
 
@@ -289,12 +274,13 @@ Station.prototype.clear = function() {
  * The asynchronous function that calculated when a refresh can occur.
  */
 Station.prototype.asyncRefresh = function() {
+    var thiz = this;
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh-timer").remove();
             $("#buyingFooter").append('<div id="refresh-button">' +
-                '<input type="button" class="btn btn-default" onclick="thiz.refresh()" value="Refresh Table with Last Query"/>' +
+                '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
             $("#refresh-timer").html("<br><p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
@@ -307,14 +293,15 @@ Station.prototype.asyncRefresh = function() {
  * The function that asynchronously calculates trades.
  */
 Station.prototype.asyncCalculate = function() {
+    var thiz = this;
     this.asyncCalculator = setInterval(function(){
-        while(thiz.itemIds.length != 0 && thiz.executingCount < 1500){
-            thiz.executingCount++;
+        while(thiz.itemIds.length != 0 && executingCount < 1500){
+            executingCount++;
             var itemId = thiz.itemIds.splice(0, 1)[0];
             thiz.calculateNext(itemId);
         }
 
-        if(thiz.itemIds.length == 0 && thiz.executingCount <= 0) {
+        if(thiz.itemIds.length == 0 && executingCount <= 0) {
             clearInterval(thiz.asyncCalculator);
 
             $(".loading").text("No trades found for your filters.");
@@ -332,14 +319,13 @@ Station.prototype.asyncCalculate = function() {
  */
 Station.prototype.calculateNext = function(itemId) {
 
-    var buyPrice = getMarketData(this.allOrders[itemId], this.stationLocation.station, SELL_ORDER, itemId);
+    var buyPrice = getMarketData(this.allOrders[itemId], this.stationLocation.station, SELL_ORDER, itemId, false);
 
     if (buyPrice.length > 0) {
         var executed = false;
 
-
         if(this.allOrders[itemId]){
-            var sellPrice = getMarketData(this.allOrders[itemId], this.stationLocation.station, BUY_ORDER, itemId);
+            var sellPrice = getMarketData(this.allOrders[itemId], this.stationLocation.station, BUY_ORDER, itemId, false);
             if(sellPrice.length > 0){
                 executed = true;
 
@@ -348,10 +334,10 @@ Station.prototype.calculateNext = function(itemId) {
         }
 
         if(!executed){
-            this.executingCount--;
+            executingCount--;
         }
     } else {
-        this.executingCount--;
+        executingCount--;
     }
 };
 
@@ -383,11 +369,12 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
         row.itemId = itemId;
         this.getItemVolume(itemId, row);
     }else {
-        this.executingCount--;
+        executingCount--;
     }
 };
 
 Station.prototype.asyncFiltering = function() {
+    var thiz = this;
     this.asyncFilter = setInterval(function(){
             thiz.filterCount += 1;
             var ellipses = "";
@@ -397,7 +384,7 @@ Station.prototype.asyncFiltering = function() {
 
             $("#filtering-data").html("<b>Filtering Results. Please wait" + ellipses + "</b></br>If it takes too long try a smaller margin range.");
 
-            if(thiz.executingCount == 0) {
+            if(executingCount == 0) {
                 clearInterval(thiz.asyncFilter);
                 $("#filtering-data").remove();
             }
@@ -413,6 +400,7 @@ Station.prototype.getItemVolume = function(itemId, row){
     }
 
     var url = this.getVolumeEndpointBuilder(itemId);
+    var thiz = this;
     $.ajax({
         type: "get",
         url: url,
@@ -426,17 +414,17 @@ Station.prototype.getItemVolume = function(itemId, row){
                 if(row.volume >= volume_threshold){
                     thiz.getItemWeight(itemId, row);
                 }else{
-                    thiz.executingCount--;
+                    executingCount--;
                 }
             }else{
-                thiz.executingCount--;
+                executingCount--;
             }
         },
         error: function (request, error) {
             if(request.status != 404 && request.statusText !== "parsererror") {
                 thiz.getItemVolume(itemId, row);
             } else {
-                thiz.executingCount--;
+                executingCount--;
             }
         }
     });
@@ -449,8 +437,9 @@ Station.prototype.getItemWeight = function(itemId, row){
 
         this.addRow(row);
 
-        this.executingCount--;
+        executingCount--;
     }else{
+        var thiz = this;
         var url = this.getWeightEndpointBuilder(itemId);
         $.ajax({
             type: "get",
@@ -460,7 +449,7 @@ Station.prototype.getItemWeight = function(itemId, row){
             cache: false,
             contentType: "application/json",
             success: function(weightData) {
-                thiz.executingCount--;
+                executingCount--;
 
                 var name = weightData.name;
 
@@ -475,7 +464,7 @@ Station.prototype.getItemWeight = function(itemId, row){
                 if(request.status != 404 && request.statusText !== "parsererror") {
                     thiz.getItemWeight(itemId, row);
                 } else {
-                    thiz.executingCount--;
+                    executingCount--;
                 }
             }
         });
@@ -488,7 +477,7 @@ Station.prototype.addRow = function(row) {
     var margin = (row.sellPrice - row.buyPrice) / row.sellPrice;
     margin = (margin.toFixed(3)*100).toFixed(1)+"%";
 
-    if(!this.tableCreated) {
+    if(!tableCreated) {
         this.createTable();
     }
 
@@ -505,7 +494,9 @@ Station.prototype.addRow = function(row) {
 };
 
 Station.prototype.createTable = function() {
-    this.tableCreated = true;
+    tableCreated = true;
+
+    $(".deal_note").hide();
     // sorting on margin index
     dt = $('#dataTable').DataTable({
         "order": [[ 5, "desc" ]],

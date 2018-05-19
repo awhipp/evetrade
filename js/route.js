@@ -1,3 +1,5 @@
+var routes = [];
+
 /**
  * Creates a Route object
  *
@@ -15,17 +17,18 @@ function Route(startLocation, endLocations) {
     this.buyOrders.pageBookend = PAGE_MULTIPLE;
 
     this.sellOrders = {};
-    this.itemCache = {};
 
     this.totalProgress = 0;
     this.itemIds = [];
-    this.executingCount = 0;
     this.secondsToRefresh = 60;
-    this.tableCreated = false;
 
-    this.asyncChecker = null;
-    this.asyncCalculator = null;
     this.asyncRefresher = null;
+    this.asyncProgressUpdate = null;
+
+    this.completed = false;
+
+    routes.push(this);
+    this.routeId = routes.length-1;
 }
 
 Route.prototype.className = function() {
@@ -37,8 +40,6 @@ Route.prototype.className = function() {
  * Begins the process for finding route information and displaying the best trades for the route.
  */
 Route.prototype.startRoute = function() {
-    thiz = this;
-
     var page;
     var regionId = parseInt(this.startLocation.region);
     var stationId = parseInt(this.startLocation.station);
@@ -47,31 +48,25 @@ Route.prototype.startRoute = function() {
         this.getSellOrders(regionId, stationId, page, this.buyOrders);
     }
 
+    var rI = 0;
     for(var i = 0; i < this.endLocations.length; i++){
-        this.sellOrders[i] = {};
-        this.sellOrders[i].completePages = [];
-        this.sellOrders[i].complete = false;
-        this.sellOrders[i].pageBookend = PAGE_MULTIPLE;
+        if(this.endLocations[i].station !== this.startLocation.station) {
+            this.sellOrders[rI] = {};
+            this.sellOrders[rI].completePages = [];
+            this.sellOrders[rI].complete = false;
+            this.sellOrders[rI].pageBookend = PAGE_MULTIPLE;
 
-        regionId = parseInt(this.endLocations[i].region);
-        stationId = parseInt(this.endLocations[i].station);
+            regionId = parseInt(this.endLocations[i].region);
+            stationId = parseInt(this.endLocations[i].station);
 
-        for(page = 1; page <= PAGE_MULTIPLE; page++){
-            this.getBuyOrders(regionId, stationId, page, this.sellOrders[i]);
+            for(page = 1; page <= PAGE_MULTIPLE; page++){
+                this.getBuyOrders(regionId, stationId, page, this.sellOrders[rI]);
+            }
+            rI += 1;
         }
     }
 
     $("#selection").hide();
-    this.asyncCheck();
-};
-
-/**
- * Asynchronous checking function that periodically checks all of the orders to ensure they are still running
- */
-Route.prototype.asyncCheck = function() {
-    this.asyncChecker = setInterval(function(){
-        thiz.executeOrders();
-    }, 1000);
 };
 
 /**
@@ -113,11 +108,15 @@ Route.prototype.getWeightEndpointBuilder = function(itemId) {
 Route.prototype.recalculateProgress = function() {
     var progressUpdate = this.getNumberOfCompletePages(this.buyOrders);
 
+    var rI = 0;
     for (var i = 0; i < this.endLocations.length; i++) {
-        progressUpdate += this.getNumberOfCompletePages(this.sellOrders[i]);
+        if(this.endLocations[i].station !== this.startLocation.station) {
+            progressUpdate += this.getNumberOfCompletePages(this.sellOrders[rI]);
+            rI += 1;
+        }
     }
 
-    return progressUpdate === 0 ? 1 : progressUpdate;
+    return progressUpdate <= 0 ? 1 : 35.0 * Math.log10(progressUpdate);
 };
 
 /**
@@ -128,12 +127,7 @@ Route.prototype.recalculateProgress = function() {
  */
 Route.prototype.incrementProgress = function(composite, page) {
 
-    if(this.totalProgress !== 100) {
-        this.totalProgress = 35.0 * Math.log10(this.recalculateProgress());
-        this.totalProgress = this.totalProgress > 100 ? 100 : this.totalProgress;
-
-        $(".loading").html("<b>Getting orders: " + this.totalProgress.toFixed(2) + "% complete</b>");
-    }
+    getTotalProgress();
 
     composite.completePages[page] = true;
 };
@@ -172,7 +166,9 @@ Route.prototype.getSellOrders = function(region, station, page, composite) {
  * @param orderType The order type to get orders for.
  */
 Route.prototype.getOrders = function(region, station, page, composite, orderType) {
+
     var url = this.marketEndpointBuilder(region, page, orderType);
+    var thiz = this;
 
     if(!composite.completePages[page]) {
         $.ajax({
@@ -205,6 +201,8 @@ Route.prototype.getOrders = function(region, station, page, composite, orderType
                         for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
                             thiz.getOrders(region, station, _page, composite, orderType);
                         }
+                    } else {
+                        thiz.executeOrders();
                     }
                 }
 
@@ -220,6 +218,8 @@ Route.prototype.getOrders = function(region, station, page, composite, orderType
                     for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
                         thiz.getOrders(region, station, _page, composite, orderType);
                     }
+                } else {
+                    thiz.executeOrders();
                 }
             }
         });
@@ -252,9 +252,14 @@ Route.prototype.checkOrdersComplete = function() {
     var orderFull = (this.getNumberOfCompletePages(this.buyOrders) === this.buyOrders.pageBookend);
     var ordersComplete = this.buyOrders.complete;
 
+    // running index
+    var rI = 0;
     for (var i = 0; i < this.endLocations.length; i++) {
-        orderFull = orderFull && (this.getNumberOfCompletePages(this.sellOrders[i]) === this.sellOrders[i].pageBookend);
-        ordersComplete = ordersComplete && this.sellOrders[i].complete;
+        if(this.endLocations[i].station !== this.startLocation.station) {
+            orderFull = orderFull && (this.getNumberOfCompletePages(this.sellOrders[rI]) === this.sellOrders[rI].pageBookend);
+            ordersComplete = ordersComplete && this.sellOrders[rI].complete;
+            rI += 1;
+        }
     }
 
     return (orderFull && ordersComplete);
@@ -265,8 +270,6 @@ Route.prototype.checkOrdersComplete = function() {
  */
 Route.prototype.executeOrders = function() {
     if (this.checkOrdersComplete()) {
-
-        clearInterval(this.asyncChecker);
         hideError();
 
         for(itemId in this.buyOrders){
@@ -274,24 +277,8 @@ Route.prototype.executeOrders = function() {
                 this.itemIds.push(itemId);
         }
 
-        this.totalProgress = 100;
-        $(".loading").text("Getting orders: " + this.totalProgress.toFixed(2) + "% complete");
-
-        this.asyncCalculate();
+        this.calculate();
     }
-};
-
-/**
- * Refreshes and re-reruns the query.
- */
-Route.prototype.refresh = function() {
-    $('#noselect-object').html('<table id="dataTable" class="display"></table>');
-    $(".dataTables_filter").remove();
-    $(".dt-buttons").remove();
-    $("#refresh-button").remove();
-    iteration += 1;
-    this.clear();
-    init();
 };
 
 Route.prototype.clear = function() {
@@ -304,29 +291,25 @@ Route.prototype.clear = function() {
     this.buyOrders.pageBookend = PAGE_MULTIPLE;
 
     this.sellOrders = {};
-    this.itemCache = {};
 
-    this.totalProgress = 0;
     this.itemIds = [];
-    this.executingCount = 0;
     this.secondsToRefresh = 60;
-    this.tableCreated = false;
 
-    clearInterval(this.asyncChecker);
-    clearInterval(this.asyncCalculator);
     clearInterval(this.asyncRefresher);
+    clearInterval(this.asyncProgressUpdate);
 };
 
 /**
  * The asynchronous function that calculated when a refresh can occur.
  */
 Route.prototype.asyncRefresh = function() {
+    var thiz = this;
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh-timer").remove();
             $("#buyingFooter").append('<div id="refresh-button">' +
-                '<input type="button" class="btn btn-default" onclick="thiz.refresh()" value="Refresh Table with Last Query"/>' +
+                '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
             $("#refresh-timer").html("<br><p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
@@ -335,26 +318,44 @@ Route.prototype.asyncRefresh = function() {
     }, 1000);
 };
 
+Route.prototype.asyncProgress = function() {
+    var thiz = this;
+    this.asyncProgressUpdate = setInterval(function() {
+        getTotalProgress();
+
+        if (totalProgress == 100) {
+            clearInterval(thiz.asyncProgressUpdate);
+
+            if (rowAdded) {
+                $(".loading").hide();
+            }
+
+            $("#buyingFooter").append('<div id="refresh-timer"></div>');
+
+            if (!createdRefresher) {
+                createdRefresher = true;
+                thiz.asyncRefresh();
+            }
+        }
+    }, 2500);
+};
+
 /**
  * The function that asynchronously calculates trades.
  */
-Route.prototype.asyncCalculate = function() {
-    this.asyncCalculator = setInterval(function(){
-        while(thiz.itemIds.length != 0 && thiz.executingCount < 1500){
-            thiz.executingCount++;
-            var itemId = thiz.itemIds.splice(0, 1)[0];
-            thiz.calculateNext(itemId);
+Route.prototype.calculate = function() {
+    this.asyncProgress();
+
+    while(this.itemIds.length != 0){
+        executingCount++;
+        var itemId = this.itemIds.splice(0, 1)[0];
+        if(this.itemIds.length == 0) {
+            this.completed = true;
         }
+        this.calculateNext(itemId);
+    }
 
-        if(thiz.itemIds.length == 0 && thiz.executingCount <= 0) {
-            clearInterval(thiz.asyncCalculator);
 
-            $(".loading").text("No trades found for your filters.");
-            $("#buyingFooter").append('<div id="refresh-timer"></div>');
-
-            thiz.asyncRefresh();
-        }
-    }, 1000);
 };
 
 /**
@@ -364,33 +365,37 @@ Route.prototype.asyncCalculate = function() {
  */
 Route.prototype.calculateNext = function(itemId) {
 
-    var buyPrice = getMarketData(this.buyOrders[itemId], this.startLocation.station, SELL_ORDER, itemId);
+    var buyPrice = getMarketData(this.buyOrders[itemId], this.startLocation.station, SELL_ORDER, itemId, true);
 
     if (buyPrice.length > 0) {
         var executed = false;
 
+        var rI = 0;
         for(var i = 0; i < this.endLocations.length; i++){
-            var sellOrder = this.sellOrders[i];
-            var endLocation = this.endLocations[i];
+            if(this.endLocations[i].station !== this.startLocation.station) {
+                var sellOrder = this.sellOrders[rI];
+                var endLocation = this.endLocations[i];
 
-            if(sellOrder[itemId]){
-                var sellPrice = getMarketData(sellOrder[itemId], endLocation.station, BUY_ORDER, itemId);
-                if(sellPrice.length > 0){
-                    var locationInfo = {};
-                    locationInfo.region = endLocation.region;
-                    locationInfo.station = endLocation.station;
-                    executed = true;
+                if (sellOrder[itemId]) {
+                    var sellPrice = getMarketData(sellOrder[itemId], endLocation.station, BUY_ORDER, itemId, true);
+                    if (sellPrice.length > 0) {
+                        var locationInfo = {};
+                        locationInfo.region = endLocation.region;
+                        locationInfo.station = endLocation.station;
+                        executed = true;
 
-                    this.getItemInfo(itemId, buyPrice, sellPrice, locationInfo);
+                        this.getItemInfo(itemId, buyPrice, sellPrice, locationInfo);
+                    }
                 }
+                rI += 1;
             }
         }
 
         if(!executed){
-            this.executingCount--;
+            executingCount--;
         }
     } else {
-        this.executingCount--;
+        executingCount--;
     }
 };
 
@@ -410,7 +415,7 @@ Route.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, locationInfo
         rows = rows.sort(bestRowComparator);
         this.getItemWeight(itemId, this.createRowObject(rows[0]));
     }else {
-        this.executingCount--;
+        executingCount--;
     }
 };
 
@@ -445,17 +450,18 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
 
 Route.prototype.getItemWeight = function(itemId, row){
 
-    if(this.itemCache[itemId]){
-        var name = this.itemCache[itemId].name;
-        var weight = this.itemCache[itemId].weight;
+    if(itemCache[itemId]){
+        var name = itemCache[itemId].name;
+        var weight = itemCache[itemId].weight;
 
         row.itemName = name;
         row.itemWeight = weight;
 
         this.addRow(row);
 
-        this.executingCount--;
+        executingCount--;
     }else{
+        var thiz = this;
         var url = this.getWeightEndpointBuilder(itemId);
         $.ajax({
             type: "get",
@@ -465,14 +471,14 @@ Route.prototype.getItemWeight = function(itemId, row){
             cache: false,
             contentType: "application/json",
             success: function(weightData) {
-                thiz.executingCount--;
+                executingCount--;
 
                 var name = weightData.name;
                 var weight = weightData.packaged_volume;
 
-                thiz.itemCache[itemId] = {};
-                thiz.itemCache[itemId].name = name;
-                thiz.itemCache[itemId].weight = weight;
+                itemCache[itemId] = {};
+                itemCache[itemId].name = name;
+                itemCache[itemId].weight = weight;
 
                 row.itemName = name;
                 row.itemWeight = weight;
@@ -483,7 +489,7 @@ Route.prototype.getItemWeight = function(itemId, row){
                 if(request.status != 404 && request.statusText !== "parsererror") {
                     thiz.getItemWeight(itemId, row);
                 } else {
-                    thiz.executingCount--;
+                    executingCount--;
                 }
             }
         });
@@ -512,17 +518,27 @@ Route.prototype.addRow = function(row) {
         return;
     }
 
-    var uniqueRowId = row.itemId + "_" + row.sellToStation.station;
+    if(isSpamItem(row.itemName)) {
+        return;
+    }
 
-    if(!this.tableCreated) {
+
+    if(!tableCreated) {
         this.createTable();
     }
 
-    var investigateId = uniqueRowId + "_investigate";
+    var investigateId = row.sellToStation.station + this.startLocation.station + row.itemId + "_investigate";
 
     var row_data = [
-        "<span id='"+ investigateId +"' title='All Orders for " + row.itemName + "'><i class='fa fa-search-plus'></i></span>",
+        "<span id=\""+ investigateId +"\"" +
+        "data-itemId=\"" + row.itemId + "\"" +
+        "data-itemName=\"" + row.itemName + "\"" +
+        "data-routeId=\"" + this.routeId + "\"" +
+        "data-sellStationId=\"" + row.sellToStation.station + "\">" +
+        "<i class=\"fa fa-search-plus\"></i>" +
+        "</span>",
         row.itemName,
+        this.startLocation.name,
         numberWithCommas(row.quantity),
         numberWithCommas(row.buyPrice.toFixed(2)),
         numberWithCommas(row.buyCost.toFixed(2)),
@@ -535,113 +551,32 @@ Route.prototype.addRow = function(row) {
     ];
 
     var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
-    var tableRow = $('#dataTable').dataTable().fnGetNodes(rowIndex);
-
-    $(tableRow).attr('id', uniqueRowId + "_" + $("." + uniqueRowId).length);
-    $(tableRow).addClass(uniqueRowId);
+    $('#dataTable').dataTable().fnGetNodes(rowIndex);
 
     $("#" + investigateId).on('click', function(){
-        open_popup(row.itemId, row.itemName, row.sellToStation.station);
+        var popId = parseInt(this.dataset.itemid);
+        var popName = this.dataset.itemname;
+        var popFrom = routes[parseInt(this.dataset.routeid)].startLocation;
+        var popTo = parseInt(this.dataset.sellstationid);
+
+        open_popup(popId, popName, popFrom, popTo);
     });
+
+    rowAdded = true;
 };
 
 Route.prototype.createTable = function() {
-    this.tableCreated = true;
-
-    // sorting on total profit
-    var dt = $('#dataTable').DataTable({
-        "order": [[ 7, "desc" ]],
-        "lengthMenu": [[-1], ["All"]],
-        responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ],
-        "columnDefs": [{
-            "targets": 0,
-            "orderable": false
-        }]
-    });
-
-    // for each column in header add a togglevis button in the div
-    var li_counter = 0;
-    $("#dataTable thead th").each( function ( i ) {
-        var name = dt.column( i ).header();
-        var spanelt = document.createElement( "button" );
-        spanelt.innerHTML = name.innerHTML;
-
-        $(spanelt).addClass("colvistoggle");
-        $(spanelt).addClass("btn");
-        $(spanelt).addClass("btn-default");
-        $(spanelt).attr("colidx",i);    // store the column idx on the button
-
-        $(spanelt).addClass("is-true");
-        var column = dt.column( $(spanelt).attr('colidx') );
-        column.visible( true );
-
-        $(spanelt).on( 'click', function (e) {
-            e.preventDefault();
-            // Get the column API object
-            var column = dt.column( $(this).attr('colidx') );
-            // Toggle the visibility
-            $(this).removeClass("is-"+column.visible());
-            column.visible( ! column.visible() );
-            $(this).addClass("is-"+column.visible());
-
-        });
-        var li = document.createElement("li");
-        $(li).append($(spanelt));
-        $("#colvis").append($(li));
-    });
-
+    tableCreated = true;
     $("#show-hide").show();
-
-    // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
-    $('.dropdown').on('show.bs.dropdown', function(e){
-        $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
-    });
-
-    // ADD SLIDEUP ANIMATION TO DROPDOWN //
-    $('.dropdown').on('hide.bs.dropdown', function(e){
-        $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
-    });
-
-    $('#dataTable tbody').on('mousedown', 'tr', function (event) {
-        var investigateButton = (event.target.id.indexOf("investigate") >= 0
-        || (event.target.children[0] && event.target.children[0].id.indexOf("investigate") >= 0)
-        || (event.target.classList.contains("fa")));
-
-        if(event.which === 1 && !investigateButton){
-            if(event.ctrlKey){
-                var classToFind = $(this).attr('id').split("_")[0] + "_" + $(this).attr('id').split("_")[1]
-                if(!$(this).hasClass("row-selected")){
-                    $.each($("."+classToFind), function(){
-                        $(this).addClass("row-selected");
-                    })
-                }else{
-                    $.each($("."+classToFind), function(){
-                        $(this).removeClass("row-selected");
-                    })
-                }
-            }else if(event.shiftKey){
-                open_popup($(this).attr('id').split("_")[0], $(this).children()[0].textContent, parseInt($(this).attr('id').split("_")[1]));
-            }else{
-                if(!$(this).hasClass("row-selected")){
-                    $(this).addClass("row-selected");
-                }else{
-                    $(this).removeClass("row-selected");
-                }
-            }
-        }
-    } );
-    $("label > input").addClass("form-control").addClass("minor-text");
-    $("label > input").attr("placeholder", "Search Results...");
-    $(".loading").hide();
     $('#dataTable').show();
     $(".data_options").append($("#dataTable_filter"));
 
     $(".data_options").append($(".dt-buttons"));
     $(".dt-button").addClass("btn");
     $(".dt-button").addClass("btn-default");
-    $("#core").css('display','block');
+
+    $(".deal_note").hide();
+    $("#core input").css('display','block');
+    $("#core a").css('display','inline-block');
+    $("#core").show();
 };

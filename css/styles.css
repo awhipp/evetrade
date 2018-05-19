@@ -40,18 +40,28 @@ header {
 }
 
 .announcement {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  text-align: center;
-  width: 100%;
-  padding: 1em;
-  background: #f7f7f7;
-  font-weight: bold;
-  border: darkred 2px solid;
-  display: none;
-  z-index:1000;
-  color: darkred;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    padding: 1em;
+    background: black;
+    border-top: #00aeff 2px solid;
+    display: none;
+    z-index: 1000;
+    color: white;
+}
+
+.announcement-selection {
+    text-align: left;
+    width: 100%;
+    padding: 1em;
+    background: rgba(0,0,0,0.8);
+    border: #00aeff 2px solid;
+    color: #eee;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .announcement > a {
@@ -169,6 +179,10 @@ section {
 /** END CORE **/
 
 /** START DATATABLES **/
+
+#core input, #core a {
+    display: none;
+}
 
 .dt-buttons {
   text-align: center;
@@ -359,42 +373,60 @@ tr > td:first-child {
       margin: 0 auto;
   }
 
-.standard {
-    width: 800px;
-    max-width: 100%;
-    margin: 0 auto;
-}
+    .standard {
+        width: 800px;
+        max-width: 100%;
+        margin: 0 auto;
+    }
 
-    #custom_station input[type="text"], #start_station input[type="text"], #end_station input[type="text"] {
+    #custom_station input[type="text"], #start_station input[type="text"], #end_station input[type="text"], #start_station input[type="text"] {
         text-align: left !important;
         max-width: unset !important;
-        padding: 0 1em !important;
+        padding: 0 100px 0 1em !important;
     }
 
   /** START CUSTOM FEATURE **/
-  #custom_route_end{
-      max-height: 250px;
+  #custom_route_end, #custom_route_start{
       height: auto;
-      overflow: scroll;
       text-align: center;
       max-width: 700px;
       margin: 0 auto;
       background: rgba(0,0,0,0.5);
       color: white !important;
-      overflow-x: hidden;
+      overflow: hidden;
       display: none;
   }
 
-  #custom_route_end > li{
+  #custom_route_end > li, #custom_route_start > li{
       list-style: none;
       white-space: nowrap;
       text-overflow: ellipsis;
       width: 100%;
       overflow: hidden;
   }
-  #custom_route_end input{
+  #custom_route_end input, #custom_route_start input {
     margin: 4px;
   }
+
+  #addingToStartStationList, #addingToEndStationList {
+      position: relative;
+  }
+
+  .add-station-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 0 !important;
+      height: 100%;
+      line-height: 0;
+      background: black !important;
+      border: 1px solid #999 !important;
+      border-radius: 0 !important;
+  }
+
+.add-station-button:hover {
+    background: #999 !important;
+}
 
   .custom_switcher input{
     width: auto !important;

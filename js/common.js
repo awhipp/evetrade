@@ -1,5 +1,3 @@
-var thiz;
-
 var BUY_ORDER = "buy";
 var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
@@ -7,10 +5,16 @@ var ESI_ENDPOINT = "https://esi.evetech.net";
 
 var PAGE_MULTIPLE = 50;
 
-var customBuy = [];
-var customSell = [];
+var tableCreated = false;
+var createdRefresher = false;
+var totalProgress = 0;
+var executingCount = 0;
+var customBuy = {};
+var customSell = {};
+var itemCache = {};
 var page = 1;
 var iteration = 1;
+var rowAdded = false;
 
 function getMarketData(data, stationId, orderType, itemId){
     var tempArray;
@@ -41,7 +45,7 @@ function getMarketData(data, stationId, orderType, itemId){
  * @param itemId The itemId in question
  * @returns {Array} The best price
  */
-function getBestMarketPrice(orders, stationId, orderType, itemId) {
+function getBestMarketPrice(orders, stationId, orderType, itemId, isRoute) {
     var bestPrice = [];
 
     // Pull all orders found and start iteration
@@ -64,10 +68,12 @@ function getBestMarketPrice(orders, stationId, orderType, itemId) {
 
     /** Selling to Users at this price - ordered high to low **/
     if (orderType == SELL_ORDER){
+        var sellOrderComparator = isRoute ? sellOrderComparatorRoute : sellOrderComparatorStation;
         bestPrice = bestPrice.sort(sellOrderComparator);
         saveSellOrderData(stationId, itemId, $.extend(true, [], bestPrice));
         /** Buying from Users at this price - ordered low to high **/
     }else {
+        var buyOrderComparator = isRoute ? buyOrderComparatorRoute : buyOrderComparatorStation;
         bestPrice = bestPrice.sort(buyOrderComparator);
         saveBuyOrderData(stationId, itemId, $.extend(true, [], bestPrice));
     }
@@ -89,18 +95,27 @@ function saveBuyOrderData(stationId, itemId, data){
     customSell[stationId][itemId] = data;
 }
 
-function sellOrderComparator(a,b){
-    var stationFlip = thiz.className() === "Route" ? 1 : -1;
-    if (a[0] > b[0]) return -1 * stationFlip;
-    if (a[0] < b[0]) return stationFlip;
+function sellOrderComparatorRoute(a,b){
+    if (a[0] > b[0]) return -1;
+    if (a[0] < b[0]) return 1;
     return 0;
 }
 
-function buyOrderComparator(a,b){
-    var stationFlip = thiz.className() === "Route" ? 1 : -1;
+function buyOrderComparatorRoute(a,b){
+    if (a[0] > b[0]) return 1;
+    if (a[0] < b[0]) return -1;
+    return 0;
+}
 
-    if (a[0] > b[0]) return stationFlip;
-    if (a[0] < b[0]) return -1 * stationFlip;
+function sellOrderComparatorStation(a,b){
+    if (a[0] > b[0]) return 1;
+    if (a[0] < b[0]) return -1;
+    return 0;
+}
+
+function buyOrderComparatorStation(a,b){
+    if (a[0] > b[0]) return -1;
+    if (a[0] < b[0]) return 1;
     return 0;
 }
 
@@ -128,4 +143,66 @@ function numberWithCommas(val) {
         val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
     }
     return val;
+}
+
+function getTotalProgress() {
+    var progressUpdate = 0;
+    var allComplete = true;
+
+    for (var i = 0; i < routes.length; i++) {
+        allComplete = (allComplete && routes[i].completed);
+
+        var routeProgress = routes[i].recalculateProgress();
+        progressUpdate += routeProgress / routes.length;
+    }
+
+    if(allComplete) {
+        totalProgress = 100;
+    } else {
+        totalProgress = progressUpdate > 100 ? 100 : progressUpdate;
+    }
+
+    $(".loading").html("Fetching orders: " + totalProgress.toFixed(2) + "% complete");
+}
+
+function refresh() {
+    $('#noselect-object').html('<table id="dataTable" class="display"></table>');
+    $(".dataTables_filter").remove();
+    $(".dt-buttons").remove();
+    $("#refresh-button").remove();
+    iteration += 1;
+    for (var i = 0; i < routes.length; i++) {
+        routes[i].clear();
+    }
+
+    customBuy = [];
+    customSell = [];
+    startCoordinates = [];
+    endCoordinates = [];
+    startLocation = "";
+    addedToStartList = [];
+    addedToEndList = [];
+    endLocations = [];
+    page = 1;
+    totalProgress = 0;
+    createdRefresher = false;
+    tableCreated = false;
+
+    init();
+}
+
+var spamItems = ["ahremen's", "brokara's", "brynn's",
+    "chelm's", "cormack's", "draclira's", "estamel's",
+    "gotan's", "hakim's", "kaikka's", "mizuro's", "raysere's",
+    "selynne's", "setele's", "shaqil's", "tairei's", "thon's", "tuvan's",
+    "vizen's", "zor's"
+];
+
+function isSpamItem(name) {
+    for(var i = 0; i < spamItems.length; i++) {
+        if(name.toLowerCase().indexOf(spamItems[i]) >= 0) {
+            return true;
+        }
+    }
+    return false;
 }

@@ -84,7 +84,7 @@
                     <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="release.html" target="_blank">V4.5.2</a>
+                    <a class="nav-link" href="release.html" target="_blank">V4.6.0</a>
                 </li>
             </ul>
         </div>
@@ -104,6 +104,22 @@
                 <p>
                   <input type="button" class="btn btn-default station-trader" value="Staying in One Station"/>
                 </p>
+
+                  <br>
+
+                  <div class="announcement-selection">
+                      <p>Version 4.6.0 Released (19 May 2018):</p>
+                      <ol>
+                          <li>
+                              You may select multiple start/end locations for hauling queries!
+                              Just type a station as normal and click the &plus; button
+                              or enter key and it will be added to the search.
+                          </li>
+                          <li>
+                              Scam item's that provide unreasonable profits have been removed from searches.
+                          </li>
+                      </ol>
+                  </div>
               </div>
 
               <!-- Start Station Trading Dialogue -->
@@ -112,9 +128,7 @@
                   Station Trading
                 </h2>
                 <div class="col-md-12 col-xs-12 mx-auto">
-                    <p> Finding the most profitable items to buy low, and then sell high without leaving the station
-                      <em class="custom" style="font-size:0.9em"><br/>If nothing appears for a custom location, there might not be any deals for your station criteria.
-                        <br>It is rare to find good deals outside of the major trade hubs. You might need to relax the filters on the search.</em>
+                    <p> Finding the most profitable items to buy low, and then sell high without leaving the station.
                     </p>
                 </div>
 
@@ -161,31 +175,41 @@
 
               <!-- Start Route Trading Dialogue -->
               <div id="route_trade">
+
                 <div class="col-xs-12 mx-auto">
                   <h2> Route / Hauler Trading </h2>
-                  <p> Finding the most profitable trade routes based on given filter parameters.</p>
+                  <p> Finding the most profitable trade routes based on given filter parameters.<br>
+                      Orders change frequently. Profit is not guaranteed. Verify prices are accurate.</p>
+                    <hr>
                 </div>
 
                 <div class="col-xs-12 mx-auto">
-                  <p> Starting Station </p>
-                  <div class="standard">
-                    <div id='start_station' style='border:1px solid #999;'></div>
-                  </div>
+                    <p> Starting Station(s) </p>
+
+                    <div class="form-group standard">
+                        <div id="addingToStartStationList">
+                            <div id='start_station' style='border:1px solid #999;'></div>
+                            <input type="button" class="btn btn-default add-station-button" onclick="newStartStation()" value="&plus;">
+                        </div>
+
+                        <ul id="custom_route_start" class="location_checklist form-control">
+                        </ul>
+                    </div>
                 </div>
 
 
                 <div class="col-xs-12 mx-auto">
                   <p> End Point(s) </p>
                   <div class="form-group standard">
+                      <div id="addingToEndStationList">
+                          <div id='end_station' style='border:1px solid #999;'>
 
-                  <div id="addingToEndStationList" class="header">
-                      <div id='end_station' style='border:1px solid #999;'></div>
-                      <input type="button" class="btn btn-default" onclick="newStationToList()" value="Add Station">
-                  </div>
+                          </div>
+                          <input type="button" class="btn btn-default add-station-button" onclick="newEndStation()" value="&plus;">
+                      </div>
 
-                  <ul id="custom_route_end" class="location_checklist form-control">
-                  </ul>
-
+                      <ul id="custom_route_end" class="location_checklist form-control">
+                      </ul>
                   </div>
                 </div>
 
@@ -241,12 +265,13 @@
               </table>
           </div>
     </section>
-
     <!-- Footer -->
     <footer>
+
+
         <div class="container overflow_none">
-      			<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.5.2 | Updated 18 May 2018</a></p>
+      		<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.6.0 | Updated 19 May 2018</a></p>
             <p class="m-0 text-center text-white">&copy; 2016-2018 <a href='https://EVETrade.space'> EVE Trade</a>. All rights reserved.</p>
             <div style="position: absolute !important; top: -1000px !important; left: -1000px !important; z-index: -100 !important; width:0 !important; height: 0 !important; opacity: 0 !important;">
               <a href="https://venturefocused.com" data-ytta-id="-">Developed in part with the help of Venture Focused Consulting</a>
@@ -348,11 +373,12 @@
             <h5> Highlight an item to be tracked </h5>
             <p> Click the row </p>
 
-            <h5> View all trades between two stations </h5>
-            <p> Shift + Click the row </p>
+              <br>
 
             <h5> Sort on a column </h5>
             <p> Click the header </p>
+
+              <br>
 
             <h5> Multi-sort on an additional column </h5>
             <p> Shift + Click the header </p>
@@ -380,8 +406,12 @@
             <h5> Highlight an item to be tracked </h5>
             <p> Click the row </p>
 
+              <br>
+
             <h5> Sort on a column </h5>
             <p> Click the header </p>
+
+              <br>
 
             <h5> Multi-sort on an additional column </h5>
             <p> Shift + Click the header </p>

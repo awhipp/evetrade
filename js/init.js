@@ -8,7 +8,8 @@ var threshold_weight = 999999999999999999;
 
 var routeTrading = null;
 var errorShown = false;
-var addedToList = [];
+var addedToStartList = [];
+var addedToEndList = [];
 
 var popup_table_buy;
 var popup_table_sell;
@@ -17,11 +18,11 @@ var stations_checked = 0;
 var MAX_STATIONS = 25;
 
 var universeList = {};
-var startCoordinates;
-var endCoordinates;
-var startLocation;
-var endLocations;
 
+var startCoordinates = [];
+var endCoordinates = [];
+var startLocations = [];
+var endLocations = [];
 
 $( document ).ready(function() {
     $("#stations_remaining").text(MAX_STATIONS);
@@ -83,11 +84,18 @@ function initCompletely(domId, stationList) {
     completelyInput.options = stationList;
     completelyInput.repaint();
 
+    if (domId == "start_station") {
+        $($("#" + domId + " input")[1]).on('keydown', function (e) {
+            if (e.keyCode == 13) {
+                newStartStation();
+            }
+        });
+    }
 
     if (domId == "end_station") {
         $($("#" + domId + " input")[1]).on('keydown', function (e) {
             if (e.keyCode == 13) {
-                newStationToList();
+                newEndStation();
             }
         });
     }
@@ -170,14 +178,53 @@ function setupCustomDropdown() {
     }, 1000);
 }
 
-function newStationToList() {
-
+function newStartStation() {
     var li = document.createElement("li");
-    var inputValue = universeList[$("#end_station input")[0].value.toLowerCase()].name;
+    var inputValue = ($("#start_station input")[0].value && universeList[$("#start_station input")[0].value.toLowerCase()].name)
+        || ($("#start_station input")[1].value && universeList[$("#start_station input")[1].value.toLowerCase()].name);
     var t = document.createTextNode(inputValue);
 
-    if (addedToList.indexOf(inputValue) == -1) {
-        addedToList.push(inputValue);
+    if (addedToStartList.indexOf(inputValue) == -1) {
+        addedToStartList.push(inputValue);
+
+        li.appendChild(t);
+        if (inputValue === '') {
+            alert("You must choose a station!");
+        } else {
+            document.getElementById("custom_route_start").style.display = "block";
+            document.getElementById("custom_route_start").appendChild(li);
+        }
+
+        $("#start_station input")[0].value = "";
+        $("#start_station input")[1].value = "";
+
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode(" \u00D7");
+        span.className = "closeStation";
+        span.title = "Remove: " + inputValue;
+        span.appendChild(txt);
+        li.appendChild(span);
+    }
+
+    var close = document.getElementsByClassName("closeStation");
+    var i;
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function () {
+            var data = $(this)[0].previousSibling.data;
+            addedToStartList[addedToStartList.indexOf(data)] = "";
+            $(this.parentElement).remove();
+        }
+    }
+}
+
+function newEndStation() {
+    var li = document.createElement("li");
+    var inputValue = ($("#end_station input")[0].value && universeList[$("#end_station input")[0].value.toLowerCase()].name)
+        || ($("#end_station input")[0].value && universeList[$("#end_station input")[1].value.toLowerCase()].name);
+    var t = document.createTextNode(inputValue);
+
+    if (addedToEndList.indexOf(inputValue) == -1) {
+        addedToEndList.push(inputValue);
 
         li.appendChild(t);
         if (inputValue === '') {
@@ -203,7 +250,7 @@ function newStationToList() {
     for (i = 0; i < close.length; i++) {
         close[i].onclick = function () {
             var data = $(this)[0].previousSibling.data;
-            addedToList[addedToList.indexOf(data)] = "";
+            addedToEndList[addedToEndList.indexOf(data)] = "";
             $(this.parentElement).remove();
         }
     }
@@ -323,16 +370,16 @@ function setupTradeOptions(tradeType){
     }
 }
 
-function open_popup(itemId, name, stationId){
+function open_popup(itemId, name, fromStation, toStation){
     popup_table_buy.clear();
     popup_table_sell.clear();
 
     $("#popup_itemName").text("Trade info for " + name);
-    $("#buyLocation").text("Buy at " + startLocation);
-    $("#sellLocation").text("Sell at " + getStationName(stationId));
+    $("#buyLocation").text("Buy at " + fromStation.name);
+    $("#sellLocation").text("Sell at " + getStationName(toStation));
 
-    var buyArr = customBuy[thiz.startLocation.station][itemId];
-    var sellArr = customSell[stationId][itemId];
+    var buyArr = customBuy[fromStation.station][itemId];
+    var sellArr = customSell[toStation][itemId];
 
     for(var i = 0; i < buyArr.length; i++){
         if(buyArr[i]){
@@ -375,63 +422,71 @@ function getCookie(cname) {
 }
 
 function setStationTradingLocations() {
-    startLocation = $("#custom_station input")[0].value.toLowerCase();
+    startLocations = $("#custom_station input")[0].value.toLowerCase();
 
-    var start_region = universeList[startLocation].region;
-    var start_station = universeList[startLocation].station;
-    startLocation = universeList[startLocation].name;
+    var start_region = universeList[startLocations].region;
+    var start_station = universeList[startLocations].station;
+    startLocations = universeList[startLocations].name;
 
     startCoordinates.region = start_region;
     startCoordinates.station = start_station;
 }
 
-function setRouteTradingLocations() {
-    var start_region, start_station;
+function getCoordinatesFor(listId, inputId) {
+    var coordinates = [];
+    var existingPoints = [];
+    var universeItem;
 
-    var selectedStation = $("#start_station input")[0].value.toLowerCase();
-    if(selectedStation){
-        start_region = universeList[selectedStation].region;
-        start_station = universeList[selectedStation].station;
-        startLocation = universeList[selectedStation].name;
+    $.each($(listId + " > li"), function () {
+        var coordinate = {};
+        var unrefined = $(this).text();
+        var stationLocation = unrefined.substring(0, unrefined.length - 2).toLowerCase();
 
-        var existingEndpoints = [];
+        universeItem = universeList[stationLocation];
 
-        $.each($("#custom_route_end > li"), function () {
-            var endCoordinate = {};
-            var unrefined = $(this).text();
-            var endLocation = unrefined.substring(0, unrefined.length - 2).toLowerCase();
+        coordinate.region = universeItem.region;
+        coordinate.station = universeItem.station;
+        coordinate.name = universeItem.name;
 
-            var universeItem = universeList[endLocation];
+        if (existingPoints.indexOf(coordinate.station) == -1) {
+            coordinates.push(coordinate);
+            existingPoints.push(coordinate.station);
+        }
+    });
 
-            endCoordinate.region = universeItem.region;
-            endCoordinate.station = universeItem.station;
-            endCoordinate.name = universeItem.name;
-
-            if (endCoordinate.station != start_station && existingEndpoints.indexOf(endCoordinate.station) == -1) {
-                endLocations.push(endCoordinate.name);
-                endCoordinates.push(endCoordinate);
-                existingEndpoints.push(endCoordinate.station);
-            }
-        });
-
-        var universeItem = universeList[$("#end_station input")[0].value.toLowerCase()];
+    if($(inputId + " input")[0].value) {
+        universeItem = universeList[$(inputId + " input")[0].value.toLowerCase()];
 
         if (universeItem) {
-            var endCoordinate = {};
-            endCoordinate.region = universeItem.region;
-            endCoordinate.station = universeItem.station;
-            endCoordinate.name = universeItem.name;
+            var coordinate = {};
+            coordinate.region = universeItem.region;
+            coordinate.station = universeItem.station;
+            coordinate.name = universeItem.name;
 
-            if (endCoordinate.station != start_station && existingEndpoints.indexOf(endCoordinate.station) == -1) {
-                endLocations.push(endCoordinate.name);
-                endCoordinates.push(endCoordinate);
-                existingEndpoints.push(endCoordinate.station);
+            if (existingPoints.indexOf(coordinate.station) == -1) {
+                coordinates.push(coordinate);
             }
         }
     }
 
-    startCoordinates.region = start_region;
-    startCoordinates.station = start_station;
+    return coordinates;
+}
+
+function setRouteTradingLocations() {
+
+    startCoordinates = getCoordinatesFor("#custom_route_start", "#start_station");
+
+    if(startCoordinates.length > 0) {
+        startLocations = [];
+        for (var i = 0; i < startCoordinates.length; i++) {
+            startLocations.push(startCoordinates[i].name);
+        }
+
+        endCoordinates = getCoordinatesFor("#custom_route_end", "#end_station");
+        for (i = 0; i < endCoordinates.length; i++) {
+            endLocations.push(endCoordinates[i].name);
+        }
+    }
 }
 
 function createDataTable() {
@@ -445,6 +500,7 @@ function createDataTable() {
         dataTableDOM.append("<thead><tr>" +
                 "<th></th>" +
             "<th>Buy Item</th>" +
+            "<th>From</th>" +
             "<th>Quantity</th>" +
             "<th>At Sell Price</th>" +
             "<th>Total Cost</th>" +
@@ -458,7 +514,12 @@ function createDataTable() {
             "<tbody id='tableBody'></tbody>");
 
 
-        buyingHeaderDOM.text("Buying Sell Orders from " + startLocation);
+        var buyingFrom = "";
+        $.each(startLocations, function(){
+            buyingFrom += this + ", ";
+        });
+        buyingFrom = buyingFrom.substring(0,buyingFrom.length-2);
+        buyingHeaderDOM.text("Buying Sell Orders from " + buyingFrom);
 
         var sellingTo = "";
         $.each(endLocations, function(){
@@ -480,16 +541,105 @@ function createDataTable() {
         buyingHeaderDOM.show();
 
         buyingFooter = extraData +
-            "<br/>*Profit is not guaranteed. " +
-            "<span class='avoidwrap'>Use at your own risk. " +
-            "<span class='avoidwrap'>Verify in game that prices are accurate.</span></span>" +
+            "<br/><hr/>" +
             "<div class='loading'></div>";
 
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
-        coreDOM.slideToggle();
+
+        coreDOM.show();
+
+        $(".deal_note").show();
+        $("#core input").css('display','none');
+        $("#core a").css('display','none');
+        $("#show-hide").hide();
+
+        // sorting on margin index
+        var dt = dataTableDOM.DataTable({
+            "order": [[ 8, "desc" ]],
+            "lengthMenu": [[-1], ["All"]],
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf'
+            ],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable": false
+            }]
+        });
+
+        // for each column in header add a togglevis button in the div
+        var li_counter = 0;
+        $("#dataTable thead th").each( function ( i ) {
+            var name = dt.column( i ).header();
+            var spanelt = document.createElement( "button" );
+
+            var initial_removed = [];
+
+            spanelt.innerHTML = name.innerHTML;
+
+            $(spanelt).addClass("colvistoggle");
+            $(spanelt).addClass("btn");
+            $(spanelt).addClass("btn-default");
+            $(spanelt).attr("colidx",i);    // store the column idx on the button
+
+            $(spanelt).addClass("is-true");
+            var column = dt.column( $(spanelt).attr('colidx') );
+            column.visible( true );
+
+            for(var i = 0; i < initial_removed.length; i++){
+                if(spanelt.innerHTML === initial_removed[i]){
+                    $(spanelt).addClass("is-false");
+                    var column = dt.column( $(spanelt).attr('colidx') );
+                    column.visible( false );
+                    break;
+                }
+            }
+
+            $(spanelt).on( 'click', function (e) {
+                e.preventDefault();
+                // Get the column API object
+                var column = dt.column( $(this).attr('colidx') );
+                // Toggle the visibility
+                $(this).removeClass("is-"+column.visible());
+                column.visible( ! column.visible() );
+                $(this).addClass("is-"+column.visible());
+
+            });
+            var li = document.createElement("li");
+            $(li).append($(spanelt));
+            $("#colvis").append($(li));
+        });
+
+        // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
+        $('.dropdown').on('show.bs.dropdown', function(e){
+            $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+        });
+
+        // ADD SLIDEUP ANIMATION TO DROPDOWN //
+        $('.dropdown').on('hide.bs.dropdown', function(e){
+            $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+        });
+
+        $('#dataTable tbody').on('mousedown', 'tr', function (event) {
+            var investigateButton = (event.target.id.indexOf("investigate") >= 0
+            || (event.target.children[0] && event.target.children[0].id.indexOf("investigate") >= 0)
+            || (event.target.classList.contains("fa")));
+
+            if(event.which === 1 && !investigateButton){
+                if(!$(this).hasClass("row-selected")){
+                    $(this).addClass("row-selected");
+                }else{
+                    $(this).removeClass("row-selected");
+                }
+            }
+        } );
+
+        $("label > input").addClass("form-control").addClass("minor-text");
+        $("label > input").attr("placeholder", "Search Results...");
     } else {
-        buyingHeaderDOM.text("Station Trading at " + startLocation);
+        buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
         buyingFooter = "Volume greater than: " + numberWithCommas(volume_threshold) +
@@ -498,7 +648,9 @@ function createDataTable() {
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
 
-        coreDOM.slideToggle();
+        coreDOM.show();
+        $(".deal_note").show();
+        $("#show-hide").hide();
 
         dataTableDOM.append("<thead><tr>" +
             "<th>Item</th>" +
@@ -514,7 +666,10 @@ function createDataTable() {
 
 function execute() {
     if(routeTrading) {
-        new Route(startCoordinates, endCoordinates).startRoute();
+        routes = [];
+        for(var i = 0; i < startCoordinates.length; i++) {
+            new Route(startCoordinates[i], endCoordinates).startRoute();
+        }
     } else {
         new Station(startCoordinates).startStation();
     }
@@ -522,13 +677,6 @@ function execute() {
 }
 
 function init(){
-    customBuy = [];
-    customSell = [];
-    startCoordinates = {};
-    endCoordinates = [];
-    startLocation;
-    endLocations = [];
-    page = 1;
 
     updateCookies();
 
@@ -538,7 +686,7 @@ function init(){
         setStationTradingLocations();
     }
 
-    var startCondition = (startLocation && startLocation.length > 0);
+    var startCondition = (startLocations && startLocations.length > 0);
     var endCondition = (routeTrading && endLocations.length > 0) || !routeTrading;
 
     if(startCondition && endCondition){
