@@ -10,7 +10,7 @@ Select which of the station you are docked in. It will return a lazy-loaded tabl
 
 ## V4.6.0
     * Continuing progress towards Region-Region trading by allowing multiple starting locations.
-    * Cutting down on spam item's that provide unreasonable results.
+    * Cutting down on spam items that provide unreasonable results.
 
 ## V4.5.2
     * Mobile responsiveness updates for the input dialogue
