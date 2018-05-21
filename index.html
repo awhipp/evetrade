@@ -98,12 +98,19 @@
             <div id="selection">
               <div id="initial_choice">
                 <h2>How do you trade?</h2>
-                <p>
-                  <input type="button" class="btn btn-default route-trader" value="Between Two Stations"/>
-                </p>
-                <p>
-                  <input type="button" class="btn btn-default station-trader" value="Staying in One Station"/>
-                </p>
+                  <h3>Station Trading</h3>
+                      <p>
+                          <input type="button" class="btn btn-default station-trader" value="In One Station"/>
+                      </p>
+
+                  <hr>
+                  <h3>Route Hauling</h3>
+                      <p>
+                          <input type="button" class="btn btn-default hauling-station-trader" value="Station-To-Station"/>
+                      </p>
+                      <p>
+                          <input type="button" class="btn btn-default hauling-region-trader" value="Region-To-Region"/>
+                      </p>
 
                   <br>
 
@@ -164,7 +171,7 @@
 
                   <div class="col-xs-12 mx-auto">
                     <div class="error question secondary-text"> A station is required. </div>
-                    <input type="button" class="btn btn-default secondary-text" onclick="init()" value="Search"/>
+                    <input type="button" class="btn btn-default secondary-text" onclick="init(0)" value="Search"/>
                   </div>
                 </div>
                 <!-- End Inner Dialogue -->
@@ -175,9 +182,8 @@
 
               <!-- Start Route Trading Dialogue -->
               <div id="route_trade">
-
                 <div class="col-xs-12 mx-auto">
-                  <h2> Route / Hauler Trading </h2>
+                  <h2> Station-To-Station Trading </h2>
                   <p> Finding the most profitable trade routes based on given filter parameters.<br>
                       Orders change frequently. Profit is not guaranteed. Verify prices are accurate.</p>
                     <hr>
@@ -240,11 +246,78 @@
 
                 <div class="col-xs-12 mx-auto">
                   <div class="error"> A starting point, and at least one destination is required. Starting point cannot equal Destination. </div>
-                  <input type="button" class="btn btn-default" onclick="init()" value="Search"/>
+                  <input type="button" class="btn btn-default" onclick="init(1)" value="Search"/>
                 </div>
               </div>
               <!-- END Route Trading Dialogue -->
 
+                <!-- Start Route Trading Dialogue -->
+                <div id="region_trade">
+                    <div class="col-xs-12 mx-auto">
+                        <h2> Region-to-Region Trading </h2>
+                        <p> Finding the most profitable trade routes based on given filter parameters.<br>
+                            Orders change frequently. Profit is not guaranteed. Verify prices are accurate.</p>
+                        <hr>
+                    </div>
+
+                    <div class="col-xs-12 mx-auto">
+                        <p> Starting Region </p>
+
+                        <div class="form-group standard">
+                            <div id="addingToStartRegionList">
+                                <div id='start_region' style='border:1px solid #999;'></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 mx-auto">
+                        <p> Destination Region </p>
+                        <div class="form-group standard">
+                            <div id="addingToEndRegionList">
+                                <div id='end_region' style='border:1px solid #999;'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="col-xs-12 mx-auto">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12">
+                                <p><label for="profit-threshold" class="control-label">Only Return Profits Above</label>
+                                    <input type="number" id="region-profit-threshold" class="minor-text form-control"
+                                           placeholder="Default: 100,000"/></p>
+                            </div>
+                            <div class="col-sm-12 col-xs-12">
+                                <p><label for="weight-threshold" class="control-label">Max Cargo Capacity (in
+                                    m3)</label>
+                                    <input type="number" id="region-weight-threshold" class="minor-text form-control"
+                                           placeholder="Default: Not Included"/></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12">
+                                <p><label for="roi-threshold" class="control-label"> Minimum ROI (in %) </label>
+                                    <input type="number" id="region-roi-threshold" class="minor-text form-control"
+                                           placeholder="Default: 1"/></p>
+                            </div>
+                            <div class="col-sm-12 col-xs-12">
+                                <p><label for="buy-threshold" class="control-label">Maximum Budget</label>
+                                    <input type="number" id="region-buy-threshold" class="minor-text form-control"
+                                           placeholder="Default: Infinity"/></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 mx-auto">
+                        <div class="error"> A starting region, and a destination is required.
+                        </div>
+                        <input type="button" class="btn btn-default" onclick="init(2)" value="Search"/>
+                    </div>
+                </div>
+                <!-- END Route Trading Dialogue -->
 
             </div>
         </div>
@@ -450,37 +523,39 @@
   <script src="js/init.min.js" async defer></script>
   <script src="js/common.min.js" async defer></script>
   <script src="js/route.min.js" async defer></script>
+    <script src="js/region.min.js" async defer></script>
   <script src="js/station.min.js" async defer></script>
   <script src="js/station_ids.min.js" async defer></script>
+    <script src="js/region_ids.min.js" async defer></script>
 
-  <ins class="adsbygoogle"
-  style="display:block;"
-  data-ad-client="ca-pub-0599578547621989"
-  data-ad-slot="7378680598"
-  data-ad-format="auto"></ins>
-  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <script async>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-  <style>
-    /* Small devices (tablets, 768px and up) */
-    .adsbygoogle > ins{
-        position: relative !important;
-        bottom: inherit !important;
-        left: inherit !important;
-        transform: none !important;
-    }
-    @media ( min-width : 768px) {
-        .adsbygoogle > ins{
-          position: fixed !important;
-          bottom: 0 !important;
-          left: 50% !important;
-          transform: translate(-50%,0) !important;
-        }
-    }
-  </style>
+  <!--<ins class="adsbygoogle"-->
+  <!--style="display:block;"-->
+  <!--data-ad-client="ca-pub-0599578547621989"-->
+  <!--data-ad-slot="7378680598"-->
+  <!--data-ad-format="auto"></ins>-->
+  <!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+  <!--<script async>-->
+    <!--(adsbygoogle = window.adsbygoogle || []).push({});-->
+  <!--</script>-->
+  <!--<style>-->
+    <!--/* Small devices (tablets, 768px and up) */-->
+    <!--.adsbygoogle > ins{-->
+        <!--position: relative !important;-->
+        <!--bottom: inherit !important;-->
+        <!--left: inherit !important;-->
+        <!--transform: none !important;-->
+    <!--}-->
+    <!--@media ( min-width : 768px) {-->
+        <!--.adsbygoogle > ins{-->
+          <!--position: fixed !important;-->
+          <!--bottom: 0 !important;-->
+          <!--left: 50% !important;-->
+          <!--transform: translate(-50%,0) !important;-->
+        <!--}-->
+    <!--}-->
+  <!--</style>-->
 
-  <script async defer src="vendor/blockadblock/blockadblock.min.js"></script>
+  <!--<script async defer src="vendor/blockadblock/blockadblock.min.js"></script>-->
 </body>
 
 </html>

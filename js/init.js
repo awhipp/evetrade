@@ -6,16 +6,16 @@ var threshold_roi = 1;
 var threshold_cost = 999999999999999999;
 var threshold_weight = 999999999999999999;
 
-var routeTrading = null;
+var tradingStyle = null;
 var errorShown = false;
 var addedToStartList = [];
 var addedToEndList = [];
 
+var stationsReady = false;
+var regionsReady = false;
+
 var popup_table_buy;
 var popup_table_sell;
-
-var stations_checked = 0;
-var MAX_STATIONS = 25;
 
 var universeList = {};
 
@@ -25,8 +25,6 @@ var startLocations = [];
 var endLocations = [];
 
 $( document ).ready(function() {
-    $("#stations_remaining").text(MAX_STATIONS);
-
     popup_table_buy = $("#popup-table-buy").DataTable({
         "order": [[ 0, "asc" ]],
         "lengthMenu": [[10], ["10"]]
@@ -58,7 +56,6 @@ $( document ).ready(function() {
 });
 
 function getTradeHubName(stationName) {
-
     if (stationName == "Jita IV - Moon 4 - Caldari Navy Assembly Plant") {
         return "Jita";
     } else if (stationName == "Amarr VIII (Oris) - Emperor Family Academy") {
@@ -102,9 +99,9 @@ function initCompletely(domId, stationList) {
 }
 
 function setupCustomDropdown() {
-    var customDropdown = setInterval(function () {
-        if (station_ids) {
-            clearInterval(customDropdown);
+    var customStationsDropdown = setInterval(function () {
+        if (station_ids !== undefined) {
+            clearInterval(customStationsDropdown);
             var stationList = [""];
 
             for (var i = 0; i < station_ids.length; i++) {
@@ -138,18 +135,43 @@ function setupCustomDropdown() {
             initCompletely("start_station", stationList);
             initCompletely("end_station", stationList);
 
-            $(".end-selection").on('click', function () {
-                stations_checked = $(".end-selection:checked").length;
-                if (stations_checked > MAX_STATIONS) {
-                    $(this).prop("checked", false);
-                    stations_checked = $(".end-selection:checked").length;
-                }
-                $("#stations_remaining").text(MAX_STATIONS - stations_checked);
-            });
+            stationsReady = true;
+        }
+    }, 1000);
 
-            $(function() {
+
+    var customRegionsDropdown = setInterval(function () {
+        if (region_ids !== undefined) {
+            clearInterval(customRegionsDropdown);
+            var regionList = [""];
+
+            for (var i = 0; i < region_ids.length; i++) {
+                var regionName = region_ids[i][1];
+                var lcRegionName = regionName.toLowerCase();
+
+                universeList[lcRegionName] = {};
+                universeList[lcRegionName].name = region_ids[i][1];
+                universeList[lcRegionName].id = region_ids[i][0];
+                regionList.push(regionName);
+            }
+
+            regionList.sort();
+
+            initCompletely("start_region", regionList);
+            initCompletely("end_region", regionList);
+
+            regionsReady = true;
+        }
+    }, 1000);
+
+
+    var pageReadyInterval = setInterval(function () {
+        if (stationsReady && regionsReady) {
+            clearInterval(pageReadyInterval);
+
+            $(function () {
                 var tabindex = 1;
-                $('input').each(function() {
+                $('input').each(function () {
                     if (this.type != "hidden") {
                         var $input = $(this);
                         $input.attr("tabindex", tabindex);
@@ -158,22 +180,23 @@ function setupCustomDropdown() {
                 });
             });
 
-            $(".location-input").keyup(function(event){
-                if(event.keyCode=='9') { //9 is the tab key
-                    var lastChar = parseInt(event.target.id.charAt(event.target.id.length-1));
+            $(".location-input").keyup(function (event) {
+                if (event.keyCode == '9') { //9 is the tab key
+                    var lastChar = parseInt(event.target.id.charAt(event.target.id.length - 1));
                     if (lastChar == 1) {
                         $("#volume-threshold").focus();
-                    } else if (lastChar == 2) {
-                        $("#location-input-" + (lastChar+1)).focus();
+                    } else if (lastChar == 2 || lastChar == 4) {
+                        $("#location-input-" + (lastChar + 1)).focus();
                     } else if (lastChar == 3) {
                         $("#profit-threshold").focus();
+                    } else if (lastChar == 5) {
+                        $("#region-profit-threshold").focus();
                     }
                 }
             });
 
             $(".loadingIcon").remove();
             $("header").css("opacity", 1);
-
         }
     }, 1000);
 }
@@ -260,15 +283,18 @@ function onClickListeners() {
 
     $(".end").on('click', function () {
         $(this).hasClass("end-selected") ? $(this).removeClass("end-selected") : $(this).addClass("end-selected");
-        // checkEndSelection();
     });
 
-    $(".route-trader").on('click', function(){
-        setupTradeOptions(true);
+    $(".hauling-region-trader").on('click', function () {
+        setupTradeOptions(2);
+    });
+
+    $(".hauling-station-trader").on('click', function(){
+        setupTradeOptions(1);
     });
 
     $(".station-trader").on('click', function(){
-        setupTradeOptions(false);
+        setupTradeOptions(0);
     });
 
     $(".station-start").on('click', function(){
@@ -278,17 +304,21 @@ function onClickListeners() {
 }
 
 function setAbout() {
-    if (routeTrading == null) {
+    if (tradingStyle == null) {
         $("#about")[0].onclick = function() {
             $('#howto').modal('show');
         };
-    } else if (routeTrading) {
+    } else if (tradingStyle >= 1) {
         $("#about")[0].onclick = function() {
             $('#howto-route').modal('show');
         };
-    } else {
+    } else if (tradingStyle == 0) {
         $("#about")[0].onclick = function() {
             $('#howto-station').modal('show');
+        };
+    } else if (tradingStyle == 2) {
+        $("#about")[0].onclick = function () {
+            $('#howto-route').modal('show');
         };
     }
 }
@@ -301,10 +331,14 @@ function setupCookies() {
     $("#roi-threshold").val(getCookie("roi-threshold"));
     $("#buy-threshold").val(getCookie("buy-threshold"));
     $("#weight-threshold").val(getCookie("weight-threshold"));
+    $("#region-profit-threshold").val(getCookie("profit-threshold"));
+    $("#region-roi-threshold").val(getCookie("roi-threshold"));
+    $("#region-buy-threshold").val(getCookie("buy-threshold"));
+    $("#region-weight-threshold").val(getCookie("weight-threshold"));
 }
 
 function updateCookies() {
-    if(routeTrading) {
+    if(tradingStyle == 1) {
         if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
             threshold_profit = parseFloat($("#profit-threshold").val());
             setCookie("profit-threshold",threshold_profit,7);
@@ -329,7 +363,7 @@ function updateCookies() {
         }else{
             setCookie("weight-threshold","");
         }
-    } else {
+    } else if (tradingStyle == 0) {
         if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
             threshold_margin_lower = parseFloat($("#lower-margin-threshold").val());
             setCookie("lower-margin-threshold",threshold_margin_lower,7);
@@ -350,23 +384,52 @@ function updateCookies() {
         }else{
             setCookie("volume-threshold","");
         }
+    } else if (tradingStyle == 2) {
+        if ($("#region-profit-threshold").val().length > 0 && !isNaN($("#region-profit-threshold").val())) {
+            threshold_profit = parseFloat($("#region-profit-threshold").val());
+            setCookie("profit-threshold", threshold_profit, 7);
+        } else {
+            setCookie("profit-threshold", "");
+        }
+        if ($("#region-roi-threshold").val().length > 0 && !isNaN($("#region-roi-threshold").val())) {
+            threshold_roi = parseFloat($("#region-roi-threshold").val());
+            setCookie("roi-threshold", threshold_roi, 7);
+        } else {
+            setCookie("roi-threshold", "");
+        }
+        if ($("#region-buy-threshold").val().length > 0 && !isNaN($("#region-buy-threshold").val())) {
+            threshold_cost = parseFloat($("#region-buy-threshold").val());
+            setCookie("buy-threshold", threshold_cost, 7);
+        } else {
+            setCookie("buy-threshold", "");
+        }
+        if ($("#region-weight-threshold").val().length > 0 && !isNaN($("#region-weight-threshold").val())) {
+            threshold_weight = parseFloat($("#region-weight-threshold").val());
+            setCookie("weight-threshold", threshold_weight, 7);
+        } else {
+            setCookie("weight-threshold", "");
+        }
     }
 }
 
 function setupTradeOptions(tradeType){
-    routeTrading = tradeType;
+    tradingStyle = tradeType;
+
     $('.howto').toggle(false);
 
     $("#initial_choice").hide();
 
     setAbout();
 
-    if(routeTrading){
+    if(tradingStyle == 1){
         $("#route_trade").slideToggle();
-        ga('send', 'event', 'Trade Style', 'Hauler', 'User Preference Campaign');
-    }else{
+        ga('send', 'event', 'Trade Style', 'Hauler - Station', 'User Preference Campaign');
+    }else if(tradingStyle==0){
         $("#station_trade").slideToggle();
         ga('send', 'event', 'Trade Style', 'Station Trader', 'User Preference Campaign');
+    } else if (tradingStyle == 2) {
+        $("#region_trade").slideToggle();
+        ga('send', 'event', 'Trade Style', 'Hauler - Region', 'User Preference Campaign');
     }
 }
 
@@ -432,6 +495,18 @@ function setStationTradingLocations() {
     startCoordinates.station = start_station;
 }
 
+function setRouteRegionTradingLocations() {
+    startLocations = $("#start_region input")[0].value.toLowerCase();
+
+    startCoordinates = universeList[startLocations];
+    startLocations = startCoordinates.name;
+
+    endLocations = $("#end_region input")[0].value.toLowerCase();
+
+    endCoordinates = universeList[endLocations];
+    endLocations = endCoordinates.name;
+}
+
 function getCoordinatesFor(listId, inputId) {
     var coordinates = [];
     var existingPoints = [];
@@ -472,7 +547,7 @@ function getCoordinatesFor(listId, inputId) {
     return coordinates;
 }
 
-function setRouteTradingLocations() {
+function setRouteStationTradingLocations() {
 
     startCoordinates = getCoordinatesFor("#custom_route_start", "#start_station");
 
@@ -496,7 +571,7 @@ function createDataTable() {
     var coreDOM = $("#core");
     var dataTableDOM = $("#dataTable");
 
-    if(routeTrading) {
+    if(tradingStyle == 1 || tradingStyle == 2) {
         dataTableDOM.append("<thead><tr>" +
                 "<th></th>" +
             "<th>Buy Item</th>" +
@@ -515,17 +590,23 @@ function createDataTable() {
 
 
         var buyingFrom = "";
-        $.each(startLocations, function(){
-            buyingFrom += this + ", ";
-        });
-        buyingFrom = buyingFrom.substring(0,buyingFrom.length-2);
-        buyingHeaderDOM.text("Buying Sell Orders from " + buyingFrom);
-
         var sellingTo = "";
-        $.each(endLocations, function(){
-            sellingTo += this + ", ";
-        });
-        sellingTo = sellingTo.substring(0,sellingTo.length-2);
+        if (tradingStyle == 1) {
+            $.each(startLocations, function () {
+                buyingFrom += this + ", ";
+            });
+            buyingFrom = buyingFrom.substring(0, buyingFrom.length - 2);
+
+            $.each(endLocations, function () {
+                sellingTo += this + ", ";
+            });
+            sellingTo = sellingTo.substring(0, sellingTo.length - 2);
+        } else {
+            buyingFrom = startLocations;
+            sellingTo = endLocations;
+        }
+
+        buyingHeaderDOM.text("Buying Sell Orders from " + buyingFrom);
 
         var extraData = "<div id='route-to'>Selling to the Buy Orders at " + sellingTo + "</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
@@ -638,7 +719,7 @@ function createDataTable() {
 
         $("label > input").addClass("form-control").addClass("minor-text");
         $("label > input").attr("placeholder", "Search Results...");
-    } else {
+    } else if (tradingStyle == 0) {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
@@ -665,13 +746,19 @@ function createDataTable() {
 }
 
 function execute() {
-    if(routeTrading) {
+    if(tradingStyle == 1) {
         routes = [];
         for(var i = 0; i < startCoordinates.length; i++) {
             new Route(startCoordinates[i], endCoordinates).startRoute();
         }
-    } else {
+    } else if (tradingStyle == 0) {
         new Station(startCoordinates).startStation();
+    } else if (tradingStyle == 2) {
+        console.log("From: ");
+        console.log(startCoordinates);
+        console.log("To: ");
+        console.log(endCoordinates);
+        new Region(startCoordinates, endCoordinates).startRoute();
     }
 
 }
@@ -680,14 +767,16 @@ function init(){
 
     updateCookies();
 
-    if(routeTrading){
-        setRouteTradingLocations();
-    }else{
+    if(tradingStyle == 1){
+        setRouteStationTradingLocations();
+    } else if (tradingStyle == 0) {
         setStationTradingLocations();
+    } else {
+        setRouteRegionTradingLocations();
     }
 
     var startCondition = (startLocations && startLocations.length > 0);
-    var endCondition = (routeTrading && endLocations.length > 0) || !routeTrading;
+    var endCondition = (tradingStyle>=1 && endLocations.length > 0) || tradingStyle==0;
 
     if(startCondition && endCondition){
         $(".error").hide();

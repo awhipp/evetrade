@@ -349,7 +349,7 @@ tr > td:first-child {
 #buyingHeader {
     font-size: 1.5em !important;
 }
-  #route_trade, #station_trade, #buying_footer, #buying_header {
+  #route_trade, #station_trade, #region_trade, #buying_footer, #buying_header {
     display: none;
   }
 
@@ -376,17 +376,33 @@ tr > td:first-child {
       margin: 0 auto;
   }
 
+    #start_region, #end_region {
+        max-width: 400px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
     .standard {
         width: 800px;
         max-width: 100%;
         margin: 0 auto;
     }
 
-    #custom_station input[type="text"], #start_station input[type="text"], #end_station input[type="text"], #start_station input[type="text"] {
+    #custom_station input[type="text"],
+    #start_station input[type="text"],
+    #end_station input[type="text"] {
         text-align: left !important;
         max-width: unset !important;
         padding: 0 100px 0 1em !important;
     }
+
+
+#start_region input[type="text"],
+#end_region input[type="text"] {
+    text-align: left !important;
+    max-width: 400px !important;
+    padding: 0 100px 0 1em !important;
+}
 
   /** START CUSTOM FEATURE **/
   #custom_route_end, #custom_route_start{
