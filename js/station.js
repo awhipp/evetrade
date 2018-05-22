@@ -584,5 +584,8 @@ Station.prototype.createTable = function() {
     $(".data_options").append($(".dt-buttons"));
     $(".dt-button").addClass("btn");
     $(".dt-button").addClass("btn-default");
+
+    $("#core input").css('display','block');
+    $("#core a").css('display','inline-block');
     $("#core").css('display','block');
 };
