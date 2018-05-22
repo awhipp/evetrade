@@ -1,35 +1,31 @@
-# EVE Trade Finder v4.6.0
+# EVE Trade Finder v5.0.0b
 
 ## About
 Implements the EVE ESI API to find:
 
 * the best trades between stations.
 * the best margins inside your own station.
+* the best trades between regions.
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
-## V4.6.0
+## V5.0.0b
+    * Highly anticipated beta version of the region-to-region feature is now live.
+    
+## V4.0 - V4.6
     * Continuing progress towards Region-Region trading by allowing multiple starting locations.
     * Cutting down on spam items that provide unreasonable results.
-
-## V4.5.2
     * Mobile responsiveness updates for the input dialogue
     * Tabbing now works between input dialogues and buttons
     * If an endpoint is just typed into the endpoints dialogue it is also considered for the trade (users do not need to click Add Station for just one station).
-
-## V4.5.1
     * Users had trouble learning of the order investigation function, added a magnifying glass to each row to show all orders
     * Users complained about the interface to add custom stations so now these sections are all fill-in-the-blank
     * Completely removed custom section. Performance should drastically improve now that these sections are not being generated in HTML.
-
-## V4.5.0
     * Complete back and front end refactoring to promote future feature viability and allow for region to region trading in the next update.
     * Revised frontend based on user feedback (moving away from brighter colors).
     * Improved performance and provides more results.
     * Packaged volumes are now taken into consideration.
     * Loading icon to appear to ensure all assets are loaded before clicks take place.
-
-## V4.0 - V4.4.X
     * Minor performance gains due to refactoring 3-year old code.
     * Allow users to refresh the table with the last query they submitted.
     * Added user analytics when selecting different options to better track user perferences and prioritize bugs.

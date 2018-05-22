@@ -127,7 +127,7 @@ Station.prototype.incrementProgress = function(composite, page) {
         this.totalProgress = 35.0 * Math.log10(this.recalculateProgress());
         this.totalProgress = this.totalProgress > 100 ? 100 : this.totalProgress;
 
-        $(".loading").html("<b>Getting orders: " + this.totalProgress.toFixed(2) + "% complete</b>");
+        $(".loading").html("Getting orders: " + this.totalProgress.toFixed(2) + "% complete");
     }
 
     composite.completePages[page] = true;
@@ -382,20 +382,20 @@ Station.prototype.asyncFiltering = function() {
                 ellipses += ".";
             }
 
-            $("#filtering-data").html("<b>Filtering Results. Please wait" + ellipses + "</b></br>If it takes too long try a smaller margin range.");
+            $("#filtering-data").html("<br>Filtering Results. Please wait" + ellipses + "</br>If it takes too long try a smaller margin range.");
 
             if(executingCount == 0) {
                 clearInterval(thiz.asyncFilter);
                 $("#filtering-data").remove();
             }
         },
-        1000);
+        250);
 };
 
 Station.prototype.getItemVolume = function(itemId, row){
     if(!this.filtered){
         this.filtered = true;
-        $("#buyingFooter").append("<div id='filtering-data'><b>Filtering Results. Please wait.</b></br>If it takes too long try a smaller margin range.</div>");
+        $("#buyingFooter").append("<div id='filtering-data'><br>Filtering Results. Please wait.</br>If it takes too long try a smaller margin range.</div>");
         this.asyncFiltering();
     }
 
@@ -577,12 +577,16 @@ Station.prototype.createTable = function() {
     } );
 
     $("label > input").addClass("form-control").addClass("minor-text");
-    $("label > input").attr("placeholder", "Search Results...");
+    $("label > input").attr("placeholder", "Filter Results...");
     $(".loading").hide();
     $('#dataTable').show();
     $(".data_options").append($("#dataTable_filter"));
     $(".data_options").append($(".dt-buttons"));
     $(".dt-button").addClass("btn");
     $(".dt-button").addClass("btn-default");
+
+    $("#core input").css('display','block');
+    $("#core a").css('display','inline-block');
+
     $("#core").css('display','block');
 };

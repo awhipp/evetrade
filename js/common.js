@@ -16,12 +16,12 @@ var page = 1;
 var iteration = 1;
 var rowAdded = false;
 
-function getMarketData(data, stationId, orderType, itemId){
+function getMarketData(data, stationId, orderType, itemId, isRoute){
     var tempArray;
     if (typeof(data) == "string")  {
         tempArray = [data];
     } else if (data != null){
-        tempArray = getBestMarketPrice(data, stationId, orderType, itemId)
+        tempArray = getBestMarketPrice(data, stationId, orderType, itemId, isRoute)
     }
 
     var returningArray = [];
@@ -72,7 +72,7 @@ function getBestMarketPrice(orders, stationId, orderType, itemId, isRoute) {
         bestPrice = bestPrice.sort(sellOrderComparator);
         saveSellOrderData(stationId, itemId, $.extend(true, [], bestPrice));
         /** Buying from Users at this price - ordered low to high **/
-    }else {
+    } else {
         var buyOrderComparator = isRoute ? buyOrderComparatorRoute : buyOrderComparatorStation;
         bestPrice = bestPrice.sort(buyOrderComparator);
         saveBuyOrderData(stationId, itemId, $.extend(true, [], bestPrice));
@@ -82,17 +82,29 @@ function getBestMarketPrice(orders, stationId, orderType, itemId, isRoute) {
 }
 
 function saveSellOrderData(stationId, itemId, data){
-    if(!customBuy[stationId]){
-        customBuy[stationId] = [];
+    if(data && data.length > 0) {
+        if (!customBuy[stationId]) {
+            customBuy[stationId] = [];
+        }
+
+        if (!customBuy[stationId][itemId] && data.length > 0) {
+            customBuy[stationId][itemId] = data;
+        }
     }
-    customBuy[stationId][itemId] = data;
 }
 
 function saveBuyOrderData(stationId, itemId, data){
-    if(!customSell[stationId]){
-        customSell[stationId] = [];
+
+    if(data && data.length > 0) {
+        if(!customSell[stationId]){
+            customSell[stationId] = [];
+        }
+
+        if(!customSell[stationId][itemId] && data.length > 0) {
+            customSell[stationId][itemId] = data;
+        }
+
     }
-    customSell[stationId][itemId] = data;
 }
 
 function sellOrderComparatorRoute(a,b){
@@ -187,6 +199,7 @@ function refresh() {
     totalProgress = 0;
     createdRefresher = false;
     tableCreated = false;
+    routes=[];
 
     init();
 }

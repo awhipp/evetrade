@@ -1,8 +1,8 @@
 var threshold_margin_lower = 20;
 var threshold_margin_upper = 40;
 var volume_threshold = 1000;
-var threshold_profit = 100000;
-var threshold_roi = 1;
+var threshold_profit = 500000;
+var threshold_roi = 4;
 var threshold_cost = 999999999999999999;
 var threshold_weight = 999999999999999999;
 
@@ -18,6 +18,7 @@ var popup_table_buy;
 var popup_table_sell;
 
 var universeList = {};
+var stationIdToName = {};
 
 var startCoordinates = [];
 var endCoordinates = [];
@@ -126,6 +127,8 @@ function setupCustomDropdown() {
                 universeList[lowerCaseStationName].station = station_ids[i][0];
                 universeList[lowerCaseStationName].name = stationName;
                 stationList.push(stationName);
+
+                stationIdToName[station_ids[i][0]] = stationName;
 
             }
 
@@ -437,12 +440,15 @@ function open_popup(itemId, name, fromStation, toStation){
     popup_table_buy.clear();
     popup_table_sell.clear();
 
+    var toStationName = getStationName(toStation) || toStation.name;
+    var toStationId = toStation.station || toStation;
+
     $("#popup_itemName").text("Trade info for " + name);
     $("#buyLocation").text("Buy at " + fromStation.name);
-    $("#sellLocation").text("Sell at " + getStationName(toStation));
+    $("#sellLocation").text("Sell at " + toStationName);
 
     var buyArr = customBuy[fromStation.station][itemId];
-    var sellArr = customSell[toStation][itemId];
+    var sellArr = customSell[toStationId][itemId];
 
     for(var i = 0; i < buyArr.length; i++){
         if(buyArr[i]){
@@ -485,7 +491,8 @@ function getCookie(cname) {
 }
 
 function setStationTradingLocations() {
-    startLocations = $("#custom_station input")[0].value.toLowerCase();
+    var inputValue = $("#custom_station input")[0].value || $("#custom_station input")[1].value;
+    startLocations = inputValue.toLowerCase();
 
     var start_region = universeList[startLocations].region;
     var start_station = universeList[startLocations].station;
@@ -496,12 +503,14 @@ function setStationTradingLocations() {
 }
 
 function setRouteRegionTradingLocations() {
-    startLocations = $("#start_region input")[0].value.toLowerCase();
+    var inputValue = $("#start_region input")[0].value || $("#start_region input")[1].value;
+    startLocations = inputValue.toLowerCase();
 
     startCoordinates = universeList[startLocations];
     startLocations = startCoordinates.name;
 
-    endLocations = $("#end_region input")[0].value.toLowerCase();
+    inputValue = $("#end_region input")[0].value || $("#end_region input")[1].value;
+    endLocations = inputValue.toLowerCase();
 
     endCoordinates = universeList[endLocations];
     endLocations = endCoordinates.name;
@@ -530,7 +539,8 @@ function getCoordinatesFor(listId, inputId) {
     });
 
     if($(inputId + " input")[0].value) {
-        universeItem = universeList[$(inputId + " input")[0].value.toLowerCase()];
+        var inputValue = $(inputId + " input")[0].value || $(inputId + " input")[1].value;
+        universeItem = universeList[inputValue.toLowerCase()];
 
         if (universeItem) {
             var coordinate = {};
@@ -622,7 +632,7 @@ function createDataTable() {
         buyingHeaderDOM.show();
 
         buyingFooter = extraData +
-            "<br/><hr/>" +
+            "<br/>" +
             "<div class='loading'></div>";
 
         buyingFooterDOM.html(buyingFooter);
@@ -638,6 +648,7 @@ function createDataTable() {
         // sorting on margin index
         var dt = dataTableDOM.DataTable({
             "order": [[ 8, "desc" ]],
+            // "lengthMenu": [[50], ["50"]],
             "lengthMenu": [[-1], ["All"]],
             responsive: true,
             dom: 'Bfrtip',
@@ -718,7 +729,7 @@ function createDataTable() {
         } );
 
         $("label > input").addClass("form-control").addClass("minor-text");
-        $("label > input").attr("placeholder", "Search Results...");
+        $("label > input").attr("placeholder", "Filter by Station/Name...");
     } else if (tradingStyle == 0) {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
@@ -754,10 +765,6 @@ function execute() {
     } else if (tradingStyle == 0) {
         new Station(startCoordinates).startStation();
     } else if (tradingStyle == 2) {
-        console.log("From: ");
-        console.log(startCoordinates);
-        console.log("To: ");
-        console.log(endCoordinates);
         new Region(startCoordinates, endCoordinates).startRoute();
     }
 

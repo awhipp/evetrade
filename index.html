@@ -84,7 +84,7 @@
                     <a class="nav-link" href="https://goo.gl/forms/pU2NoNtQoL9v9dcO2" target="_blank" alt="Feedback form">Feedback</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="release.html" target="_blank">V4.6.0</a>
+                    <a class="nav-link" href="release.html" target="_blank">V5.0b</a>
                 </li>
             </ul>
         </div>
@@ -97,33 +97,31 @@
 
             <div id="selection">
               <div id="initial_choice">
-                <h2>How do you trade?</h2>
-                  <h3>Station Trading</h3>
+                  <h2>How do you trade?</h2>
                       <p>
-                          <input type="button" class="btn btn-default station-trader" value="In One Station"/>
+                          <input type="button" class="btn btn-default station-trader" value="Single Station"/>
                       </p>
-
-                  <hr>
-                  <h3>Route Hauling</h3>
                       <p>
                           <input type="button" class="btn btn-default hauling-station-trader" value="Station-To-Station"/>
                       </p>
                       <p>
-                          <input type="button" class="btn btn-default hauling-region-trader" value="Region-To-Region"/>
+                          <input type="button" class="btn btn-default hauling-region-trader" value="Region-To-Region (BETA)"/>
                       </p>
 
-                  <br>
+                  <hr>
 
                   <div class="announcement-selection">
-                      <p>Version 4.6.0 Released (19 May 2018):</p>
+                      <p>Region-to-Region BETA Available (22 May 2018):</p>
                       <ol>
                           <li>
-                              You may select multiple start/end locations for hauling queries!
-                              Just type a station as normal and click the &plus; button
-                              or enter key and it will be added to the search.
+                              Region to Region trading is now available as a BETA feature.<br>
+                              In order to filter by system type it into the search box above the table.<br>
+                              Please be patient as this query is significantly larger than station queries.
                           </li>
                           <li>
-                              Scam items that provide unreasonable profits have been removed from searches.
+                              Fixed a bug where it does not always pick up locations for start/end locations.
+                              Just type a station as normal and click the &plus; button
+                              or enter key and it will be added to the search.
                           </li>
                       </ol>
                   </div>
@@ -225,7 +223,7 @@
                   <div class="row">
                     <div class="col-sm-12 col-xs-12">
                       <p><label for="profit-threshold" class="control-label">Only Return Profits Above</label>
-                      <input type="number" id="profit-threshold" class="minor-text form-control" placeholder="Default: 100,000"/></p>
+                      <input type="number" id="profit-threshold" class="minor-text form-control" placeholder="Default: 500,000"/></p>
                     </div>
                     <div class="col-sm-12 col-xs-12">
                       <p><label for="weight-threshold" class="control-label">Max Cargo Capacity (in m3)</label>
@@ -235,7 +233,7 @@
                   <div class="row">
                     <div class="col-sm-12 col-xs-12">
                       <p><label for="roi-threshold" class="control-label"> Minimum ROI (in %) </label>
-                      <input type="number" id="roi-threshold" class="minor-text form-control" placeholder="Default: 1"/></p>
+                      <input type="number" id="roi-threshold" class="minor-text form-control" placeholder="Default: 4"/></p>
                     </div>
                     <div class="col-sm-12 col-xs-12">
                       <p><label for="buy-threshold" class="control-label">Maximum Budget</label>
@@ -288,7 +286,7 @@
                             <div class="col-sm-12 col-xs-12">
                                 <p><label for="profit-threshold" class="control-label">Only Return Profits Above</label>
                                     <input type="number" id="region-profit-threshold" class="minor-text form-control"
-                                           placeholder="Default: 100,000"/></p>
+                                           placeholder="Default: 500,000"/></p>
                             </div>
                             <div class="col-sm-12 col-xs-12">
                                 <p><label for="weight-threshold" class="control-label">Max Cargo Capacity (in
@@ -301,7 +299,7 @@
                             <div class="col-sm-12 col-xs-12">
                                 <p><label for="roi-threshold" class="control-label"> Minimum ROI (in %) </label>
                                     <input type="number" id="region-roi-threshold" class="minor-text form-control"
-                                           placeholder="Default: 1"/></p>
+                                           placeholder="Default: 4"/></p>
                             </div>
                             <div class="col-sm-12 col-xs-12">
                                 <p><label for="buy-threshold" class="control-label">Maximum Budget</label>
@@ -344,7 +342,7 @@
 
         <div class="container overflow_none">
       		<h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 4.6.0 | Updated 19 May 2018</a></p>
+            <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">Version 5.0b | Updated 22 May 2018</a></p>
             <p class="m-0 text-center text-white">&copy; 2016-2018 <a href='https://EVETrade.space'> EVE Trade</a>. All rights reserved.</p>
             <div style="position: absolute !important; top: -1000px !important; left: -1000px !important; z-index: -100 !important; width:0 !important; height: 0 !important; opacity: 0 !important;">
               <a href="https://venturefocused.com" data-ytta-id="-">Developed in part with the help of Venture Focused Consulting</a>
@@ -520,10 +518,10 @@
 
 
   <script src="vendor/complete.ly/complete.ly.min.js"></script>
-  <script src="js/init.min.js" async defer></script>
-  <script src="js/common.min.js" async defer></script>
+  <script src="js/init.js" async defer></script>
+  <script src="js/common.js" async defer></script>
   <script src="js/route.min.js" async defer></script>
-    <script src="js/region.min.js" async defer></script>
+    <script src="js/region.js" async defer></script>
   <script src="js/station.min.js" async defer></script>
   <script src="js/station_ids.min.js" async defer></script>
     <script src="js/region_ids.min.js" async defer></script>
