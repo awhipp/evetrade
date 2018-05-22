@@ -587,6 +587,5 @@ Station.prototype.createTable = function() {
 
     $("#core input").css('display','block');
     $("#core a").css('display','inline-block');
-
     $("#core").css('display','block');
 };
