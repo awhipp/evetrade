@@ -1,4 +1,4 @@
-# EVE Trade Finder v5.0.0b
+# EVE Trade Finder v5.0.1
 
 ## About
 Implements the EVE ESI API to find:
@@ -9,6 +9,13 @@ Implements the EVE ESI API to find:
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
+## V5.0.1
+    * Removed redundant code.
+    * When refreshing the table, existing results remain until new ones are found.
+    * Due to demand, trade hubs are temporarily added back in. This will eventually become the last 5-10 most recent trade selections.
+    * Added table pagination back in for queries that result in over 50 trades so as not to break browsers.
+    * Loading indicator in top right added to know that results are still being added while you scroll.
+    
 ## V5.0.0b
     * Highly anticipated beta version of the region-to-region feature is now live.
     

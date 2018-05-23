@@ -490,6 +490,28 @@ function getCookie(cname) {
     return "";
 }
 
+function addStart(variable) {
+    if (tradingStyle == 0) {
+        $("#custom_station input")[0].value = variable;
+    } else if (tradingStyle == 1) {
+        $("#start_station input")[0].value = variable;
+        newStartStation();
+    } else if (tradingStyle == 2) {
+        $("#start_region input")[0].value = variable;
+    }
+}
+
+function addEnd(variable) {
+    if (tradingStyle == 0) {
+        return;
+    } else if (tradingStyle == 1) {
+        $("#end_station input")[0].value = variable;
+        newEndStation();
+    } else if (tradingStyle == 2) {
+        $("#end_region input")[0].value = variable;
+    }
+}
+
 function setStationTradingLocations() {
     var inputValue = $("#custom_station input")[0].value || $("#custom_station input")[1].value;
     startLocations = inputValue.toLowerCase();
@@ -574,188 +596,6 @@ function setRouteStationTradingLocations() {
     }
 }
 
-function createDataTable() {
-    var buyingFooter;
-    var buyingHeaderDOM = $("#buyingHeader");
-    var buyingFooterDOM = $("#buyingFooter");
-    var coreDOM = $("#core");
-    var dataTableDOM = $("#dataTable");
-
-    if(tradingStyle == 1 || tradingStyle == 2) {
-        dataTableDOM.append("<thead><tr>" +
-                "<th></th>" +
-            "<th>Buy Item</th>" +
-            "<th>From</th>" +
-            "<th>Quantity</th>" +
-            "<th>At Sell Price</th>" +
-            "<th>Total Cost</th>" +
-            "<th>Take To</th>" +
-            "<th>At Buy Price</th>" +
-            "<th>Total Profit</th>" +
-            "<th>Profit Per Item</th>" +
-            "<th>R.O.I.</th>" +
-            "<th>Total Volume (m3)</th>" +
-            "</tr></thead>" +
-            "<tbody id='tableBody'></tbody>");
-
-
-        var buyingFrom = "";
-        var sellingTo = "";
-        if (tradingStyle == 1) {
-            $.each(startLocations, function () {
-                buyingFrom += this + ", ";
-            });
-            buyingFrom = buyingFrom.substring(0, buyingFrom.length - 2);
-
-            $.each(endLocations, function () {
-                sellingTo += this + ", ";
-            });
-            sellingTo = sellingTo.substring(0, sellingTo.length - 2);
-        } else {
-            buyingFrom = startLocations;
-            sellingTo = endLocations;
-        }
-
-        buyingHeaderDOM.text("Buying Sell Orders from " + buyingFrom);
-
-        var extraData = "<div id='route-to'>Selling to the Buy Orders at " + sellingTo + "</div> " +
-            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
-            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
-
-        if(threshold_cost !== 999999999999999999){
-            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";
-        }
-        if(threshold_weight !== 999999999999999999){
-            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
-        }
-
-        buyingHeaderDOM.show();
-
-        buyingFooter = extraData +
-            "<br/>" +
-            "<div class='loading'></div>";
-
-        buyingFooterDOM.html(buyingFooter);
-        buyingFooterDOM.show();
-
-        coreDOM.show();
-
-        $(".deal_note").show();
-        $("#core input").css('display','none');
-        $("#core a").css('display','none');
-        $("#show-hide").hide();
-
-        // sorting on margin index
-        var dt = dataTableDOM.DataTable({
-            "order": [[ 8, "desc" ]],
-            // "lengthMenu": [[50], ["50"]],
-            "lengthMenu": [[-1], ["All"]],
-            responsive: true,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf'
-            ],
-            "columnDefs": [{
-                "targets": 0,
-                "orderable": false
-            }]
-        });
-
-        // for each column in header add a togglevis button in the div
-        var li_counter = 0;
-        $("#dataTable thead th").each( function ( i ) {
-            var name = dt.column( i ).header();
-            var spanelt = document.createElement( "button" );
-
-            var initial_removed = [];
-
-            spanelt.innerHTML = name.innerHTML;
-
-            $(spanelt).addClass("colvistoggle");
-            $(spanelt).addClass("btn");
-            $(spanelt).addClass("btn-default");
-            $(spanelt).attr("colidx",i);    // store the column idx on the button
-
-            $(spanelt).addClass("is-true");
-            var column = dt.column( $(spanelt).attr('colidx') );
-            column.visible( true );
-
-            for(var i = 0; i < initial_removed.length; i++){
-                if(spanelt.innerHTML === initial_removed[i]){
-                    $(spanelt).addClass("is-false");
-                    var column = dt.column( $(spanelt).attr('colidx') );
-                    column.visible( false );
-                    break;
-                }
-            }
-
-            $(spanelt).on( 'click', function (e) {
-                e.preventDefault();
-                // Get the column API object
-                var column = dt.column( $(this).attr('colidx') );
-                // Toggle the visibility
-                $(this).removeClass("is-"+column.visible());
-                column.visible( ! column.visible() );
-                $(this).addClass("is-"+column.visible());
-
-            });
-            var li = document.createElement("li");
-            $(li).append($(spanelt));
-            $("#colvis").append($(li));
-        });
-
-        // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
-        $('.dropdown').on('show.bs.dropdown', function(e){
-            $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
-        });
-
-        // ADD SLIDEUP ANIMATION TO DROPDOWN //
-        $('.dropdown').on('hide.bs.dropdown', function(e){
-            $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
-        });
-
-        $('#dataTable tbody').on('mousedown', 'tr', function (event) {
-            var investigateButton = (event.target.id.indexOf("investigate") >= 0
-            || (event.target.children[0] && event.target.children[0].id.indexOf("investigate") >= 0)
-            || (event.target.classList.contains("fa")));
-
-            if(event.which === 1 && !investigateButton){
-                if(!$(this).hasClass("row-selected")){
-                    $(this).addClass("row-selected");
-                }else{
-                    $(this).removeClass("row-selected");
-                }
-            }
-        } );
-
-        $("label > input").addClass("form-control").addClass("minor-text");
-        $("label > input").attr("placeholder", "Filter by Station/Name...");
-    } else if (tradingStyle == 0) {
-        buyingHeaderDOM.text("Station Trading at " + startLocations);
-        buyingHeaderDOM.show();
-
-        buyingFooter = "Volume greater than: " + numberWithCommas(volume_threshold) +
-            " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%" +
-            "<div class='loading'>Loading. Please wait...</div>";
-        buyingFooterDOM.html(buyingFooter);
-        buyingFooterDOM.show();
-
-        coreDOM.show();
-        $(".deal_note").show();
-        $("#show-hide").hide();
-
-        dataTableDOM.append("<thead><tr>" +
-            "<th>Item</th>" +
-            "<th>Buy Order</th>" +
-            "<th>Sell Order</th>" +
-            "<th>Profit Per Item</th>" +
-            "<th>Margin</th>" +
-            "<th>Volume</th>" +
-            "</tr></thead>" +
-            "<tbody id='tableBody'></tbody>");
-    }
-}
-
 function execute() {
     if(tradingStyle == 1) {
         routes = [];
@@ -771,7 +611,7 @@ function execute() {
 }
 
 function init(){
-
+    $(".tableLoadingIcon").show();
     updateCookies();
 
     if(tradingStyle == 1){
@@ -793,7 +633,7 @@ function init(){
         return;
     }
 
-    createDataTable();
+    createTradeHeader();
     execute();
 }
 

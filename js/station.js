@@ -14,15 +14,15 @@ function Station(stationLocation) {
 
     this.itemCache = {};
 
-    this.totalProgress = 0;
     this.itemIds = [];
     this.secondsToRefresh = 60;
     this.filtered = false;
+    this.completed = false;
     this.filterCount = 0;
 
     this.asyncChecker = null;
     this.asyncCalculator = null;
-    this.asyncFilter = null
+    this.asyncFilter = null;
     this.asyncRefresher = null;
 
     routes.push(this);
@@ -59,79 +59,15 @@ Station.prototype.asyncCheck = function() {
 };
 
 /**
- * The builder for the market endpoint
- *
- * @param region The region ID in question.
- * @param page The page in question.
- * @param orderType The order type to get orders for.
- * @returns {string} Returns a URL for the ESI EVE Market Endpoint.
- */
-Station.prototype.marketEndpointBuilder = function(region, page, orderType) {
-    var url = ESI_ENDPOINT + "/latest/markets/" + region + "/orders/" +
-        "?datasource=tranquility" +
-        "&page=" + page +
-        "&order_type=" + orderType +
-        "&language=en-us&iteration=" + iteration;
-    return url.replace(/\s/g, '');
-};
-
-/**
- * The builder for the weight/itemtype endpoint
- *
- * @param itemId The item ID in question.
- * @returns {string} Returns a URL for the ESI EVE Item Type Endpoint.
- */
-Station.prototype.getWeightEndpointBuilder = function(itemId) {
-    var url = ESI_ENDPOINT + "/latest/universe/types/" + itemId + "/" +
-        "?datasource=tranquility" +
-        "&language=en-us" +
-        "&iteration=" + iteration;
-    return url.replace(/\s/g, '');
-};
-
-/**
- * The builder for the volume endpoint
- *
- * @param itemId The item ID in question.
- * @returns {string} Returns a URL for the ESI EVE Volume History Endpoint.
- */
-Station.prototype.getVolumeEndpointBuilder = function(itemId) {
-    var url = ESI_ENDPOINT + "/latest/markets/" + this.stationLocation.region + "/history/" +
-        "?datasource=tranquility" +
-        "&type_id=" + itemId +
-        "&language=en-us" +
-        "&iteration=" + iteration;
-    return url.replace(/\s/g, '');
-};
-
-/**
  * Calculates the progress using a logarithmic function
  *
  * @returns {number}
  */
 Station.prototype.recalculateProgress = function() {
     var progressUpdate = this.getNumberOfCompletePages(this.allOrders);
-
     return progressUpdate === 0 ? 1 : progressUpdate;
 };
 
-/**
- * Helper function to increment order finding progress and paint it to the screen.
- *
- * @param composite The running buy or sell order list object.
- * @param page The page that is now completed.
- */
-Station.prototype.incrementProgress = function(composite, page) {
-
-    if(this.totalProgress !== 100) {
-        this.totalProgress = 35.0 * Math.log10(this.recalculateProgress());
-        this.totalProgress = this.totalProgress > 100 ? 100 : this.totalProgress;
-
-        $(".loading").html("Getting orders: " + this.totalProgress.toFixed(2) + "% complete");
-    }
-
-    composite.completePages[page] = true;
-};
 
 /**
  * Getting the orders for a specific region, station, and page number.
@@ -143,7 +79,7 @@ Station.prototype.incrementProgress = function(composite, page) {
  * @param orderType The order type to get orders for.
  */
 Station.prototype.getOrders = function(region, station, page, composite, orderType) {
-    var url = this.marketEndpointBuilder(region, page, orderType);
+    var url = marketEndpointBuilder(region, page, orderType);
     var thiz = this;
 
     if(!composite.completePages[page]) {
@@ -154,11 +90,12 @@ Station.prototype.getOrders = function(region, station, page, composite, orderTy
             contentType: "application/json",
             async: true,
             success: function(data) {
-                thiz.incrementProgress(composite, page);
+                incrementProgress(composite, page);
 
                 if (data.length === 0 && !composite.complete) {
                     composite.complete = true;
                     console.log("Completed " + station + " order fetch at " + page);
+                    thiz.completed = true;
                 } else {
                     for (var i = 0; i < data.length; i++) {
                         if (data[i]["location_id"] === station) {
@@ -183,7 +120,7 @@ Station.prototype.getOrders = function(region, station, page, composite, orderTy
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 displayError();
-                thiz.incrementProgress(composite, page);
+                incrementProgress(composite, page);
 
                 if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
                     var _page = page + 1;
@@ -222,7 +159,7 @@ Station.prototype.getNumberOfCompletePages = function(order) {
  */
 Station.prototype.checkOrdersComplete = function() {
     var orderFull = (this.getNumberOfCompletePages(this.allOrders) === this.allOrders.pageBookend);
-    var ordersComplete = this.allOrders.complete;
+    var ordersComplete = this.allOrders.complete && this.completed;
 
     return (orderFull && ordersComplete);
 };
@@ -241,9 +178,6 @@ Station.prototype.executeOrders = function() {
                 this.itemIds.push(itemId);
         }
 
-        this.totalProgress = 100;
-        $(".loading").text("Getting orders: " + this.totalProgress.toFixed(2) + "% complete");
-
         this.asyncCalculate();
     }
 };
@@ -258,11 +192,11 @@ Station.prototype.clear = function() {
 
     this.itemCache = {};
 
-    this.totalProgress = 0;
     this.itemIds = [];
     this.secondsToRefresh = 60;
     this.filtered = false;
     this.filterCount = 0;
+    this.completed = false;
 
     clearInterval(this.asyncChecker);
     clearInterval(this.asyncCalculator);
@@ -283,7 +217,15 @@ Station.prototype.asyncRefresh = function() {
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
-            $("#refresh-timer").html("<br><p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            if (rowAdded) {
+                $(".loading").hide();
+            } else {
+                $(".loading").text("No trades found for your filters.");
+            }
+
+            $(".tableLoadingIcon").hide();
+
+            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -295,6 +237,12 @@ Station.prototype.asyncRefresh = function() {
 Station.prototype.asyncCalculate = function() {
     var thiz = this;
     this.asyncCalculator = setInterval(function(){
+        if(!thiz.filtered){
+            thiz.filtered = true;
+            $("#buyingFooter").append("<div id='filtering-data'>Filtering Results. Please wait.</br>If it takes too long try a smaller margin range.</div>");
+            thiz.asyncFiltering();
+        }
+
         while(thiz.itemIds.length != 0 && executingCount < 1500){
             executingCount++;
             var itemId = thiz.itemIds.splice(0, 1)[0];
@@ -304,7 +252,12 @@ Station.prototype.asyncCalculate = function() {
         if(thiz.itemIds.length == 0 && executingCount <= 0) {
             clearInterval(thiz.asyncCalculator);
 
-            $(".loading").text("No trades found for your filters.");
+            $(".tableLoadingIcon").hide();
+
+            if (rowAdded) {
+                $(".loading").hide();
+            }
+
             $("#buyingFooter").append('<div id="refresh-timer"></div>');
 
             thiz.asyncRefresh();
@@ -382,7 +335,7 @@ Station.prototype.asyncFiltering = function() {
                 ellipses += ".";
             }
 
-            $("#filtering-data").html("<br>Filtering Results. Please wait" + ellipses + "</br>If it takes too long try a smaller margin range.");
+            $("#filtering-data").html("Filtering Results. Please wait" + ellipses + "</br>If it takes too long try a smaller margin range.");
 
             if(executingCount == 0) {
                 clearInterval(thiz.asyncFilter);
@@ -393,13 +346,7 @@ Station.prototype.asyncFiltering = function() {
 };
 
 Station.prototype.getItemVolume = function(itemId, row){
-    if(!this.filtered){
-        this.filtered = true;
-        $("#buyingFooter").append("<div id='filtering-data'><br>Filtering Results. Please wait.</br>If it takes too long try a smaller margin range.</div>");
-        this.asyncFiltering();
-    }
-
-    var url = this.getVolumeEndpointBuilder(itemId);
+    var url = getVolumeEndpointBuilder(this.stationLocation.region, itemId);
     var thiz = this;
     $.ajax({
         type: "get",
@@ -431,16 +378,13 @@ Station.prototype.getItemVolume = function(itemId, row){
 };
 
 Station.prototype.getItemWeight = function(itemId, row){
-
     if(this.itemCache[itemId]){
         row.itemName = this.itemCache[itemId].name;
-
         this.addRow(row);
-
         executingCount--;
     }else{
         var thiz = this;
-        var url = this.getWeightEndpointBuilder(itemId);
+        var url = getWeightEndpointBuilder(itemId);
         $.ajax({
             type: "get",
             url: url,
@@ -477,9 +421,7 @@ Station.prototype.addRow = function(row) {
     var margin = (row.sellPrice - row.buyPrice) / row.sellPrice;
     margin = (margin.toFixed(3)*100).toFixed(1)+"%";
 
-    if(!tableCreated) {
-        this.createTable();
-    }
+    createDataTable();
 
     var row_data = [
         row.itemName,
@@ -491,101 +433,6 @@ Station.prototype.addRow = function(row) {
     ];
 
     $('#dataTable').dataTable().fnAddData(row_data);
-};
 
-Station.prototype.createTable = function() {
-    tableCreated = true;
-
-    $(".deal_note").hide();
-    // sorting on margin index
-    dt = $('#dataTable').DataTable({
-        "order": [[ 5, "desc" ]],
-        "lengthMenu": [[-1], ["All"]],
-        responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf'
-        ]
-    });
-
-    // for each column in header add a togglevis button in the div
-    var li_counter = 0;
-    $("#dataTable thead th").each( function ( i ) {
-        var name = dt.column( i ).header();
-        var spanelt = document.createElement( "button" );
-
-        var initial_removed = [];
-        // if($(document).width() < 768){
-        //     initial_removed = ["Profit Per Item"];
-        // }
-
-        spanelt.innerHTML = name.innerHTML;
-
-        $(spanelt).addClass("colvistoggle");
-        $(spanelt).addClass("btn");
-        $(spanelt).addClass("btn-default");
-        $(spanelt).attr("colidx",i);    // store the column idx on the button
-
-        $(spanelt).addClass("is-true");
-        var column = dt.column( $(spanelt).attr('colidx') );
-        column.visible( true );
-
-        for(var i = 0; i < initial_removed.length; i++){
-            if(spanelt.innerHTML === initial_removed[i]){
-                $(spanelt).addClass("is-false");
-                var column = dt.column( $(spanelt).attr('colidx') );
-                column.visible( false );
-                break;
-            }
-        }
-
-        $(spanelt).on( 'click', function (e) {
-            e.preventDefault();
-            // Get the column API object
-            var column = dt.column( $(this).attr('colidx') );
-            // Toggle the visibility
-            $(this).removeClass("is-"+column.visible());
-            column.visible( ! column.visible() );
-            $(this).addClass("is-"+column.visible());
-
-        });
-        var li = document.createElement("li");
-        $(li).append($(spanelt));
-        $("#colvis").append($(li));
-    });
-
-    $("#show-hide").show();
-
-    // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
-    $('.dropdown').on('show.bs.dropdown', function(e){
-        $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
-    });
-
-    // ADD SLIDEUP ANIMATION TO DROPDOWN //
-    $('.dropdown').on('hide.bs.dropdown', function(e){
-        $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
-    });
-
-    $('#dataTable tbody').on('mousedown', 'tr', function (event) {
-        if(event.which === 1){
-            if(!$(this).hasClass("row-selected")){
-                $(this).addClass("row-selected");
-            }else{
-                $(this).removeClass("row-selected");
-            }
-        }
-    } );
-
-    $("label > input").addClass("form-control").addClass("minor-text");
-    $("label > input").attr("placeholder", "Filter Results...");
-    $(".loading").hide();
-    $('#dataTable').show();
-    $(".data_options").append($("#dataTable_filter"));
-    $(".data_options").append($(".dt-buttons"));
-    $(".dt-button").addClass("btn");
-    $(".dt-button").addClass("btn-default");
-
-    $("#core input").css('display','block');
-    $("#core a").css('display','inline-block');
-    $("#core").css('display','block');
+    rowAdded  = true;
 };
