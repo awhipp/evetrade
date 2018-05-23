@@ -168,7 +168,7 @@ function getTotalProgress() {
     if(allComplete) {
         totalProgress = 100;
     } else {
-        totalProgress = progressUpdate > 100 ? 99.99 : progressUpdate;
+        totalProgress = progressUpdate > 100 ? 100 : progressUpdate;
     }
 
     $(".loading").html("Fetching orders: " + (totalProgress-0.01).toFixed(2) + "% complete");
