@@ -18,7 +18,6 @@ function Route(startLocation, endLocations) {
 
     this.sellOrders = {};
 
-    this.totalProgress = 0;
     this.itemIds = [];
     this.secondsToRefresh = 60;
 
@@ -70,44 +69,12 @@ Route.prototype.startRoute = function() {
 };
 
 /**
- * The builder for the market endpoint
- *
- * @param region The region ID in question.
- * @param page The page in question.
- * @param orderType The order type to get orders for.
- * @returns {string} Returns a URL for the ESI EVE Market Endpoint.
- */
-Route.prototype.marketEndpointBuilder = function(region, page, orderType) {
-    var url = ESI_ENDPOINT + "/latest/markets/" + region + "/orders/" +
-        "?datasource=tranquility" +
-        "&page=" + page +
-        "&order_type=" + orderType +
-        "&language=en-us&iteration=" + iteration;
-    return url.replace(/\s/g, '');
-};
-
-/**
- * The builder for the weight/itemtype endpoint
- *
- * @param itemId The item ID in question.
- * @returns {string} Returns a URL for the ESI EVE Item Type Endpoint.
- */
-Route.prototype.getWeightEndpointBuilder = function(itemId) {
-    var url = ESI_ENDPOINT + "/latest/universe/types/" + itemId + "/" +
-        "?datasource=tranquility" +
-        "&language=en-us" +
-        "&iteration=" + iteration;
-    return url.replace(/\s/g, '');
-};
-
-/**
  * Calculates the progress using a logarithmic function
  *
  * @returns {number}
  */
 Route.prototype.recalculateProgress = function() {
     var progressUpdate = this.getNumberOfCompletePages(this.buyOrders);
-
     var rI = 0;
     for (var i = 0; i < this.endLocations.length; i++) {
         if(this.endLocations[i].station !== this.startLocation.station) {
@@ -115,21 +82,7 @@ Route.prototype.recalculateProgress = function() {
             rI += 1;
         }
     }
-
     return progressUpdate <= 0 ? 1 : 35.0 * Math.log10(progressUpdate);
-};
-
-/**
- * Helper function to increment order finding progress and paint it to the screen.
- *
- * @param composite The running buy or sell order list object.
- * @param page The page that is now completed.
- */
-Route.prototype.incrementProgress = function(composite, page) {
-
-    getTotalProgress();
-
-    composite.completePages[page] = true;
 };
 
 /**
@@ -167,7 +120,7 @@ Route.prototype.getSellOrders = function(region, station, page, composite) {
  */
 Route.prototype.getOrders = function(region, station, page, composite, orderType) {
 
-    var url = this.marketEndpointBuilder(region, page, orderType);
+    var url = marketEndpointBuilder(region, page, orderType);
     var thiz = this;
 
     if(!composite.completePages[page]) {
@@ -178,7 +131,7 @@ Route.prototype.getOrders = function(region, station, page, composite, orderType
             contentType: "application/json",
             async: true,
             success: function(data) {
-                thiz.incrementProgress(composite, page);
+                incrementProgress(composite, page);
 
                 if (data.length === 0 && !composite.complete) {
                     composite.complete = true;
@@ -209,7 +162,7 @@ Route.prototype.getOrders = function(region, station, page, composite, orderType
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 displayError();
-                thiz.incrementProgress(composite, page);
+                incrementProgress(composite, page);
 
                 if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
                     var _page = page + 1;
@@ -312,7 +265,13 @@ Route.prototype.asyncRefresh = function() {
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
-            $("#refresh-timer").html("<br><p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            if (rowAdded) {
+                $(".loading").hide();
+            } else {
+                $(".loading").text("No trades found for your filters.");
+            }
+
+            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -326,11 +285,9 @@ Route.prototype.asyncProgress = function() {
         if (totalProgress == 100) {
             clearInterval(thiz.asyncProgressUpdate);
 
-            if (rowAdded) {
-                $(".loading").hide();
-            }
-
             $("#buyingFooter").append('<div id="refresh-timer"></div>');
+
+            $(".tableLoadingIcon").hide();
 
             if (!createdRefresher) {
                 createdRefresher = true;
@@ -354,8 +311,6 @@ Route.prototype.calculate = function() {
         }
         this.calculateNext(itemId);
     }
-
-
 };
 
 /**
@@ -462,7 +417,7 @@ Route.prototype.getItemWeight = function(itemId, row){
         executingCount--;
     }else{
         var thiz = this;
-        var url = this.getWeightEndpointBuilder(itemId);
+        var url = getWeightEndpointBuilder(itemId);
         $.ajax({
             type: "get",
             url: url,
@@ -522,10 +477,7 @@ Route.prototype.addRow = function(row) {
         return;
     }
 
-
-    if(!tableCreated) {
-        this.createTable();
-    }
+    createDataTable();
 
     var investigateId = row.sellToStation.station + this.startLocation.station + row.itemId + "_investigate";
 
@@ -563,20 +515,4 @@ Route.prototype.addRow = function(row) {
     });
 
     rowAdded = true;
-};
-
-Route.prototype.createTable = function() {
-    tableCreated = true;
-    $("#show-hide").show();
-    $('#dataTable').show();
-    $(".data_options").append($("#dataTable_filter"));
-
-    $(".data_options").append($(".dt-buttons"));
-    $(".dt-button").addClass("btn");
-    $(".dt-button").addClass("btn-default");
-
-    $(".deal_note").hide();
-    $("#core input").css('display','block');
-    $("#core a").css('display','inline-block');
-    $("#core").show();
 };

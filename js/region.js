@@ -61,37 +61,6 @@ Region.prototype.startRoute = function() {
 };
 
 /**
- * The builder for the market endpoint
- *
- * @param region The region ID in question.
- * @param page The page in question.
- * @param orderType The order type to get orders for.
- * @returns {string} Returns a URL for the ESI EVE Market Endpoint.
- */
-Region.prototype.marketEndpointBuilder = function(region, page, orderType) {
-    var url = ESI_ENDPOINT + "/latest/markets/" + region + "/orders/" +
-        "?datasource=tranquility" +
-        "&page=" + page +
-        "&order_type=" + orderType +
-        "&language=en-us&iteration=" + iteration;
-    return url.replace(/\s/g, '');
-};
-
-/**
- * The builder for the weight/itemtype endpoint
- *
- * @param itemId The item ID in question.
- * @returns {string} Returns a URL for the ESI EVE Item Type Endpoint.
- */
-Region.prototype.getWeightEndpointBuilder = function(itemId) {
-    var url = ESI_ENDPOINT + "/latest/universe/types/" + itemId + "/" +
-        "?datasource=tranquility" +
-        "&language=en-us" +
-        "&iteration=" + iteration;
-    return url.replace(/\s/g, '');
-};
-
-/**
  * Calculates the progress using a logarithmic function
  *
  * @returns {number}
@@ -99,21 +68,7 @@ Region.prototype.getWeightEndpointBuilder = function(itemId) {
 Region.prototype.recalculateProgress = function() {
     var progressUpdate = this.getNumberOfCompletePages(this.buyOrders);
     progressUpdate += this.getNumberOfCompletePages(this.sellOrders);
-
     return progressUpdate <= 0 ? 1 : 35.0 * Math.log10(progressUpdate);
-};
-
-/**
- * Helper function to increment order finding progress and paint it to the screen.
- *
- * @param composite The running buy or sell order list object.
- * @param page The page that is now completed.
- */
-Region.prototype.incrementProgress = function(composite, page) {
-
-    getTotalProgress();
-
-    composite.completePages[page] = true;
 };
 
 /**
@@ -148,7 +103,7 @@ Region.prototype.getSellOrders = function(region, page, composite) {
  */
 Region.prototype.getOrders = function(region, page, composite, orderType) {
 
-    var url = this.marketEndpointBuilder(region, page, orderType);
+    var url = marketEndpointBuilder(region, page, orderType);
     var thiz = this;
 
     if(!composite.completePages[page]) {
@@ -159,7 +114,7 @@ Region.prototype.getOrders = function(region, page, composite, orderType) {
             contentType: "application/json",
             async: true,
             success: function(data) {
-                thiz.incrementProgress(composite, page);
+                incrementProgress(composite, page);
 
                 if (data.length === 0 && !composite.complete) {
                     composite.complete = true;
@@ -196,7 +151,7 @@ Region.prototype.getOrders = function(region, page, composite, orderType) {
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
                 displayError();
-                thiz.incrementProgress(composite, page);
+                incrementProgress(composite, page);
 
                 if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
                     var _page = page + 1;
@@ -306,11 +261,14 @@ Region.prototype.executeRoutes = function() {
     this.routesExecutor = setInterval(function(){
 
         if(thiz.regionRoutes.length == 0){
+            thiz.completed = true;
             totalProgress = 100;
             clearInterval(thiz.routesExecutor);
             if (rowAdded) {
                 $(".loading").hide();
             }
+
+            $(".tableLoadingIcon").hide();
 
             $("#buyingFooter").append('<div id="refresh-timer"></div>');
 
@@ -327,6 +285,7 @@ Region.prototype.executeRoutes = function() {
         totalProgress = originalTotal + (remainingProgress * (runningCount/originalCount));
 
         $(".loading").html("Adding orders to table: " + totalProgress.toFixed(2) + "% complete");
+        $(".loadingContent").text((totalProgress).toFixed(2) + "%");
     }, 1000);
 };
 
@@ -368,7 +327,13 @@ Region.prototype.asyncRefresh = function() {
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
-            $("#refresh-timer").html("<br><p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            if (rowAdded) {
+                $(".loading").hide();
+            } else {
+                $(".loading").text("No trades found for your filters.");
+            }
+
+            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -425,14 +390,12 @@ Region.prototype.getItemWeight = function(itemId, row){
     if(itemCache[itemId]){
         var name = itemCache[itemId].name;
         var weight = itemCache[itemId].weight;
-
         row.itemName = name;
         row.itemWeight = weight;
-
         this.addRow(row);
     }else{
         var thiz = this;
-        var url = this.getWeightEndpointBuilder(itemId);
+        var url = getWeightEndpointBuilder(itemId);
         $.ajax({
             type: "get",
             url: url,
@@ -490,9 +453,7 @@ Region.prototype.addRow = function(row) {
     }
 
 
-    if(!tableCreated) {
-        this.createTable();
-    }
+    createDataTable();
 
     var investigateId = row.sellToStation.station + row.buyFromStation.station + row.itemId + "_investigate";
 
