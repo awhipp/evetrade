@@ -25,6 +25,8 @@ var endCoordinates = [];
 var startLocations = [];
 var endLocations = [];
 
+
+var shifted = false;
 $( document ).ready(function() {
     popup_table_buy = $("#popup-table-buy").DataTable({
         "order": [[ 0, "asc" ]],
@@ -48,6 +50,17 @@ $( document ).ready(function() {
             theEvent.returnValue = false;
             if(theEvent.preventDefault) theEvent.preventDefault();
         }
+    });
+
+    $(document).on('keyup keydown', function (e) {
+        if(e.shiftKey) {
+            $(".add-station-button").val("Add System");
+            shifted = true;
+        } else {
+            $(".add-station-button").val("+");
+            shifted = false;
+        }
+        return true;
     });
 
     setAbout();
@@ -85,7 +98,13 @@ function initCompletely(domId, stationList) {
     if (domId == "start_station") {
         $($("#" + domId + " input")[1]).on('keydown', function (e) {
             if (e.keyCode == 13) {
-                newStartStation();
+                if (shifted) {
+                    var e = {};
+                    e.shiftKey = true;
+                    newStartStation(e);
+                } else {
+                    newStartStation();
+                }
             }
         });
     }
@@ -93,7 +112,13 @@ function initCompletely(domId, stationList) {
     if (domId == "end_station") {
         $($("#" + domId + " input")[1]).on('keydown', function (e) {
             if (e.keyCode == 13) {
-                newEndStation();
+                if (shifted) {
+                    var e = {};
+                    e.shiftKey = true;
+                    newEndStation(e);
+                } else {
+                    newEndStation();
+                }
             }
         });
     }
@@ -204,80 +229,146 @@ function setupCustomDropdown() {
     }, 1000);
 }
 
-function newStartStation() {
-    var li = document.createElement("li");
-    var inputValue = ($("#start_station input")[0].value && universeList[$("#start_station input")[0].value.toLowerCase()].name)
-        || ($("#start_station input")[1].value && universeList[$("#start_station input")[1].value.toLowerCase()].name);
-    var t = document.createTextNode(inputValue);
-
-    if (addedToStartList.indexOf(inputValue) == -1) {
-        addedToStartList.push(inputValue);
-
-        li.appendChild(t);
-        if (inputValue === '') {
-            alert("You must choose a station!");
-        } else {
-            document.getElementById("custom_route_start").style.display = "block";
-            document.getElementById("custom_route_start").appendChild(li);
-        }
-
-        $("#start_station input")[0].value = "";
-        $("#start_station input")[1].value = "";
-
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode(" \u00D7");
-        span.className = "closeStation";
-        span.title = "Remove: " + inputValue;
-        span.appendChild(txt);
-        li.appendChild(span);
-    }
-
-    var close = document.getElementsByClassName("closeStation");
-    var i;
-    for (i = 0; i < close.length; i++) {
-        close[i].onclick = function () {
-            var data = $(this)[0].previousSibling.data;
-            addedToStartList[addedToStartList.indexOf(data)] = "";
-            $(this.parentElement).remove();
-        }
-    }
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function (searchString, position) {
+        position = position || 0;
+        return this.indexOf(searchString, position) === position;
+    };
 }
 
-function newEndStation() {
-    var li = document.createElement("li");
-    var inputValue = ($("#end_station input")[0].value && universeList[$("#end_station input")[0].value.toLowerCase()].name)
-        || ($("#end_station input")[0].value && universeList[$("#end_station input")[1].value.toLowerCase()].name);
-    var t = document.createTextNode(inputValue);
-
-    if (addedToEndList.indexOf(inputValue) == -1) {
-        addedToEndList.push(inputValue);
-
-        li.appendChild(t);
-        if (inputValue === '') {
-            alert("You must choose a station!");
-        } else {
-            document.getElementById("custom_route_end").style.display = "block";
-            document.getElementById("custom_route_end").appendChild(li);
-        }
-
-        $("#end_station input")[0].value = "";
-        $("#end_station input")[1].value = "";
-
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode(" \u00D7");
-        span.className = "closeStation";
-        span.title = "Remove: " + inputValue;
-        span.appendChild(txt);
-        li.appendChild(span);
+function findAllStations(stationName) {
+    var stationsInSystem = [];
+    var systemName = stationName.toLowerCase();
+    if(stationName.indexOf(" ") > -1) {
+        systemName = stationName.substr(0, stationName.indexOf(" ")).toLowerCase();
     }
 
-    var close = document.getElementsByClassName("closeStation");
-    var i;
-    for (i = 0; i < close.length; i++) {
-        close[i].onclick = function () {
-            var data = $(this)[0].previousSibling.data;
-            addedToEndList[addedToEndList.indexOf(data)] = "";
-            $(this.parentElement).remove();
+    if(systemName.length >= 3) {
+        for (station in universeList) {
+            if (!universeList.hasOwnProperty(station)) continue;
+            if (station && station.startsWith(systemName)
+                && station.indexOf(" ") > -1) {
+                stationsInSystem.push(station);
+            }
+        }
+    }
+    return stationsInSystem;
+}
+
+function newStartStation(e) {
+    var li = document.createElement("li");
+    var inputValue = ($("#start_station input")[0].value
+    && universeList[$("#start_station input")[0].value.toLowerCase()]
+    && universeList[$("#start_station input")[0].value.toLowerCase()].name);
+
+    if (inputValue.length == 0) {
+        inputValue = ($("#start_station input")[1].value
+        && universeList[$("#start_station input")[1].value.toLowerCase()]
+        && universeList[$("#start_station input")[1].value.toLowerCase()].name);
+    }
+
+    var systems = [];
+    if(e && e.shiftKey) {
+        systems = findAllStations(inputValue);
+        for(var i = 0; i < systems.length; i++) {
+            $("#start_station input")[0].value = systems[i];
+            $("#start_station input")[1].value = systems[i];
+            newStartStation();
+            $("#start_station input")[0].value = "";
+            $("#start_station input")[1].value = "";
+        }
+    } else {
+        var t = document.createTextNode(inputValue);
+
+        if (addedToStartList.indexOf(inputValue) == -1) {
+            addedToStartList.push(inputValue);
+
+            li.appendChild(t);
+            if (inputValue === '') {
+                alert("You must choose a station!");
+            } else {
+                document.getElementById("custom_route_start").style.display = "block";
+                document.getElementById("custom_route_start").appendChild(li);
+            }
+
+            $("#start_station input")[0].value = "";
+            $("#start_station input")[1].value = "";
+
+            var span = document.createElement("SPAN");
+            var txt = document.createTextNode(" \u00D7");
+            span.className = "closeStation";
+            span.title = "Remove: " + inputValue;
+            span.appendChild(txt);
+            li.appendChild(span);
+        }
+
+        var close = document.getElementsByClassName("closeStation");
+        var i;
+        for (i = 0; i < close.length; i++) {
+            close[i].onclick = function () {
+                var data = $(this)[0].previousSibling.data;
+                addedToStartList[addedToStartList.indexOf(data)] = "";
+                $(this.parentElement).remove();
+            }
+        }
+    }
+
+}
+
+function newEndStation(e) {
+    var li = document.createElement("li");
+    var inputValue = ($("#end_station input")[0].value
+    && universeList[$("#end_station input")[0].value.toLowerCase()]
+    && universeList[$("#end_station input")[0].value.toLowerCase()].name);
+    if(inputValue.length == 0) {
+        inputValue = ($("#end_station input")[1].value
+        && universeList[$("#end_station input")[1].value.toLowerCase()]
+        && universeList[$("#end_station input")[1].value.toLowerCase()].name);
+    }
+
+    var systems = [];
+    if (e && e.shiftKey) {
+        systems = findAllStations(inputValue);
+        for (var i = 0; i < systems.length; i++) {
+            $("#end_station input")[0].value = systems[i];
+            $("#end_station input")[1].value = systems[i];
+            newEndStation();
+            $("#end_station input")[0].value = "";
+            $("#end_station input")[1].value = "";
+        }
+    } else {
+        var t = document.createTextNode(inputValue);
+
+        if (addedToEndList.indexOf(inputValue) == -1) {
+            addedToEndList.push(inputValue);
+
+            li.appendChild(t);
+            if (inputValue === '') {
+                alert("You must choose a station!");
+            } else {
+                document.getElementById("custom_route_end").style.display = "block";
+                document.getElementById("custom_route_end").appendChild(li);
+            }
+
+            $("#end_station input")[0].value = "";
+            $("#end_station input")[1].value = "";
+
+            var span = document.createElement("SPAN");
+            var txt = document.createTextNode(" \u00D7");
+            span.className = "closeStation";
+            span.title = "Remove: " + inputValue;
+            span.appendChild(txt);
+            li.appendChild(span);
+        }
+
+        var close = document.getElementsByClassName("closeStation");
+        var i;
+        for (i = 0; i < close.length; i++) {
+            close[i].onclick = function () {
+                var data = $(this)[0].previousSibling.data;
+                addedToEndList[addedToEndList.indexOf(data)] = "";
+                $(this.parentElement).remove();
+            }
         }
     }
 }
@@ -495,7 +586,13 @@ function addStart(variable) {
         $("#custom_station input")[0].value = variable;
     } else if (tradingStyle == 1) {
         $("#start_station input")[0].value = variable;
-        newStartStation();
+        if(shifted){
+            var e = {};
+            e.shiftKey = true;
+            newStartStation(e);
+        } else {
+            newStartStation();
+        }
     } else if (tradingStyle == 2) {
         $("#start_region input")[0].value = variable;
     }
@@ -506,7 +603,13 @@ function addEnd(variable) {
         return;
     } else if (tradingStyle == 1) {
         $("#end_station input")[0].value = variable;
-        newEndStation();
+        if (shifted) {
+            var e = {};
+            e.shiftKey = true;
+            newEndStation(e);
+        } else {
+            newEndStation();
+        }
     } else if (tradingStyle == 2) {
         $("#end_region input")[0].value = variable;
     }
