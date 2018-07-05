@@ -528,6 +528,10 @@ function setupTradeOptions(tradeType){
 }
 
 function open_popup(itemId, name, fromStation, toStation){
+    if(!toStation.name && citadelCache[toStation.station]) {
+        toStation.name = citadelCache[toStation.station];
+    }
+
     popup_table_buy.clear();
     popup_table_sell.clear();
 

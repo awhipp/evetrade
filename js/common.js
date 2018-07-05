@@ -12,6 +12,7 @@ var executingCount = 0;
 var customBuy = {};
 var customSell = {};
 var itemCache = {};
+var citadelCache = {};
 var page = 1;
 var iteration = 1;
 var rowAdded = false;
@@ -267,6 +268,9 @@ function createTradeHeader() {
         var extraData = "<div id='route-to'>Selling to the Buy Orders at " + sellingTo + "</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
+        if (tradingStyle == 2) {
+            extraData += "<br>* Indicates that the station is a citadel (confirm access at your own risk)."
+        }
 
         if(threshold_cost !== 999999999999999999){
             extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";

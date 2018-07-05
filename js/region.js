@@ -22,7 +22,6 @@ function Region(startLocation, endLocation) {
     this.sellOrders.complete = false;
     this.sellOrders.pageBookend = PAGE_MULTIPLE;
 
-    this.totalProgress = 0;
     this.regionRoutes = [];
     this.secondsToRefresh = 60;
 
@@ -207,6 +206,9 @@ Region.prototype.executeOrders = function() {
         hideError();
 
         for(startStationId in this.buyOrders) {
+            if (startStationId > 999999999) {
+                continue;
+            }
             var start = {};
             start.name = stationIdToName[startStationId];
             start.region = this.startLocation.id;
@@ -219,9 +221,9 @@ Region.prototype.executeOrders = function() {
                     if (buyPrice.length > 0) {
 
                         for (endStationId in this.sellOrders) {
-                            if (endStationId < 999999999 && endStationId !== startStationId) {
+                            if (endStationId !== startStationId) {
                                 var end = {};
-                                end.name = stationIdToName[endStationId];
+                                end.name = endStationId < 999999999 ? stationIdToName[endStationId] : endStationId;
                                 end.region = this.endLocations.id;
                                 end.station = endStationId;
 
@@ -478,6 +480,56 @@ Region.prototype.addRow = function(row) {
         numberWithCommas(storageVolume.toFixed(2))
     ];
 
+    if (isNaN(parseInt(row.sellToStation.name))) {
+        var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
+        $('#dataTable').dataTable().fnGetNodes(rowIndex);
+
+        $("#" + investigateId).on('click', function(){
+            var popId = parseInt(this.dataset.itemid);
+            var popName = this.dataset.itemname;
+            var popFrom = parseInt(this.dataset.fromstationid);
+
+            var fromStation = {};
+            fromStation.name = stationIdToName[popFrom];
+            fromStation.station = popFrom;
+
+            var toStation = {};
+            toStation.name = stationIdToName[this.dataset.sellstationid];
+            toStation.station = parseInt(this.dataset.sellstationid);
+
+            open_popup(popId, popName, fromStation, toStation);
+        });
+
+        rowAdded = true;
+    } else {
+        var citadelId = row.sellToStation.name;
+        var thiz = this;
+
+        if(citadelCache[citadelId]) {
+            var citadelName = citadelCache[citadelId];
+            this.updateDatatable(investigateId, row_data, citadelName);
+        } else {
+            $.ajax({
+                type: "get",
+                url: "https://stop.hammerti.me.uk/api/citadel/" + citadelId,
+                dataType: "json",
+                contentType: "application/json",
+                async: true,
+                success: function (data) {
+                    data = data[citadelId];
+                    var citadelName = data.name;
+                    citadelCache[citadelId] = citadelName;
+
+                    thiz.updateDatatable(investigateId, row_data, citadelName);
+                }
+            });
+        }
+    }
+};
+
+Region.prototype.updateDatatable = function(investigateId, row_data, citadelName) {
+    row_data[6] = "<strong>" + citadelName + " (*)</strong>";
+
     var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
     $('#dataTable').dataTable().fnGetNodes(rowIndex);
 
@@ -498,20 +550,4 @@ Region.prototype.addRow = function(row) {
     });
 
     rowAdded = true;
-};
-
-Region.prototype.createTable = function() {
-    tableCreated = true;
-    $("#show-hide").show();
-    $('#dataTable').show();
-    $(".data_options").append($("#dataTable_filter"));
-
-    $(".data_options").append($(".dt-buttons"));
-    $(".dt-button").addClass("btn");
-    $(".dt-button").addClass("btn-default");
-
-    $(".deal_note").hide();
-    $("#core input").css('display','block');
-    $("#core a").css('display','inline-block');
-    $("#core").show();
 };
