@@ -612,3 +612,28 @@ header {
     -moz-transition: opacity .25s ease-in-out;
     -webkit-transition: opacity .25s ease-in-out;
 }
+
+.amazon-offer {
+    cursor: pointer;
+}
+
+.amazon-offer > img {
+    margin: 1em 0.5em;
+}
+
+.amazon-offer:hover {
+    opacity: 0.8;
+}
+
+a#shop {
+    background-color: black;
+    border: 1px solid #00aeff;
+    font-family: 'Lato',Helvetica,Century Gothic,sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: white !important;
+}
+
+a#shop:hover {
+    opacity: 0.8;
+}

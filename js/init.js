@@ -67,6 +67,10 @@ $( document ).ready(function() {
     setupCookies();
 
     setupCustomDropdown();
+
+    $(".show-amazon-offers").on("click", function(){
+        $('.amazon-offers').slideToggle();
+    });
 });
 
 function getTradeHubName(stationName) {
