@@ -54,7 +54,7 @@
     <i class="fa fa-circle-o-notch fa-spin"></i>
 </div>
 
-<div class="tableLoadingIcon">
+<div class="tableLoadingIcon promo-item">
     <i class="fa fa-circle-o-notch fa-spin"></i>
     <p class="loadingContent"></p>
 </div>
@@ -64,7 +64,7 @@
     Slow results from EVE's Servers. Results may take longer than normal to appear.
 </div>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="mainNav">
     <a class="navbar-brand" href="https://evetrade.space/">
         <div class="branding">
             <img src="images/logo.png"/>
@@ -75,16 +75,23 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item"
-                style="position: fixed; top: 6em; right: 1em; border: 1px solid #00aeff !important; background: black;"
+            <li class="nav-item promo-item"
+                style="position: fixed;
+                top: 150px; right: 1em;
+                z-index: 10;
+                border: 1px solid #00aeff !important;
+                background: black;"
             >
                 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
                 <script type='text/javascript'>kofiwidget2.init('Donate', '#000000', 'evetrade');kofiwidget2.draw();</script>
             </li>
-            <li class="nav-item"
-                style="position: fixed; top: 6em; left: 1em;"
+            <li class="nav-item promo-item"
+                style="position: fixed; top: 100px; right: 1em;"
             >
-                <a class="nav-link" id="shop" onclick="$('#amazon-popup').modal('show');">Shop Game Time &amp; Plex</a>
+                <a class="nav-link" id="shop" onclick="$('#amazon-popup').modal('show');">
+                    <img src="images/plex_logo.png"/>
+                    <span>Shop Game Time &amp; Plex</span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="about">Help</a>

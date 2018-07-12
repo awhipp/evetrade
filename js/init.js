@@ -71,7 +71,25 @@ $( document ).ready(function() {
     $(".show-amazon-offers").on("click", function(){
         $('.amazon-offers').slideToggle();
     });
+
+    $.fn.isInViewport = function () {
+        var elementTop = $(this).offset().top;
+        var elementBottom = elementTop + $(this).outerHeight();
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
+
+    $(window).on("resize scroll",function () {
+        if($(".branding").isInViewport()) {
+            $(".promo-item").css("transform", "translateY(0)");
+        } else {
+            $(".promo-item").css("transform", "translateY(-5em)");
+        }
+    });
 });
+
+
 
 function getTradeHubName(stationName) {
     if (stationName == "Jita IV - Moon 4 - Caldari Navy Assembly Plant") {
