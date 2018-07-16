@@ -287,6 +287,12 @@ function createTradeHeader() {
 
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
+        
+        gtag('event', 'User Route Campaign', {
+            'event_category': 'Route Trade Locations',
+            'event_label': buyingFrom + " -> " + sellingTo,
+            'value': 1
+        });
     } else {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
@@ -296,6 +302,12 @@ function createTradeHeader() {
             "<div class='loading'>Loading. Please wait...</div>";
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
+
+        gtag('event', 'User Route Campaign', {
+            'event_category': 'Station Trade Locations',
+            'event_label': startLocations,
+            'value': 1
+        });
     }
     coreDOM.show();
 }

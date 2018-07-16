@@ -87,6 +87,12 @@ $( document ).ready(function() {
             $(".promo-item").css("transform", "translateY(-5em)");
         }
     });
+
+    gtag('event', 'Browser Location Tracking', {
+        'event_category': 'URI',
+        'event_label': window.location.href,
+        'value': 1
+    });
 });
 
 
