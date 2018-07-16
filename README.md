@@ -10,6 +10,8 @@ Implements the EVE ESI API to find:
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/awhipp/evetrade)
+
 ## V5.1.0
     * Added public citadels to the region-to-region trading query
 
