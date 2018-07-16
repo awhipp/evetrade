@@ -537,16 +537,23 @@ function setupTradeOptions(tradeType){
 
     setAbout();
 
+    var eventLabel = '';
     if(tradingStyle == 1){
         $("#route_trade").slideToggle();
-        ga('send', 'event', 'Trade Style', 'Hauler - Station', 'User Preference Campaign');
+        eventLabel = "Hauler - Station";
     }else if(tradingStyle==0){
         $("#station_trade").slideToggle();
-        ga('send', 'event', 'Trade Style', 'Station Trader', 'User Preference Campaign');
+        eventLabel = "Station Trader";
     } else if (tradingStyle == 2) {
         $("#region_trade").slideToggle();
-        ga('send', 'event', 'Trade Style', 'Hauler - Region', 'User Preference Campaign');
+        eventLabel = "Hauler - Region";
     }
+
+    gtag('event', 'User Preference Campaign', {
+        'event_category': 'Trade Style',
+        'event_label': eventLabel,
+        'value': 1
+    });
 }
 
 function open_popup(itemId, name, fromStation, toStation){
