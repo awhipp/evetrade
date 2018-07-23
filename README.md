@@ -1,4 +1,4 @@
-# EVE Trade Finder v5.1.1
+# EVE Trade Finder v5.1.0
 
 ## About
 Implements the EVE ESI API to find:
@@ -9,9 +9,6 @@ Implements the EVE ESI API to find:
 * the best trades between regions.
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
-
-## V5.1.1
-    * Stanadlone application is released in BETA.
 
 ## V5.1.0
     * Added public citadels to the region-to-region trading query
