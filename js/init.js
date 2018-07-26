@@ -564,7 +564,11 @@ function setupTradeOptions(tradeType){
 
 function open_popup(itemId, name, fromStation, toStation){
     if(!toStation.name && citadelCache[toStation.station]) {
-        toStation.name = citadelCache[toStation.station];
+        if(citadelCache[toStation.station] && citadelCache[toStation.station].name) {
+            toStation.name = citadelCache[toStation.station].name + "*";
+        } else {
+            toStation.name = citadelCache[toStation.station] + "*";
+        }
     }
 
     popup_table_buy.clear();
