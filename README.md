@@ -1,4 +1,4 @@
-# EVE Trade Finder v5.2.0b
+# EVE Trade Finder v5.2.0
 
 ## About
 Implements the EVE ESI API to find:
