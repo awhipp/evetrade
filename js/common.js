@@ -13,6 +13,7 @@ var customBuy = {};
 var customSell = {};
 var itemCache = {};
 var citadelCache = {};
+var systemSecurity = {};
 var page = 1;
 var iteration = 1;
 var rowAdded = false;
@@ -270,6 +271,7 @@ function createTradeHeader() {
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if (tradingStyle == 2) {
             extraData += "<br>* Indicates that the station is a citadel (confirm access at your own risk)."
+            extraData += "<br>System Security status defined by the Station's color. (blue = high sec, red = low sec)."
         }
 
         if(threshold_cost !== 999999999999999999){

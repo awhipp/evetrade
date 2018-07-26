@@ -206,11 +206,7 @@ Region.prototype.executeOrders = function() {
         hideError();
 
         for(startStationId in this.buyOrders) {
-            if (startStationId > 999999999) {
-                continue;
-            }
             var start = {};
-            start.name = stationIdToName[startStationId];
             start.region = this.startLocation.id;
             start.station = startStationId;
 
@@ -223,7 +219,6 @@ Region.prototype.executeOrders = function() {
                         for (endStationId in this.sellOrders) {
                             if (endStationId !== startStationId) {
                                 var end = {};
-                                end.name = endStationId < 999999999 ? stationIdToName[endStationId] : endStationId;
                                 end.region = this.endLocations.id;
                                 end.station = endStationId;
 
@@ -442,6 +437,130 @@ Region.prototype.createRowObject = function(row) {
     return rowObject;
 };
 
+Region.prototype.updateEndWithCitadel = function (row) {
+    var citadelId = row.sellToStation.station;
+    var thiz = this;
+
+    if (citadelId < 999999999) {
+        if (citadelCache[citadelId]) {
+            var citadelName = citadelCache[citadelId].name;
+            var citadelSystem = citadelCache[citadelId].system;
+            row.sellToStation.name = citadelName;
+            row.sellToStation.system = citadelSystem;
+            this.getStartSystemSecurity(row);
+        } else {
+            $.ajax({
+                type: "get",
+                url: "https://esi.evetech.net/latest/universe/stations/" + row.sellToStation.station + "/?datasource=tranquility",
+                dataType: "json",
+                contentType: "application/json",
+                async: true,
+                success: function (data) {
+                    var citadelName = data.name;
+                    var citadelSystem = data["system_id"];
+                    var citadel = {};
+                    citadel.name = citadelName;
+                    citadel.system = citadelSystem;
+                    citadelCache[citadelId] = citadel;
+                    row.sellToStation.name = citadelName;
+                    row.sellToStation.system = citadelSystem;
+                    thiz.getStartSystemSecurity(row);
+                }
+            });
+        }
+    } else {
+        if (citadelCache[citadelId]) {
+            var citadelName = citadelCache[citadelId].name;
+            var citadelSystem = citadelCache[citadelId].system;
+            row.sellToStation.name = "<strong><em>" + citadelName + "*</em></strong>";
+            row.sellToStation.system = citadelSystem;
+            this.getStartSystemSecurity(row);
+        } else {
+            $.ajax({
+                type: "get",
+                url: "https://stop.hammerti.me.uk/api/citadel/" + citadelId,
+                dataType: "json",
+                contentType: "application/json",
+                async: true,
+                success: function (data) {
+                    data = data[citadelId];
+                    var citadelName = data.name;
+                    var citadelSystem = data.systemId;
+                    var citadel = {};
+                    citadel.name = citadelName;
+                    citadel.system = citadelSystem;
+                    citadelCache[citadelId] = citadel;
+                    row.sellToStation.name = "<strong><em>" + citadelName + "*</em></strong>";
+                    row.sellToStation.system = citadelSystem;
+                    thiz.getStartSystemSecurity(row);
+                }
+            });
+        }
+    }
+};
+
+Region.prototype.updateStartWithCitdael = function (row) {
+    var citadelId = row.buyFromStation.station;
+    var thiz = this;
+
+    if (citadelId < 999999999) {
+        if (citadelCache[citadelId]) {
+            var citadelName = citadelCache[citadelId].name;
+            var citadelSystem = citadelCache[citadelId].system;
+            row.buyFromStation.name = citadelName;
+            row.buyFromStation.system = citadelSystem;
+            this.updateEndWithCitadel(row);
+        } else {
+            $.ajax({
+                type: "get",
+                url: "https://esi.evetech.net/latest/universe/stations/" + row.buyFromStation.station + "/?datasource=tranquility",
+                dataType: "json",
+                contentType: "application/json",
+                async: true,
+                success: function (data) {
+                    var citadelName = data.name;
+                    var citadelSystem = data["system_id"];
+                    var citadel = {};
+                    citadel.name = citadelName;
+                    citadel.system = citadelSystem;
+                    citadelCache[citadelId] = citadel;
+                    row.buyFromStation.name = citadelName;
+                    row.buyFromStation.system = citadelSystem;
+                    thiz.updateEndWithCitadel(row);
+                }
+            });
+        }
+    } else {
+        if (citadelCache[citadelId]) {
+            var citadelName = citadelCache[citadelId].name;
+            var citadelSystem = citadelCache[citadelId].system;
+            row.buyFromStation.name = "<strong><em>" + citadelName + "*</em></strong>";
+            row.buyFromStation.system = citadelSystem;
+            this.updateEndWithCitadel(row);
+        } else {
+            $.ajax({
+                type: "get",
+                url: "https://stop.hammerti.me.uk/api/citadel/" + citadelId,
+                dataType: "json",
+                contentType: "application/json",
+                async: true,
+                success: function (data) {
+                    data = data[citadelId];
+                    var citadelName = data.name;
+                    var citadelSystem = data.systemId;
+                    var citadel = {};
+                    citadel.name = citadelName;
+                    citadel.system = citadelSystem;
+                    citadelCache[citadelId] = citadel;
+                    row.buyFromStation.name = "<strong><em>"+citadelName+"*</em></strong>";
+                    row.buyFromStation.system = citadelSystem;
+                    thiz.updateEndWithCitadel(row);
+                }
+            });
+        }
+    }
+};
+
 Region.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
@@ -454,13 +573,77 @@ Region.prototype.addRow = function(row) {
         return;
     }
 
-
     createDataTable();
 
+    this.updateStartWithCitdael(row);
+};
+
+function getSecurityCode(security) {
+    if (security >= 0.5) {
+        return "high_sec";
+    } else if (security > 0) {
+        return "low_sec";
+    } else {
+        return "null_sec";
+    }
+}
+
+Region.prototype.getEndSystemSecurity = function (row) {
+    var systemId = row.sellToStation.system;
+    var thiz = this;
+
+    if (systemSecurity[systemId]) {
+        var security = systemSecurity[systemId];
+        row.sellToStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.sellToStation.name + "</span>";
+        this.updateDatatable(row);
+    } else {
+        $.ajax({
+            type: "get",
+            url: "https://esi.evetech.net/latest/universe/systems/" + systemId + "/?datasource=tranquility&language=en-us",
+            dataType: "json",
+            contentType: "application/json",
+            async: true,
+            success: function (data) {
+                systemSecurity[systemId] = data["security_status"];
+                var security = systemSecurity[systemId];
+                row.sellToStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.sellToStation.name + "</span>";
+                thiz.updateDatatable(row);
+            }
+        });
+    }
+};
+
+Region.prototype.getStartSystemSecurity = function (row) {
+    var systemId = row.buyFromStation.system;
+    var thiz = this;
+
+    if (systemSecurity[systemId]) {
+        var security = systemSecurity[systemId];
+        row.buyFromStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.buyFromStation.name + "</span>";
+        this.getEndSystemSecurity(row);
+    } else {
+        $.ajax({
+            type: "get",
+            url: "https://esi.evetech.net/latest/universe/systems/" + systemId + "/?datasource=tranquility&language=en-us",
+            dataType: "json",
+            contentType: "application/json",
+            async: true,
+            success: function (data) {
+                systemSecurity[systemId] = data["security_status"];
+                var security = systemSecurity[systemId];
+                row.buyFromStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.buyFromStation.name + "</span>";
+                thiz.getEndSystemSecurity(row);
+            }
+        });
+    }
+};
+
+Region.prototype.updateDatatable = function(row) {
     var investigateId = row.sellToStation.station + row.buyFromStation.station + row.itemId + "_investigate";
+    var storageVolume = row.itemWeight * row.quantity;
 
     var row_data = [
-        "<span id=\""+ investigateId +"\"" +
+        "<span id=\"" + investigateId + "\"" +
         "data-itemId=\"" + row.itemId + "\"" +
         "data-itemName=\"" + row.itemName + "\"" +
         "data-fromStationId=\"" + row.buyFromStation.station + "\"" +
@@ -476,64 +659,14 @@ Region.prototype.addRow = function(row) {
         numberWithCommas(row.sellPrice.toFixed(2)),
         numberWithCommas(row.totalProfit.toFixed(2)),
         numberWithCommas(row.perItemProfit.toFixed(2)),
-        (row.roi.toFixed(3)*100).toFixed(1)+"%",
+        (row.roi.toFixed(3) * 100).toFixed(1) + "%",
         numberWithCommas(storageVolume.toFixed(2))
     ];
-
-    if (isNaN(parseInt(row.sellToStation.name))) {
-        var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
-        $('#dataTable').dataTable().fnGetNodes(rowIndex);
-
-        $("#" + investigateId).on('click', function(){
-            var popId = parseInt(this.dataset.itemid);
-            var popName = this.dataset.itemname;
-            var popFrom = parseInt(this.dataset.fromstationid);
-
-            var fromStation = {};
-            fromStation.name = stationIdToName[popFrom];
-            fromStation.station = popFrom;
-
-            var toStation = {};
-            toStation.name = stationIdToName[this.dataset.sellstationid];
-            toStation.station = parseInt(this.dataset.sellstationid);
-
-            open_popup(popId, popName, fromStation, toStation);
-        });
-
-        rowAdded = true;
-    } else {
-        var citadelId = row.sellToStation.name;
-        var thiz = this;
-
-        if(citadelCache[citadelId]) {
-            var citadelName = citadelCache[citadelId];
-            this.updateDatatable(investigateId, row_data, citadelName);
-        } else {
-            $.ajax({
-                type: "get",
-                url: "https://stop.hammerti.me.uk/api/citadel/" + citadelId,
-                dataType: "json",
-                contentType: "application/json",
-                async: true,
-                success: function (data) {
-                    data = data[citadelId];
-                    var citadelName = data.name;
-                    citadelCache[citadelId] = citadelName;
-
-                    thiz.updateDatatable(investigateId, row_data, citadelName);
-                }
-            });
-        }
-    }
-};
-
-Region.prototype.updateDatatable = function(investigateId, row_data, citadelName) {
-    row_data[6] = "<strong>" + citadelName + " (*)</strong>";
 
     var rowIndex = $('#dataTable').dataTable().fnAddData(row_data);
     $('#dataTable').dataTable().fnGetNodes(rowIndex);
 
-    $("#" + investigateId).on('click', function(){
+    $("#" + investigateId).on('click', function () {
         var popId = parseInt(this.dataset.itemid);
         var popName = this.dataset.itemname;
         var popFrom = parseInt(this.dataset.fromstationid);

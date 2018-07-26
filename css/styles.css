@@ -655,3 +655,13 @@ a#shop span {
 a#shop:hover {
     opacity: 0.8;
 }
+
+.high_sec {
+    color: #2FEFEF;
+}
+.low_sec {
+    color: darkorange;
+}
+.null_sec {
+    color: red;
+}
