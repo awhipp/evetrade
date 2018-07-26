@@ -29,6 +29,9 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
+    this.security = $("#security-threshold").val();
+    this.safety = $("#route-preference").val();
+
     this.completed = false;
 
     routes.push(this);
@@ -578,13 +581,15 @@ Region.prototype.addRow = function(row) {
     this.updateStartWithCitdael(row);
 };
 
-function getSecurityCode(security) {
-    if (security >= 0.5) {
+Region.prototype.getSecurityCode = function (sec) {
+    if (sec >= 0.5) {
         return "high_sec";
-    } else if (security > 0) {
+    } else if (sec > 0 && (this.security == "NULL" || this.security == "LOW")) {
         return "low_sec";
-    } else {
+    } else if (sec <= 0 && (this.security == "NULL")) {
         return "null_sec";
+    } else {
+        return -1;
     }
 }
 
@@ -594,8 +599,12 @@ Region.prototype.getEndSystemSecurity = function (row) {
 
     if (systemSecurity[systemId]) {
         var security = systemSecurity[systemId];
-        row.sellToStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.sellToStation.name + "</span>";
-        this.updateDatatable(row);
+        var securityCode = this.getSecurityCode(security);
+        if (securityCode == -1) {
+            return;
+        }
+        row.sellToStation.name = "<span class='" + securityCode + "'>" + row.sellToStation.name + "</span>";
+        this.getRouteLength(row);
     } else {
         $.ajax({
             type: "get",
@@ -606,8 +615,12 @@ Region.prototype.getEndSystemSecurity = function (row) {
             success: function (data) {
                 systemSecurity[systemId] = data["security_status"];
                 var security = systemSecurity[systemId];
-                row.sellToStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.sellToStation.name + "</span>";
-                thiz.updateDatatable(row);
+                var securityCode = thiz.getSecurityCode(security);
+                if (securityCode == -1) {
+                    return;
+                }
+                row.sellToStation.name = "<span class='" + securityCode + "'>" + row.sellToStation.name + "</span>";
+                thiz.getRouteLength(row);
             }
         });
     }
@@ -619,7 +632,11 @@ Region.prototype.getStartSystemSecurity = function (row) {
 
     if (systemSecurity[systemId]) {
         var security = systemSecurity[systemId];
-        row.buyFromStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.buyFromStation.name + "</span>";
+        var securityCode = this.getSecurityCode(security);
+        if(securityCode == -1) {
+            return;
+        }
+        row.buyFromStation.name = "<span class='" + securityCode + "'>" + row.buyFromStation.name + "</span>";
         this.getEndSystemSecurity(row);
     } else {
         $.ajax({
@@ -631,8 +648,39 @@ Region.prototype.getStartSystemSecurity = function (row) {
             success: function (data) {
                 systemSecurity[systemId] = data["security_status"];
                 var security = systemSecurity[systemId];
-                row.buyFromStation.name = "<span class='" + getSecurityCode(security) + "'>" + row.buyFromStation.name + "</span>";
+                var securityCode = thiz.getSecurityCode(security);
+                if (securityCode == -1) {
+                    return;
+                }
+                row.buyFromStation.name = "<span class='" + securityCode + "'>" + row.buyFromStation.name + "</span>";
                 thiz.getEndSystemSecurity(row);
+            }
+        });
+    }
+};
+
+Region.prototype.getRouteLength = function (row) {
+    var systemIdStart = row.buyFromStation.system;
+    var systemIdEnd = row.sellToStation.system;
+    var routeId = systemIdStart + "-" + systemIdEnd;
+    var thiz = this;
+
+    if (routeCache[routeId]) {
+        var routeLength = routeCache[routeId];
+        row.routeLength = routeLength;
+        this.updateDatatable(row);
+    } else {
+        $.ajax({
+            type: "get",
+            url: "https://esi.evetech.net/latest/route/" + systemIdStart + "/" + systemIdEnd + "/?datasource=tranquility&flag=" + thiz.safety,
+            dataType: "json",
+            contentType: "application/json",
+            async: true,
+            success: function (data) {
+                var routeLength = data.length;
+                routeCache[routeId] = routeLength;
+                row.routeLength = routeLength;
+                thiz.updateDatatable(row);
             }
         });
     }
@@ -657,8 +705,10 @@ Region.prototype.updateDatatable = function(row) {
         numberWithCommas(row.buyCost.toFixed(2)),
         row.sellToStation.name,
         numberWithCommas(row.sellPrice.toFixed(2)),
+        // numberWithCommas(row.perItemProfit.toFixed(2)),
+        row.routeLength,
+        numberWithCommas((row.totalProfit/row.routeLength).toFixed(2)),
         numberWithCommas(row.totalProfit.toFixed(2)),
-        numberWithCommas(row.perItemProfit.toFixed(2)),
         (row.roi.toFixed(3) * 100).toFixed(1) + "%",
         numberWithCommas(storageVolume.toFixed(2))
     ];

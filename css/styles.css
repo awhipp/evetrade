@@ -395,7 +395,7 @@ tr > td:first-child {
       border: 2px solid black;
   }
 
-  input[type="text"], input[type="number"]{
+  input[type="text"], input[type="number"], #security-threshold, #route-preference{
       text-align: center;
       background: rgba(0,0,0,0.5) !important;
       color: white !important;

@@ -12,7 +12,8 @@ Select which of the station you are docked in. It will return a lazy-loaded tabl
 
 ## V5.2.0
     * Citadels now can appear as starting locations
-    * Security Status color now appear in regional trades
+    * Security Status color now appear in regional trades (and filtering)
+    * Number of Jumps and Profit per Jump included for Regional Trades
 
 ## V5.1.1
     * Standalone windows application released to BETA.

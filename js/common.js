@@ -14,11 +14,12 @@ var customSell = {};
 var itemCache = {};
 var citadelCache = {};
 var systemSecurity = {};
+var routeCache = {};
 var page = 1;
 var iteration = 1;
 var rowAdded = false;
 
-var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Total Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
+var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", /*"Profit Per Item",*/  "Jumps", "Profit per Jump", "Total Profit", "R.O.I", "Total Volume (m3)"];
 var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Total Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
 var stationHeader = ["Item", "Buy Order", "Sell Order", "Profit Per Item", "Margin", "Volume"];
 
@@ -271,7 +272,7 @@ function createTradeHeader() {
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if (tradingStyle == 2) {
             extraData += "<br>* Indicates that the station is a citadel (confirm access at your own risk)."
-            extraData += "<br>System Security status defined by the Station's color. (blue = high sec, red = low sec)."
+            extraData += "<br>Only showing system security status of " + $("#security-threshold").val() + " SEC or better.";
         }
 
         if(threshold_cost !== 999999999999999999){
@@ -333,8 +334,8 @@ function createDataTable() {
         dataTableDOM.append(dtHTML);
 
         var dt;
-        if (tradingStyle >= 1) {
-            // sorting on margin index
+        if (tradingStyle == 1) {
+            // sorting on total profit index
             dt = dataTableDOM.DataTable({
                 "order": [[8, "desc"]],
                 "lengthMenu": [[50], ["50"]],
@@ -349,6 +350,23 @@ function createDataTable() {
                     "orderable": false
                 }]
             });
+        } else if (tradingStyle == 2) {
+            // sorting on profit per jump index
+            dt = dataTableDOM.DataTable({
+                "order": [[9, "desc"]],
+                "lengthMenu": [[50], ["50"]],
+                //"lengthMenu": [[-1], ["All"]],
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf'
+                ],
+                "columnDefs": [{
+                    "targets": 0,
+                    "orderable": false
+                }]
+            });
+
         } else {
             // sorting on margin index
             dt = dataTableDOM.DataTable({

@@ -123,8 +123,17 @@
                 <hr>
                 <br>
                 <div class="announcement-selection">
-                    <p>Standalone application available (23 July):<br><br>
-                    There have been numerous requests for a standalone application to run along side EVE. This now allows you to do so. Just <strong><a href="#" onclick="$('#download-popup').modal('show');">download</a></strong>, unzip, and run the executable.</p>
+                    <p>
+                        Version 5.2.0 Released on July 27, 2018<br>
+                        System Security &amp; Jump Distance for Regional Trading
+                    </p>
+                    <div>
+                        <ul>
+                            <li>Citadels now can appear as starting locations for regions</li>
+                            <li>Security Status color now appear in regional trades (and filtering)</li>
+                            <li>Number of Jumps and Profit per Jump included for Regional Trades</li>
+                        </ul>
+                    </div>
                 </div>
                 <br>
 
@@ -312,12 +321,12 @@
 
                 <div class="col-xs-12 mx-auto">
                     <div class="row">
-                        <div class="col-sm-12 col-xs-12">
+                        <div class="col-sm-6 col-xs-12">
                             <p><label for="profit-threshold" class="control-label">Only Return Profits Above</label>
                                 <input type="number" id="region-profit-threshold" class="minor-text form-control"
                                        placeholder="Default: 500,000"/></p>
                         </div>
-                        <div class="col-sm-12 col-xs-12">
+                        <div class="col-sm-6 col-xs-12">
                             <p><label for="weight-threshold" class="control-label">Max Cargo Capacity (in
                                 m3)</label>
                                 <input type="number" id="region-weight-threshold" class="minor-text form-control"
@@ -325,15 +334,35 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12 col-xs-12">
+                        <div class="col-sm-6 col-xs-12">
                             <p><label for="roi-threshold" class="control-label"> Minimum ROI (in %) </label>
                                 <input type="number" id="region-roi-threshold" class="minor-text form-control"
                                        placeholder="Default: 4"/></p>
                         </div>
-                        <div class="col-sm-12 col-xs-12">
+                        <div class="col-sm-6 col-xs-12">
                             <p><label for="buy-threshold" class="control-label">Maximum Budget</label>
                                 <input type="number" id="region-buy-threshold" class="minor-text form-control"
                                        placeholder="Default: Infinity"/></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <p>
+                                <label for="security-threshold" class="control-label"> Security Status Filter </label>
+                                <select id="security-threshold" class="minor-text form-control">
+                                    <option value="NULL">No Filter</option>
+                                    <option value="LOW" selected>Only Low or High Sec</option>
+                                    <option value="HIGH">Only High Sec</option>
+                                </select>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <p>
+                                <label for="route-preference" class="control-label"> Route Preference </label>
+                                <select id="route-preference" class="minor-text form-control">
+                                    <option value="shortest">Shortest Route</option>
+                                    <option value="secure" selected>Safest Route</option>
+                                    <option value="insecure">Least Safe Route</option>
+                                </select>
                         </div>
                     </div>
                 </div>
