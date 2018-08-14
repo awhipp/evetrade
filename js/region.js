@@ -34,6 +34,14 @@ function Region(startLocation, endLocation) {
 
     this.completed = false;
 
+    this.includeCitadels = $("#include-citadels").is(":checked");
+
+    if(!this.includeCitadels) {
+        $("#citadelsLine").hide();
+    } else {
+        $("#citadelsLine").show();
+    }
+
     routes.push(this);
 }
 
@@ -213,6 +221,10 @@ Region.prototype.executeOrders = function() {
             start.region = this.startLocation.id;
             start.station = startStationId;
 
+            if(startStationId > 999999999 && !this.includeCitadels) {
+                continue;
+            }
+
             for(itemId in this.buyOrders[startStationId]) {
                 if(itemId !== "completePages" && itemId !== "complete" && itemId !== "pageBookend") {
                     var buyPrice = getMarketData(this.buyOrders[startStationId][itemId], start.station, SELL_ORDER, itemId, true);
@@ -220,6 +232,11 @@ Region.prototype.executeOrders = function() {
                     if (buyPrice.length > 0) {
 
                         for (endStationId in this.sellOrders) {
+
+                            if(endStationId > 999999999 && !this.includeCitadels) {
+                                continue;
+                            }
+
                             if (endStationId !== startStationId) {
                                 var end = {};
                                 end.region = this.endLocations.id;
@@ -471,7 +488,7 @@ Region.prototype.updateEndWithCitadel = function (row) {
                 }
             });
         }
-    } else {
+    } else if(this.includeCitadels) {
         if (citadelCache[citadelId]) {
             var citadelName = citadelCache[citadelId].name;
             var citadelSystem = citadelCache[citadelId].system;
@@ -533,7 +550,7 @@ Region.prototype.updateStartWithCitdael = function (row) {
                 }
             });
         }
-    } else {
+    } else if(this.includeCitadels) {
         if (citadelCache[citadelId]) {
             var citadelName = citadelCache[citadelId].name;
             var citadelSystem = citadelCache[citadelId].system;
