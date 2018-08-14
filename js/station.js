@@ -368,6 +368,7 @@ Station.prototype.getItemVolume = function(itemId, row){
                         row.volume30 += volumeData[volumeData.length-i].volume;
                     }
                 }
+                row.volume14 = parseInt(row.volume14 / 14);
                 row.volume30 = parseInt(row.volume30 / 30);
 
                 if(row.volume14 >= volume_threshold){
