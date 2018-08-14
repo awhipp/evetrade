@@ -21,7 +21,7 @@ var rowAdded = false;
 
 var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", /*"Profit Per Item",*/  "Jumps", "Profit per Jump", "Total Profit", "R.O.I", "Total Volume (m3)"];
 var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Total Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
-var stationHeader = ["Item", "Buy Order", "Sell Order", "Profit Per Item", "Margin", "Volume"];
+var stationHeader = ["Item", "Buy Order", "Sell Order", "Profit Per Item", "Margin", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
 var spamItems = ["ahremen's", "brokara's", "brynn's",
     "chelm's", "cormack's", "draclira's", "estamel's",
@@ -271,7 +271,7 @@ function createTradeHeader() {
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         if (tradingStyle == 2) {
-            extraData += "<br>* Indicates that the station is a citadel (confirm access at your own risk)."
+            extraData += "<span id='citadelsLine'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
             extraData += "<br>Only showing system security status of " + $("#security-threshold").val() + " SEC or better.";
         }
 
@@ -338,8 +338,8 @@ function createDataTable() {
             // sorting on total profit index
             dt = dataTableDOM.DataTable({
                 "order": [[8, "desc"]],
-                "lengthMenu": [[50], ["50"]],
-                //"lengthMenu": [[-1], ["All"]],
+                "lengthMenu": [[100], ["100"]],
+                // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
                 dom: 'Bfrtip',
                 buttons: [
@@ -354,8 +354,8 @@ function createDataTable() {
             // sorting on profit per jump index
             dt = dataTableDOM.DataTable({
                 "order": [[9, "desc"]],
-                "lengthMenu": [[50], ["50"]],
-                //"lengthMenu": [[-1], ["All"]],
+                "lengthMenu": [[100], ["100"]],
+                // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
                 dom: 'Bfrtip',
                 buttons: [
@@ -370,8 +370,8 @@ function createDataTable() {
         } else {
             // sorting on margin index
             dt = dataTableDOM.DataTable({
-                "order": [[5, "desc"]],
-                "lengthMenu": [[50], ["50"]],
+                "order": [[6, "desc"]],
+                "lengthMenu": [[100], ["100"]],
                 // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
                 dom: 'Bfrtip',

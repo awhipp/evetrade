@@ -1,4 +1,4 @@
-# EVE Trade Finder v5.2.0
+# EVE Trade Finder v5.2.1
 
 ## About
 Implements the EVE ESI API to find:
@@ -9,6 +9,14 @@ Implements the EVE ESI API to find:
 * the best trades between regions.
 
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
+
+## V5.2.1
+    * Station Trading now includes 14 and 30 day moving averages for volume.
+    * Filter now applies to 14-day moving average rather than the last 24 hours to provide better results.
+    * Region Trading security filter defaults to NULL Sec or better to accomodate queries with null-sec regions selected (otherwise no results are returned).
+    * Checkbox added to Region Trading to include/exclude citadels in results
+    * Number of results per page increased from 50 to 100
+    * Minor styling changes to make results appear better on smaller desktop/laptop screens.
 
 ## V5.2.0
     * Citadels now can appear as starting locations

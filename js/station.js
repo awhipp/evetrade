@@ -358,7 +358,19 @@ Station.prototype.getItemVolume = function(itemId, row){
         success: function(volumeData) {
             if(volumeData && volumeData[volumeData.length-1] && volumeData[volumeData.length-1].volume){
                 row.volume = volumeData[volumeData.length-1].volume;
-                if(row.volume >= volume_threshold){
+                row.volume14 = 0;
+                row.volume30 = 0;
+                for(var i = 1; i < 31; i++) {
+                    if(volumeData[volumeData.length-i] && volumeData[volumeData.length-i].volume) {
+                        if (i < 15) {
+                            row.volume14 += volumeData[volumeData.length-i].volume;
+                        }
+                        row.volume30 += volumeData[volumeData.length-i].volume;
+                    }
+                }
+                row.volume30 = parseInt(row.volume30 / 30);
+
+                if(row.volume14 >= volume_threshold){
                     thiz.getItemWeight(itemId, row);
                 }else{
                     executingCount--;
@@ -429,7 +441,9 @@ Station.prototype.addRow = function(row) {
         numberWithCommas(row.sellPrice.toFixed(2)),
         numberWithCommas(profitPerItem.toFixed(2)),
         margin,
-        numberWithCommas(row.volume)
+        numberWithCommas(row.volume),
+        numberWithCommas(row.volume14),
+        numberWithCommas(row.volume30)
     ];
 
     $('#dataTable').dataTable().fnAddData(row_data);
