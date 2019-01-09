@@ -4,6 +4,3 @@
 
 [context.production.environment]
   JEKYLL_ENV = "production"
-
-[context.production]
-  environment = { JEKYLL_ENV = "production" }
