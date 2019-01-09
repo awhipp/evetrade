@@ -28,3 +28,4 @@ The following are the base requirements to develop against this codebase. They a
 
 * Deployment: `jekyll serve`
 * Production Build: `JEKYLL_ENV=production jekyll build`
+  - Must run production build command before committing
