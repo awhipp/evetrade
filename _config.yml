@@ -1,0 +1,7 @@
+name: EVE Trade
+version: v5.2.1
+version_full: Version 5.2.1
+update_date: 14 August 2018
+
+plugins:
+    - jekyll-minifier

@@ -252,7 +252,7 @@ function setupCustomDropdown() {
             });
 
             $(".loadingIcon").remove();
-            $("header").css("opacity", 1);
+            $(".core-section").css("opacity", 1);
         }
     }, 1000);
 }

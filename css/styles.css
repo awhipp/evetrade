@@ -7,7 +7,7 @@ p {
 }
 
 /** START HEADER **/
-header {
+.core-section {
     padding: 40px 0 20px;
 
 }
@@ -608,7 +608,7 @@ footer h1, footer h2 {
     transform: translate(-50%,-50%);
 }
 
-header {
+.core-section {
     opacity: 0;
     transition: opacity .25s ease-in-out;
     -moz-transition: opacity .25s ease-in-out;
