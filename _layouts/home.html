@@ -90,7 +90,7 @@
                 <br>
                 <div class="announcement-selection">
                     <p>
-                        {{ site.version_full }} - {{ site.update_date}}
+                        {{ site.version_full }} - {% last_modified_at %d %B %Y %}
                         <br>
                         {{ page.announcement }}
                     </p>
@@ -366,7 +366,7 @@
 
     <div class="container overflow_none">
         <h1> The EVE Online Hauling &amp; Station Trading Tool </h1>
-        <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">{{ site.version_full }} | Updated {{ site.update_date }}</a></p>
+        <p class="m-0 text-center text-white"><a href="release.html" target="_blank" data-ytta-id="-">{{ site.version_full }} | Updated {% last_modified_at %d %B %Y %}</a></p>
         <p class="m-0 text-center text-white">&copy; 2016-2018 <a href='https://EVETrade.space'> EVE Trade</a>. All rights reserved.</p>
     </div>
     <!-- /.container -->

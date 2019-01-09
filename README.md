@@ -23,6 +23,7 @@ The following are the base requirements to develop against this codebase. They a
 ### Jekyll Plugins
 
 * [Minifier](https://github.com/digitalsparky/jekyll-minifier) via `gem install jekyll-minifier`
+* [Last Modified](jekyll-last-modified-at) via `gem install jekyll-last-modified-at`
 
 ## Development
 
