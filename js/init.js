@@ -40,7 +40,6 @@ $( document ).ready(function() {
 
     onClickListeners();
 
-
     $('input[type="number"]').keypress(function(e) {
         var theEvent = e || window.event;
         var key = theEvent.keyCode || theEvent.which;
@@ -195,7 +194,6 @@ function setupCustomDropdown() {
         }
     }, 1000);
 
-
     var customRegionsDropdown = setInterval(function () {
         if (region_ids !== undefined) {
             clearInterval(customRegionsDropdown);
@@ -219,7 +217,6 @@ function setupCustomDropdown() {
             regionsReady = true;
         }
     }, 1000);
-
 
     var pageReadyInterval = setInterval(function () {
         if (stationsReady && regionsReady) {

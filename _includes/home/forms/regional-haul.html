@@ -1,0 +1,141 @@
+<div id="region_trade">
+    <div class="col-xs-12 mx-auto">
+        <h2>
+          Region to Region Trading
+        </h2>
+        <p>
+          Finding the most profitable trade routes based on given filter parameters.
+          <br>
+          Orders change frequently. Profit is not guaranteed. Verify prices are accurate.
+        </p>
+        <hr>
+    </div>
+
+    <div class="col-xs-12 mx-auto">
+        <h4>
+          Starting Region
+        </h4>
+
+        <div class="form-group standard">
+            <div id="addingToStartRegionList">
+                <div id='start_region' style='border:1px solid #999;'></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xs-12 mx-auto">
+        <h4>
+          Destination Region
+        </h4>
+        <div class="form-group standard">
+            <div id="addingToEndRegionList">
+                <div id='end_region' style='border:1px solid #999;'>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="col-xs-12 mx-auto">
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+                <p>
+                  <label for="profit-threshold" class="control-label">
+                    Only Return Profits Above
+                  </label>
+                  <input
+                    type="number"
+                    id="region-profit-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: 500,000"
+                  />
+                </p>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <p>
+                  <label for="weight-threshold" class="control-label">
+                    Max Cargo Capacity (in m3)
+                  </label>
+                  <input
+                    type="number"
+                    id="region-weight-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: Not Included"
+                  />
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+                <p>
+                  <label for="roi-threshold" class="control-label">
+                    Minimum ROI (in %)
+                  </label>
+                  <input
+                    type="number"
+                    id="region-roi-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: 4"
+                  />
+                </p>
+            </div>
+            <div class="col-sm-6 col-xs-12">
+                <p>
+                  <label for="buy-threshold" class="control-label">
+                    Maximum Budget
+                  </label>
+                  <input
+                    type="number"
+                    id="region-buy-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: Infinity"
+                  />
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-1 col-xs-12"></div>
+            <div class="col-sm-4 col-xs-12">
+                    <label for="security-threshold" class="control-label">
+                      Security Status Filter
+                    </label>
+                    <select id="security-threshold" class="minor-text form-control">
+                        <option value="NULL" selected>No Filter</option>
+                        <option value="LOW">Only Low or High Sec</option>
+                        <option value="HIGH">Only High Sec</option>
+                    </select>
+            </div>
+            <div class="col-sm-2 col-xs-12">
+                    <label for="include-citadels" class="control-label">
+                      Include Citadels
+                    </label>
+                    <br>
+                    <input type="checkbox" id="include-citadels"/>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                    <label for="route-preference" class="control-label">
+                      Route Preference
+                    </label>
+                    <select id="route-preference" class="minor-text form-control">
+                        <option value="shortest">Shortest Route</option>
+                        <option value="secure" selected>Safest Route</option>
+                        <option value="insecure">Least Safe Route</option>
+                    </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 mx-auto">
+        <div class="error">
+          A starting region, and a destination is required.
+        </div>
+        <input
+          type="button"
+          class="btn btn-default"
+          onclick="init(2)"
+          value="Search"
+        />
+    </div>
+</div>
