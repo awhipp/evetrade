@@ -1,6 +1,6 @@
 name: EVE Trade
-version: v5.2.1
-version_full: Version 5.2.1
+version: v6.0
+version_full: Version 6.0
 
 exclude:
     - README.md

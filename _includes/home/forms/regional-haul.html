@@ -48,6 +48,7 @@
                   <input
                     type="number"
                     id="region-profit-threshold"
+                    name="region-profit-threshold"
                     class="minor-text form-control"
                     placeholder="Default: 500,000"
                   />
@@ -61,6 +62,7 @@
                   <input
                     type="number"
                     id="region-weight-threshold"
+                    name="region-weight-threshold"
                     class="minor-text form-control"
                     placeholder="Default: Not Included"
                   />
@@ -76,6 +78,7 @@
                   <input
                     type="number"
                     id="region-roi-threshold"
+                    name="region-roi-threshold"
                     class="minor-text form-control"
                     placeholder="Default: 4"
                   />
@@ -89,6 +92,7 @@
                   <input
                     type="number"
                     id="region-buy-threshold"
+                    name="region-buy-threshold"
                     class="minor-text form-control"
                     placeholder="Default: Infinity"
                   />
@@ -101,7 +105,10 @@
                     <label for="security-threshold" class="control-label">
                       Security Status Filter
                     </label>
-                    <select id="security-threshold" class="minor-text form-control">
+                    <select
+                      id="security-threshold"
+                      name="security-threshold"
+                      class="minor-text form-control">
                         <option value="NULL" selected>No Filter</option>
                         <option value="LOW">Only Low or High Sec</option>
                         <option value="HIGH">Only High Sec</option>
@@ -112,13 +119,20 @@
                       Include Citadels
                     </label>
                     <br>
-                    <input type="checkbox" id="include-citadels"/>
+                    <input
+                      type="checkbox"
+                      id="include-citadels"
+                      name="include-citadels"
+                    />
             </div>
             <div class="col-sm-4 col-xs-12">
                     <label for="route-preference" class="control-label">
                       Route Preference
                     </label>
-                    <select id="route-preference" class="minor-text form-control">
+                    <select
+                      id="route-preference"
+                      name="route-preference"
+                      class="minor-text form-control">
                         <option value="shortest">Shortest Route</option>
                         <option value="secure" selected>Safest Route</option>
                         <option value="insecure">Least Safe Route</option>

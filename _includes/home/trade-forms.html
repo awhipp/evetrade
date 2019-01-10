@@ -30,14 +30,25 @@
                       />
                 </p>
 
-                {% if page.announcement %}
+                {% if page.announcement.enabled %}
                 <br>
                 <br>
                 <div class="announcement-selection">
                     <p>
-                        {{ site.version_full }} - {% last_modified_at %d %B %Y %}
-                        <br>
-                        {{ page.announcement }}
+                      <strong>
+                        <u>
+                          {{ page.announcement.header }}
+                        </u>
+                      </strong>
+                    <p>
+                    <p>
+                      {{ page.announcement.text }}
+                    </p>
+                    {% if page.announcement.include_date %}
+                      <p style="text-align: center">
+                        <small> Posted on {% last_modified_at %-d %B %Y %} </small>
+                      </p>
+                    {% endif %}
                     </p>
                 </div>
                 {% endif %}

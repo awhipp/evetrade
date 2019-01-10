@@ -443,92 +443,17 @@ function setAbout() {
 }
 
 function setupCookies() {
-    $("#lower-margin-threshold").val(getCookie("lower-margin-threshold"));
-    $("#upper-margin-threshold").val(getCookie("upper-margin-threshold"));
-    $("#volume-threshold").val(getCookie("volume-threshold"));
-    $("#profit-threshold").val(getCookie("profit-threshold"));
-    $("#roi-threshold").val(getCookie("roi-threshold"));
-    $("#buy-threshold").val(getCookie("buy-threshold"));
-    $("#weight-threshold").val(getCookie("weight-threshold"));
-    $("#region-profit-threshold").val(getCookie("profit-threshold"));
-    $("#region-roi-threshold").val(getCookie("roi-threshold"));
-    $("#region-buy-threshold").val(getCookie("buy-threshold"));
-    $("#region-weight-threshold").val(getCookie("weight-threshold"));
-}
+  var formInputs = [
+      "lower-margin-threshold", "upper-margin-threshold", "volume-threshold",
+      "profit-threshold", "roi-threshold", "buy-threshold", "weight-threshold",
+      "route-preference", "include-citadels", "security-threshold",
+      "region-buy-threshold", "region-roi-threshold", "region-weight-threshold",
+      "region-profit-threshold"
+  ];
 
-function updateCookies() {
-    if(tradingStyle == 1) {
-        if($("#profit-threshold").val().length > 0 && !isNaN($("#profit-threshold").val())){
-            threshold_profit = parseFloat($("#profit-threshold").val());
-            setCookie("profit-threshold",threshold_profit,7);
-        }else{
-            setCookie("profit-threshold","");
-        }
-        if($("#roi-threshold").val().length > 0 && !isNaN($("#roi-threshold").val())){
-            threshold_roi = parseFloat($("#roi-threshold").val());
-            setCookie("roi-threshold",threshold_roi,7);
-        }else{
-            setCookie("roi-threshold","");
-        }
-        if($("#buy-threshold").val().length > 0 && !isNaN($("#buy-threshold").val())){
-            threshold_cost = parseFloat($("#buy-threshold").val());
-            setCookie("buy-threshold",threshold_cost,7);
-        }else{
-            setCookie("buy-threshold","");
-        }
-        if($("#weight-threshold").val().length > 0 && !isNaN($("#weight-threshold").val())){
-            threshold_weight = parseFloat($("#weight-threshold").val());
-            setCookie("weight-threshold",threshold_weight,7);
-        }else{
-            setCookie("weight-threshold","");
-        }
-    } else if (tradingStyle == 0) {
-        if($("#lower-margin-threshold").val().length > 0 && !isNaN($("#lower-margin-threshold").val())){
-            threshold_margin_lower = parseFloat($("#lower-margin-threshold").val());
-            setCookie("lower-margin-threshold",threshold_margin_lower,7);
-        }else{
-            setCookie("lower-margin-threshold","");
-        }
-
-        if($("#upper-margin-threshold").val().length > 0 && !isNaN($("#upper-margin-threshold").val())){
-            threshold_margin_upper = parseFloat($("#upper-margin-threshold").val());
-            setCookie("upper-margin-threshold",threshold_margin_upper,7);
-        }else{
-            setCookie("upper-margin-threshold","");
-        }
-
-        if($("#volume-threshold").val().length > 0 && !isNaN($("#volume-threshold").val())){
-            volume_threshold = parseFloat($("#volume-threshold").val());
-            setCookie("volume-threshold",volume_threshold,7);
-        }else{
-            setCookie("volume-threshold","");
-        }
-    } else if (tradingStyle == 2) {
-        if ($("#region-profit-threshold").val().length > 0 && !isNaN($("#region-profit-threshold").val())) {
-            threshold_profit = parseFloat($("#region-profit-threshold").val());
-            setCookie("profit-threshold", threshold_profit, 7);
-        } else {
-            setCookie("profit-threshold", "");
-        }
-        if ($("#region-roi-threshold").val().length > 0 && !isNaN($("#region-roi-threshold").val())) {
-            threshold_roi = parseFloat($("#region-roi-threshold").val());
-            setCookie("roi-threshold", threshold_roi, 7);
-        } else {
-            setCookie("roi-threshold", "");
-        }
-        if ($("#region-buy-threshold").val().length > 0 && !isNaN($("#region-buy-threshold").val())) {
-            threshold_cost = parseFloat($("#region-buy-threshold").val());
-            setCookie("buy-threshold", threshold_cost, 7);
-        } else {
-            setCookie("buy-threshold", "");
-        }
-        if ($("#region-weight-threshold").val().length > 0 && !isNaN($("#region-weight-threshold").val())) {
-            threshold_weight = parseFloat($("#region-weight-threshold").val());
-            setCookie("weight-threshold", threshold_weight, 7);
-        } else {
-            setCookie("weight-threshold", "");
-        }
-    }
+  for(var i = 0; i < formInputs.length; i++) {
+    $("#" + formInputs[i]).inputStore();
+  }
 }
 
 function setupTradeOptions(tradeType){
@@ -755,7 +680,6 @@ function execute() {
 
 function init(){
     $(".tableLoadingIcon").show();
-    updateCookies();
 
     if(tradingStyle == 1){
         setRouteStationTradingLocations();
