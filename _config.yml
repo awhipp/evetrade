@@ -6,6 +6,7 @@ exclude:
     - README.md
     - netlify.toml
     - CNAME
+    - LICENSE
 
 plugins:
     - jekyll-minifier

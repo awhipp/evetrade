@@ -1,2 +1,0 @@
-### Latest {{ site.version }}
-    * TBD
