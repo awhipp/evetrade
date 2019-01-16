@@ -134,7 +134,7 @@ nav {
     color: white;
 }
 
-input[type="button"]{
+input[type="button"], input[type="submit"]{
     background: rgba(0,0,0,0.5);
     color: white;
     min-width: 100px;
@@ -146,7 +146,7 @@ input[type="button"]{
     min-width: 200px;
 }
 
-input[type="button"]:hover {
+input[type="button"]:hover, input[type="submit"]:hover {
   opacity: 0.7;
 }
 

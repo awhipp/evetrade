@@ -48,6 +48,7 @@ function completely(container, config) {
     txtInput.style.position = 'relative';
     txtInput.classList.add("location-input");
     txtInput.id = "location-input-" + locationInputId;
+    txtInput.name = "location_" + container.id;
     locationInputId += 1;
 
     var wrapper = document.createElement('div');
