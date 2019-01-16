@@ -1,0 +1,64 @@
+<div class="core-section bg-header text-white" style="opacity: 0">
+    <div class="container text-center overflow_none">
+        <h1 id="buyingHeader"></h1>
+        <p id="buyingFooter"></p>
+
+        <div id="selection">
+            <div id="initial_choice">
+                <h2>
+                  How do you trade?
+                </h2>
+                <p>
+                    <input
+                      type="button"
+                      class="btn btn-default station-trader"
+                      value="Single Station"
+                      />
+                </p>
+                <p>
+                    <input
+                      type="button"
+                      class="btn btn-default hauling-station-trader"
+                      value="Station to Station"
+                      />
+                </p>
+                <p>
+                    <input
+                      type="button"
+                      class="btn btn-default hauling-region-trader"
+                      value="Region to Region"
+                      />
+                </p>
+
+                {% if page.announcement.enabled %}
+                <br>
+                <br>
+                <div class="announcement-selection">
+                    <p>
+                      <strong>
+                        <u>
+                          {{ page.announcement.header }}
+                        </u>
+                      </strong>
+                    <p>
+                    <p>
+                      {{ page.announcement.text }}
+                    </p>
+                    {% if page.announcement.include_date %}
+                      <p style="text-align: center">
+                        <small> Posted on {% last_modified_at %-d %B %Y %} </small>
+                      </p>
+                    {% endif %}
+                    </p>
+                </div>
+                {% endif %}
+                <br>
+            </div>
+
+            {% include home/forms/station-trading.html %}
+            {% include home/forms/station-haul.html %}
+            {% include home/forms/regional-haul.html %}
+
+        </div>
+    </div>
+</div>

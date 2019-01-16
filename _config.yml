@@ -1,0 +1,12 @@
+name: EVE Trade
+version: v6.0
+version_full: Version 6.0
+
+exclude:
+    - README.md
+    - netlify.toml
+    - CNAME
+
+plugins:
+    - jekyll-minifier
+    - jekyll-last-modified-at
