@@ -11,3 +11,6 @@ exclude:
 plugins:
     - jekyll-minifier
     - jekyll-last-modified-at
+
+jekyll-minifier:
+  exclude: 'release.html'
