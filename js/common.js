@@ -200,8 +200,6 @@ function refresh() {
     tableCreated = false;
     routes=[];
 
-    $("footer").css("position", "fixed");
-
     init();
 }
 
@@ -321,8 +319,6 @@ function createTradeHeader() {
 function createDataTable() {
     if(!tableCreated) {
         tableCreated = true;
-        $("footer").css("position", "absolute");
-
         $('#noselect-object').html('<table id="dataTable" class="display"></table>');
         $(".dataTableFilters").html("");
 
