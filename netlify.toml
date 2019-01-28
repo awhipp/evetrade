@@ -1,2 +1,2 @@
 [build]
-  publish = "_site"
+  publish = "dist"

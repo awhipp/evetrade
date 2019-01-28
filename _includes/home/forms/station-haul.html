@@ -1,4 +1,5 @@
-<div id="route_trade">
+<form id="route_trade" onsubmit="return init(1)">
+    <input type="hidden" name="form_type" value="STATION_HAUL"/>
     <div class="col-xs-12 mx-auto">
         <h2>
           Station to Station Trading
@@ -79,7 +80,8 @@
 
     <div class="col-xs-12 mx-auto">
         <div class="row">
-            <div class="col-sm-12 col-xs-12">
+            <div class="col-sm-2 col-xs-12"></div>
+            <div class="col-sm-4 col-xs-12">
                 <p>
                   <label for="profit-threshold" class="control-label">
                     Only Return Profits Above
@@ -93,8 +95,7 @@
                   />
                 </p>
             </div>
-
-            <div class="col-sm-12 col-xs-12">
+            <div class="col-sm-4 col-xs-12">
                 <p>
                   <label for="weight-threshold" class="control-label">
                     Max Cargo Capacity (in m3)
@@ -108,9 +109,11 @@
                   />
                 </p>
             </div>
+            <div class="col-sm-2 col-xs-12"></div>
         </div>
         <div class="row">
-            <div class="col-sm-12 col-xs-12">
+            <div class="col-sm-2 col-xs-12"></div>
+            <div class="col-sm-4 col-xs-12">
                 <p>
                   <label for="roi-threshold" class="control-label">
                     Minimum ROI (in %)
@@ -124,7 +127,7 @@
                   />
                 </p>
             </div>
-            <div class="col-sm-12 col-xs-12">
+            <div class="col-sm-4 col-xs-12">
                 <p>
                   <label for="buy-threshold" class="control-label">
                     Maximum Budget
@@ -138,6 +141,7 @@
                   />
                 </p>
             </div>
+            <div class="col-sm-2 col-xs-12"></div>
         </div>
     </div>
 
@@ -147,10 +151,9 @@
           Starting point cannot equal Destination.
         </div>
         <input
-          type="button"
+          type="submit"
           class="btn btn-default"
-          onclick="init(1)"
           value="Search"
         />
     </div>
-</div>
+</form>

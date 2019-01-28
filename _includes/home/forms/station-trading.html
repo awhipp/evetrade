@@ -1,4 +1,5 @@
-<div id="station_trade">
+<form id="station_trade" onsubmit="return init(0)">
+    <input type="hidden" name="form_type" value="STATION_TRADE"/>
     <h2>
         Station Trading
     </h2>
@@ -14,71 +15,79 @@
           Station Trade at
         </h4>
 
-        <form id="station_trading_form">
-          <div class="col-xs-12 mx-auto">
-              <div class="form-group standard">
-                  <div id='custom_station' style='border:1px solid #999;'></div>
-                  <p class="suggestions">
-                      Suggestions:
-                      <span onclick="addStart('Jita');">Jita</span>
-                      <span onclick="addStart('Amarr');">Amarr</span>
-                      <span onclick="addStart('Dodixie');">Dodixie</span>
-                      <span onclick="addStart('Rens');">Rens</span>
-                      <span onclick="addStart('Hek');">Hek</span>
-                  </p>
-              </div>
-          </div>
+        <div class="col-xs-12 mx-auto">
+            <div class="form-group standard">
+                <div id='custom_station' style='border:1px solid #999;'></div>
+                <p class="suggestions">
+                    Suggestions:
+                    <span onclick="addStart('Jita');">Jita</span>
+                    <span onclick="addStart('Amarr');">Amarr</span>
+                    <span onclick="addStart('Dodixie');">Dodixie</span>
+                    <span onclick="addStart('Rens');">Rens</span>
+                    <span onclick="addStart('Hek');">Hek</span>
+                </p>
+            </div>
+        </div>
 
-          <div class="col-xs-12 mx-auto">
-              <p>
-                Volume Above
-                <br/>
-                <input
-                  type="number"
-                  id="volume-threshold"
-                  name="volume-threshold"
-                  class="minor-text form-control threshold-margin"
-                  placeholder="Default: 1,000"
-                />
-              </p>
-
-              <p>
-                Return margins above
-                <br/>
-                <input
-                  type="number"
-                  id="lower-margin-threshold"
-                  name="lower-margin-threshold"
-                  class="minor-text form-control threshold-margin"
-                  placeholder="Default: 20"
-                />
-              </p>
-
-              <p>
-                and below
-                <br/>
-                <input
-                  type="number"
-                  id="upper-margin-threshold"
-                  name="upper-margin-threshold"
-                  class="minor-text form-control threshold-margin"
-                  placeholder="Default: 40"
-                />
-              </p>
-          </div>
-
-          <div class="col-xs-12 mx-auto">
-              <div class="error question secondary-text">
-                A station is required.
-              </div>
+        <div class="row">
+          <div class="col-sm-2 col-xs-12"></div>
+          <div class="col-sm-4 col-xs-12 mx-auto">
+            <p>
+              Return margins above
+              <br/>
               <input
-                type="button"
-                class="btn btn-default secondary-text"
-                onclick="init(0)"
-                value="Search"
+                type="number"
+                id="lower-margin-threshold"
+                name="lower-margin-threshold"
+                class="minor-text form-control threshold-margin"
+                placeholder="Default: 20"
               />
+            </p>
           </div>
-        </form>
+          <div class="col-sm-4 col-xs-12 mx-auto">
+            <p>
+              and below
+              <br/>
+              <input
+                type="number"
+                id="upper-margin-threshold"
+                name="upper-margin-threshold"
+                class="minor-text form-control threshold-margin"
+                placeholder="Default: 40"
+              />
+            </p>
+          </div>
+          <div class="col-sm-2 col-xs-12"></div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-2 col-xs-12"></div>
+          <div class="col-sm-8 col-xs-12 mx-auto">
+            <p>
+              Volume Above
+              <br/>
+              <input
+                type="number"
+                id="volume-threshold"
+                name="volume-threshold"
+                class="minor-text form-control threshold-margin"
+                placeholder="Default: 1,000"
+              />
+            </p>
+          </div>
+          <div class="col-sm-2 col-xs-hide"></div>
+        </div>
+
+        <div class="col-xs-12 mx-auto">
+            <div class="error question secondary-text">
+              A station is required.
+            </div>
+            <input
+              type="submit"
+              class="btn btn-default secondary-text"
+              value="Search"
+            />
+        </div>
     </div>
     <!-- End Inner Dialogue -->
-</div>
+</form>

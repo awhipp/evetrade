@@ -1,3 +1,7 @@
+html {
+    opacity: 1 !important;
+}
+
 h2{
 	margin-bottom: 1.5rem !important;
 }
@@ -73,15 +77,11 @@ p {
 
 /** START CORE **/
 body {
-    background: black;
-    background: url(../images/evetrade-background-min.png);
+    background: #111 url(../images/evetrade-background-min.png) center/cover fixed;
     font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
-    background-repeat: repeat-y;
-    background-size: 100%;
     position: relative;
     padding-bottom: 10em;
     margin-bottom: 6em;
-    min-height: 800px;
     font-size: 90%;
 }
 
@@ -134,7 +134,7 @@ nav {
     color: white;
 }
 
-input[type="button"]{
+input[type="button"], input[type="submit"]{
     background: rgba(0,0,0,0.5);
     color: white;
     min-width: 100px;
@@ -146,7 +146,7 @@ input[type="button"]{
     min-width: 200px;
 }
 
-input[type="button"]:hover {
+input[type="button"]:hover, input[type="submit"]:hover {
   opacity: 0.7;
 }
 
