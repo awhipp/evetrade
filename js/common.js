@@ -23,7 +23,8 @@ var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total 
 var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Total Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
 var stationHeader = ["Item", "Buy Order", "Sell Order", "Profit Per Item", "Margin", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
-var spamItems = ["ahremen's", "brokara's", "brynn's",
+var spamItems = [
+    "ahremen's", "brokara's", "brynn's",
     "chelm's", "cormack's", "draclira's", "estamel's",
     "gotan's", "hakim's", "kaikka's", "mizuro's", "raysere's",
     "selynne's", "setele's", "shaqil's", "tairei's", "thon's", "tuvan's",
@@ -199,6 +200,8 @@ function refresh() {
     tableCreated = false;
     routes=[];
 
+    $("footer").css("position", "fixed");
+
     init();
 }
 
@@ -318,6 +321,7 @@ function createTradeHeader() {
 function createDataTable() {
     if(!tableCreated) {
         tableCreated = true;
+        $("footer").css("position", "absolute");
 
         $('#noselect-object').html('<table id="dataTable" class="display"></table>');
         $(".dataTableFilters").html("");

@@ -1,4 +1,4 @@
-<form id="station_trade">
+<form id="station_trade" onsubmit="return init(0)">
     <input type="hidden" name="form_type" value="STATION_TRADE"/>
     <h2>
         Station Trading
@@ -85,7 +85,6 @@
             <input
               type="submit"
               class="btn btn-default secondary-text"
-              onclick="init(0)"
               value="Search"
             />
         </div>

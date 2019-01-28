@@ -697,11 +697,12 @@ function init(){
         $("#selection").hide();
     }else{
         $(".error").show();
-        return;
+        return false;
     }
 
     createTradeHeader();
     execute();
+    return false;
 }
 
 function displayError(){

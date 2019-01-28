@@ -2,15 +2,35 @@ name: EVE Trade
 version: v6.0
 version_full: Version 6.0
 
+destination: dist
+
 exclude:
     - README.md
     - netlify.toml
     - CNAME
     - LICENSE
 
+    - /js/common.js
+    - /js/init.js
+    - /js/region.js
+    - /js/region_ids.js
+    - /js/route.js
+    - /js/station.js
+    - /js/station_ids.js
+
+    - /vendor/jquery/jquery.min.js
+    - /vendor/popper/popper.min.js
+    - /vendor/bootstrap/js/bootstrap.min.js
+    - /vendor/jquery-easing/jquery.easing.min.js
+    - /vendor/jquery/inputStore.jquery.min.js
+    - /vendor/complete.ly/complete.ly.js
+
 plugins:
     - jekyll-minifier
     - jekyll-last-modified-at
 
 jekyll-minifier:
-  exclude: 'release.html'
+  exclude:
+    - release.html
+    - sitemap.xml
+

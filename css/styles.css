@@ -1,3 +1,7 @@
+html {
+    opacity: 1 !important;
+}
+
 h2{
 	margin-bottom: 1.5rem !important;
 }
@@ -73,20 +77,16 @@ p {
 
 /** START CORE **/
 body {
-    background: black;
-    background: url(../images/evetrade-background-min.png);
+    background: #111 url(../images/evetrade-background-min.png) center/cover fixed;
     font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
-    background-repeat: repeat-y;
-    background-size: 100%;
     position: relative;
     padding-bottom: 10em;
     margin-bottom: 6em;
-    min-height: 800px;
     font-size: 90%;
 }
 
 footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 50%;
     transform: translate(-50%);
