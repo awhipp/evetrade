@@ -1,3 +1,2 @@
 [build]
-  command = "jekyll build --incremental"
   publish = "dist"
