@@ -3,6 +3,10 @@ var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
 
+var STATION_TRADE = 0;
+var STATION_HAUL = 1;
+var REGION_HAUL = 2;
+
 var PAGE_MULTIPLE = 50;
 
 var tableCreated = false;
@@ -246,7 +250,7 @@ function createTradeHeader() {
     var buyingFooterDOM = $("#buyingFooter");
     var coreDOM = $("#core");
 
-    if (tradingStyle == 1) {
+    if (tradingStyle == STATION_HAUL) {
         $.each(startLocations, function () {
             if(this) {
                 buyingFrom += this + ", ";
@@ -260,18 +264,18 @@ function createTradeHeader() {
             }
         });
         sellingTo = sellingTo.substring(0, sellingTo.length - 2);
-    } else if (tradingStyle == 2) {
+    } else if (tradingStyle == REGION_HAUL) {
         buyingFrom = startLocations;
         sellingTo = endLocations;
     }
 
-    if (tradingStyle >= 1) {
+    if (tradingStyle == STATION_HAUL || tradingStyle == REGION_HAUL) {
         buyingHeaderDOM.text("Buying Sell Orders from " + buyingFrom);
 
         var extraData = "<div id='route-to'>Selling to the Buy Orders at " + sellingTo + "</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
-        if (tradingStyle == 2) {
+        if (tradingStyle == REGION_HAUL) {
             extraData += "<span id='citadelsLine'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
             extraData += "<br>Only showing system security status of " + $("#security-threshold").val() + " SEC or better.";
         }
@@ -291,13 +295,13 @@ function createTradeHeader() {
 
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
-        
+
         gtag('event', 'User Route Campaign', {
             'event_category': 'Route Trade Locations',
             'event_label': buyingFrom + " -> " + sellingTo,
             'value': 1
         });
-    } else {
+    } else if (tradingStyle == STATION_TRADE){
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
@@ -326,7 +330,7 @@ function createDataTable() {
         dataTableDOM.html("");
 
         var dtHTML = "<thead>";
-        var headers = tradingStyle === 0 ? stationHeader : tradingStyle === 1 ? routeHeader : regionHeader;
+        var headers = tradingStyle === STATION_TRADE ? stationHeader : tradingStyle === STATION_HAUL ? routeHeader : regionHeader;
         for (var i = 0; i < headers.length; i++) {
             dtHTML += ("<th>" + headers[i] + "</th>");
         }
@@ -334,7 +338,7 @@ function createDataTable() {
         dataTableDOM.append(dtHTML);
 
         var dt;
-        if (tradingStyle == 1) {
+        if (tradingStyle == STATION_HAUL) {
             // sorting on total profit index
             dt = dataTableDOM.DataTable({
                 "order": [[8, "desc"]],
@@ -350,7 +354,7 @@ function createDataTable() {
                     "orderable": false
                 }]
             });
-        } else if (tradingStyle == 2) {
+        } else if (tradingStyle == REGION_HAUL) {
             // sorting on profit per jump index
             dt = dataTableDOM.DataTable({
                 "order": [[9, "desc"]],
@@ -367,7 +371,7 @@ function createDataTable() {
                 }]
             });
 
-        } else {
+        } else if (tradingStyle == STATION_TRADE) {
             // sorting on margin index
             dt = dataTableDOM.DataTable({
                 "order": [[6, "desc"]],
@@ -383,7 +387,7 @@ function createDataTable() {
 
 
         $("#dataTable thead th").each(function (i) {
-            if( i > 0 || tradingStyle == 0) {
+            if( i > 0 || tradingStyle == STATION_TRADE) {
                 var name = dt.column(i).header();
                 var spanelt = document.createElement("button");
 

@@ -1,10 +1,10 @@
-var threshold_margin_lower = 20;
-var threshold_margin_upper = 40;
-var volume_threshold = 1000;
-var threshold_profit = 500000;
-var threshold_roi = 4;
-var threshold_cost = 999999999999999999;
-var threshold_weight = 999999999999999999;
+var threshold_margin_lower;
+var threshold_margin_upper;
+var volume_threshold;
+var threshold_profit;
+var threshold_roi;
+var threshold_cost;
+var threshold_weight ;
 
 var tradingStyle = null;
 var errorShown = false;
@@ -24,7 +24,6 @@ var startCoordinates = [];
 var endCoordinates = [];
 var startLocations = [];
 var endLocations = [];
-
 
 var shifted = false;
 $( document ).ready(function() {
@@ -93,8 +92,6 @@ $( document ).ready(function() {
         'value': 1
     });
 });
-
-
 
 function getTradeHubName(stationName) {
     if (stationName == "Jita IV - Moon 4 - Caldari Navy Assembly Plant") {
@@ -427,17 +424,13 @@ function setAbout() {
         $("#about")[0].onclick = function() {
             $('#howto').modal('show');
         };
-    } else if (tradingStyle >= 1) {
+    } else if (tradingStyle == STATION_HAUL || tradingStyle == REGION_HAUL) {
         $("#about")[0].onclick = function() {
             $('#howto-route').modal('show');
         };
-    } else if (tradingStyle == 0) {
+    } else if (tradingStyle == STATION_TRADE) {
         $("#about")[0].onclick = function() {
             $('#howto-station').modal('show');
-        };
-    } else if (tradingStyle == 2) {
-        $("#about")[0].onclick = function () {
-            $('#howto-route').modal('show');
         };
     }
 }
@@ -466,13 +459,13 @@ function setupTradeOptions(tradeType){
     setAbout();
 
     var eventLabel = '';
-    if(tradingStyle == 1){
+    if(tradingStyle == STATION_HAUL){
         $("#route_trade").slideToggle();
         eventLabel = "Hauler - Station";
-    }else if(tradingStyle==0){
+    }else if(tradingStyle == STATION_TRADE){
         $("#station_trade").slideToggle();
         eventLabel = "Station Trader";
-    } else if (tradingStyle == 2) {
+    } else if (tradingStyle == REGION_HAUL) {
         $("#region_trade").slideToggle();
         eventLabel = "Hauler - Region";
     }
@@ -547,10 +540,12 @@ function getCookie(cname) {
 }
 
 function addStart(variable) {
-    if (tradingStyle == 0) {
+    if (tradingStyle == STATION_TRADE) {
         $("#custom_station input")[0].value = variable;
-    } else if (tradingStyle == 1) {
+        $("#custom_station input")[1].value = variable;
+    } else if (tradingStyle == STATION_HAUL) {
         $("#start_station input")[0].value = variable;
+        $("#start_station input")[1].value = variable;
         if(shifted){
             var e = {};
             e.shiftKey = true;
@@ -558,16 +553,18 @@ function addStart(variable) {
         } else {
             newStartStation();
         }
-    } else if (tradingStyle == 2) {
+    } else if (tradingStyle == REGION_HAUL) {
         $("#start_region input")[0].value = variable;
+        $("#start_region input")[1].value = variable;
     }
 }
 
 function addEnd(variable) {
-    if (tradingStyle == 0) {
+    if (tradingStyle == STATION_TRADE) {
         return;
-    } else if (tradingStyle == 1) {
+    } else if (tradingStyle == STATION_HAUL) {
         $("#end_station input")[0].value = variable;
+        $("#end_station input")[1].value = variable;
         if (shifted) {
             var e = {};
             e.shiftKey = true;
@@ -575,9 +572,11 @@ function addEnd(variable) {
         } else {
             newEndStation();
         }
-    } else if (tradingStyle == 2) {
+    } else if (tradingStyle == REGION_HAUL) {
         $("#end_region input")[0].value = variable;
+        $("#end_region input")[1].value = variable;
     }
+
 }
 
 function setStationTradingLocations() {
@@ -665,32 +664,35 @@ function setRouteStationTradingLocations() {
 }
 
 function execute() {
-    if(tradingStyle == 1) {
+    if(tradingStyle == STATION_HAUL) {
         routes = [];
         for(var i = 0; i < startCoordinates.length; i++) {
             new Route(startCoordinates[i], endCoordinates).startRoute();
         }
-    } else if (tradingStyle == 0) {
+    } else if (tradingStyle == STATION_TRADE) {
         new Station(startCoordinates).startStation();
-    } else if (tradingStyle == 2) {
+    } else if (tradingStyle == REGION_HAUL) {
         new Region(startCoordinates, endCoordinates).startRoute();
     }
 
 }
 
-function init(){
+function init(style){
+    tradingStyle = style;
     $(".tableLoadingIcon").show();
 
-    if(tradingStyle == 1){
+    if(tradingStyle == STATION_HAUL){
         setRouteStationTradingLocations();
-    } else if (tradingStyle == 0) {
+    } else if (tradingStyle == STATION_TRADE) {
         setStationTradingLocations();
-    } else {
+    } else if (tradingStyle == REGION_HAUL) {
         setRouteRegionTradingLocations();
     }
 
     var startCondition = (startLocations && startLocations.length > 0);
-    var endCondition = (tradingStyle>=1 && endLocations.length > 0) || tradingStyle==0;
+    var endCondition = (
+      (tradingStyle==STATION_HAUL || tradingStyle==REGION_HAUL) && endLocations.length > 0
+    ) || tradingStyle==STATION_TRADE;
 
     if(startCondition && endCondition){
         $(".error").hide();
