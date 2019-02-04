@@ -65,7 +65,7 @@ Station.prototype.asyncCheck = function() {
  */
 Station.prototype.recalculateProgress = function() {
     var progressUpdate = this.getNumberOfCompletePages(this.allOrders);
-    return progressUpdate === 0 ? 1 : progressUpdate;
+    return progressUpdate <= 0 ? 1 : 35.0 * Math.log10(progressUpdate);
 };
 
 
@@ -182,6 +182,9 @@ Station.prototype.executeOrders = function() {
     }
 };
 
+/**
+* Clears the entire class including asynchronous timers.
+*/
 Station.prototype.clear = function() {
     this.stationLocation = null;
 
@@ -294,6 +297,13 @@ Station.prototype.calculateNext = function(itemId) {
     }
 };
 
+/**
+* Gets the best sell and buy price for a particular itemId
+*
+* @param itemId The itemId to calculate for.
+* @param buyPrice The items buyPrice to compare.
+* @param sellPrice The items sellPrice to compare.
+*/
 Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
     var bestBuyPrice = sellPrice[0][0];
     var bestSellPrice = buyPrice[0][0];
@@ -326,6 +336,9 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
     }
 };
 
+/**
+* An async function which determines when filtering is occuring as well as when it has stopped.
+*/
 Station.prototype.asyncFiltering = function() {
     var thiz = this;
     this.asyncFilter = setInterval(function(){
@@ -345,6 +358,12 @@ Station.prototype.asyncFiltering = function() {
         250);
 };
 
+/**
+* The rest function to get an item's market volume
+*
+* @param itemId the item id for the item in question
+* @param row the data row that this will be applied to
+*/
 Station.prototype.getItemVolume = function(itemId, row){
     var url = getVolumeEndpointBuilder(this.stationLocation.region, itemId);
     var thiz = this;
@@ -390,6 +409,12 @@ Station.prototype.getItemVolume = function(itemId, row){
     });
 };
 
+/**
+* The rest function to get an item's weightData
+*
+* @param itemId the item id for the item in question
+* @param row the data row that this will be applied to
+*/
 Station.prototype.getItemWeight = function(itemId, row){
     if(this.itemCache[itemId]){
         row.itemName = this.itemCache[itemId].name;
@@ -428,6 +453,11 @@ Station.prototype.getItemWeight = function(itemId, row){
     }
 };
 
+/**
+* Adds the row to the datatable. This also creates the datatable if it has not been created yet.
+*
+* @param row the row to be added
+*/
 Station.prototype.addRow = function(row) {
 
     var profitPerItem = row.sellPrice - row.buyPrice;

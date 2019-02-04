@@ -7,4 +7,53 @@
  * Licensed under the MIT License:
  *   http://www.opensource.org/licenses/mit-license.php
  */
-!function(i){i.extend(i.easing,{easeIn:function(n,e,u,t,a){return i.easing.easeInQuad(n,e,u,t,a)},easeOut:function(n,e,u,t,a){return i.easing.easeOutQuad(n,e,u,t,a)},easeInOut:function(n,e,u,t,a){return i.easing.easeInOutQuad(n,e,u,t,a)},expoin:function(n,e,u,t,a){return i.easing.easeInExpo(n,e,u,t,a)},expoout:function(n,e,u,t,a){return i.easing.easeOutExpo(n,e,u,t,a)},expoinout:function(n,e,u,t,a){return i.easing.easeInOutExpo(n,e,u,t,a)},bouncein:function(n,e,u,t,a){return i.easing.easeInBounce(n,e,u,t,a)},bounceout:function(n,e,u,t,a){return i.easing.easeOutBounce(n,e,u,t,a)},bounceinout:function(n,e,u,t,a){return i.easing.easeInOutBounce(n,e,u,t,a)},elasin:function(n,e,u,t,a){return i.easing.easeInElastic(n,e,u,t,a)},elasout:function(n,e,u,t,a){return i.easing.easeOutElastic(n,e,u,t,a)},elasinout:function(n,e,u,t,a){return i.easing.easeInOutElastic(n,e,u,t,a)},backin:function(n,e,u,t,a){return i.easing.easeInBack(n,e,u,t,a)},backout:function(n,e,u,t,a){return i.easing.easeOutBack(n,e,u,t,a)},backinout:function(n,e,u,t,a){return i.easing.easeInOutBack(n,e,u,t,a)}})}(jQuery);
+
+(function($){
+$.extend( $.easing,
+{
+	easeIn: function (x, t, b, c, d) {
+		return $.easing.easeInQuad(x, t, b, c, d);
+	},
+	easeOut: function (x, t, b, c, d) {
+		return $.easing.easeOutQuad(x, t, b, c, d);
+	},
+	easeInOut: function (x, t, b, c, d) {
+		return $.easing.easeInOutQuad(x, t, b, c, d);
+	},
+	expoin: function(x, t, b, c, d) {
+		return $.easing.easeInExpo(x, t, b, c, d);
+	},
+	expoout: function(x, t, b, c, d) {
+		return $.easing.easeOutExpo(x, t, b, c, d);
+	},
+	expoinout: function(x, t, b, c, d) {
+		return $.easing.easeInOutExpo(x, t, b, c, d);
+	},
+	bouncein: function(x, t, b, c, d) {
+		return $.easing.easeInBounce(x, t, b, c, d);
+	},
+	bounceout: function(x, t, b, c, d) {
+		return $.easing.easeOutBounce(x, t, b, c, d);
+	},
+	bounceinout: function(x, t, b, c, d) {
+		return $.easing.easeInOutBounce(x, t, b, c, d);
+	},
+	elasin: function(x, t, b, c, d) {
+		return $.easing.easeInElastic(x, t, b, c, d);
+	},
+	elasout: function(x, t, b, c, d) {
+		return $.easing.easeOutElastic(x, t, b, c, d);
+	},
+	elasinout: function(x, t, b, c, d) {
+		return $.easing.easeInOutElastic(x, t, b, c, d);
+	},
+	backin: function(x, t, b, c, d) {
+		return $.easing.easeInBack(x, t, b, c, d);
+	},
+	backout: function(x, t, b, c, d) {
+		return $.easing.easeOutBack(x, t, b, c, d);
+	},
+	backinout: function(x, t, b, c, d) {
+		return $.easing.easeInOutBack(x, t, b, c, d);
+	}
+});})(jQuery);

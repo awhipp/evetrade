@@ -29,8 +29,8 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = $("#security-threshold").val();
-    this.safety = $("#route-preference").val();
+    this.security = setDefaultVal($("#security-threshold").val(), "NULL");
+    this.safety = setDefaultVal($("#route-preference").val(), "shortest");
 
     this.completed = false;
 
@@ -268,6 +268,9 @@ Region.prototype.executeOrders = function() {
     }
 };
 
+/**
+* Keeps tracks of an executes the region calculation
+*/
 Region.prototype.executeRoutes = function() {
     var thiz = this;
     var runningCount = 0;
@@ -306,6 +309,9 @@ Region.prototype.executeRoutes = function() {
     }, 1000);
 };
 
+/**
+* Clears the entire region for a refresh including async functions
+*/
 Region.prototype.clear = function() {
     this.startLocation = null;
     this.endLocations = null;
@@ -356,6 +362,9 @@ Region.prototype.asyncRefresh = function() {
     }, 1000);
 };
 
+/**
+* Gets all required item info for a given itemId
+*/
 Region.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, start, end){
     var rows = [];
 
@@ -374,6 +383,9 @@ Region.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, start, end)
     }
 };
 
+/**
+* Calculates the given row and whether it should be added to the table
+*/
 Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, start, end){
     if(buyPrice < sellPrice && sellPrice > 0){
         var itemProfit = sellPrice - buyPrice;
@@ -403,6 +415,9 @@ Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice,
     return [];
 };
 
+/**
+* Gets the item weight for a given itemId and adds it to the row
+*/
 Region.prototype.getItemWeight = function(itemId, row){
     if(itemCache[itemId]){
         var name = itemCache[itemId].name;
@@ -442,6 +457,9 @@ Region.prototype.getItemWeight = function(itemId, row){
     }
 };
 
+/**
+* Creates the row object for a regional trade
+*/
 Region.prototype.createRowObject = function(row) {
     var rowObject = {};
     rowObject.itemId = row[0];
@@ -457,6 +475,10 @@ Region.prototype.createRowObject = function(row) {
     return rowObject;
 };
 
+/**
+* If the user requested citadel data as well this will swap out the citadel id
+* at the endpoint with the citadel data provided by stop.hammerti.me.uk
+*/
 Region.prototype.updateEndWithCitadel = function (row) {
     var citadelId = row.sellToStation.station;
     var thiz = this;
@@ -519,6 +541,11 @@ Region.prototype.updateEndWithCitadel = function (row) {
     }
 };
 
+
+/**
+* If the user requested citadel data as well this will swap out the citadel id
+* at the startpoint with the citadel data provided by stop.hammerti.me.uk
+*/
 Region.prototype.updateStartWithCitdael = function (row) {
     var citadelId = row.buyFromStation.station;
     var thiz = this;
@@ -581,6 +608,9 @@ Region.prototype.updateStartWithCitdael = function (row) {
     }
 };
 
+/**
+* If all conditions are met then the row is added to the datatable
+*/
 Region.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
@@ -598,6 +628,9 @@ Region.prototype.addRow = function(row) {
     this.updateStartWithCitdael(row);
 };
 
+/**
+* Translates security codes to their respective numeric values
+*/
 Region.prototype.getSecurityCode = function (sec) {
     if (sec >= 0.5) {
         return "high_sec";
@@ -610,6 +643,9 @@ Region.prototype.getSecurityCode = function (sec) {
     }
 }
 
+/**
+* Determines the endpoint's security code
+*/
 Region.prototype.getEndSystemSecurity = function (row) {
     var systemId = row.sellToStation.system;
     var thiz = this;
@@ -643,6 +679,9 @@ Region.prototype.getEndSystemSecurity = function (row) {
     }
 };
 
+/**
+* Determines the startpoint's security code
+*/
 Region.prototype.getStartSystemSecurity = function (row) {
     var systemId = row.buyFromStation.system;
     var thiz = this;
@@ -676,6 +715,9 @@ Region.prototype.getStartSystemSecurity = function (row) {
     }
 };
 
+/**
+* Gets the length of the route
+*/
 Region.prototype.getRouteLength = function (row) {
     var systemIdStart = row.buyFromStation.system;
     var systemIdEnd = row.sellToStation.system;
@@ -703,6 +745,9 @@ Region.prototype.getRouteLength = function (row) {
     }
 };
 
+/**
+* Given a row this function updates the datatable
+*/
 Region.prototype.updateDatatable = function(row) {
     var investigateId = row.sellToStation.station + row.buyFromStation.station + row.itemId + "_investigate";
     var storageVolume = row.itemWeight * row.quantity;

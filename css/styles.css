@@ -367,6 +367,7 @@ tr > td:first-child {
 
   .error {
     display: none;
+    border-top: rgb(140, 0, 0) 2px solid;
   }
 
   .station-selected, .start-selected, .end-selected {

@@ -4,7 +4,7 @@ var volume_threshold;
 var threshold_profit;
 var threshold_roi;
 var threshold_cost;
-var threshold_weight ;
+var threshold_weight;
 
 var tradingStyle = null;
 var errorShown = false;
@@ -26,6 +26,13 @@ var startLocations = [];
 var endLocations = [];
 
 var shifted = false;
+
+/**
+* Once all resources are loaded we need to setup all the information
+* > onClickListeners
+* > ensuring numeric input is only entered
+* > Setup the about, cookies, and custom station dropdowns
+*/
 $( document ).ready(function() {
     popup_table_buy = $("#popup-table-buy").DataTable({
         "order": [[ 0, "asc" ]],
@@ -93,6 +100,9 @@ $( document ).ready(function() {
     });
 });
 
+/**
+* Mapping function to shortened names of these popular stations
+*/
 function getTradeHubName(stationName) {
     if (stationName == "Jita IV - Moon 4 - Caldari Navy Assembly Plant") {
         return "Jita";
@@ -109,6 +119,9 @@ function getTradeHubName(stationName) {
     return stationName;
 }
 
+/**
+* Initializes completely which is the suggestion engine behind the inputs
+*/
 function initCompletely(domId, stationList) {
     var completelyInput = completely(document.getElementById(domId), {
         fontSize: '18px',
@@ -148,6 +161,9 @@ function initCompletely(domId, stationList) {
     }
 }
 
+/**
+* Custom station dropdown initializer
+*/
 function setupCustomDropdown() {
     var customStationsDropdown = setInterval(function () {
         if (station_ids !== undefined) {
@@ -186,6 +202,14 @@ function setupCustomDropdown() {
             initCompletely("custom_station", stationList);
             initCompletely("start_station", stationList);
             initCompletely("end_station", stationList);
+
+            if($("#route-preference").val() == null) {
+              $("#route-preference").val("shortest")
+            }
+
+            if($("#security-threshold").val() == null) {
+              $("#security-threshold").val("NULL")
+            }
 
             stationsReady = true;
         }
@@ -251,6 +275,9 @@ function setupCustomDropdown() {
     }, 1000);
 }
 
+/**
+* Starts with function for Strings. Not accessible in IE.
+*/
 if (!String.prototype.startsWith) {
     String.prototype.startsWith = function (searchString, position) {
         position = position || 0;
@@ -258,6 +285,9 @@ if (!String.prototype.startsWith) {
     };
 }
 
+/**
+* Finds all stations in a given system with this name.
+*/
 function findAllStations(stationName) {
     var stationsInSystem = [];
     var systemName = stationName.toLowerCase();
@@ -277,6 +307,9 @@ function findAllStations(stationName) {
     return stationsInSystem;
 }
 
+/**
+* Adds a start station under the input for station haul
+*/
 function newStartStation(e) {
     var li = document.createElement("li");
     var inputValue = ($("#start_station input")[0].value
@@ -337,6 +370,9 @@ function newStartStation(e) {
 
 }
 
+/**
+* Adds an end station under the input for station haul
+*/
 function newEndStation(e) {
     var li = document.createElement("li");
     var inputValue = ($("#end_station input")[0].value
@@ -395,6 +431,9 @@ function newEndStation(e) {
     }
 }
 
+/**
+* Enables all of the onclick listeners in one function
+*/
 function onClickListeners() {
 
     $(".end").on('click', function () {
@@ -419,6 +458,9 @@ function onClickListeners() {
     });
 }
 
+/**
+* Based on the page the user is on, this function updates the about.
+*/
 function setAbout() {
     if (tradingStyle == null) {
         $("#about")[0].onclick = function() {
@@ -435,6 +477,9 @@ function setAbout() {
     }
 }
 
+/**
+* Sets up cookies automatically using the jquery library input store.
+*/
 function setupCookies() {
   var formInputs = [
       "lower-margin-threshold", "upper-margin-threshold", "volume-threshold",
@@ -449,6 +494,10 @@ function setupCookies() {
   }
 }
 
+
+/**
+* Provides the user with the proper form on click.
+*/
 function setupTradeOptions(tradeType){
     tradingStyle = tradeType;
 
@@ -477,6 +526,10 @@ function setupTradeOptions(tradeType){
     });
 }
 
+/**
+* This is the comparison modal when a user wants
+* more indepth information about a trade
+*/
 function open_popup(itemId, name, fromStation, toStation){
     if(!toStation.name && citadelCache[toStation.station]) {
         if(citadelCache[toStation.station] && citadelCache[toStation.station].name) {
@@ -516,29 +569,9 @@ function open_popup(itemId, name, fromStation, toStation){
     popup_table_sell.draw();
 }
 
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
+/**
+* Gets the start coordinates based on the style
+*/
 function addStart(variable) {
     if (tradingStyle == STATION_TRADE) {
         $("#custom_station input")[0].value = variable;
@@ -559,6 +592,9 @@ function addStart(variable) {
     }
 }
 
+/**
+* Gets the end coordinates based on the style
+*/
 function addEnd(variable) {
     if (tradingStyle == STATION_TRADE) {
         return;
@@ -576,9 +612,11 @@ function addEnd(variable) {
         $("#end_region input")[0].value = variable;
         $("#end_region input")[1].value = variable;
     }
-
 }
 
+/**
+* Gets the station trading coordinates based on the input
+*/
 function setStationTradingLocations() {
     var inputValue = $("#custom_station input")[0].value || $("#custom_station input")[1].value;
     startLocations = inputValue.toLowerCase();
@@ -591,6 +629,9 @@ function setStationTradingLocations() {
     startCoordinates.station = start_station;
 }
 
+/**
+* Gets the region trading coordinates based on the input
+*/
 function setRouteRegionTradingLocations() {
     var inputValue = $("#start_region input")[0].value || $("#start_region input")[1].value;
     startLocations = inputValue.toLowerCase();
@@ -605,6 +646,10 @@ function setRouteRegionTradingLocations() {
     endLocations = endCoordinates.name;
 }
 
+/**
+* Leverages the cached values to determine all the
+* region, station, and name information required for a query
+*/
 function getCoordinatesFor(listId, inputId) {
     var coordinates = [];
     var existingPoints = [];
@@ -646,8 +691,10 @@ function getCoordinatesFor(listId, inputId) {
     return coordinates;
 }
 
+/**
+* Sets up the start and end locations for a given form input
+*/
 function setRouteStationTradingLocations() {
-
     startCoordinates = getCoordinatesFor("#custom_route_start", "#start_station");
 
     if(startCoordinates.length > 0) {
@@ -663,6 +710,9 @@ function setRouteStationTradingLocations() {
     }
 }
 
+/**
+* Executes the queries by forming the appropriate class prototypes
+*/
 function execute() {
     if(tradingStyle == STATION_HAUL) {
         routes = [];
@@ -677,46 +727,51 @@ function execute() {
 
 }
 
+/**
+* The initalizer function that runs when a form is submitted
+*/
 function init(style){
     tradingStyle = style;
-    $(".tableLoadingIcon").show();
+    try {
+      if(tradingStyle == STATION_TRADE){
+          threshold_margin_lower = setDefaultVal($("#lower-margin-threshold").val(), 20);
+          threshold_margin_upper = setDefaultVal($("#upper-margin-threshold").val(), 40);
+          volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);
+          setStationTradingLocations();
+      } else if (tradingStyle == STATION_HAUL) {
+          threshold_profit = setDefaultVal($("#profit-threshold").val(), 500000);
+          threshold_roi = setDefaultVal($("#roi-threshold").val(), 4);
+          threshold_cost = setDefaultVal($("#buy-threshold").val(), 999999999999999999);
+          threshold_weight = setDefaultVal($("#weight-threshold").val(), 999999999999999999);
+          setRouteStationTradingLocations();
+      } else if (tradingStyle == REGION_HAUL) {
+          threshold_profit = setDefaultVal($("#region-profit-threshold").val(), 500000);
+          threshold_roi = setDefaultVal($("#region-roi-threshold").val(), 4);
+          threshold_cost = setDefaultVal($("#region-buy-threshold").val(), 999999999999999999);
+          threshold_weight = setDefaultVal($("#region-weight-threshold").val(), 999999999999999999);
+          setRouteRegionTradingLocations();
+      }
 
-    if(tradingStyle == STATION_HAUL){
-        setRouteStationTradingLocations();
-    } else if (tradingStyle == STATION_TRADE) {
-        setStationTradingLocations();
-    } else if (tradingStyle == REGION_HAUL) {
-        setRouteRegionTradingLocations();
-    }
+      var startCondition = (startLocations && startLocations.length > 0);
+      var endCondition = (
+        (tradingStyle==STATION_HAUL || tradingStyle==REGION_HAUL) && endLocations.length > 0
+      ) || tradingStyle==STATION_TRADE;
 
-    var startCondition = (startLocations && startLocations.length > 0);
-    var endCondition = (
-      (tradingStyle==STATION_HAUL || tradingStyle==REGION_HAUL) && endLocations.length > 0
-    ) || tradingStyle==STATION_TRADE;
+      if(startCondition && endCondition){
+          $(".error").slideToggle(false);
+          $("#selection").hide();
+      }else{
+          $(".error").slideToggle(true);
+          return false;
+      }
 
-    if(startCondition && endCondition){
-        $(".error").hide();
-        $("#selection").hide();
-    }else{
-        $(".error").show();
+      $(".tableLoadingIcon").show();
+      createTradeHeader();
+      execute();
+    } catch(err) {
+        $(".error").slideToggle(true);
+        console.log(err);
         return false;
     }
-
-    createTradeHeader();
-    execute();
     return false;
-}
-
-function displayError(){
-    if(!errorShown){
-        $("#connectEVE").slideToggle(true);
-        errorShown = true;
-    }
-}
-
-function hideError(){
-    if(errorShown){
-        $("#connectEVE").slideToggle();
-        errorShown = false;
-    }
 }

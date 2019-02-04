@@ -234,6 +234,9 @@ Route.prototype.executeOrders = function() {
     }
 };
 
+/**
+* Clears the entire object for a refresh call.
+*/
 Route.prototype.clear = function() {
     this.startLocation = null;
     this.endLocations = null;
@@ -277,6 +280,9 @@ Route.prototype.asyncRefresh = function() {
     }, 1000);
 };
 
+/**
+* Async function which determines the progress of the query
+*/
 Route.prototype.asyncProgress = function() {
     var thiz = this;
     this.asyncProgressUpdate = setInterval(function() {
@@ -354,6 +360,9 @@ Route.prototype.calculateNext = function(itemId) {
     }
 };
 
+/**
+* Gets a particular item info given its itemId
+*/
 Route.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, locationInfo){
     var rows = [];
 
@@ -374,6 +383,9 @@ Route.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, locationInfo
     }
 };
 
+/**
+* Calculates the metrics behind a given row
+*/
 Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, locationInfo){
     if(buyPrice < sellPrice && sellPrice > 0){
         var itemProfit = sellPrice - buyPrice;
@@ -403,6 +415,9 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
     return [];
 };
 
+/**
+* Gets the itemweight of a given itemId (checks cache if it was already retrieved)
+*/
 Route.prototype.getItemWeight = function(itemId, row){
 
     if(itemCache[itemId]){
@@ -451,6 +466,9 @@ Route.prototype.getItemWeight = function(itemId, row){
     }
 };
 
+/**
+* Creates the route row object for insertion into datatable
+*/
 Route.prototype.createRowObject = function(row) {
     var rowObject = {};
     rowObject.itemId = row[0];
@@ -465,6 +483,9 @@ Route.prototype.createRowObject = function(row) {
     return rowObject;
 };
 
+/**
+* Adds the row to the datatable if it passes all the conditions
+*/
 Route.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;

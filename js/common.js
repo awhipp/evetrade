@@ -27,6 +27,9 @@ var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total 
 var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Total Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
 var stationHeader = ["Item", "Buy Order", "Sell Order", "Profit Per Item", "Margin", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
+/**
+* The keyword for known scam items
+*/
 var spamItems = [
     "ahremen's", "brokara's", "brynn's",
     "chelm's", "cormack's", "draclira's", "estamel's",
@@ -35,6 +38,9 @@ var spamItems = [
     "vizen's", "zor's"
 ];
 
+/**
+* Given a market data object this function determines the best prices
+*/
 function getMarketData(data, stationId, orderType, itemId, isRoute){
     var tempArray;
     if (typeof(data) == "string")  {
@@ -52,6 +58,16 @@ function getMarketData(data, stationId, orderType, itemId, isRoute){
         }
     }
     return returningArray;
+}
+
+/**
+* Given a null or empty value it will return the default
+*/
+function setDefaultVal(ele, def) {
+  if (ele && ele.length > 0) {
+    return ele;
+  }
+  return def;
 }
 
 /**
@@ -100,6 +116,9 @@ function getBestMarketPrice(orders, stationId, orderType, itemId, isRoute) {
     return bestPrice;
 }
 
+/**
+* Saves the sell order data for a given station and itemId
+*/
 function saveSellOrderData(stationId, itemId, data){
     if(data && data.length > 0) {
         if (!customBuy[stationId]) {
@@ -111,6 +130,9 @@ function saveSellOrderData(stationId, itemId, data){
     }
 }
 
+/**
+* Saves the buy order data for a given station and itemId
+*/
 function saveBuyOrderData(stationId, itemId, data){
     if(data && data.length > 0) {
         if(!customSell[stationId]){
@@ -122,24 +144,36 @@ function saveBuyOrderData(stationId, itemId, data){
     }
 }
 
+/**
+* The comparator for a sellOrder (greater is better)
+*/
 function sellOrderComparator(a,b){
     if (a[0] > b[0]) return -1;
     if (a[0] < b[0]) return 1;
     return 0;
 }
 
+/**
+* The comparator for a buyOrder (lesser is better)
+*/
 function buyOrderComparator(a,b){
     if (a[0] > b[0]) return 1;
     if (a[0] < b[0]) return -1;
     return 0;
 }
 
+/**
+* The comparator for a row on a margin trade
+*/
 function bestRowComparator(a,b){
     if (a[5] < b[5]) return 1;
     if (a[5] > b[5]) return -1;
     return 0;
 }
 
+/**
+* Given a station Id this function will provide the station name
+*/
 function getStationName(stationId){
     var stationFound = "";
     $.each(endCoordinates, function(){
@@ -150,6 +184,29 @@ function getStationName(stationId){
     return stationFound;
 }
 
+/**
+* Displays the connection slow error
+*/
+function displayError(){
+    if(!errorShown){
+        $("#connectEVE").slideToggle(true);
+        errorShown = true;
+    }
+}
+
+/**
+* Hides the connection slow error
+*/
+function hideError(){
+    if(errorShown){
+        $("#connectEVE").slideToggle();
+        errorShown = false;
+    }
+}
+
+/**
+* Converts a numeric into a human readable string with commas.
+*/
 function numberWithCommas(val) {
     while (/(\d+)(\d{3})/.test(val.toString())){
         val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
@@ -157,11 +214,17 @@ function numberWithCommas(val) {
     return val;
 }
 
+/**
+* Increment progress helper
+*/
 function incrementProgress(composite, page) {
     getTotalProgress();
     composite.completePages[page] = true;
 }
 
+/**
+* Determines progress based on completeness
+*/
 function getTotalProgress() {
     var progressUpdate = 0;
     var allComplete = true;
@@ -183,6 +246,9 @@ function getTotalProgress() {
     $(".loadingContent").text((totalProgress-0.01).toFixed(2) + "%");
 }
 
+/**
+* Generic refresh function which will clear and reinitialize the query
+*/
 function refresh() {
     $("#refresh-button").remove();
     iteration += 1;
@@ -204,9 +270,12 @@ function refresh() {
     tableCreated = false;
     routes=[];
 
-    init();
+    init(tradingStyle);
 }
 
+/**
+* Given an item this helper determines if it is a scam
+*/
 function isSpamItem(name) {
     for(var i = 0; i < spamItems.length; i++) {
         if(name.toLowerCase().indexOf(spamItems[i]) >= 0) {
@@ -216,6 +285,9 @@ function isSpamItem(name) {
     return false;
 }
 
+/**
+* Market endpoint URI builder
+*/
 function marketEndpointBuilder(region, page, orderType) {
     var url = ESI_ENDPOINT + "/latest/markets/" + region + "/orders/" +
         "?datasource=tranquility" +
@@ -225,6 +297,9 @@ function marketEndpointBuilder(region, page, orderType) {
     return url.replace(/\s/g, '');
 }
 
+/**
+* Item weight endpoint URI builder
+*/
 function getWeightEndpointBuilder(itemId) {
     var url = ESI_ENDPOINT + "/latest/universe/types/" + itemId + "/" +
         "?datasource=tranquility" +
@@ -233,6 +308,9 @@ function getWeightEndpointBuilder(itemId) {
     return url.replace(/\s/g, '');
 }
 
+/**
+* Market volume endpoint URI builder
+*/
 function getVolumeEndpointBuilder(region, itemId) {
     var url = ESI_ENDPOINT + "/latest/markets/" + region + "/history/" +
         "?datasource=tranquility" +
@@ -242,6 +320,10 @@ function getVolumeEndpointBuilder(region, itemId) {
     return url.replace(/\s/g, '');
 }
 
+/**
+* Builds the textual trade header while query
+* is running which gives context on what the query is executing
+*/
 function createTradeHeader() {
     var buyingFooter = "";
     var buyingFrom = "";
@@ -320,6 +402,10 @@ function createTradeHeader() {
     coreDOM.show();
 }
 
+
+/**
+* Creates the datatable based on the trading style that is being queried
+*/
 function createDataTable() {
     if(!tableCreated) {
         tableCreated = true;
