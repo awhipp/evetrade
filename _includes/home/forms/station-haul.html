@@ -1,0 +1,191 @@
+<form id="route_trade" onsubmit="return init(STATION_HAUL)">
+    <input type="hidden" name="form_type" value="STATION_HAUL"/>
+    <div class="col-xs-12 mx-auto">
+        <h2>
+          Station to Station Trading
+        </h2>
+        <p>
+          Finding the most profitable trade routes based on given filter parameters.
+          <br>
+          Orders change frequently. Profit is not guaranteed. Verify prices are accurate.
+          <br><br>
+          <em>
+            <b>Hold Shift</b> to add all stations in a system.
+          </em>
+          <br>
+          The more systems added, the longer the query will take.
+        </p>
+        <hr>
+    </div>
+
+    <div class="col-xs-12 mx-auto">
+        <h4>
+          Starting Stations
+        </h4>
+
+        <div class="form-group standard">
+            <div id="addingToStartStationList">
+                <div id='start_station' style='border:1px solid #999;'></div>
+                <input
+                  type="button"
+                  class="btn btn-default add-station-button"
+                  onclick="newStartStation(event)"
+                  value="&plus;"
+                />
+            </div>
+            <p class="suggestions">
+                Suggestions:
+                <span onclick="addStart('Jita');">Jita</span>
+                <span onclick="addStart('Amarr');">Amarr</span>
+                <span onclick="addStart('Dodixie');">Dodixie</span>
+                <span onclick="addStart('Rens');">Rens</span>
+                <span onclick="addStart('Hek');">Hek</span>
+            </p>
+
+            <ul id="custom_route_start" class="location_checklist form-control">
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="col-xs-12 mx-auto">
+        <h4>
+          Ending Stations
+        </h4>
+
+        <div class="form-group standard">
+            <div id="addingToEndStationList">
+                <div id='end_station' style='border:1px solid #999;'></div>
+                <input
+                  type="button"
+                  class="btn btn-default add-station-button"
+                  onclick="newEndStation(event)"
+                  value="&plus;"
+                />
+            </div>
+            <p class="suggestions">
+                Suggestions:
+                <span onclick="addEnd('Jita');">Jita</span>
+                <span onclick="addEnd('Amarr');">Amarr</span>
+                <span onclick="addEnd('Dodixie');">Dodixie</span>
+                <span onclick="addEnd('Rens');">Rens</span>
+                <span onclick="addEnd('Hek');">Hek</span>
+            </p>
+
+            <ul id="custom_route_end" class="location_checklist form-control">
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-xs-12 mx-auto">
+        <div class="row">
+            <div class="col-sm-2 col-xs-12"></div>
+            <div class="col-sm-4 col-xs-12">
+                <p>
+                  <label for="buying-type-station" class="control-label">
+                    Buying from
+                  </label>
+                  <select id="buying-type-station" name="buying-type-station" class="directionChange">
+                    <option value="SELL" selected>Sell Orders</option>
+                    <option value="BUY">Buy Orders</option>
+                  </select>
+                </p>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p>
+                  <label for="selling-type-station" class="control-label">
+                    Selling to
+                  </label>
+                  <select id="selling-type-station" name="selling-type-station" class="directionChange">
+                    <option value="SELL">Sell Orders</option>
+                    <option value="BUY" selected>Buy Orders</option>
+                  </select>
+                </p>
+            </div>
+            <div class="col-sm-2 col-xs-12"></div>
+            <p class="directionWarning" id="directionWarningStation">
+              It is highly recommended to search from SELL Orders to BUY Orders OR to increase your ROI threshold above 100%.<br>
+              Searching from <span class="startDirection"></span> Orders to <span class="endDirection"></span> Orders returns a very large resultset and will take a while.
+            </p>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-2 col-xs-12"></div>
+            <div class="col-sm-4 col-xs-12">
+                <p>
+                  <label for="profit-threshold" class="control-label">
+                    Only Return Profits Above
+                  </label>
+                  <input
+                    type="number"
+                    id="profit-threshold"
+                    name="profit-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: 500,000"
+                  />
+                </p>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p>
+                  <label for="weight-threshold" class="control-label">
+                    Max Cargo Capacity (in m3)
+                  </label>
+                  <input
+                    type="number"
+                    id="weight-threshold"
+                    name="weight-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: Not Included"
+                  />
+                </p>
+            </div>
+            <div class="col-sm-2 col-xs-12"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 col-xs-12"></div>
+            <div class="col-sm-4 col-xs-12">
+                <p>
+                  <label for="roi-threshold" class="control-label">
+                    Minimum ROI (in %)
+                  </label>
+                  <input
+                    type="number"
+                    id="roi-threshold"
+                    name="roi-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: 4"
+                  />
+                </p>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <p>
+                  <label for="buy-threshold" class="control-label">
+                    Maximum Budget
+                  </label>
+                  <input
+                    type="number"
+                    id="buy-threshold"
+                    name="buy-threshold"
+                    class="minor-text form-control"
+                    placeholder="Default: Infinity"
+                  />
+                </p>
+            </div>
+            <div class="col-sm-2 col-xs-12"></div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 mx-auto">
+        <div class="error announcement">
+          A starting point, and at least one destination is required.
+          Starting point cannot equal Destination.
+        </div>
+        <input
+          type="submit"
+          class="btn btn-default"
+          value="Search"
+        />
+    </div>
+</form>
