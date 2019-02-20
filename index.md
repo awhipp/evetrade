@@ -2,7 +2,7 @@
 title: EVE Online Market Trade Tool | Realtime Hauling & Station Trading
 layout: home
 announcement: {
-  enabled: true,
+  enabled: false,
   header: Version 6.0 has been released,
   include_date: true,
   text: '
