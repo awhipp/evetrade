@@ -17,7 +17,10 @@ Implements the EVE ESI API to find:
 Select which of the station you are docked in. It will return a lazy-loaded table of trades you can make at other station. Allows table sorting on any of the fields to see what items are selling at your hub for a low price and can be sold at another hub for a higher price.
 
 
-### V6 [LATEST]
+### V6.1
+    * Fixed a bug where nothing but SELL ORDERS to BUY ORDERS would return the proper results. [Now that it works, we have to give this warning. Be sure to understand the nature of your query. If you request too much information by widening your filters, this may crash your browser.]
+
+### V6
     * Refined the build process to be more developer focused
     * Created a structure and pipeline for open-source development
     * Added the ability to select buy/sell orders at start or end station

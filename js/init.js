@@ -597,17 +597,13 @@ function open_popup(itemId, name, fromStation, toStation){
     var sellArr = [];
 
     if(orderTypeStart == "BUY") {
-      $("#buyLocation").text("Buy Orders at " + fromStation.name);
       buyArr = customSell[fromStation.station][itemId];
     } else {
-      $("#buyLocation").text("Sell Orders at " + fromStation.name);
       buyArr = customBuy[fromStation.station][itemId];
     }
     if(orderTypeEnd == "BUY") {
-      $("#sellLocation").text("Buy Orders at " + toStationName);
       sellArr = customSell[toStationId][itemId];
     } else {
-      $("#sellLocation").text("Sell Orders at " + toStationName);
       sellArr = customBuy[toStationId][itemId];
     }
 
@@ -626,6 +622,26 @@ function open_popup(itemId, name, fromStation, toStation){
     $('#popup').modal('show');
     popup_table_buy.draw();
     popup_table_sell.draw();
+
+
+    if(orderTypeStart == "BUY") {
+      $("#buyLocation").text("Buy Orders at " + fromStation.name);
+      $("#popup-table-buy th:first-of-type")[0].textContent = "Buy Orders";
+      $('#popup-table-buy').dataTable().fnSort( [0,'desc'] );
+    } else {
+      $("#buyLocation").text("Sell Orders at " + fromStation.name);
+      $("#popup-table-buy th:first-of-type")[0].textContent = "Sell Orders";
+      $('#popup-table-buy').dataTable().fnSort( [0,'asc'] );
+    }
+    if(orderTypeEnd == "BUY") {
+      $("#sellLocation").text("Buy Orders at " + toStationName);
+      $("#popup-table-sell th:first-of-type")[0].textContent = "Buy Orders";
+      $('#popup-table-sell').dataTable().fnSort( [0,'desc'] );
+    } else {
+      $("#sellLocation").text("Sell Orders at " + toStationName);
+      $("#popup-table-sell th:first-of-type")[0].textContent = "Sell Orders";
+      $('#popup-table-sell').dataTable().fnSort( [0,'asc'] );
+    }
 }
 
 /**

@@ -230,6 +230,13 @@ Region.prototype.executeOrders = function() {
                     var buyPrice = getMarketData(this.buyOrders[startStationId][itemId], start.station, SELL_ORDER, itemId, true);
 
                     if (buyPrice.length > 0) {
+                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
+                        if(orderTypeStart=="BUY"){
+                          buyPrice = [buyPrice[0]]
+                        } else {
+                          buyPrice = [buyPrice[buyPrice.length-1]]
+                        }
+                      }
 
                         for (endStationId in this.sellOrders) {
 
@@ -247,6 +254,13 @@ Region.prototype.executeOrders = function() {
                                 if (sellOrder && sellOrder[itemId]) {
                                     var sellPrice = getMarketData(sellOrder[itemId], end.station, BUY_ORDER, itemId, true);
                                     if (sellPrice.length > 0) {
+                                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
+                                        if(orderTypeStart=="BUY"){
+                                          sellPrice = [sellPrice[0]]
+                                        } else {
+                                          sellPrice = [sellPrice[sellPrice.length-1]]
+                                        }
+                                      }
                                         var route = {};
                                         route.itemId = itemId;
                                         route.buyPrice = buyPrice;
