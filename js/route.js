@@ -337,6 +337,13 @@ Route.prototype.calculateNext = function(itemId) {
     var buyPrice = getMarketData(this.buyOrders[itemId], this.startLocation.station, (orderTypeStart == "BUY" ? BUY_ORDER : SELL_ORDER), itemId, true);
 
     if (buyPrice.length > 0) {
+        if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
+          if(orderTypeStart=="BUY"){
+            buyPrice = [buyPrice[0]]
+          } else {
+            buyPrice = [buyPrice[buyPrice.length-1]]
+          }
+        }
         var executed = false;
 
         var rI = 0;
@@ -348,6 +355,13 @@ Route.prototype.calculateNext = function(itemId) {
                 if (sellOrder[itemId]) {
                     var sellPrice = getMarketData(sellOrder[itemId], endLocation.station, (orderTypeEnd == "BUY" ? BUY_ORDER : SELL_ORDER), itemId, true);
                     if (sellPrice.length > 0) {
+                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
+                        if(orderTypeStart=="BUY"){
+                          sellPrice = [sellPrice[0]]
+                        } else {
+                          sellPrice = [sellPrice[sellPrice.length-1]]
+                        }
+                      }
                         var locationInfo = {};
                         locationInfo.region = endLocation.region;
                         locationInfo.station = endLocation.station;
