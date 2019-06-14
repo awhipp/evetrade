@@ -12,22 +12,6 @@ exclude:
     - CNAME
     - LICENSE
 
-# ensures that development changes propogate to the frontend when working locally
-# can be shown if you do not want these files appearing in /dist
-    # - /js/common.js
-    # - /js/init.js
-    # - /js/region.js
-    # - /js/region_ids.js
-    # - /js/route.js
-    # - /js/station.js
-    # - /js/station_ids.js
-    # - /vendor/jquery/jquery.min.js
-    # - /vendor/popper/popper.min.js
-    # - /vendor/bootstrap/js/bootstrap.min.js
-    # - /vendor/jquery-easing/jquery.easing.min.js
-    # - /vendor/jquery/inputStore.jquery.min.js
-    # - /vendor/complete.ly/complete.ly.js
-
 plugins:
     - jekyll-minifier
 
