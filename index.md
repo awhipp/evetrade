@@ -2,11 +2,11 @@
 title: EVE Online Market Trade Tool | Realtime Hauling & Station Trading
 layout: home
 announcement: {
-  enabled: true,
-  header: Version 6.2 has been released,
-  include_date: true,
+  enabled: false,
+  header: Version 6.2.1 has been released,
+  include_date: false,
   text: '
-    In addition to Windows, there are now standalone desktop apps for MacOSX and Linux. Just head over to the download tab to find yours.
+
   '
 }
 ---
