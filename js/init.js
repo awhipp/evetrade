@@ -5,6 +5,7 @@ var threshold_profit;
 var threshold_roi;
 var threshold_cost;
 var threshold_weight;
+var sales_tax;
 
 var tradingStyle = null;
 var errorShown = false;
@@ -814,6 +815,7 @@ function init(style){
           volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);
           setStationTradingLocations();
       } else if (tradingStyle == STATION_HAUL) {
+          sales_tax = setDefaultVal($("#sales_tax").val(), 5);
           threshold_profit = setDefaultVal($("#profit-threshold").val(), 500000);
           threshold_roi = setDefaultVal($("#roi-threshold").val(), 4);
           threshold_cost = setDefaultVal($("#buy-threshold").val(), 999999999999999999);

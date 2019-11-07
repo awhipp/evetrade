@@ -27,7 +27,7 @@ var orderTypeStart = "SELL";
 var orderTypeEnd = "BUY";
 
 var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", /*"Profit Per Item",*/  "Jumps", "Profit per Jump", "Total Profit", "R.O.I", "Total Volume (m3)"];
-var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Total Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
+var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
 var stationHeader = ["Item", "Buy Order", "Sell Order", "Profit Per Item", "Margin", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
 /**
@@ -396,11 +396,11 @@ function createTradeHeader() {
 
         var extraData = "";
         if(orderTypeEnd == "SELL") {
-          extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + "</div> " +
+          extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + " at " + sales_tax + "%</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         } else {
-          extraData = "<div id='route-to'>Selling to Buy Orders at " + sellingTo + "</div> " +
+          extraData = "<div id='route-to'>Selling to Buy Orders at " + sellingTo + " at " + sales_tax + "%</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         }
@@ -474,7 +474,7 @@ function createDataTable() {
         if (tradingStyle == STATION_HAUL) {
             // sorting on total profit index
             dt = dataTableDOM.DataTable({
-                "order": [[8, "desc"]],
+                "order": [[10, "desc"]],
                 "lengthMenu": [[50], ["50"]],
                 // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
