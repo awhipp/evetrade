@@ -810,6 +810,7 @@ function init(style){
     tradingStyle = style;
     try {
       if(tradingStyle == STATION_TRADE){
+          sales_tax = setDefaultVal($("#sales_tax").val(), 5);
           threshold_margin_lower = setDefaultVal($("#lower-margin-threshold").val(), 20);
           threshold_margin_upper = setDefaultVal($("#upper-margin-threshold").val(), 40);
           volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);

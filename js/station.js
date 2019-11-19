@@ -305,8 +305,8 @@ Station.prototype.calculateNext = function(itemId) {
 * @param sellPrice The items sellPrice to compare.
 */
 Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
-    var bestBuyPrice = sellPrice[0][0];
-    var bestSellPrice = buyPrice[0][0];
+    var bestBuyPrice = buyPrice[0][0];
+    var bestSellPrice = sellPrice[0][0];
 
     for(var i = 0; i < buyPrice.length; i++){
         for(var j = 0; j < sellPrice.length; j++){
@@ -323,14 +323,20 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
     buyPrice = bestBuyPrice;
     sellPrice = bestSellPrice;
 
-    var profit_per_item = sellPrice-buyPrice;
-    var margin = (sellPrice - buyPrice) / sellPrice;
+    var tax_per_item = sellPrice * sales_tax / 100;
+    var gross_margin = sellPrice-buyPrice;
+    var profit_per_item = gross_margin-tax_per_item;
+    var margin = profit_per_item / buyPrice;
 
     if(margin*100 >= threshold_margin_lower && margin*100 <= threshold_margin_upper && profit_per_item > 1000){
         row.buyPrice = buyPrice;
         row.sellPrice = sellPrice;
         row.itemId = itemId;
         this.getItemVolume(itemId, row);
+        row.itemTax = tax_per_item;
+        row.grossMargin = gross_margin;
+        row.netProfit = profit_per_item;
+        row.margin = margin;
     }else {
         executingCount--;
     }
@@ -460,18 +466,16 @@ Station.prototype.getItemWeight = function(itemId, row){
 */
 Station.prototype.addRow = function(row) {
 
-    var profitPerItem = row.sellPrice - row.buyPrice;
-    var margin = (row.sellPrice - row.buyPrice) / row.sellPrice;
-    margin = (margin.toFixed(3)*100).toFixed(1)+"%";
-
     createDataTable();
 
     var row_data = [
         row.itemName,
         numberWithCommas(row.buyPrice.toFixed(2)),
         numberWithCommas(row.sellPrice.toFixed(2)),
-        numberWithCommas(profitPerItem.toFixed(2)),
-        margin,
+        numberWithCommas(row.grossMargin.toFixed(2)),
+        numberWithCommas(row.itemTax.toFixed(2)),
+        numberWithCommas(row.netProfit.toFixed(2)),
+        (row.margin.toFixed(3)*100).toFixed(1)+"%",
         numberWithCommas(row.volume),
         numberWithCommas(row.volume14),
         numberWithCommas(row.volume30)
