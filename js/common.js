@@ -26,7 +26,7 @@ var rowAdded = false;
 var orderTypeStart = "SELL";
 var orderTypeEnd = "BUY";
 
-var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", /*"Profit Per Item",*/  "Jumps", "Profit per Jump", "Total Profit", "R.O.I", "Total Volume (m3)"];
+var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", /*"Profit Per Item",*/  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
 var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
 var stationHeader = ["Item", "At Sell Price", "At Buy Price", "Gross Margin Per Item", "Sell Taxes Per Item",  "Net Profit Per Item", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
@@ -490,7 +490,7 @@ function createDataTable() {
         } else if (tradingStyle == REGION_HAUL) {
             // sorting on profit per jump index
             dt = dataTableDOM.DataTable({
-                "order": [[9, "desc"]],
+                "order": [[12, "desc"]],
                 "lengthMenu": [[50], ["50"]],
                 // "lengthMenu": [[-1], ["All"]],
                 responsive: true,

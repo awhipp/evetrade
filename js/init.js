@@ -823,6 +823,7 @@ function init(style){
           threshold_weight = setDefaultVal($("#weight-threshold").val(), 999999999999999999);
           setRouteStationTradingLocations();
       } else if (tradingStyle == REGION_HAUL) {
+          sales_tax = setDefaultVal($("#region_sales_tax").val(), 5);
           threshold_profit = setDefaultVal($("#region-profit-threshold").val(), 500000);
           threshold_roi = setDefaultVal($("#region-roi-threshold").val(), 4);
           threshold_cost = setDefaultVal($("#region-buy-threshold").val(), 999999999999999999);
