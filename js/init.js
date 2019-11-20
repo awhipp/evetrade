@@ -810,13 +810,13 @@ function init(style){
     tradingStyle = style;
     try {
       if(tradingStyle == STATION_TRADE){
-          sales_tax = setDefaultVal($("#sales_tax").val(), 5);
+          sales_tax = setDefaultVal($("#station_sales_tax").val(), 5);
           threshold_margin_lower = setDefaultVal($("#lower-margin-threshold").val(), 20);
           threshold_margin_upper = setDefaultVal($("#upper-margin-threshold").val(), 40);
           volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);
           setStationTradingLocations();
       } else if (tradingStyle == STATION_HAUL) {
-          sales_tax = setDefaultVal($("#sales_tax").val(), 5);
+          sales_tax = setDefaultVal($("#route_sales_tax").val(), 5);
           threshold_profit = setDefaultVal($("#profit-threshold").val(), 500000);
           threshold_roi = setDefaultVal($("#roi-threshold").val(), 4);
           threshold_cost = setDefaultVal($("#buy-threshold").val(), 999999999999999999);
