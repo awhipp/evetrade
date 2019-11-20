@@ -533,7 +533,8 @@ function setupCookies() {
       "route-preference", "include-citadels", "security-threshold",
       "region-buy-threshold", "region-roi-threshold", "region-weight-threshold",
       "region-profit-threshold", "buying-type-station", "selling-type-station",
-      "buying-type-region", "selling-type-region"
+      "buying-type-region", "selling-type-region", "station_sales_tax", "region_sales_tax",
+      "route_sales_tax"
   ];
 
   for(var i = 0; i < formInputs.length; i++) {
