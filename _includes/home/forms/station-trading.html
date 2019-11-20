@@ -26,13 +26,21 @@
                     <span onclick="addStart('Rens');">Rens</span>
                     <span onclick="addStart('Hek');">Hek</span>
                 </p>
-                <div class="form-inline">
-                    <label class="control-label text-right" for="station_sales_tax">Sales Tax (in %)</label>
-                    <input type="number" id="station_sales_tax" name="station_sales_tax" class="form-control form-control-sm mx-3 my-1" placeholder="Default: 5" tabindex="16" step="0.05">
-                    <span class="text-left">Calculation : 5 * (1 - 0.11 * AccountingLevel)</span>
-                </div>
             </div>
+        </div>
+
+        <hr>
+
+        <div class="row align-items-center">
+            <div class="col-sm-2 col-xs-12"></div>
+            <div class="col-sm-4 col-xs-12">
+                <label class="control-label" for="station_sales_tax">Sales Tax = 5 * (1 - 0.11 * AccountingLevel) %</label>
             </div>
+            <div class="col-sm-4 col-xs-12">
+                <input type="number" id="station_sales_tax" name="station_sales_tax" class="form-control my-1" placeholder="Default: 5" tabindex="17" step="0.05">
+            </div>
+            
+            <div class="col-sm-2 col-xs-12"></div>
         </div>
 
         <div class="row">

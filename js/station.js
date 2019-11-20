@@ -305,8 +305,8 @@ Station.prototype.calculateNext = function(itemId) {
 * @param sellPrice The items sellPrice to compare.
 */
 Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
-    var bestBuyPrice = buyPrice[0][0];
-    var bestSellPrice = sellPrice[0][0];
+    var bestBuyPrice = sellPrice[0][0];
+    var bestSellPrice = buyPrice[0][0];
 
     for(var i = 0; i < buyPrice.length; i++){
         for(var j = 0; j < sellPrice.length; j++){
