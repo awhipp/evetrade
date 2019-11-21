@@ -396,11 +396,11 @@ function createTradeHeader() {
 
         var extraData = "";
         if(orderTypeEnd == "SELL") {
-          extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + " at " + sales_tax + "%</div> " +
+          extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         } else {
-          extraData = "<div id='route-to'>Selling to Buy Orders at " + sellingTo + " at " + sales_tax + "%</div> " +
+          extraData = "<div id='route-to'>Selling to Buy Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         }
@@ -434,7 +434,8 @@ function createTradeHeader() {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
-        buyingFooter = "Volume greater than: " + numberWithCommas(volume_threshold) +
+        buyingFooter = "With sell tax at " + numberWithCommas(sales_tax) + "%<br />" +
+            "Volume greater than: " + numberWithCommas(volume_threshold) +
             " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%" +
             "<div class='loading'>Loading. Please wait...</div>";
         buyingFooterDOM.html(buyingFooter);
