@@ -6,6 +6,7 @@ var threshold_roi;
 var threshold_cost;
 var threshold_weight;
 var sales_tax;
+var broker_fee;
 
 var tradingStyle = null;
 var errorShown = false;
@@ -534,7 +535,7 @@ function setupCookies() {
       "region-buy-threshold", "region-roi-threshold", "region-weight-threshold",
       "region-profit-threshold", "buying-type-station", "selling-type-station",
       "buying-type-region", "selling-type-region", "station_sales_tax", "region_sales_tax",
-      "route_sales_tax"
+      "route_sales_tax", "broker_fee"
   ];
 
   for(var i = 0; i < formInputs.length; i++) {
@@ -812,6 +813,7 @@ function init(style){
     try {
       if(tradingStyle == STATION_TRADE){
           sales_tax = setDefaultVal($("#station_sales_tax").val(), 5);
+          broker_fee = setDefaultVal($("#broker_fee").val(), 5);
           threshold_margin_lower = setDefaultVal($("#lower-margin-threshold").val(), 20);
           threshold_margin_upper = setDefaultVal($("#upper-margin-threshold").val(), 40);
           volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);

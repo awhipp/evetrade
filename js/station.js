@@ -324,8 +324,10 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
     sellPrice = bestSellPrice;
 
     var tax_per_item = sellPrice * sales_tax / 100;
-    var gross_margin = sellPrice-buyPrice;
-    var profit_per_item = gross_margin-tax_per_item;
+    var buy_fee_per_item = buyPrice * broker_fee / 100;
+    var sell_fee_per_item = sellPrice * broker_fee / 100;
+    var gross_margin = sellPrice - buyPrice;
+    var profit_per_item = gross_margin - tax_per_item - buy_fee_per_item - sell_fee_per_item;
     var margin = profit_per_item / buyPrice;
 
     if(margin*100 >= threshold_margin_lower && margin*100 <= threshold_margin_upper && profit_per_item > 1000){
@@ -333,10 +335,12 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
         row.sellPrice = sellPrice;
         row.itemId = itemId;
         this.getItemVolume(itemId, row);
-        row.itemTax = tax_per_item;
+        row.sellTax = tax_per_item;
         row.grossMargin = gross_margin;
         row.netProfit = profit_per_item;
         row.margin = margin;
+        row.buyFee = buy_fee_per_item;
+        row.sellFee = sell_fee_per_item;
     }else {
         executingCount--;
     }
@@ -473,7 +477,9 @@ Station.prototype.addRow = function(row) {
         numberWithCommas(row.buyPrice.toFixed(2)),
         numberWithCommas(row.sellPrice.toFixed(2)),
         numberWithCommas(row.grossMargin.toFixed(2)),
-        numberWithCommas(row.itemTax.toFixed(2)),
+        numberWithCommas(row.buyFee.toFixed(2)),
+        numberWithCommas(row.sellFee.toFixed(2)),
+        numberWithCommas(row.sellTax.toFixed(2)),
         numberWithCommas(row.netProfit.toFixed(2)),
         (row.margin.toFixed(3)*100).toFixed(1)+"%",
         numberWithCommas(row.volume),

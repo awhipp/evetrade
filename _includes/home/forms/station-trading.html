@@ -33,11 +33,19 @@
 
         <div class="row align-items-center">
             <div class="col-sm-2 col-xs-12"></div>
-            <div class="col-sm-4 col-xs-12">
-                <label class="control-label" for="station_sales_tax">Sales Tax = 5 * (1 - 0.11 * AccountingLevel) %</label>
+            <div class="col-sm-4 col-xs-12 mx-auto">
+                <p>
+                    Sales Tax = 5 * (1 - 0.11 * AccountingLevel) %
+                    <br />
+                    <input type="number" id="station_sales_tax" name="station_sales_tax" class="form-control" placeholder="Default: 5" step="0.05" />
+                </p>
             </div>
-            <div class="col-sm-4 col-xs-12">
-                <input type="number" id="station_sales_tax" name="station_sales_tax" class="form-control my-1" placeholder="Default: 5" tabindex="17" step="0.05">
+            <div class="col-sm-4 col-xs-12 mx-auto">
+                <p>
+                    Broker Fee = 5 - ( 0.3 * BrokersRelationsLevel) - (0.03 * FactionStanding) - (0.02 * CorpStanding) %
+                    <br />
+                    <input type="number" id="broker_fee" name="broker_fee" class="form-control" placeholder="Default: 5" step="0.01" />
+                </p>
             </div>
             
             <div class="col-sm-2 col-xs-12"></div>

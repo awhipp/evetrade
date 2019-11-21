@@ -28,7 +28,7 @@ var orderTypeEnd = "BUY";
 
 var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", /*"Profit Per Item",*/  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
 var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
-var stationHeader = ["Item", "At Sell Price", "At Buy Price", "Gross Margin Per Item", "Sell Taxes Per Item",  "Net Profit Per Item", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
+var stationHeader = ["Item", "At Sell Price", "At Buy Price", "Gross Margin", "Buy Fee", "Sell Fee", "Sell Tax",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
 /**
 * The keyword for known scam items
@@ -434,7 +434,7 @@ function createTradeHeader() {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
-        buyingFooter = "With sell tax at " + numberWithCommas(sales_tax) + "%<br />" +
+        buyingFooter = "With sell tax at " + numberWithCommas(sales_tax) + "% and broker fee at " + numberWithCommas(broker_fee) + "%<br />" +
             "Volume greater than: " + numberWithCommas(volume_threshold) +
             " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%" +
             "<div class='loading'>Loading. Please wait...</div>";
@@ -508,7 +508,7 @@ function createDataTable() {
         } else if (tradingStyle == STATION_TRADE) {
             // sorting on margin index
             dt = dataTableDOM.DataTable({
-                "order": [[6, "desc"]],
+                "order": [[7, "desc"]],
                 "lengthMenu": [[50], ["50"]],
                 // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
