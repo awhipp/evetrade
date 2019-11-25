@@ -402,28 +402,30 @@ Region.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, start, end)
 */
 Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, start, end){
     if(buyPrice < sellPrice && sellPrice > 0){
-        var itemProfit = sellPrice - buyPrice;
+        var itemSellTax = sellPrice * sales_tax / 100;
+        var itemProfit = sellPrice - itemSellTax - buyPrice;
 
-        var profit;
-        var buyCost;
-        var volume;
+        if(itemProfit > 0){
+            var volume;
 
-        if(buyVolume >= sellVolume){
-            volume = sellVolume;
-            profit = sellVolume * itemProfit;
-            buyCost = buyPrice * sellVolume;
-        }else{
-            volume = buyVolume;
-            profit = buyVolume * itemProfit;
-            buyCost = buyPrice * buyVolume;
-        }
+            if(buyVolume >= sellVolume){
+                volume = sellVolume;
+            }else{
+                volume = buyVolume;
+            }
 
-        var iskRatio = (sellPrice-buyPrice)/buyPrice;
+            var grossMargin = volume * (sellPrice - buyPrice)
+            var sellTax = volume * itemSellTax;
+            var profit = grossMargin - sellTax;
+            var buyCost = volume * buyPrice;
 
-        if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
-            return [itemId, start, buyPrice, volume, buyCost, end, profit, iskRatio, sellPrice, itemProfit];
-        }else{
-            return [];
+            var iskRatio = itemProfit / buyPrice;
+
+            if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
+                return [itemId, start, buyPrice, volume, buyCost, end, profit, iskRatio, sellPrice, itemProfit, grossMargin, sellTax];
+            }else{
+                return [];
+            }
         }
     }
     return [];
@@ -486,6 +488,8 @@ Region.prototype.createRowObject = function(row) {
     rowObject.roi = row[7];
     rowObject.sellPrice = row[8];
     rowObject.perItemProfit = row[9];
+    rowObject.grossMargin = row[10];
+    rowObject.sellTax = row[11];
     return rowObject;
 };
 
@@ -782,9 +786,11 @@ Region.prototype.updateDatatable = function(row) {
         row.sellToStation.name,
         numberWithCommas(row.sellPrice.toFixed(2)),
         // numberWithCommas(row.perItemProfit.toFixed(2)),
+        numberWithCommas(row.grossMargin.toFixed(2)),
+        numberWithCommas(row.sellTax.toFixed(2)),
+        numberWithCommas(row.totalProfit.toFixed(2)),
         row.routeLength,
         numberWithCommas((row.totalProfit/row.routeLength).toFixed(2)),
-        numberWithCommas(row.totalProfit.toFixed(2)),
         (row.roi.toFixed(3) * 100).toFixed(1) + "%",
         numberWithCommas(storageVolume.toFixed(2))
     ];
