@@ -782,8 +782,8 @@ Region.prototype.updateDatatable = function(row) {
         row.sellToStation.name,
         numberWithCommas(row.sellPrice.toFixed(2)),
         // numberWithCommas(row.perItemProfit.toFixed(2)),
-        row.routeLength,
-        numberWithCommas((row.totalProfit/row.routeLength).toFixed(2)),
+        row.routeLength - 1,
+        numberWithCommas((row.totalProfit/(row.routeLength - 1)).toFixed(2)),
         numberWithCommas(row.totalProfit.toFixed(2)),
         (row.roi.toFixed(3) * 100).toFixed(1) + "%",
         numberWithCommas(storageVolume.toFixed(2))
