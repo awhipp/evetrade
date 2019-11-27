@@ -410,28 +410,28 @@ Route.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, locationInfo
 */
 Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, locationInfo){
     if(buyPrice < sellPrice && sellPrice > 0){
-        var itemProfit = sellPrice - buyPrice;
+        var itemSellTax = sellPrice * sales_tax / 100;
+        var itemProfit =  sellPrice - itemSellTax - buyPrice;
 
-        var profit;
-        var buyCost;
-        var volume;
+        if(itemProfit > 0){
+            var volume;
+    
+            if(buyVolume >= sellVolume){
+                volume = sellVolume;
+            }else{
+                volume = buyVolume;
+            }
 
-        if(buyVolume >= sellVolume){
-            volume = sellVolume;
-            profit = sellVolume * itemProfit;
-            buyCost = buyPrice * sellVolume;
-        }else{
-            volume = buyVolume;
-            profit = buyVolume * itemProfit;
-            buyCost = buyPrice * buyVolume;
-        }
+            var grossMargin = volume * (sellPrice - buyPrice)
+            var sellTax = volume * itemSellTax;
+            var profit = grossMargin - sellTax;
+            var buyCost = volume * buyPrice;
+    
+            var iskRatio = itemProfit / buyPrice;
 
-        var iskRatio = (sellPrice-buyPrice)/buyPrice;
-
-        if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
-            return [itemId, buyPrice, volume, buyCost, locationInfo, profit, iskRatio, sellPrice, itemProfit];
-        }else{
-            return [];
+            if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
+                return [itemId, buyPrice, volume, buyCost, locationInfo, profit, iskRatio, sellPrice, itemProfit, grossMargin, sellTax];
+            }
         }
     }
     return [];
@@ -502,6 +502,8 @@ Route.prototype.createRowObject = function(row) {
     rowObject.roi = row[6];
     rowObject.sellPrice = row[7];
     rowObject.perItemProfit = row[8];
+    rowObject.grossMargin = row[9];
+    rowObject.sellTax = row[10];
     return rowObject;
 };
 
@@ -539,6 +541,8 @@ Route.prototype.addRow = function(row) {
         numberWithCommas(row.buyCost.toFixed(2)),
         getStationName(row.sellToStation.station),
         numberWithCommas(row.sellPrice.toFixed(2)),
+        numberWithCommas(row.grossMargin.toFixed(2)),
+        numberWithCommas(row.sellTax.toFixed(2)),
         numberWithCommas(row.totalProfit.toFixed(2)),
         numberWithCommas(row.perItemProfit.toFixed(2)),
         (row.roi.toFixed(3)*100).toFixed(1)+"%",
