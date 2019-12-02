@@ -100,6 +100,19 @@ $( document ).ready(function() {
         'event_label': window.location.href,
         'value': 1
     });
+
+    var urlParams = (new URL(window.location.href)).searchParams.get("trade");
+    switch(urlParams) {
+        case "sst":
+            setupTradeOptions(0);
+            break;
+        case "s2s":
+            setupTradeOptions(1);
+            break;
+        case "r2r":
+            setupTradeOptions(2);
+    }
+    //window.history.replaceState(null, null, window.location.pathname);
 });
 
 /**
@@ -479,6 +492,18 @@ function onClickListeners() {
     $(".directionChange").on('change', function(){
         checkDirection();
     });
+
+    $("#sst").on('click', function(){
+        window.location = window.location.pathname + "?trade=sst";
+    });
+
+    $("#s2s").on('click', function(){
+        window.location = window.location.pathname + "?trade=s2s";
+    });
+        
+    $("#r2r").on('click', function(){
+        window.location = window.location.pathname + "?trade=r2r";
+    });
 }
 
 function checkDirection() {
@@ -543,7 +568,6 @@ function setupCookies() {
   }
 }
 
-
 /**
 * Provides the user with the proper form on click.
 */
@@ -553,6 +577,8 @@ function setupTradeOptions(tradeType){
     $('.howto').toggle(false);
 
     $("#initial_choice").hide();
+
+    $("#trade_menu").show();
 
     setAbout();
 
