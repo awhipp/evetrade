@@ -101,7 +101,7 @@ function getMarketData(data, stationId, orderType, itemId, isRoute){
 */
 function setDefaultVal(ele, def) {
   if (ele && ele.length > 0) {
-    return ele;
+    return parseInt(ele);
   }
   return def;
 }
