@@ -43,6 +43,10 @@ p {
   cursor: pointer !important;
 }
 
+.dropdown-item {
+  cursor: pointer;
+}
+
 .announcement {
     position: fixed;
     bottom: 0;

@@ -1,2 +1,4 @@
 [build]
-  publish = "dist"
+  base = "/"
+  publish = "/dist"
+  command = "jekyll build"

@@ -28,10 +28,9 @@ They are split up amongst base package requirements and Jekyll plugins.
 * [Minifier](https://github.com/digitalsparky/jekyll-minifier)
   - `gem install jekyll-minifier`
 
-
 ### Development and Deployment
 
-The following explain the development guidelines and requirements.
+The following explain the development guidelines and requirements. `bundle install` should install most requirements.
 
 #### Commands
   * To develop locally execute `jekyll serve` (ensure `JEKYLL_ENV=dev` -- you should be fine by default)

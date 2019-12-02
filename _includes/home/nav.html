@@ -27,11 +27,20 @@
                     <span>Shop Game Time &amp; Plex</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="about">Help</a>
+            <li class="nav-item dropdown" id="trade_menu" style="display: none">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Trade menu
+                </a>
+                <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item btn btn-sm" id="sst">Single station</a>
+                    <a class="dropdown-item btn btn-sm" id="s2s">Station to Station</a>
+                    <a class="dropdown-item btn btn-sm" id="r2r">Region to Region</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item btn btn-sm" id="reset" onclick="window.location.reload()">Restart</a>
+                </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="reset" onclick="window.location.reload()">Restart</a>
+                <a class="nav-link" id="about">Help</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="https://github.com/awhipp/evetrade" target="_blank">Source</a>
