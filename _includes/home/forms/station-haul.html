@@ -115,8 +115,8 @@
         <div class="row align-items-center">
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-8 col-xs-12">
-                <label class="control-label" for="route_sales_tax" title="Calculation = 5 * (1 - 0.11 * AccountingLevel)" style="cursor: pointer;">Sales Tax = 5%</label>
-                <input type="number" id="route_sales_tax" name="route_sales_tax" class="form-control my-1" placeholder="Default: 5" tabindex="17" step="0.05">
+                <label class="control-label" for="route_sales_tax" title="Calculation = 5 * (1 - 0.11 * AccountingLevel)" style="cursor: pointer;">Sales Tax (in %)</label>
+                <input type="number" id="route_sales_tax" name="route_sales_tax" class="form-control my-1" placeholder="Default: 5" tabindex="17" step="0.05"  min="0" max="5"/>
             </div>            
             <div class="col-sm-2 col-xs-12"></div>
         </div>
