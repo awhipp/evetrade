@@ -99,9 +99,13 @@ function getMarketData(data, stationId, orderType, itemId, isRoute){
 /**
 * Given a null or empty value it will return the default
 */
-function setDefaultVal(ele, def) {
+function setDefaultVal(ele, def, type='num') {
   if (ele && ele.length > 0) {
-    return parseInt(ele);
+    if (type === 'str') {
+        return ele;
+    } else {
+        return parseInt(ele);
+    }
   }
   return def;
 }

@@ -29,8 +29,8 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = setDefaultVal($("#security-threshold").val(), "NULL");
-    this.safety = setDefaultVal($("#route-preference").val(), "shortest");
+    this.security = setDefaultVal($("#security-threshold").val(), "NULL", 'str');
+    this.safety = setDefaultVal($("#route-preference").val(), "shortest", 'str');
 
     this.completed = false;
 
