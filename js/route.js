@@ -424,13 +424,14 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
 
             var grossMargin = volume * (sellPrice - buyPrice)
             var sellTax = volume * itemSellTax;
-            var profit = grossMargin - sellTax;
-            var buyCost = volume * buyPrice;
+            var netProfit = grossMargin - sellTax;
+            var netCosts = volume * buyPrice;
+            var netSales = volume * sellPrice;
     
             var iskRatio = itemProfit / buyPrice;
 
-            if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
-                return [itemId, buyPrice, volume, buyCost, locationInfo, profit, iskRatio, sellPrice, itemProfit, grossMargin, sellTax];
+            if(netProfit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && netCosts <= threshold_cost ){
+                return [itemId, volume, buyPrice, netCosts, locationInfo, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio, itemProfit];
             }
         }
     }
@@ -494,16 +495,17 @@ Route.prototype.getItemWeight = function(itemId, row){
 Route.prototype.createRowObject = function(row) {
     var rowObject = {};
     rowObject.itemId = row[0];
-    rowObject.buyPrice = row[1];
-    rowObject.quantity = row[2];
-    rowObject.buyCost = row[3];
+    rowObject.quantity = row[1];
+    rowObject.buyPrice = row[2];
+    rowObject.netCosts = row[3];
     rowObject.sellToStation = row[4];
-    rowObject.totalProfit = row[5];
-    rowObject.roi = row[6];
-    rowObject.sellPrice = row[7];
-    rowObject.perItemProfit = row[8];
-    rowObject.grossMargin = row[9];
-    rowObject.sellTax = row[10];
+    rowObject.sellPrice = row[5];
+    rowObject.netSales = row[6];
+    rowObject.grossMargin = row[7];
+    rowObject.sellTax = row[8];
+    rowObject.netProfit = row[9];
+    rowObject.roi = row[10];
+    rowObject.perItemProfit = row[11];
     return rowObject;
 };
 
@@ -538,12 +540,13 @@ Route.prototype.addRow = function(row) {
         this.startLocation.name,
         numberWithCommas(row.quantity),
         numberWithCommas(row.buyPrice.toFixed(2)),
-        numberWithCommas(row.buyCost.toFixed(2)),
+        numberWithCommas(row.netCosts.toFixed(2)),
         getStationName(row.sellToStation.station),
         numberWithCommas(row.sellPrice.toFixed(2)),
+        numberWithCommas(row.netSales.toFixed(2)),
         numberWithCommas(row.grossMargin.toFixed(2)),
         numberWithCommas(row.sellTax.toFixed(2)),
-        numberWithCommas(row.totalProfit.toFixed(2)),
+        numberWithCommas(row.netProfit.toFixed(2)),
         numberWithCommas(row.perItemProfit.toFixed(2)),
         (row.roi.toFixed(3)*100).toFixed(1)+"%",
         numberWithCommas(storageVolume.toFixed(2))
