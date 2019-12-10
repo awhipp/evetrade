@@ -29,6 +29,8 @@ var endLocations = [];
 
 var shifted = false;
 
+var urlParams;
+
 /**
 * Once all resources are loaded we need to setup all the information
 * > onClickListeners
@@ -101,8 +103,8 @@ $( document ).ready(function() {
         'value': 1
     });
 
-    var urlParams = (new URL(window.location.href)).searchParams.get("trade");
-    switch(urlParams) {
+    urlParams = (new URL(window.location.href)).searchParams;
+    switch(urlParams.get("trade")) {
         case "sst":
             setupTradeOptions(0);
             break;
@@ -611,6 +613,8 @@ function setupTradeOptions(tradeType){
         eventLabel = "Hauler - Region";
     }
 
+    if (urlParams.has("start")) setupBookmark(urlParams);
+
     gtag('event', 'User Preference Campaign', {
         'event_category': 'Trade Style',
         'event_label': eventLabel,
@@ -888,6 +892,7 @@ function init(style){
             threshold_weight = setDefaultVal($("#region-weight-threshold").val(), 999999999999999999);
             setRouteRegionTradingLocations();
         }
+        createBookmarks();
         setCopyWording();
 
       var startCondition = (startLocations && startLocations.length > 0);

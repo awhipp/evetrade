@@ -608,3 +608,38 @@ function createDataTable() {
         });
     }
 }
+
+/**
+* Change the URL to be able to bookmark the search based on the trading style that is being queried
+*/
+function createBookmarks() {
+    var trade;
+    if ($("#station_haul_bookmark").is(":checked")) {
+        trade = "s2s";
+    }
+
+    if (trade !== undefined) {
+        var other = "N";
+
+        var bookmarkURL = window.location.pathname + "?trade=" + trade;
+
+        bookmarkURL += "&start=";
+        startLocations.forEach(function(startLocation) {
+            bookmarkURL += startLocation + ",";
+        });
+        bookmarkURL = bookmarkURL.slice(0, -1);
+        bookmarkURL += "&end=";
+        endLocations.forEach(function(endLocation) {
+            bookmarkURL += endLocation + ",";
+        });
+        bookmarkURL = bookmarkURL.slice(0, -1);
+        if ($("#route_sales_tax").val() === "Other") other="Y";
+        
+        bookmarkURL += "&other=" + other;
+
+        bookmarkURL += "&sales_tax=" + sales_tax + "&threshold_profit=" + threshold_profit;
+        bookmarkURL += "&threshold_roi=" + threshold_roi + "&threshold_cost=" + threshold_cost;
+        bookmarkURL += "&threshold_weight=" + threshold_weight;
+    }
+}
+
