@@ -113,6 +113,12 @@ $( document ).ready(function() {
             setupTradeOptions(2);
     }
     //window.history.replaceState(null, null, window.location.pathname);
+    
+    ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
+        if ($(id).val() === "Other") {
+            $(id + "_in").show();
+        }
+    });
 });
 
 /**
@@ -504,6 +510,16 @@ function onClickListeners() {
     $("#r2r").on('click', function(){
         window.location = window.location.pathname + "?trade=r2r";
     });
+
+    ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
+        $(id).on('change', function() {
+            if ($(id).val() === "Other") {
+                $(id + "_in").show();
+            } else {
+                $(id + "_in").hide();
+            }
+        });
+    });
 }
 
 function checkDirection() {
@@ -559,8 +575,9 @@ function setupCookies() {
       "route-preference", "include-citadels", "security-threshold",
       "region-buy-threshold", "region-roi-threshold", "region-weight-threshold",
       "region-profit-threshold", "buying-type-station", "selling-type-station",
-      "buying-type-region", "selling-type-region", "station_sales_tax", "region_sales_tax",
-      "route_sales_tax", "broker_fee"
+      "buying-type-region", "selling-type-region", "station_sales_tax", "station_sales_tax_in",
+      "region_sales_tax", "region_sales_tax_in", "route_sales_tax", "route_sales_tax_in",
+      "broker_fee"
   ];
 
   for(var i = 0; i < formInputs.length; i++) {
