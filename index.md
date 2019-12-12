@@ -2,9 +2,9 @@
 title: EVE Online Market Trade Tool | Realtime Hauling & Station Trading
 layout: home
 announcement: {
-  enabled: false,
+  enabled: true,
   header: Version 6.3 has been released,
-  include_date: false,
+  include_date: true,
   text: '
     <ul>
     <li>Fixed number of jumps count</li>
@@ -12,6 +12,8 @@ announcement: {
     <li>Added net profit and tax calculation field</li>
     <li>Minor bugfixes</li>
     </ul>
+    
+    <p>Contribution shout outs to <a href="https://github.com/psolyca">@psolyca</a> and <a href="https://github.com/timegrinder">@timegrinder</a></p>
   '
 }
 ---
