@@ -652,8 +652,8 @@ function createBookmarks() {
                 }
                 break;
             case "sst":
-                    bookmarkURL += "&start=" + startLocations;
-                    if ($("#station_sales_tax").val() === "Other") other="Y";
+                bookmarkURL += "&start=" + startLocations;
+                if ($("#station_sales_tax").val() === "Other") other="Y";
         }
 
         bookmarkURL += "&other=" + other;
@@ -672,5 +672,8 @@ function createBookmarks() {
                 bookmarkURL += "&threshold_margin_upper=" + threshold_margin_upper;
                 bookmarkURL += "&volume_threshold=" + volume_threshold;
         }
-    }
+
+        history.pushState({}, document.title, encodeURI(bookmarkURL));
+
+    }    
 }
