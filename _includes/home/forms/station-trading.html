@@ -37,7 +37,17 @@
                 <p title="Calculation = 5 * (1 - 0.11 * AccountingLevel) %" style="cursor: pointer">
                     Sales Tax (in %)
                 </p>
-                <input type="number" id="station_sales_tax" name="station_sales_tax" class="form-control" placeholder="Default: 5" step="0.05" min="0" max="5"/>
+                <select class="minor-text form-control" id="station_sales_tax" name="station_sales_tax">
+                  <option value="" selected>Choose your Accounting Level</option>
+                  <option value="5">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.00%</option>
+                  <option value="4.45">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.45%</option>
+                  <option value="3.9">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.90%</option>
+                  <option value="3.35">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.35%</option>
+                  <option value="2.8">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.80%</option>
+                  <option value="2.25">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.25%</option>
+                  <option value="Other">Other</option>
+                </select>
+                <input type="number" id="station_sales_tax_in" name="station_sales_tax_in" class="form-control" placeholder="Default: 5" style="display:none" step="0.05" min="0" max="5"/>
             </div>
             <div class="col-sm-4 col-xs-12 mx-auto">
                 <p title="Calculation = 5 - ( 0.3 * BrokersRelationsLevel) - (0.03 * FactionStanding) - (0.02 * CorpStanding) %" style="cursor: pointer">

@@ -113,6 +113,12 @@ $( document ).ready(function() {
             setupTradeOptions(2);
     }
     //window.history.replaceState(null, null, window.location.pathname);
+    
+    ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
+        if ($(id).val() === "Other") {
+            $(id + "_in").show();
+        }
+    });
 });
 
 /**
@@ -504,6 +510,16 @@ function onClickListeners() {
     $("#r2r").on('click', function(){
         window.location = window.location.pathname + "?trade=r2r";
     });
+
+    ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
+        $(id).on('change', function() {
+            if ($(id).val() === "Other") {
+                $(id + "_in").show();
+            } else {
+                $(id + "_in").hide();
+            }
+        });
+    });
 }
 
 function checkDirection() {
@@ -559,8 +575,9 @@ function setupCookies() {
       "route-preference", "include-citadels", "security-threshold",
       "region-buy-threshold", "region-roi-threshold", "region-weight-threshold",
       "region-profit-threshold", "buying-type-station", "selling-type-station",
-      "buying-type-region", "selling-type-region", "station_sales_tax", "region_sales_tax",
-      "route_sales_tax", "broker_fee"
+      "buying-type-region", "selling-type-region", "station_sales_tax", "station_sales_tax_in",
+      "region_sales_tax", "region_sales_tax_in", "route_sales_tax", "route_sales_tax_in",
+      "broker_fee"
   ];
 
   for(var i = 0; i < formInputs.length; i++) {
@@ -837,29 +854,41 @@ function execute() {
 function init(style){
     tradingStyle = style;
     try {
-      if(tradingStyle == STATION_TRADE){
-          sales_tax = setDefaultVal($("#station_sales_tax").val(), 5);
-          broker_fee = setDefaultVal($("#broker_fee").val(), 5);
-          threshold_margin_lower = setDefaultVal($("#lower-margin-threshold").val(), 20);
-          threshold_margin_upper = setDefaultVal($("#upper-margin-threshold").val(), 40);
-          volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);
-          setStationTradingLocations();
-      } else if (tradingStyle == STATION_HAUL) {
-          sales_tax = setDefaultVal($("#route_sales_tax").val(), 5);
-          threshold_profit = setDefaultVal($("#profit-threshold").val(), 500000);
-          threshold_roi = setDefaultVal($("#roi-threshold").val(), 4);
-          threshold_cost = setDefaultVal($("#buy-threshold").val(), 999999999999999999);
-          threshold_weight = setDefaultVal($("#weight-threshold").val(), 999999999999999999);
-          setRouteStationTradingLocations();
-      } else if (tradingStyle == REGION_HAUL) {
-          sales_tax = setDefaultVal($("#region_sales_tax").val(), 5);
-          threshold_profit = setDefaultVal($("#region-profit-threshold").val(), 500000);
-          threshold_roi = setDefaultVal($("#region-roi-threshold").val(), 4);
-          threshold_cost = setDefaultVal($("#region-buy-threshold").val(), 999999999999999999);
-          threshold_weight = setDefaultVal($("#region-weight-threshold").val(), 999999999999999999);
-          setRouteRegionTradingLocations();
-      }
-      setCopyWording();
+        if(tradingStyle == STATION_TRADE){
+            if ($("#station_sales_tax").val() === "Other") {
+                sales_tax = setDefaultVal($("#station_sales_tax_in").val(), 5);
+            } else {
+                sales_tax = setDefaultVal($("#station_sales_tax").val(), 5);
+            }
+            broker_fee = setDefaultVal($("#broker_fee").val(), 5);
+            threshold_margin_lower = setDefaultVal($("#lower-margin-threshold").val(), 20);
+            threshold_margin_upper = setDefaultVal($("#upper-margin-threshold").val(), 40);
+            volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);
+            setStationTradingLocations();
+        } else if (tradingStyle == STATION_HAUL) {
+            if ($("#route_sales_tax").val() === "Other") {
+                sales_tax = setDefaultVal($("#route_sales_tax_in").val(), 5);
+            } else {
+                sales_tax = setDefaultVal($("#route_sales_tax").val(), 5);
+            }
+            threshold_profit = setDefaultVal($("#profit-threshold").val(), 500000);
+            threshold_roi = setDefaultVal($("#roi-threshold").val(), 4);
+            threshold_cost = setDefaultVal($("#buy-threshold").val(), 999999999999999999);
+            threshold_weight = setDefaultVal($("#weight-threshold").val(), 999999999999999999);
+            setRouteStationTradingLocations();
+        } else if (tradingStyle == REGION_HAUL) {
+            if ($("#region_sales_tax").val() === "Other") {
+                sales_tax = setDefaultVal($("#region_sales_tax_in").val(), 5);
+            } else {
+                sales_tax = setDefaultVal($("#region_sales_tax").val(), 5);
+            }
+            threshold_profit = setDefaultVal($("#region-profit-threshold").val(), 500000);
+            threshold_roi = setDefaultVal($("#region-roi-threshold").val(), 4);
+            threshold_cost = setDefaultVal($("#region-buy-threshold").val(), 999999999999999999);
+            threshold_weight = setDefaultVal($("#region-weight-threshold").val(), 999999999999999999);
+            setRouteRegionTradingLocations();
+        }
+        setCopyWording();
 
       var startCondition = (startLocations && startLocations.length > 0);
       var endCondition = (

@@ -102,9 +102,9 @@ function getMarketData(data, stationId, orderType, itemId, isRoute){
 function setDefaultVal(ele, def) {
   if (ele && ele.length > 0) {
       if(isNaN(ele)){
-         return ele;
+        return ele;
       } else {
-        return parseInt(ele);
+        return parseFloat(ele);
       }
   }
   return def;
