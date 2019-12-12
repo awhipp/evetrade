@@ -616,6 +616,8 @@ function createBookmarks() {
     var trade;
     if ($("#station_haul_bookmark").is(":checked")) {
         trade = "s2s";
+    } else if ($("#region_haul_bookmark").is(":checked")) {
+        trade = "r2r";
     }
 
     if (trade !== undefined) {
@@ -623,18 +625,32 @@ function createBookmarks() {
 
         var bookmarkURL = window.location.pathname + "?trade=" + trade;
 
-        bookmarkURL += "&start=";
-        startLocations.forEach(function(startLocation) {
-            bookmarkURL += startLocation + ",";
-        });
-        bookmarkURL = bookmarkURL.slice(0, -1);
-        bookmarkURL += "&end=";
-        endLocations.forEach(function(endLocation) {
-            bookmarkURL += endLocation + ",";
-        });
-        bookmarkURL = bookmarkURL.slice(0, -1);
-        if ($("#route_sales_tax").val() === "Other") other="Y";
-        
+        switch (trade) {
+            case "s2s":
+                bookmarkURL += "&start=";
+                startLocations.forEach(function(startLocation) {
+                    bookmarkURL += startLocation + ",";
+                });
+                bookmarkURL = bookmarkURL.slice(0, -1);
+                bookmarkURL += "&end=";
+                endLocations.forEach(function(endLocation) {
+                    bookmarkURL += endLocation + ",";
+                });
+                bookmarkURL = bookmarkURL.slice(0, -1);
+                if ($("#route_sales_tax").val() === "Other") other="Y";
+                break;
+            case "r2r":
+                bookmarkURL += "&start=" + startLocations;
+                bookmarkURL += "&end=" + endLocations ;
+                if ($("#region_sales_tax").val() === "Other") other="Y";
+                if ($("#include-citadels").is(":checked")) {
+                    bookmarkURL += "&citadels=Y";
+                } else {
+                    bookmarkURL += "&citadels=N";
+                }
+                break;
+        }
+
         bookmarkURL += "&other=" + other;
 
         bookmarkURL += "&sales_tax=" + sales_tax + "&threshold_profit=" + threshold_profit;
