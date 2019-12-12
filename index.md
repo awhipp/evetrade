@@ -13,7 +13,10 @@ announcement: {
     <li>Minor bugfixes</li>
     </ul>
     
-    <p>Contribution shout outs to <a href="https://github.com/psolyca">@psolyca</a> and <a href="https://github.com/timegrinder">@timegrinder</a></p>
+    <p>
+    Contribution shout outs to <a href="https://github.com/psolyca" target="_blank">@psolyca</a> 
+    and <a href="https://github.com/timegrinder" target="_blank">@timegrinder</a>
+    </p>
   '
 }
 ---
