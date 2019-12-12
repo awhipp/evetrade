@@ -323,24 +323,24 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
     buyPrice = bestBuyPrice;
     sellPrice = bestSellPrice;
 
-    var tax_per_item = sellPrice * sales_tax / 100;
-    var buy_fee_per_item = buyPrice * broker_fee / 100;
-    var sell_fee_per_item = sellPrice * broker_fee / 100;
-    var gross_margin = sellPrice - buyPrice;
-    var profit_per_item = gross_margin - tax_per_item - buy_fee_per_item - sell_fee_per_item;
-    var margin = profit_per_item / buyPrice;
+    var itemSellTax = sellPrice * sales_tax / 100;
+    var itemBuyFee = buyPrice * broker_fee / 100;
+    var itemSellFee = sellPrice * broker_fee / 100;
+    var grossMargin = sellPrice - buyPrice;
+    var itemProfit = grossMargin - itemSellTax - itemBuyFee - itemSellFee;
+    var itemMargin = itemProfit / buyPrice;
 
-    if(margin*100 >= threshold_margin_lower && margin*100 <= threshold_margin_upper && profit_per_item > 1000){
+    if(itemMargin*100 >= threshold_margin_lower && itemMargin*100 <= threshold_margin_upper && itemProfit > 1000){
         row.buyPrice = buyPrice;
         row.sellPrice = sellPrice;
         row.itemId = itemId;
         this.getItemVolume(itemId, row);
-        row.sellTax = tax_per_item;
-        row.grossMargin = gross_margin;
-        row.netProfit = profit_per_item;
-        row.margin = margin;
-        row.buyFee = buy_fee_per_item;
-        row.sellFee = sell_fee_per_item;
+        row.sellTax = itemSellTax;
+        row.grossMargin = grossMargin;
+        row.netProfit = itemProfit;
+        row.margin = itemMargin;
+        row.buyFee = itemBuyFee;
+        row.sellFee = itemSellFee;
     }else {
         executingCount--;
     }
