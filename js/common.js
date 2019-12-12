@@ -618,6 +618,8 @@ function createBookmarks() {
         trade = "s2s";
     } else if ($("#region_haul_bookmark").is(":checked")) {
         trade = "r2r";
+    } else if ($("#station_trade_bookmark").is(":checked")) {
+        trade = "sst";
     }
 
     if (trade !== undefined) {
@@ -649,13 +651,26 @@ function createBookmarks() {
                     bookmarkURL += "&citadels=N";
                 }
                 break;
+            case "sst":
+                    bookmarkURL += "&start=" + startLocations;
+                    if ($("#station_sales_tax").val() === "Other") other="Y";
         }
 
         bookmarkURL += "&other=" + other;
+        bookmarkURL += "&sales_tax=" + sales_tax;
 
-        bookmarkURL += "&sales_tax=" + sales_tax + "&threshold_profit=" + threshold_profit;
-        bookmarkURL += "&threshold_roi=" + threshold_roi + "&threshold_cost=" + threshold_cost;
-        bookmarkURL += "&threshold_weight=" + threshold_weight;
+        switch (trade) {
+            case "s2s":
+            case "r2r":
+                bookmarkURL += "&threshold_profit=" + threshold_profit;
+                bookmarkURL += "&threshold_roi=" + threshold_roi + "&threshold_cost=" + threshold_cost;
+                bookmarkURL += "&threshold_weight=" + threshold_weight;
+                break;
+            case "sst":
+                bookmarkURL += "&broker_fee=" + broker_fee;
+                bookmarkURL += "&threshold_margin_lower=" + threshold_margin_lower;
+                bookmarkURL += "&threshold_margin_upper=" + threshold_margin_upper;
+                bookmarkURL += "&volume_threshold=" + volume_threshold;
+        }
     }
 }
-
