@@ -727,6 +727,24 @@ function setupBookmark(urlParams) {
             $("#region-roi-threshold").val(urlParams.get("threshold_roi"));
             $("#region-buy-threshold").val(urlParams.get("threshold_cost"));
             $("#region-weight-threshold").val(urlParams.get("threshold_weight"));
+        } else if (tradingStyle == STATION_TRADE){
+            // We have to wait for input element
+            var waitForInputTrade = setInterval(function () {
+                if ($("#custom_station input").length) {
+                    clearInterval(waitForInputTrade);
+                    addStart(urlParams.get("start"));
+                }
+            }, 1000);
+            if (urlParams.get("other") === "Y") {
+                $("#station_sales_tax option[value=\"Other\"]").prop('selected', true);
+                $("#station_sales_tax_in").val(urlParams.get("sales_tax"));
+            } else {
+                $("#station_sales_tax option[value=\"" + urlParams.get("sales_tax") + "\"]").prop('selected', true);
+            }
+            $("#broker_fee").val(urlParams.get("broker_fee"));
+            $("#lower-margin-threshold").val(urlParams.get("threshold_margin_lower"));
+            $("#upper-margin-threshold").val(urlParams.get("threshold_margin_upper"));
+            $("#volume-threshold").val(urlParams.get("volume_threshold"));
         }
     }
 }
