@@ -677,3 +677,33 @@ function createBookmarks() {
 
     }    
 }
+
+function setupBookmark(urlParams) {
+    if (urlParams.has("start")) {
+        if(tradingStyle == STATION_HAUL){
+            // We have to wait for input element
+            var waitForInputStation = setInterval(function () {
+                if ($("#start_station input").length) {
+                    clearInterval(waitForInputStation);
+                    urlParams.get("start").split(',').forEach(function(item) {
+                        addStart(item);
+                    });
+                    urlParams.get("end").split(',').forEach(function(item) {
+                        addEnd(item);
+                    });
+                }
+            }, 1000);
+            if (urlParams.get("other") === "Y") {
+                $("#route_sales_tax option[value=\"Other\"]").prop('selected', true);
+                $("#route_sales_tax_in").val(urlParams.get("sales_tax"));
+            } else {
+                $("#route_sales_tax option[value=\"" + urlParams.get("sales_tax") + "\"]").prop('selected', true);
+            }
+            $("#profit-threshold").val(urlParams.get("threshold_profit"));
+            $("#roi-threshold").val(urlParams.get("threshold_roi"));
+            $("#buy-threshold").val(urlParams.get("threshold_cost"));
+            $("#weight-threshold").val(urlParams.get("threshold_weight"));
+
+        }
+    }
+
