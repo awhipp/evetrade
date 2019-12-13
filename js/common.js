@@ -680,7 +680,7 @@ function createBookmarks() {
 
 function setupBookmark(urlParams) {
     if (urlParams.has("start")) {
-        if(tradingStyle == STATION_HAUL){
+        if (tradingStyle == STATION_HAUL){
             // We have to wait for input element
             var waitForInputStation = setInterval(function () {
                 if ($("#start_station input").length) {
@@ -703,7 +703,30 @@ function setupBookmark(urlParams) {
             $("#roi-threshold").val(urlParams.get("threshold_roi"));
             $("#buy-threshold").val(urlParams.get("threshold_cost"));
             $("#weight-threshold").val(urlParams.get("threshold_weight"));
-
+        } else if (tradingStyle == REGION_HAUL){
+            // We have to wait for input element
+            var waitForInputRegion = setInterval(function () {
+                if ($("#start_region input").length) {
+                    clearInterval(waitForInputRegion);
+                    addStart(urlParams.get("start"));
+                    addEnd(urlParams.get("end"))
+                }
+            }, 1000);
+            if (urlParams.get("other") === "Y") {
+                $("#region_sales_tax option[value=\"Other\"]").prop('selected', true);
+                $("#region_sales_tax_in").val(urlParams.get("sales_tax"));
+            } else {
+                $("#region_sales_tax option[value=\"" + urlParams.get("sales_tax") + "\"]").prop('selected', true);
+            }
+            if (urlParams.get("citadels") === "Y") {
+                $("#include-citadels").prop('checked', true);
+            } else {
+                $("#include-citadels").prop('checked', false);
+            }
+            $("#region-profit-threshold").val(urlParams.get("threshold_profit"));
+            $("#region-roi-threshold").val(urlParams.get("threshold_roi"));
+            $("#region-buy-threshold").val(urlParams.get("threshold_cost"));
+            $("#region-weight-threshold").val(urlParams.get("threshold_weight"));
         }
     }
-
+}
