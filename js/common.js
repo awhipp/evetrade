@@ -608,3 +608,14 @@ function createDataTable() {
         });
     }
 }
+
+function setTitle() {
+    if(tradingStyle == STATION_TRADE){
+        trade = startLocations;
+    } else if (tradingStyle == STATION_HAUL) {
+        trade = startLocations.join("-") + " => " + endLocations.join("-");
+    } else if (tradingStyle == REGION_HAUL) {
+        trade = startLocations + " => " + endLocations;
+    }
+    document.title = trade + " | " + document.title
+}

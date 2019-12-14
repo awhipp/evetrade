@@ -889,6 +889,7 @@ function init(style){
             setRouteRegionTradingLocations();
         }
         setCopyWording();
+        setTitle();
 
       var startCondition = (startLocations && startLocations.length > 0);
       var endCondition = (
