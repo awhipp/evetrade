@@ -662,6 +662,7 @@ function createBookmarks() {
         switch (trade) {
             case "s2s":
             case "r2r":
+                bookmarkURL += "&orderTypeStart=" + orderTypeStart + "&orderTypeEnd=" + orderTypeEnd;
                 bookmarkURL += "&threshold_profit=" + threshold_profit;
                 bookmarkURL += "&threshold_roi=" + threshold_roi + "&threshold_cost=" + threshold_cost;
                 bookmarkURL += "&threshold_weight=" + threshold_weight;
@@ -693,6 +694,8 @@ function setupBookmark(urlParams) {
                     });
                 }
             }, 1000);
+            $("#buying-type-station option[value=\"" + urlParams.get("orderTypeStart") + "\"").prop('selected', true);
+            $("#selling-type-station option[value=\"" + urlParams.get("orderTypeEnd") + "\"").prop('selected', true);
             if (urlParams.get("other") === "Y") {
                 $("#route_sales_tax option[value=\"Other\"]").prop('selected', true);
                 $("#route_sales_tax_in").val(urlParams.get("sales_tax"));
@@ -712,6 +715,8 @@ function setupBookmark(urlParams) {
                     addEnd(urlParams.get("end"))
                 }
             }, 1000);
+            $("#buying-type-region option[value=\"" + urlParams.get("orderTypeStart") + "\"").prop('selected', true);
+            $("#selling-type-region option[value=\"" + urlParams.get("orderTypeEnd") + "\"").prop('selected', true);
             if (urlParams.get("other") === "Y") {
                 $("#region_sales_tax option[value=\"Other\"]").prop('selected', true);
                 $("#region_sales_tax_in").val(urlParams.get("sales_tax"));
