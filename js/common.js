@@ -651,6 +651,7 @@ function createBookmarks() {
                     bookmarkURL += "&citadels=N";
                 }
                 bookmarkURL += "&security=" + $("#security-threshold").val();
+                bookmarkURL += "&route=" + $("#route-preference").val();
                 break;
             case "sst":
                 bookmarkURL += "&start=" + startLocations;
@@ -734,6 +735,7 @@ function setupBookmark(urlParams) {
             $("#region-buy-threshold").val(urlParams.get("threshold_cost"));
             $("#region-weight-threshold").val(urlParams.get("threshold_weight"));
             $("#security-threshold option[value=\"" + urlParams.get("security") + "\"").prop('selected', true);
+            $("#route-preference option[value=\"" + urlParams.get("route") + "\"").prop('selected', true);
         } else if (tradingStyle == STATION_TRADE){
             // We have to wait for input element
             var waitForInputTrade = setInterval(function () {
