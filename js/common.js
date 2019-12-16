@@ -26,9 +26,9 @@ var rowAdded = false;
 var orderTypeStart = "SELL";
 var orderTypeEnd = "BUY";
 
-var regionHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", /*"Profit Per Item",*/  "Jumps", "Profit per Jump", "Total Profit", "R.O.I", "Total Volume (m3)"];
-var routeHeader = ["", "Buy Item", "From", "Quantity", "At Sell Price", "Total Cost", "Take To", "At Buy Price", "Total Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
-var stationHeader = ["Item", "Buy Order", "Sell Order", "Profit Per Item", "Margin", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
+var regionHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
+var routeHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
+var stationHeader = ["Item", "Buy Price", "Sell Price", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
 /**
 * The keyword for known scam items
@@ -55,22 +55,22 @@ function setCopyWording() {
 
   if(orderTypeStart == "BUY") {
     regionHeader[1] = "Buy Order";
-    regionHeader[4] = "At Buy Price";
+    regionHeader[4] = "Sell Price";
     routeHeader[1] = "Buy Order";
-    routeHeader[4] = "At Buy Price";
+    routeHeader[4] = "Sell Price";
   } else {
     regionHeader[1] = "Sell Order";
-    regionHeader[4] = "At Sell Price";
+    regionHeader[4] = "Buy Price";
     routeHeader[1] = "Sell Order";
-    routeHeader[4] = "At Sell Price";
+    routeHeader[4] = "Buy Price";
   }
 
   if(orderTypeEnd == "BUY") {
-    regionHeader[7] = "At Buy Price";
-    routeHeader[7] = "At Buy Price";
+    regionHeader[7] = "Sell Price";
+    routeHeader[7] = "Sell Price";
   } else {
-    regionHeader[7] = "At Sell Price";
-    routeHeader[7] = "At Sell Price";
+    regionHeader[7] = "Buy Price";
+    routeHeader[7] = "Buy Price";
   }
 }
 
@@ -101,7 +101,11 @@ function getMarketData(data, stationId, orderType, itemId, isRoute){
 */
 function setDefaultVal(ele, def) {
   if (ele && ele.length > 0) {
-    return ele;
+      if(isNaN(ele)){
+        return ele;
+      } else {
+        return parseFloat(ele);
+      }
   }
   return def;
 }
@@ -396,11 +400,11 @@ function createTradeHeader() {
 
         var extraData = "";
         if(orderTypeEnd == "SELL") {
-          extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + "</div> " +
+          extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         } else {
-          extraData = "<div id='route-to'>Selling to Buy Orders at " + sellingTo + "</div> " +
+          extraData = "<div id='route-to'>Selling to Buy Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         }
@@ -434,7 +438,8 @@ function createTradeHeader() {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
-        buyingFooter = "Volume greater than: " + numberWithCommas(volume_threshold) +
+        buyingFooter = "With Sales Tax at " + numberWithCommas(sales_tax) + "% and Broker Fee at " + numberWithCommas(broker_fee) + "%<br />" +
+            "Volume greater than: " + numberWithCommas(volume_threshold) +
             " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%" +
             "<div class='loading'>Loading. Please wait...</div>";
         buyingFooterDOM.html(buyingFooter);
@@ -474,7 +479,7 @@ function createDataTable() {
         if (tradingStyle == STATION_HAUL) {
             // sorting on total profit index
             dt = dataTableDOM.DataTable({
-                "order": [[8, "desc"]],
+                "order": [[12, "desc"]],
                 "lengthMenu": [[50], ["50"]],
                 // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
@@ -490,7 +495,7 @@ function createDataTable() {
         } else if (tradingStyle == REGION_HAUL) {
             // sorting on profit per jump index
             dt = dataTableDOM.DataTable({
-                "order": [[9, "desc"]],
+                "order": [[13, "desc"]],
                 "lengthMenu": [[50], ["50"]],
                 // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
@@ -507,7 +512,7 @@ function createDataTable() {
         } else if (tradingStyle == STATION_TRADE) {
             // sorting on margin index
             dt = dataTableDOM.DataTable({
-                "order": [[6, "desc"]],
+                "order": [[7, "desc"]],
                 "lengthMenu": [[50], ["50"]],
                 // "lengthMenu": [[-1], ["All"]],
                 responsive: true,
@@ -524,7 +529,7 @@ function createDataTable() {
                 var name = dt.column(i).header();
                 var spanelt = document.createElement("button");
 
-                var initial_removed = [];
+                var initial_removed = ["Net Costs", "Net Sales", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes"];
 
                 spanelt.innerHTML = name.innerHTML;
 
@@ -602,4 +607,15 @@ function createDataTable() {
            $(this)[0].scrollIntoView();
         });
     }
+}
+
+function setTitle() {
+    if(tradingStyle == STATION_TRADE){
+        trade = startLocations;
+    } else if (tradingStyle == STATION_HAUL) {
+        trade = startLocations.join("-") + " => " + endLocations.join("-");
+    } else if (tradingStyle == REGION_HAUL) {
+        trade = startLocations + " => " + endLocations;
+    }
+    document.title = trade + " | " + document.title
 }

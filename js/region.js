@@ -402,28 +402,31 @@ Region.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, start, end)
 */
 Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, start, end){
     if(buyPrice < sellPrice && sellPrice > 0){
-        var itemProfit = sellPrice - buyPrice;
+        var itemSellTax = sellPrice * sales_tax / 100;
+        var itemProfit = sellPrice - itemSellTax - buyPrice;
 
-        var profit;
-        var buyCost;
-        var volume;
+        if(itemProfit > 0){
+            var volume;
 
-        if(buyVolume >= sellVolume){
-            volume = sellVolume;
-            profit = sellVolume * itemProfit;
-            buyCost = buyPrice * sellVolume;
-        }else{
-            volume = buyVolume;
-            profit = buyVolume * itemProfit;
-            buyCost = buyPrice * buyVolume;
-        }
+            if(buyVolume >= sellVolume){
+                volume = sellVolume;
+            }else{
+                volume = buyVolume;
+            }
 
-        var iskRatio = (sellPrice-buyPrice)/buyPrice;
+            var grossMargin = volume * (sellPrice - buyPrice)
+            var sellTax = volume * itemSellTax;
+            var netProfit = grossMargin - sellTax;
+            var netCosts = volume * buyPrice;
+            var netSales = volume * sellPrice;
 
-        if(profit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && buyCost <= threshold_cost ){
-            return [itemId, start, buyPrice, volume, buyCost, end, profit, iskRatio, sellPrice, itemProfit];
-        }else{
-            return [];
+            var iskRatio = itemProfit / buyPrice;
+
+            if(netProfit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && netCosts <= threshold_cost ){
+                return [itemId, start, volume, buyPrice, netCosts, end, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio];
+            }else{
+                return [];
+            }
         }
     }
     return [];
@@ -478,14 +481,16 @@ Region.prototype.createRowObject = function(row) {
     var rowObject = {};
     rowObject.itemId = row[0];
     rowObject.buyFromStation = row[1];
-    rowObject.buyPrice = row[2];
-    rowObject.quantity = row[3];
-    rowObject.buyCost = row[4];
+    rowObject.quantity = row[2];
+    rowObject.buyPrice = row[3];
+    rowObject.netCosts = row[4];
     rowObject.sellToStation = row[5];
-    rowObject.totalProfit = row[6];
-    rowObject.roi = row[7];
-    rowObject.sellPrice = row[8];
-    rowObject.perItemProfit = row[9];
+    rowObject.sellPrice = row[6];
+    rowObject.netSales = row[7];
+    rowObject.grossMargin = row[8];
+    rowObject.sellTax = row[9];
+    rowObject.netProfit = row[10];
+    rowObject.roi = row[11];
     return rowObject;
 };
 
@@ -778,13 +783,15 @@ Region.prototype.updateDatatable = function(row) {
         row.buyFromStation.name,
         numberWithCommas(row.quantity),
         numberWithCommas(row.buyPrice.toFixed(2)),
-        numberWithCommas(row.buyCost.toFixed(2)),
+        numberWithCommas(row.netCosts.toFixed(2)),
         row.sellToStation.name,
         numberWithCommas(row.sellPrice.toFixed(2)),
-        // numberWithCommas(row.perItemProfit.toFixed(2)),
+        numberWithCommas(row.netSales.toFixed(2)),
+        numberWithCommas(row.grossMargin.toFixed(2)),
+        numberWithCommas(row.sellTax.toFixed(2)),
+        numberWithCommas(row.netProfit.toFixed(2)),
         row.routeLength - 1,
-        numberWithCommas((row.totalProfit/(row.routeLength - 1)).toFixed(2)),
-        numberWithCommas(row.totalProfit.toFixed(2)),
+        numberWithCommas((row.netProfit/(row.routeLength - 1)).toFixed(2)),
         (row.roi.toFixed(3) * 100).toFixed(1) + "%",
         numberWithCommas(storageVolume.toFixed(2))
     ];

@@ -72,6 +72,27 @@
         </div>
 
         <hr>
+            
+        <div class="row align-items-center">
+            <div class="col-sm-2 col-xs-12"></div>
+            <div class="col-sm-8 col-xs-12">
+                <label class="control-label" for="region_sales_tax" title="Calculation = 5 * (1 - 0.11 * AccountingLevel)" style="cursor: pointer;">Sales Tax (in %)</label>
+                <select class="minor-text form-control" id="region_sales_tax" name="region_sales_tax">
+                  <option value="" selected>Choose your Accounting Level</option>
+                  <option value="5">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.00%</option>
+                  <option value="4.45">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.45%</option>
+                  <option value="3.9">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.90%</option>
+                  <option value="3.35">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.35%</option>
+                  <option value="2.8">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.80%</option>
+                  <option value="2.25">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.25%</option>
+                  <option value="Other">Other</option>
+                </select>
+                <input type="number" id="region_sales_tax_in" name="region_sales_tax_in" class="form-control my-1" placeholder="Default: 5" style="display:none" step="0.05" min="0" max="5"/>
+            </div>
+            <div class="col-sm-2 col-xs-12"></div>
+        </div>
+
+        <hr>
 
     <div class="col-xs-12 mx-auto">
         <div class="row">
