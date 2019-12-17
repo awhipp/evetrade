@@ -720,6 +720,30 @@ function createBookmarks() {
     }
 }
 
+/**
+* Given a selector it will set it if not default
+*/
+function setDefaultInput(trade, ele, value) {
+    var element = $("#" + ele);
+    if (value != "") {
+        if (element.is(":checkbox")) {
+            element.prop("checked", !defaultValues[trade][ele]);
+        } else if (element.is("select")) {
+            $("#" + ele + " option[value=\"" + value + "\"]").prop('selected', true);
+        } else {
+            element.val(value);
+        }
+    } else {
+        if (element.is(":checkbox")) {
+            element.prop("checked", defaultValues[trade][ele]);
+        } else if (element.is("select")) {
+            $("#" + ele + " option[value=\"" + defaultValues[trade][ele] + "\"]").prop('selected', true);
+        } else {
+            element.val("");
+        }
+    }
+}
+
 function setupBookmark(urlParams) {
     if (urlParams.has("start")) {
         if (tradingStyle == STATION_HAUL){
