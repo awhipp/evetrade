@@ -42,6 +42,42 @@ var spamItems = [
 ];
 
 /**
+ * Defaults values of forms inputs by trade style
+ */
+var defaultValues = {
+    "s2s": {
+        "buying-type-station": "SELL",
+        "selling-type-station": "BUY",
+        "route_sales_tax": 5,
+        "route_sales_tax_in": 5,
+        "profit-threshold": 500000,
+        "weight-threshold": 999999999999999999,
+        "roi-threshold": 4,
+        "buy-threshold": 999999999999999999},
+    "r2r": {
+        "buying-type-region": "SELL",
+        "selling-type-region": "BUY",
+        "region_sales_tax": 5,
+        "region_sales_tax_in": 5,
+        "region-profit-threshold": 500000,
+        "region-weight-threshold": 999999999999999999,
+        "region-roi-threshold": 4,
+        "region-buy-threshold": 999999999999999999,
+        "security-threshold": "NULL",
+        "route-preference": "secure",
+        "include-citadels": false
+    },
+    "sst":{
+        "station_sales_tax": 5,
+        "station_sales_tax_in": 5,
+        "broker_fee": 5,
+        "lower-margin-threshold": 20,
+        "upper-margin-threshold": 40,
+        "volume-threshold": 1000
+    }
+}
+
+/**
 * Sets up the wording on the screen based on the order types selected
 */
 function setCopyWording() {
