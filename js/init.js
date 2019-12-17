@@ -104,14 +104,14 @@ $( document ).ready(function() {
     });
 
     urlParams = (new URL(window.location.href)).searchParams;
-    switch(urlParams.get("trade")) {
-        case "sst":
+    switch(parseInt(urlParams.get("trade"))) {
+        case STATION_TRADE:
             setupTradeOptions(0);
             break;
-        case "s2s":
+        case STATION_HAUL:
             setupTradeOptions(1);
             break;
-        case "r2r":
+        case REGION_HAUL:
             setupTradeOptions(2);
     }
     //window.history.replaceState(null, null, window.location.pathname);
@@ -502,15 +502,15 @@ function onClickListeners() {
     });
 
     $("#sst").on('click', function(){
-        window.location = window.location.pathname + "?trade=sst";
+        window.location = window.location.pathname + "?trade=0";
     });
 
     $("#s2s").on('click', function(){
-        window.location = window.location.pathname + "?trade=s2s";
+        window.location = window.location.pathname + "?trade=1";
     });
         
     $("#r2r").on('click', function(){
-        window.location = window.location.pathname + "?trade=r2r";
+        window.location = window.location.pathname + "?trade=2";
     });
 
     ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {

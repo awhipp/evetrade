@@ -44,8 +44,16 @@ var spamItems = [
 /**
  * Defaults values of forms inputs by trade style
  */
-var defaultValues = {
-    "s2s": {
+var defaultValues = [
+    {
+        "station_sales_tax": 5,
+        "station_sales_tax_in": 5,
+        "broker_fee": 5,
+        "lower-margin-threshold": 20,
+        "upper-margin-threshold": 40,
+        "volume-threshold": 1000
+    },
+    {
         "buying-type-station": "SELL",
         "selling-type-station": "BUY",
         "route_sales_tax": 5,
@@ -53,8 +61,9 @@ var defaultValues = {
         "profit-threshold": 500000,
         "weight-threshold": 999999999999999999,
         "roi-threshold": 4,
-        "buy-threshold": 999999999999999999},
-    "r2r": {
+        "buy-threshold": 999999999999999999
+    },
+    {
         "buying-type-region": "SELL",
         "selling-type-region": "BUY",
         "region_sales_tax": 5,
@@ -66,16 +75,8 @@ var defaultValues = {
         "security-threshold": "NULL",
         "route-preference": "secure",
         "include-citadels": false
-    },
-    "sst":{
-        "station_sales_tax": 5,
-        "station_sales_tax_in": 5,
-        "broker_fee": 5,
-        "lower-margin-threshold": 20,
-        "upper-margin-threshold": 40,
-        "volume-threshold": 1000
     }
-}
+]
 
 /**
 * Sets up the wording on the screen based on the order types selected
@@ -672,20 +673,10 @@ function isDefaultInput(trade, ele) {
 * Change the URL to be able to bookmark the search based on the trading style that is being queried
 */
 function createBookmarks() {
-    var trade;
-    if (tradingStyle == STATION_HAUL) {
-        trade = "s2s";
-    } else if (tradingStyle == REGION_HAUL) {
-        trade = "r2r";
-    } else if (tradingStyle == STATION_TRADE) {
-        trade = "sst";
-    }
+        var bookmarkURL = window.location.pathname + "?trade=" + tradingStyle;
 
-    if (trade !== undefined) {
-        var bookmarkURL = window.location.pathname + "?trade=" + trade;
-
-        switch (trade) {
-            case "s2s":
+        switch (tradingStyle) {
+            case STATION_HAUL:
                 bookmarkURL += "&start=";
                 startLocations.forEach(function(startLocation) {
                     bookmarkURL += startLocation + ",";
@@ -697,16 +688,16 @@ function createBookmarks() {
                 });
                 bookmarkURL = bookmarkURL.slice(0, -1);
                 break;
-            case "r2r":
+            case REGION_HAUL:
                 bookmarkURL += "&start=" + startLocations;
                 bookmarkURL += "&end=" + endLocations ;
                 break;
-            case "sst":
+            case STATION_TRADE:
                 bookmarkURL += "&start=" + startLocations;
         }
 
-        for (var key in defaultValues[trade]) {
-            bookmarkURL += "&" + key + "=" + isDefaultInput(trade, key);
+        for (var key in defaultValues[tradingStyle]) {
+            bookmarkURL += "&" + key + "=" + isDefaultInput(tradingStyle, key);
         };
 
         history.pushState({}, document.title, encodeURI(bookmarkURL));
@@ -717,7 +708,6 @@ function createBookmarks() {
                 $("#bookmark").slideToggle();
             }, 20000);
         }
-    }
 }
 
 /**
@@ -746,48 +736,51 @@ function setDefaultInput(trade, ele, value) {
 
 function setupBookmark(urlParams) {
     if (urlParams.has("start")) {
-        if (tradingStyle == STATION_HAUL){
-            // We have to wait for input element
-            var waitForInputStation = setInterval(function () {
-                if ($("#start_station input").length) {
-                    clearInterval(waitForInputStation);
-                    urlParams.get("start").split(',').forEach(function(item) {
-                        addStart(item);
-                    });
-                    urlParams.get("end").split(',').forEach(function(item) {
-                        addEnd(item);
-                    });
-                }
-            }, 1000);
+        switch (tradingStyle) {
+            case STATION_HAUL:
+                // We have to wait for input element
+                var waitForInputStation = setInterval(function () {
+                    if ($("#start_station input").length) {
+                        clearInterval(waitForInputStation);
+                        urlParams.get("start").split(',').forEach(function(item) {
+                            addStart(item);
+                        });
+                        urlParams.get("end").split(',').forEach(function(item) {
+                            addEnd(item);
+                        });
+                    }
+                }, 1000);
 
-            for (var key in defaultValues["s2s"]) {
-                setDefaultInput("s2s", key, urlParams.get(key));
-            };
-        } else if (tradingStyle == REGION_HAUL){
-            // We have to wait for input element
-            var waitForInputRegion = setInterval(function () {
-                if ($("#start_region input").length) {
-                    clearInterval(waitForInputRegion);
-                    addStart(urlParams.get("start"));
-                    addEnd(urlParams.get("end"))
-                }
-            }, 1000);
+                for (var key in defaultValues[STATION_HAUL]) {
+                    setDefaultInput(STATION_HAUL, key, urlParams.get(key));
+                };
+                break;
+            case REGION_HAUL:
+                // We have to wait for input element
+                var waitForInputRegion = setInterval(function () {
+                    if ($("#start_region input").length) {
+                        clearInterval(waitForInputRegion);
+                        addStart(urlParams.get("start"));
+                        addEnd(urlParams.get("end"))
+                    }
+                }, 1000);
 
-            for (var key in defaultValues["r2r"]) {
-                setDefaultInput("r2r", key, urlParams.get(key));
-            };
-        } else if (tradingStyle == STATION_TRADE){
-            // We have to wait for input element
-            var waitForInputTrade = setInterval(function () {
-                if ($("#custom_station input").length) {
-                    clearInterval(waitForInputTrade);
-                    addStart(urlParams.get("start"));
-                }
-            }, 1000);
+                for (var key in defaultValues[REGION_HAUL]) {
+                    setDefaultInput(REGION_HAUL, key, urlParams.get(key));
+                };
+                break;
+            case STATION_TRADE:
+                // We have to wait for input element
+                var waitForInputTrade = setInterval(function () {
+                    if ($("#custom_station input").length) {
+                        clearInterval(waitForInputTrade);
+                        addStart(urlParams.get("start"));
+                    }
+                }, 1000);
 
-            for (var key in defaultValues["sst"]) {
-                setDefaultInput("sst", key, urlParams.get(key));
-            };
+                for (var key in defaultValues[STATION_TRADE]) {
+                    setDefaultInput(STATION_TRADE, key, urlParams.get(key));
+                };
         }
     }
 }
