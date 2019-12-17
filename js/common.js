@@ -759,18 +759,10 @@ function setupBookmark(urlParams) {
                     });
                 }
             }, 1000);
-            $("#buying-type-station option[value=\"" + urlParams.get("orderTypeStart") + "\"").prop('selected', true);
-            $("#selling-type-station option[value=\"" + urlParams.get("orderTypeEnd") + "\"").prop('selected', true);
-            if (urlParams.get("other") === "Y") {
-                $("#route_sales_tax option[value=\"Other\"]").prop('selected', true);
-                $("#route_sales_tax_in").val(urlParams.get("sales_tax"));
-            } else {
-                $("#route_sales_tax option[value=\"" + urlParams.get("sales_tax") + "\"]").prop('selected', true);
-            }
-            $("#profit-threshold").val(urlParams.get("threshold_profit"));
-            $("#roi-threshold").val(urlParams.get("threshold_roi"));
-            $("#buy-threshold").val(urlParams.get("threshold_cost"));
-            $("#weight-threshold").val(urlParams.get("threshold_weight"));
+
+            for (var key in defaultValues["s2s"]) {
+                setDefaultInput("s2s", key, urlParams.get(key));
+            };
         } else if (tradingStyle == REGION_HAUL){
             // We have to wait for input element
             var waitForInputRegion = setInterval(function () {
@@ -780,25 +772,10 @@ function setupBookmark(urlParams) {
                     addEnd(urlParams.get("end"))
                 }
             }, 1000);
-            $("#buying-type-region option[value=\"" + urlParams.get("orderTypeStart") + "\"").prop('selected', true);
-            $("#selling-type-region option[value=\"" + urlParams.get("orderTypeEnd") + "\"").prop('selected', true);
-            if (urlParams.get("other") === "Y") {
-                $("#region_sales_tax option[value=\"Other\"]").prop('selected', true);
-                $("#region_sales_tax_in").val(urlParams.get("sales_tax"));
-            } else {
-                $("#region_sales_tax option[value=\"" + urlParams.get("sales_tax") + "\"]").prop('selected', true);
-            }
-            if (urlParams.get("citadels") === "Y") {
-                $("#include-citadels").prop('checked', true);
-            } else {
-                $("#include-citadels").prop('checked', false);
-            }
-            $("#region-profit-threshold").val(urlParams.get("threshold_profit"));
-            $("#region-roi-threshold").val(urlParams.get("threshold_roi"));
-            $("#region-buy-threshold").val(urlParams.get("threshold_cost"));
-            $("#region-weight-threshold").val(urlParams.get("threshold_weight"));
-            $("#security-threshold option[value=\"" + urlParams.get("security") + "\"").prop('selected', true);
-            $("#route-preference option[value=\"" + urlParams.get("route") + "\"").prop('selected', true);
+
+            for (var key in defaultValues["r2r"]) {
+                setDefaultInput("r2r", key, urlParams.get(key));
+            };
         } else if (tradingStyle == STATION_TRADE){
             // We have to wait for input element
             var waitForInputTrade = setInterval(function () {
@@ -807,16 +784,10 @@ function setupBookmark(urlParams) {
                     addStart(urlParams.get("start"));
                 }
             }, 1000);
-            if (urlParams.get("other") === "Y") {
-                $("#station_sales_tax option[value=\"Other\"]").prop('selected', true);
-                $("#station_sales_tax_in").val(urlParams.get("sales_tax"));
-            } else {
-                $("#station_sales_tax option[value=\"" + urlParams.get("sales_tax") + "\"]").prop('selected', true);
-            }
-            $("#broker_fee").val(urlParams.get("broker_fee"));
-            $("#lower-margin-threshold").val(urlParams.get("threshold_margin_lower"));
-            $("#upper-margin-threshold").val(urlParams.get("threshold_margin_upper"));
-            $("#volume-threshold").val(urlParams.get("volume_threshold"));
+
+            for (var key in defaultValues["sst"]) {
+                setDefaultInput("sst", key, urlParams.get(key));
+            };
         }
     }
 }
