@@ -614,11 +614,11 @@ function createDataTable() {
 */
 function createBookmarks() {
     var trade;
-    if ($("#station_haul_bookmark").is(":checked")) {
+    if (tradingStyle == STATION_HAUL) {
         trade = "s2s";
-    } else if ($("#region_haul_bookmark").is(":checked")) {
+    } else if (tradingStyle == REGION_HAUL) {
         trade = "r2r";
-    } else if ($("#station_trade_bookmark").is(":checked")) {
+    } else if (tradingStyle == STATION_TRADE) {
         trade = "sst";
     }
 
