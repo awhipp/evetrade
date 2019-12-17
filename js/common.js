@@ -682,8 +682,6 @@ function createBookmarks() {
     }
 
     if (trade !== undefined) {
-        var other = "N";
-
         var bookmarkURL = window.location.pathname + "?trade=" + trade;
 
         switch (trade) {
@@ -698,42 +696,18 @@ function createBookmarks() {
                     bookmarkURL += endLocation + ",";
                 });
                 bookmarkURL = bookmarkURL.slice(0, -1);
-                if ($("#route_sales_tax").val() === "Other") other="Y";
                 break;
             case "r2r":
                 bookmarkURL += "&start=" + startLocations;
                 bookmarkURL += "&end=" + endLocations ;
-                if ($("#region_sales_tax").val() === "Other") other="Y";
-                if ($("#include-citadels").is(":checked")) {
-                    bookmarkURL += "&citadels=Y";
-                } else {
-                    bookmarkURL += "&citadels=N";
-                }
-                bookmarkURL += "&security=" + $("#security-threshold").val();
-                bookmarkURL += "&route=" + $("#route-preference").val();
                 break;
             case "sst":
                 bookmarkURL += "&start=" + startLocations;
-                if ($("#station_sales_tax").val() === "Other") other="Y";
         }
 
-        bookmarkURL += "&other=" + other;
-        bookmarkURL += "&sales_tax=" + sales_tax;
-
-        switch (trade) {
-            case "s2s":
-            case "r2r":
-                bookmarkURL += "&orderTypeStart=" + orderTypeStart + "&orderTypeEnd=" + orderTypeEnd;
-                bookmarkURL += "&threshold_profit=" + threshold_profit;
-                bookmarkURL += "&threshold_roi=" + threshold_roi + "&threshold_cost=" + threshold_cost;
-                bookmarkURL += "&threshold_weight=" + threshold_weight;
-                break;
-            case "sst":
-                bookmarkURL += "&broker_fee=" + broker_fee;
-                bookmarkURL += "&threshold_margin_lower=" + threshold_margin_lower;
-                bookmarkURL += "&threshold_margin_upper=" + threshold_margin_upper;
-                bookmarkURL += "&volume_threshold=" + volume_threshold;
-        }
+        for (var key in defaultValues[trade]) {
+            bookmarkURL += "&" + key + "=" + isDefaultInput(trade, key);
+        };
 
         history.pushState({}, document.title, encodeURI(bookmarkURL));
 
