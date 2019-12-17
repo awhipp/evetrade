@@ -678,7 +678,13 @@ function createBookmarks() {
 
         history.pushState({}, document.title, encodeURI(bookmarkURL));
 
-    }    
+        if (!$("#bookmark_clear").is(":checked")) {
+            $("#bookmark").show();
+            setTimeout(() => {
+                $("#bookmark").slideToggle();
+            }, 20000);
+        }
+    }
 }
 
 function setupBookmark(urlParams) {

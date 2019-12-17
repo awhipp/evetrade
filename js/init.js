@@ -522,6 +522,11 @@ function onClickListeners() {
             }
         });
     });
+
+    $("#bookmark_clear").on("change", function() {
+        $("#bookmark").slideToggle();
+    })
+
 }
 
 function checkDirection() {
@@ -579,7 +584,7 @@ function setupCookies() {
       "region-profit-threshold", "buying-type-station", "selling-type-station",
       "buying-type-region", "selling-type-region", "station_sales_tax", "station_sales_tax_in",
       "region_sales_tax", "region_sales_tax_in", "route_sales_tax", "route_sales_tax_in",
-      "broker_fee"
+      "broker_fee", "bookmark_clear"
   ];
 
   for(var i = 0; i < formInputs.length; i++) {
