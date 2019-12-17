@@ -646,6 +646,29 @@ function createDataTable() {
 }
 
 /**
+* Given a selector it will return empty string if default otherwise the value
+*/
+function isDefaultInput(trade, ele) {
+    var element = $("#" + ele);
+    if (element.is(":checkbox")) {
+        if (element.is(":checked") != defaultValues[trade][ele]) {
+            return "Y";
+        }
+    } else {
+        if (isNaN(element.val())) {
+            if (element.val() !== defaultValues[trade][ele]) {
+                return element.val();
+            }
+        } else {
+            if (parseFloat(element.val()) !== defaultValues[trade][ele]) {
+                return element.val();
+            }
+        }
+    }
+    return "";
+}
+
+/**
 * Change the URL to be able to bookmark the search based on the trading style that is being queried
 */
 function createBookmarks() {
