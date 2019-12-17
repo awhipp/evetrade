@@ -704,7 +704,7 @@ function createBookmarks() {
 
         if (!$("#bookmark_clear").is(":checked")) {
             $("#bookmark").show();
-            setTimeout(() => {
+            setTimeout(function() {
                 $("#bookmark").slideToggle();
             }, 20000);
         }
