@@ -888,6 +888,7 @@ function init(style){
         }
         createBookmarks();
         setCopyWording();
+        setTitle();
 
       var startCondition = (startLocations && startLocations.length > 0);
       var endCondition = (
