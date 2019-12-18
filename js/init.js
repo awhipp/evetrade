@@ -231,15 +231,15 @@ function setupCustomDropdown() {
             }
 
             if($("#security-threshold").val() == null) {
-              $("#security-threshold").val("NULL");
+              $("#security-threshold").val("null");
             }
 
             if($("#buying-type-station").val() == null) {
-              $("#buying-type-station").val("SELL");
+              $("#buying-type-station").val("sell");
             }
 
             if($("#selling-type-station").val() == null) {
-              $("#selling-type-station").val("BUY");
+              $("#selling-type-station").val("buy");
             }
 
             stationsReady = true;
@@ -267,11 +267,11 @@ function setupCustomDropdown() {
             initCompletely("end_region", regionList);
 
             if($("#buying-type-region").val() == null) {
-              $("#buying-type-region").val("SELL");
+              $("#buying-type-region").val("sell");
             }
 
             if($("#selling-type-region").val() == null) {
-              $("#selling-type-region").val("BUY");
+              $("#selling-type-region").val("buy");
             }
 
             regionsReady = true;
@@ -525,7 +525,7 @@ function checkDirection() {
     var regionStartType = $("#buying-type-region").val();
     var regionEndType = $("#selling-type-region").val();
 
-    if(stationStartType == "SELL" && stationEndType == "BUY") {
+    if(stationStartType == "sell" && stationEndType == "buy") {
       $("#directionWarningStation").hide();
     } else {
       $("#directionWarningStation > .startDirection").text(stationStartType);
@@ -533,7 +533,7 @@ function checkDirection() {
       $("#directionWarningStation").show();
     }
 
-    if(regionStartType == "SELL" && regionEndType == "BUY") {
+    if(regionStartType == "sell" && regionEndType == "buy") {
       $("#directionWarningRegion").hide();
     } else {
       $("#directionWarningRegion > .startDirection").text(regionStartType);
@@ -640,12 +640,12 @@ function open_popup(itemId, name, fromStation, toStation){
     var buyArr = [];
     var sellArr = [];
 
-    if(orderTypeStart == "BUY") {
+    if(orderTypeStart == "buy") {
       buyArr = customSell[fromStation.station][itemId];
     } else {
       buyArr = customBuy[fromStation.station][itemId];
     }
-    if(orderTypeEnd == "BUY") {
+    if(orderTypeEnd == "buy") {
       sellArr = customSell[toStationId][itemId];
     } else {
       sellArr = customBuy[toStationId][itemId];
@@ -668,7 +668,7 @@ function open_popup(itemId, name, fromStation, toStation){
     popup_table_sell.draw();
 
 
-    if(orderTypeStart == "BUY") {
+    if(orderTypeStart == "buy") {
       $("#buyLocation").text("Buy Orders at " + fromStation.name);
       $("#popup-table-buy th:first-of-type")[0].textContent = "Buy Orders";
       $('#popup-table-buy').dataTable().fnSort( [0,'desc'] );
@@ -677,7 +677,7 @@ function open_popup(itemId, name, fromStation, toStation){
       $("#popup-table-buy th:first-of-type")[0].textContent = "Sell Orders";
       $('#popup-table-buy').dataTable().fnSort( [0,'asc'] );
     }
-    if(orderTypeEnd == "BUY") {
+    if(orderTypeEnd == "buy") {
       $("#sellLocation").text("Buy Orders at " + toStationName);
       $("#popup-table-sell th:first-of-type")[0].textContent = "Buy Orders";
       $('#popup-table-sell').dataTable().fnSort( [0,'desc'] );

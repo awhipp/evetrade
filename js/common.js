@@ -23,8 +23,8 @@ var page = 1;
 var iteration = 1;
 var rowAdded = false;
 
-var orderTypeStart = "SELL";
-var orderTypeEnd = "BUY";
+var orderTypeStart = "sell";
+var orderTypeEnd = "buy";
 
 var regionHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
 var routeHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
@@ -42,39 +42,39 @@ var spamItems = [
 ];
 
 /**
- * Defaults values of forms inputs by trade style
+ * Defaults values and parameters of forms inputs by trade style
  */
 var defaultValues = [
     {
-        "station_sales_tax": 5,
-        "station_sales_tax_in": 5,
-        "broker_fee": 5,
-        "lower-margin-threshold": 20,
-        "upper-margin-threshold": 40,
-        "volume-threshold": 1000
+        "station_sales_tax": ["sales_tax", 5],
+        "station_sales_tax_in": ["sales_tax_other", 5],
+        "broker_fee": ["broker_fee", 5],
+        "lower-margin-threshold": ["min_margin", 20],
+        "upper-margin-threshold": ["max_margin", 40],
+        "volume-threshold": ["min_volume", 1000]
     },
     {
-        "buying-type-station": "SELL",
-        "selling-type-station": "BUY",
-        "route_sales_tax": 5,
-        "route_sales_tax_in": 5,
-        "profit-threshold": 500000,
-        "weight-threshold": 999999999999999999,
-        "roi-threshold": 4,
-        "buy-threshold": 999999999999999999
+        "buying-type-station": ["buy_type", "sell"],
+        "selling-type-station": ["sell_type", "buy"],
+        "route_sales_tax": ["sales_tax", 5],
+        "route_sales_tax_in": ["sales_tax_other", 5],
+        "profit-threshold": ["min_profit", 500000],
+        "weight-threshold": ["max_cargo", 999999999999999999],
+        "roi-threshold": ["min_roi", 4],
+        "buy-threshold": ["max_budget", 999999999999999999]
     },
     {
-        "buying-type-region": "SELL",
-        "selling-type-region": "BUY",
-        "region_sales_tax": 5,
-        "region_sales_tax_in": 5,
-        "region-profit-threshold": 500000,
-        "region-weight-threshold": 999999999999999999,
-        "region-roi-threshold": 4,
-        "region-buy-threshold": 999999999999999999,
-        "security-threshold": "NULL",
-        "route-preference": "secure",
-        "include-citadels": false
+        "buying-type-region": ["buy_type", "sell"],
+        "selling-type-region": ["sell_type", "buy"],
+        "region_sales_tax": ["sales_tax", 5],
+        "region_sales_tax_in": ["sales_tax_other", 5],
+        "region-profit-threshold": ["min_profit", 500000],
+        "region-weight-threshold": ["max_cargo", 999999999999999999],
+        "region-roi-threshold": ["min_roi", 4],
+        "region-buy-threshold": ["max_budget", 999999999999999999],
+        "security-threshold": ["min_security", "null"],
+        "route-preference": ["route_type", "secure"],
+        "include-citadels": ["include_citadels", false]
     }
 ]
 
@@ -90,7 +90,7 @@ function setCopyWording() {
     orderTypeEnd = $("#selling-type-region").val();
   }
 
-  if(orderTypeStart == "BUY") {
+  if(orderTypeStart == "buy") {
     regionHeader[1] = "Buy Order";
     regionHeader[4] = "Sell Price";
     routeHeader[1] = "Buy Order";
@@ -102,7 +102,7 @@ function setCopyWording() {
     routeHeader[4] = "Buy Price";
   }
 
-  if(orderTypeEnd == "BUY") {
+  if(orderTypeEnd == "buy") {
     regionHeader[7] = "Sell Price";
     routeHeader[7] = "Sell Price";
   } else {
@@ -429,14 +429,14 @@ function createTradeHeader() {
     }
 
     if (tradingStyle == STATION_HAUL || tradingStyle == REGION_HAUL) {
-        if(orderTypeStart == "SELL") {
+        if(orderTypeStart == "sell") {
           buyingHeaderDOM.text("Buying Sell Orders from " + buyingFrom);
         } else {
           buyingHeaderDOM.text("Placing Buy Orders at " + buyingFrom);
         }
 
         var extraData = "";
-        if(orderTypeEnd == "SELL") {
+        if(orderTypeEnd == "sell") {
           extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
@@ -652,16 +652,16 @@ function createDataTable() {
 function isDefaultInput(trade, ele) {
     var element = $("#" + ele);
     if (element.is(":checkbox")) {
-        if (element.is(":checked") != defaultValues[trade][ele]) {
+        if (element.is(":checked") != defaultValues[trade][ele][1]) {
             return "Y";
         }
     } else {
         if (isNaN(element.val())) {
-            if (element.val() !== defaultValues[trade][ele]) {
+            if (element.val() !== defaultValues[trade][ele][1]) {
                 return element.val();
             }
         } else {
-            if (parseFloat(element.val()) !== defaultValues[trade][ele]) {
+            if (parseFloat(element.val()) !== defaultValues[trade][ele][1]) {
                 return element.val();
             }
         }
@@ -698,7 +698,7 @@ function createBookmarks() {
         }
 
         for (var key in defaultValues[tradingStyle]) {
-            bookmarkURL += "&" + key + "=" + isDefaultInput(tradingStyle, key);
+            bookmarkURL += "&" + defaultValues[tradingStyle][key][0] + "=" + isDefaultInput(tradingStyle, key);
         };
 
         history.pushState({}, document.title, encodeURI(bookmarkURL));
@@ -713,7 +713,7 @@ function setDefaultInput(trade, ele, value) {
     var element = $("#" + ele);
     if (value != "") {
         if (element.is(":checkbox")) {
-            element.prop("checked", !defaultValues[trade][ele]);
+            element.prop("checked", !defaultValues[trade][ele][1]);
         } else if (element.is("select")) {
             $("#" + ele + " option[value=\"" + value + "\"]").prop('selected', true);
         } else {
@@ -721,9 +721,9 @@ function setDefaultInput(trade, ele, value) {
         }
     } else {
         if (element.is(":checkbox")) {
-            element.prop("checked", defaultValues[trade][ele]);
+            element.prop("checked", defaultValues[trade][ele][1]);
         } else if (element.is("select")) {
-            $("#" + ele + " option[value=\"" + defaultValues[trade][ele] + "\"]").prop('selected', true);
+            $("#" + ele + " option[value=\"" + defaultValues[trade][ele][1] + "\"]").prop('selected', true);
         } else {
             element.val("");
         }
@@ -748,7 +748,7 @@ function setupBookmark(urlParams) {
                 }, 1000);
 
                 for (var key in defaultValues[STATION_HAUL]) {
-                    setDefaultInput(STATION_HAUL, key, urlParams.get(key));
+                    setDefaultInput(STATION_HAUL, key, urlParams.get(defaultValues[STATION_HAUL][key][0]));
                 };
                 break;
             case REGION_HAUL:
@@ -762,7 +762,7 @@ function setupBookmark(urlParams) {
                 }, 1000);
 
                 for (var key in defaultValues[REGION_HAUL]) {
-                    setDefaultInput(REGION_HAUL, key, urlParams.get(key));
+                    setDefaultInput(REGION_HAUL, key, urlParams.get(defaultValues[REGION_HAUL][key][0]));
                 };
                 break;
             case STATION_TRADE:
@@ -775,7 +775,7 @@ function setupBookmark(urlParams) {
                 }, 1000);
 
                 for (var key in defaultValues[STATION_TRADE]) {
-                    setDefaultInput(STATION_TRADE, key, urlParams.get(key));
+                    setDefaultInput(STATION_TRADE, key, urlParams.get(defaultValues[STATION_TRADE][key][0]));
                 };
         }
     }
