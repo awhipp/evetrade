@@ -702,12 +702,7 @@ function createBookmarks() {
 
         history.pushState({}, document.title, encodeURI(bookmarkURL));
 
-        if (!$("#bookmark_clear").is(":checked")) {
-            $("#bookmark").show();
-            setTimeout(function() {
-                $("#bookmark").slideToggle();
-            }, 20000);
-        }
+        $("#bookmark").show();
 }
 
 /**
