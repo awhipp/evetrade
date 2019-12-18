@@ -673,10 +673,9 @@ function isDefaultInput(trade, ele) {
 * Change the URL to be able to bookmark the search based on the trading style that is being queried
 */
 function createBookmarks() {
-        var bookmarkURL = window.location.pathname + "?trade=" + tradingStyle;
-
         switch (tradingStyle) {
             case STATION_HAUL:
+                bookmarkURL = window.location.pathname + "?trade=s2s";
                 bookmarkURL += "&start=";
                 startLocations.forEach(function(startLocation) {
                     bookmarkURL += startLocation + ",";
@@ -689,10 +688,12 @@ function createBookmarks() {
                 bookmarkURL = bookmarkURL.slice(0, -1);
                 break;
             case REGION_HAUL:
+                bookmarkURL = window.location.pathname + "?trade=r2r";
                 bookmarkURL += "&start=" + startLocations;
                 bookmarkURL += "&end=" + endLocations ;
                 break;
             case STATION_TRADE:
+                bookmarkURL = window.location.pathname + "?trade=sst";
                 bookmarkURL += "&start=" + startLocations;
         }
 
