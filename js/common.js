@@ -50,6 +50,14 @@ $.getJSON("http://sde.zzeve.com/staStations.json", function(data) {
 });
 
 /**
+* External JSON for updated stations information
+*/
+var region_ids;
+$.getJSON("http://sde.zzeve.com/mapRegions.json", function(data) {
+    region_ids = data;
+});
+
+/**
 * Sets up the wording on the screen based on the order types selected
 */
 function setCopyWording() {
