@@ -43,31 +43,32 @@ var spamItems = [
 
 /**
  * Defaults values and parameters of forms inputs by trade style
+ * + Predefined values taxes
  */
 var defaultValues = [
+    // Station trading
     {
         "station_sales_tax": ["sales_tax", 5],
-        "station_sales_tax_in": ["sales_tax_other", 5],
         "broker_fee": ["broker_fee", 5],
         "lower-margin-threshold": ["min_margin", 20],
         "upper-margin-threshold": ["max_margin", 40],
         "volume-threshold": ["min_volume", 1000]
     },
+    // Station haul
     {
         "buying-type-station": ["buy_type", "sell"],
         "selling-type-station": ["sell_type", "buy"],
         "route_sales_tax": ["sales_tax", 5],
-        "route_sales_tax_in": ["sales_tax_other", 5],
         "profit-threshold": ["min_profit", 500000],
         "weight-threshold": ["max_cargo", 999999999999999999],
         "roi-threshold": ["min_roi", 4],
         "buy-threshold": ["max_budget", 999999999999999999]
     },
+    // Region haul
     {
         "buying-type-region": ["buy_type", "sell"],
         "selling-type-region": ["sell_type", "buy"],
         "region_sales_tax": ["sales_tax", 5],
-        "region_sales_tax_in": ["sales_tax_other", 5],
         "region-profit-threshold": ["min_profit", 500000],
         "region-weight-threshold": ["max_cargo", 999999999999999999],
         "region-roi-threshold": ["min_roi", 4],
@@ -75,7 +76,9 @@ var defaultValues = [
         "security-threshold": ["min_security", "null"],
         "route-preference": ["route_type", "secure"],
         "include-citadels": ["include_citadels", false]
-    }
+    },
+    // Taxes
+    [5, 4.45, 3.9, 3.35, 2.8, 2.25]
 ]
 
 /**
@@ -711,6 +714,10 @@ function createBookmarks() {
         }
 
         for (var key in tradeDefaultValues) {
+            if(key.includes("sales_tax") & $("#" + key).val() === "other") {
+                bookmarkURL += "&" + tradeDefaultValues[key][0] + "=" + $("#" + key + "_in").val();
+                continue;
+            }
             bookmarkURL += "&" + tradeDefaultValues[key][0] + "=" + isDefaultInput(tradeDefaultValues, key);
         };
 
@@ -785,7 +792,17 @@ function setupBookmark(urlParams) {
         }
 
         for (var key in tradeDefaultValues) {
-            setDefaultInput(tradeDefaultValues, key, urlParams.get(tradeDefaultValues[key][0]));
+            var paramValue = urlParams.get(tradeDefaultValues[key][0]);
+            if(key.includes("sales_tax")) {
+                if (!isNaN(parseFloat(paramValue))){
+                    if (defaultValues[3].indexOf(parseFloat(paramValue)) == -1) {
+                        $("#" + key + " option[value=\"other\"]").prop('selected', true);
+                        $("#" + key + "_in").val(paramValue);
+                        continue;
+                    }
+                }
+            }
+            setDefaultInput(tradeDefaultValues, key, paramValue);
         };
     }
 }
