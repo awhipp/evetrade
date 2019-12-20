@@ -117,7 +117,7 @@ $( document ).ready(function() {
     //window.history.replaceState(null, null, window.location.pathname);
     
     ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
-        if ($(id).val() === "Other") {
+        if ($(id).val() === "other") {
             $(id + "_in").show();
         }
     });
@@ -509,7 +509,7 @@ function onClickListeners() {
 
     ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
         $(id).on('change', function() {
-            if ($(id).val() === "Other") {
+            if ($(id).val() === "other") {
                 $(id + "_in").show();
             } else {
                 $(id + "_in").hide();
@@ -853,7 +853,7 @@ function init(style){
     tradingStyle = style;
     try {
         if(tradingStyle == STATION_TRADE){
-            if ($("#station_sales_tax").val() === "Other") {
+            if ($("#station_sales_tax").val() === "other") {
                 sales_tax = setDefaultVal($("#station_sales_tax_in").val(), 5);
             } else {
                 sales_tax = setDefaultVal($("#station_sales_tax").val(), 5);
@@ -864,7 +864,7 @@ function init(style){
             volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);
             setStationTradingLocations();
         } else if (tradingStyle == STATION_HAUL) {
-            if ($("#route_sales_tax").val() === "Other") {
+            if ($("#route_sales_tax").val() === "other") {
                 sales_tax = setDefaultVal($("#route_sales_tax_in").val(), 5);
             } else {
                 sales_tax = setDefaultVal($("#route_sales_tax").val(), 5);
@@ -875,7 +875,7 @@ function init(style){
             threshold_weight = setDefaultVal($("#weight-threshold").val(), 999999999999999999);
             setRouteStationTradingLocations();
         } else if (tradingStyle == REGION_HAUL) {
-            if ($("#region_sales_tax").val() === "Other") {
+            if ($("#region_sales_tax").val() === "other") {
                 sales_tax = setDefaultVal($("#region_sales_tax_in").val(), 5);
             } else {
                 sales_tax = setDefaultVal($("#region_sales_tax").val(), 5);
