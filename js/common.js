@@ -663,16 +663,16 @@ function setTitle() {
 function isDefaultInput(trade, ele) {
     var element = $("#" + ele);
     if (element.is(":checkbox")) {
-        if (element.is(":checked") != defaultValues[trade][ele][1]) {
+        if (element.is(":checked") != trade[ele][1]) {
             return "Y";
         }
     } else {
         if (isNaN(element.val())) {
-            if (element.val() !== defaultValues[trade][ele][1]) {
+            if (element.val() !== trade[ele][1]) {
                 return element.val();
             }
         } else {
-            if (parseFloat(element.val()) !== defaultValues[trade][ele][1]) {
+            if (parseFloat(element.val()) !== trade[ele][1]) {
                 return element.val();
             }
         }
@@ -684,6 +684,8 @@ function isDefaultInput(trade, ele) {
 * Change the URL to be able to bookmark the search based on the trading style that is being queried
 */
 function createBookmarks() {
+        var tradeDefaultValues = defaultValues[tradingStyle];
+
         switch (tradingStyle) {
             case STATION_HAUL:
                 bookmarkURL = window.location.pathname + "?trade=s2s";
@@ -708,8 +710,8 @@ function createBookmarks() {
                 bookmarkURL += "&start=" + startLocations;
         }
 
-        for (var key in defaultValues[tradingStyle]) {
-            bookmarkURL += "&" + defaultValues[tradingStyle][key][0] + "=" + isDefaultInput(tradingStyle, key);
+        for (var key in tradeDefaultValues) {
+            bookmarkURL += "&" + tradeDefaultValues[key][0] + "=" + isDefaultInput(tradeDefaultValues, key);
         };
 
         history.pushState({}, document.title, encodeURI(bookmarkURL));
@@ -724,7 +726,7 @@ function setDefaultInput(trade, ele, value) {
     var element = $("#" + ele);
     if (value != "") {
         if (element.is(":checkbox")) {
-            element.prop("checked", !defaultValues[trade][ele][1]);
+            element.prop("checked", !trade[ele][1]);
         } else if (element.is("select")) {
             $("#" + ele + " option[value=\"" + value + "\"]").prop('selected', true);
         } else {
@@ -732,9 +734,9 @@ function setDefaultInput(trade, ele, value) {
         }
     } else {
         if (element.is(":checkbox")) {
-            element.prop("checked", defaultValues[trade][ele][1]);
+            element.prop("checked", trade[ele][1]);
         } else if (element.is("select")) {
-            $("#" + ele + " option[value=\"" + defaultValues[trade][ele][1] + "\"]").prop('selected', true);
+            $("#" + ele + " option[value=\"" + trade[ele][1] + "\"]").prop('selected', true);
         } else {
             element.val("");
         }
@@ -743,6 +745,7 @@ function setDefaultInput(trade, ele, value) {
 
 function setupBookmark(urlParams) {
     if (urlParams.has("start")) {
+        var tradeDefaultValues = defaultValues[tradingStyle];
         switch (tradingStyle) {
             case STATION_HAUL:
                 // We have to wait for input element
@@ -758,9 +761,6 @@ function setupBookmark(urlParams) {
                     }
                 }, 1000);
 
-                for (var key in defaultValues[STATION_HAUL]) {
-                    setDefaultInput(STATION_HAUL, key, urlParams.get(defaultValues[STATION_HAUL][key][0]));
-                };
                 break;
             case REGION_HAUL:
                 // We have to wait for input element
@@ -772,9 +772,6 @@ function setupBookmark(urlParams) {
                     }
                 }, 1000);
 
-                for (var key in defaultValues[REGION_HAUL]) {
-                    setDefaultInput(REGION_HAUL, key, urlParams.get(defaultValues[REGION_HAUL][key][0]));
-                };
                 break;
             case STATION_TRADE:
                 // We have to wait for input element
@@ -785,9 +782,10 @@ function setupBookmark(urlParams) {
                     }
                 }, 1000);
 
-                for (var key in defaultValues[STATION_TRADE]) {
-                    setDefaultInput(STATION_TRADE, key, urlParams.get(defaultValues[STATION_TRADE][key][0]));
-                };
         }
+
+        for (var key in tradeDefaultValues) {
+            setDefaultInput(tradeDefaultValues, key, urlParams.get(tradeDefaultValues[key][0]));
+        };
     }
 }
