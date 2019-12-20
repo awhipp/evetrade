@@ -193,7 +193,7 @@ function setupCustomDropdown() {
 
             for (var i = 0; i < station_ids.length; i++) {
 
-                var stationName = station_ids[i][2];
+                var stationName = station_ids[i].stationName;
 
                 // add trade hubs for easy of use
                 var tradeHubName = getTradeHubName(stationName);
@@ -201,20 +201,20 @@ function setupCustomDropdown() {
                     var lowerCaseStationName = tradeHubName.toLowerCase();
 
                     universeList[lowerCaseStationName] = {};
-                    universeList[lowerCaseStationName].region = station_ids[i][1];
-                    universeList[lowerCaseStationName].station = station_ids[i][0];
+                    universeList[lowerCaseStationName].region = station_ids[i].regionID;
+                    universeList[lowerCaseStationName].station = station_ids[i].stationID;
                     universeList[lowerCaseStationName].name = tradeHubName;
                     stationList.push(tradeHubName);
                 }
 
                 var lowerCaseStationName = stationName.toLowerCase();
                 universeList[lowerCaseStationName] = {};
-                universeList[lowerCaseStationName].region = station_ids[i][1];
-                universeList[lowerCaseStationName].station = station_ids[i][0];
+                universeList[lowerCaseStationName].region = station_ids[i].regionID;
+                universeList[lowerCaseStationName].station = station_ids[i].stationID;
                 universeList[lowerCaseStationName].name = stationName;
                 stationList.push(stationName);
 
-                stationIdToName[station_ids[i][0]] = stationName;
+                stationIdToName[station_ids[i].stationID] = stationName;
 
             }
 

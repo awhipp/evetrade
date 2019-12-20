@@ -42,6 +42,14 @@ var spamItems = [
 ];
 
 /**
+* External JSON for updated stations information
+*/
+var station_ids;
+$.getJSON("http://sde.zzeve.com/staStations.json", function(data) {
+    station_ids = data;
+});
+
+/**
 * Sets up the wording on the screen based on the order types selected
 */
 function setCopyWording() {
