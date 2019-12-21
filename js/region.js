@@ -29,7 +29,7 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = setDefaultVal($("#security-threshold").val(), "NULL");
+    this.security = setDefaultVal($("#security-threshold").val(), "null");
     this.safety = setDefaultVal($("#route-preference").val(), "shortest");
 
     this.completed = false;
@@ -230,8 +230,8 @@ Region.prototype.executeOrders = function() {
                     var buyPrice = getMarketData(this.buyOrders[startStationId][itemId], start.station, SELL_ORDER, itemId, true);
 
                     if (buyPrice.length > 0) {
-                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
-                        if(orderTypeStart=="BUY"){
+                      if(orderTypeStart != "sell" || orderTypeEnd != "buy") {
+                        if(orderTypeStart=="buy"){
                           buyPrice = [buyPrice[0]]
                         } else {
                           buyPrice = [buyPrice[buyPrice.length-1]]
@@ -254,8 +254,8 @@ Region.prototype.executeOrders = function() {
                                 if (sellOrder && sellOrder[itemId]) {
                                     var sellPrice = getMarketData(sellOrder[itemId], end.station, BUY_ORDER, itemId, true);
                                     if (sellPrice.length > 0) {
-                                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
-                                        if(orderTypeStart=="BUY"){
+                                      if(orderTypeStart != "sell" || orderTypeEnd != "buy") {
+                                        if(orderTypeStart=="buy"){
                                           sellPrice = [sellPrice[0]]
                                         } else {
                                           sellPrice = [sellPrice[sellPrice.length-1]]
@@ -653,9 +653,9 @@ Region.prototype.addRow = function(row) {
 Region.prototype.getSecurityCode = function (sec) {
     if (sec >= 0.5) {
         return "high_sec";
-    } else if (sec > 0 && (this.security == "NULL" || this.security == "LOW")) {
+    } else if (sec > 0 && (this.security == "null" || this.security == "low")) {
         return "low_sec";
-    } else if (sec <= 0 && (this.security == "NULL")) {
+    } else if (sec <= 0 && (this.security == "null")) {
         return "null_sec";
     } else {
         return -1;

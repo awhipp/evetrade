@@ -29,6 +29,8 @@ var endLocations = [];
 
 var shifted = false;
 
+var urlParams;
+
 /**
 * Once all resources are loaded we need to setup all the information
 * > onClickListeners
@@ -101,8 +103,8 @@ $( document ).ready(function() {
         'value': 1
     });
 
-    var urlParams = (new URL(window.location.href)).searchParams.get("trade");
-    switch(urlParams) {
+    urlParams = (new URL(window.location.href)).searchParams;
+    switch(urlParams.get("trade")) {
         case "sst":
             setupTradeOptions(0);
             break;
@@ -115,7 +117,7 @@ $( document ).ready(function() {
     //window.history.replaceState(null, null, window.location.pathname);
     
     ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
-        if ($(id).val() === "Other") {
+        if ($(id).val() === "other") {
             $(id + "_in").show();
         }
     });
@@ -229,15 +231,15 @@ function setupCustomDropdown() {
             }
 
             if($("#security-threshold").val() == null) {
-              $("#security-threshold").val("NULL");
+              $("#security-threshold").val("null");
             }
 
             if($("#buying-type-station").val() == null) {
-              $("#buying-type-station").val("SELL");
+              $("#buying-type-station").val("sell");
             }
 
             if($("#selling-type-station").val() == null) {
-              $("#selling-type-station").val("BUY");
+              $("#selling-type-station").val("buy");
             }
 
             stationsReady = true;
@@ -265,11 +267,11 @@ function setupCustomDropdown() {
             initCompletely("end_region", regionList);
 
             if($("#buying-type-region").val() == null) {
-              $("#buying-type-region").val("SELL");
+              $("#buying-type-region").val("sell");
             }
 
             if($("#selling-type-region").val() == null) {
-              $("#selling-type-region").val("BUY");
+              $("#selling-type-region").val("buy");
             }
 
             regionsReady = true;
@@ -499,21 +501,15 @@ function onClickListeners() {
         checkDirection();
     });
 
-    $("#sst").on('click', function(){
-        window.location = window.location.pathname + "?trade=sst";
-    });
-
-    $("#s2s").on('click', function(){
-        window.location = window.location.pathname + "?trade=s2s";
-    });
-        
-    $("#r2r").on('click', function(){
-        window.location = window.location.pathname + "?trade=r2r";
+    ["sst", "s2s", "r2r"].forEach(function(id) {
+        $("#" + id).on('click', function(){
+            window.location = window.location.pathname + "?trade=" + id;
+        });
     });
 
     ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
         $(id).on('change', function() {
-            if ($(id).val() === "Other") {
+            if ($(id).val() === "other") {
                 $(id + "_in").show();
             } else {
                 $(id + "_in").hide();
@@ -529,7 +525,7 @@ function checkDirection() {
     var regionStartType = $("#buying-type-region").val();
     var regionEndType = $("#selling-type-region").val();
 
-    if(stationStartType == "SELL" && stationEndType == "BUY") {
+    if(stationStartType == "sell" && stationEndType == "buy") {
       $("#directionWarningStation").hide();
     } else {
       $("#directionWarningStation > .startDirection").text(stationStartType);
@@ -537,7 +533,7 @@ function checkDirection() {
       $("#directionWarningStation").show();
     }
 
-    if(regionStartType == "SELL" && regionEndType == "BUY") {
+    if(regionStartType == "sell" && regionEndType == "buy") {
       $("#directionWarningRegion").hide();
     } else {
       $("#directionWarningRegion > .startDirection").text(regionStartType);
@@ -611,6 +607,8 @@ function setupTradeOptions(tradeType){
         eventLabel = "Hauler - Region";
     }
 
+    if (urlParams.has("start")) setupBookmark(urlParams);
+
     gtag('event', 'User Preference Campaign', {
         'event_category': 'Trade Style',
         'event_label': eventLabel,
@@ -642,12 +640,12 @@ function open_popup(itemId, name, fromStation, toStation){
     var buyArr = [];
     var sellArr = [];
 
-    if(orderTypeStart == "BUY") {
+    if(orderTypeStart == "buy") {
       buyArr = customSell[fromStation.station][itemId];
     } else {
       buyArr = customBuy[fromStation.station][itemId];
     }
-    if(orderTypeEnd == "BUY") {
+    if(orderTypeEnd == "buy") {
       sellArr = customSell[toStationId][itemId];
     } else {
       sellArr = customBuy[toStationId][itemId];
@@ -670,7 +668,7 @@ function open_popup(itemId, name, fromStation, toStation){
     popup_table_sell.draw();
 
 
-    if(orderTypeStart == "BUY") {
+    if(orderTypeStart == "buy") {
       $("#buyLocation").text("Buy Orders at " + fromStation.name);
       $("#popup-table-buy th:first-of-type")[0].textContent = "Buy Orders";
       $('#popup-table-buy').dataTable().fnSort( [0,'desc'] );
@@ -679,7 +677,7 @@ function open_popup(itemId, name, fromStation, toStation){
       $("#popup-table-buy th:first-of-type")[0].textContent = "Sell Orders";
       $('#popup-table-buy').dataTable().fnSort( [0,'asc'] );
     }
-    if(orderTypeEnd == "BUY") {
+    if(orderTypeEnd == "buy") {
       $("#sellLocation").text("Buy Orders at " + toStationName);
       $("#popup-table-sell th:first-of-type")[0].textContent = "Buy Orders";
       $('#popup-table-sell').dataTable().fnSort( [0,'desc'] );
@@ -855,7 +853,7 @@ function init(style){
     tradingStyle = style;
     try {
         if(tradingStyle == STATION_TRADE){
-            if ($("#station_sales_tax").val() === "Other") {
+            if ($("#station_sales_tax").val() === "other") {
                 sales_tax = setDefaultVal($("#station_sales_tax_in").val(), 5);
             } else {
                 sales_tax = setDefaultVal($("#station_sales_tax").val(), 5);
@@ -866,7 +864,7 @@ function init(style){
             volume_threshold = setDefaultVal($("#volume-threshold").val(), 1000);
             setStationTradingLocations();
         } else if (tradingStyle == STATION_HAUL) {
-            if ($("#route_sales_tax").val() === "Other") {
+            if ($("#route_sales_tax").val() === "other") {
                 sales_tax = setDefaultVal($("#route_sales_tax_in").val(), 5);
             } else {
                 sales_tax = setDefaultVal($("#route_sales_tax").val(), 5);
@@ -877,7 +875,7 @@ function init(style){
             threshold_weight = setDefaultVal($("#weight-threshold").val(), 999999999999999999);
             setRouteStationTradingLocations();
         } else if (tradingStyle == REGION_HAUL) {
-            if ($("#region_sales_tax").val() === "Other") {
+            if ($("#region_sales_tax").val() === "other") {
                 sales_tax = setDefaultVal($("#region_sales_tax_in").val(), 5);
             } else {
                 sales_tax = setDefaultVal($("#region_sales_tax").val(), 5);
@@ -888,6 +886,7 @@ function init(style){
             threshold_weight = setDefaultVal($("#region-weight-threshold").val(), 999999999999999999);
             setRouteRegionTradingLocations();
         }
+        createBookmarks();
         setCopyWording();
         setTitle();
 

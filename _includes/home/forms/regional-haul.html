@@ -46,8 +46,8 @@
                     Buying from
                   </label>
                   <select id="buying-type-region" name="buying-type-region" class="directionChange">
-                    <option value="SELL" selected>Sell Orders</option>
-                    <option value="BUY">Buy Orders</option>
+                    <option value="sell" selected>Sell Orders</option>
+                    <option value="buy">Buy Orders</option>
                   </select>
                 </p>
             </div>
@@ -57,8 +57,8 @@
                     Selling as
                   </label>
                   <select id="selling-type-region" name="selling-type-region" class="directionChange">
-                    <option value="SELL">Sell Orders</option>
-                    <option value="BUY" selected>Buy Orders</option>
+                    <option value="sell">Sell Orders</option>
+                    <option value="buy" selected>Buy Orders</option>
                   </select>
                 </p>
             </div>
@@ -85,7 +85,7 @@
                   <option value="3.35">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.35%</option>
                   <option value="2.8">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.80%</option>
                   <option value="2.25">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.25%</option>
-                  <option value="Other">Other</option>
+                  <option value="other">Other</option>
                 </select>
                 <input type="number" id="region_sales_tax_in" name="region_sales_tax_in" class="form-control my-1" placeholder="Default: 5" style="display:none" step="0.05" min="0" max="5"/>
             </div>
@@ -169,9 +169,9 @@
                       id="security-threshold"
                       name="security-threshold"
                       class="minor-text form-control">
-                        <option value="NULL" selected>No Filter</option>
-                        <option value="LOW">Only Low or High Sec</option>
-                        <option value="HIGH">Only High Sec</option>
+                        <option value="null" selected>No Filter</option>
+                        <option value="low">Only Low or High Sec</option>
+                        <option value="high">Only High Sec</option>
                     </select>
             </div>
             <div class="col-sm-4 col-xs-12">

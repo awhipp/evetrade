@@ -23,8 +23,8 @@ var page = 1;
 var iteration = 1;
 var rowAdded = false;
 
-var orderTypeStart = "SELL";
-var orderTypeEnd = "BUY";
+var orderTypeStart = "sell";
+var orderTypeEnd = "buy";
 
 var regionHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
 var routeHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
@@ -42,6 +42,46 @@ var spamItems = [
 ];
 
 /**
+ * Defaults values and parameters of forms inputs by trade style
+ * + Predefined values taxes
+ */
+var defaultValues = [
+    // Station trading
+    {
+        "station_sales_tax": ["sales_tax", 5],
+        "broker_fee": ["broker_fee", 5],
+        "lower-margin-threshold": ["min_margin", 20],
+        "upper-margin-threshold": ["max_margin", 40],
+        "volume-threshold": ["min_volume", 1000]
+    },
+    // Station haul
+    {
+        "buying-type-station": ["buy_type", "sell"],
+        "selling-type-station": ["sell_type", "buy"],
+        "route_sales_tax": ["sales_tax", 5],
+        "profit-threshold": ["min_profit", 500000],
+        "weight-threshold": ["max_cargo", 999999999999999999],
+        "roi-threshold": ["min_roi", 4],
+        "buy-threshold": ["max_budget", 999999999999999999]
+    },
+    // Region haul
+    {
+        "buying-type-region": ["buy_type", "sell"],
+        "selling-type-region": ["sell_type", "buy"],
+        "region_sales_tax": ["sales_tax", 5],
+        "region-profit-threshold": ["min_profit", 500000],
+        "region-weight-threshold": ["max_cargo", 999999999999999999],
+        "region-roi-threshold": ["min_roi", 4],
+        "region-buy-threshold": ["max_budget", 999999999999999999],
+        "security-threshold": ["min_security", "null"],
+        "route-preference": ["route_type", "secure"],
+        "include-citadels": ["include_citadels", false]
+    },
+    // Taxes
+    [5, 4.45, 3.9, 3.35, 2.8, 2.25]
+]
+
+/**
 * Sets up the wording on the screen based on the order types selected
 */
 function setCopyWording() {
@@ -53,7 +93,7 @@ function setCopyWording() {
     orderTypeEnd = $("#selling-type-region").val();
   }
 
-  if(orderTypeStart == "BUY") {
+  if(orderTypeStart == "buy") {
     regionHeader[1] = "Buy Order";
     regionHeader[4] = "Sell Price";
     routeHeader[1] = "Buy Order";
@@ -65,7 +105,7 @@ function setCopyWording() {
     routeHeader[4] = "Buy Price";
   }
 
-  if(orderTypeEnd == "BUY") {
+  if(orderTypeEnd == "buy") {
     regionHeader[7] = "Sell Price";
     routeHeader[7] = "Sell Price";
   } else {
@@ -392,14 +432,14 @@ function createTradeHeader() {
     }
 
     if (tradingStyle == STATION_HAUL || tradingStyle == REGION_HAUL) {
-        if(orderTypeStart == "SELL") {
+        if(orderTypeStart == "sell") {
           buyingHeaderDOM.text("Buying Sell Orders from " + buyingFrom);
         } else {
           buyingHeaderDOM.text("Placing Buy Orders at " + buyingFrom);
         }
 
         var extraData = "";
-        if(orderTypeEnd == "SELL") {
+        if(orderTypeEnd == "sell") {
           extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
@@ -618,4 +658,151 @@ function setTitle() {
         trade = startLocations + " => " + endLocations;
     }
     document.title = trade + " | " + document.title
+}
+
+/**
+* Given a selector it will return empty string if default otherwise the value
+*/
+function isDefaultInput(trade, ele) {
+    var element = $("#" + ele);
+    if (element.is(":checkbox")) {
+        if (element.is(":checked") != trade[ele][1]) {
+            return "Y";
+        }
+    } else {
+        if (isNaN(element.val())) {
+            if (element.val() !== trade[ele][1]) {
+                return element.val();
+            }
+        } else {
+            if (parseFloat(element.val()) !== trade[ele][1]) {
+                return element.val();
+            }
+        }
+    }
+    return "";
+}
+
+/**
+* Change the URL to be able to bookmark the search based on the trading style that is being queried
+*/
+function createBookmarks() {
+        var tradeDefaultValues = defaultValues[tradingStyle];
+
+        switch (tradingStyle) {
+            case STATION_HAUL:
+                bookmarkURL = window.location.pathname + "?trade=s2s";
+                bookmarkURL += "&start=";
+                startLocations.forEach(function(startLocation) {
+                    bookmarkURL += startLocation + ",";
+                });
+                bookmarkURL = bookmarkURL.slice(0, -1);
+                bookmarkURL += "&end=";
+                endLocations.forEach(function(endLocation) {
+                    bookmarkURL += endLocation + ",";
+                });
+                bookmarkURL = bookmarkURL.slice(0, -1);
+                break;
+            case REGION_HAUL:
+                bookmarkURL = window.location.pathname + "?trade=r2r";
+                bookmarkURL += "&start=" + startLocations;
+                bookmarkURL += "&end=" + endLocations ;
+                break;
+            case STATION_TRADE:
+                bookmarkURL = window.location.pathname + "?trade=sst";
+                bookmarkURL += "&start=" + startLocations;
+        }
+
+        for (var key in tradeDefaultValues) {
+            if(key.includes("sales_tax") & $("#" + key).val() === "other") {
+                bookmarkURL += "&" + tradeDefaultValues[key][0] + "=" + $("#" + key + "_in").val();
+                continue;
+            }
+            bookmarkURL += "&" + tradeDefaultValues[key][0] + "=" + isDefaultInput(tradeDefaultValues, key);
+        };
+
+        history.pushState({}, document.title, encodeURI(bookmarkURL));
+
+        $("#bookmark").show();
+}
+
+/**
+* Given a selector it will set it if not default
+*/
+function setDefaultInput(trade, ele, value) {
+    var element = $("#" + ele);
+    if (value != "") {
+        if (element.is(":checkbox")) {
+            element.prop("checked", !trade[ele][1]);
+        } else if (element.is("select")) {
+            $("#" + ele + " option[value=\"" + value + "\"]").prop('selected', true);
+        } else {
+            element.val(value);
+        }
+    } else {
+        if (element.is(":checkbox")) {
+            element.prop("checked", trade[ele][1]);
+        } else if (element.is("select")) {
+            $("#" + ele + " option[value=\"" + trade[ele][1] + "\"]").prop('selected', true);
+        } else {
+            element.val("");
+        }
+    }
+}
+
+function setupBookmark(urlParams) {
+    if (urlParams.has("start")) {
+        var tradeDefaultValues = defaultValues[tradingStyle];
+        switch (tradingStyle) {
+            case STATION_HAUL:
+                // We have to wait for input element
+                var waitForInputStation = setInterval(function () {
+                    if ($("#start_station input").length) {
+                        clearInterval(waitForInputStation);
+                        urlParams.get("start").split(',').forEach(function(item) {
+                            addStart(item);
+                        });
+                        urlParams.get("end").split(',').forEach(function(item) {
+                            addEnd(item);
+                        });
+                    }
+                }, 1000);
+
+                break;
+            case REGION_HAUL:
+                // We have to wait for input element
+                var waitForInputRegion = setInterval(function () {
+                    if ($("#start_region input").length) {
+                        clearInterval(waitForInputRegion);
+                        addStart(urlParams.get("start"));
+                        addEnd(urlParams.get("end"))
+                    }
+                }, 1000);
+
+                break;
+            case STATION_TRADE:
+                // We have to wait for input element
+                var waitForInputTrade = setInterval(function () {
+                    if ($("#custom_station input").length) {
+                        clearInterval(waitForInputTrade);
+                        addStart(urlParams.get("start"));
+                    }
+                }, 1000);
+
+        }
+
+        for (var key in tradeDefaultValues) {
+            var paramValue = urlParams.get(tradeDefaultValues[key][0]);
+            if(key.includes("sales_tax")) {
+                if (!isNaN(parseFloat(paramValue))){
+                    if (defaultValues[3].indexOf(parseFloat(paramValue)) == -1) {
+                        $("#" + key + " option[value=\"other\"]").prop('selected', true);
+                        $("#" + key + "_in").val(paramValue);
+                        continue;
+                    }
+                }
+            }
+            setDefaultInput(tradeDefaultValues, key, paramValue);
+        };
+    }
 }

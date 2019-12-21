@@ -44,7 +44,7 @@ Route.prototype.startRoute = function() {
     var stationId = parseInt(this.startLocation.station);
 
     for(page = 1; page <= PAGE_MULTIPLE; page++){
-        if (orderTypeStart == "SELL") {
+        if (orderTypeStart == "sell") {
           this.getSellOrders(regionId, stationId, page, this.buyOrders);
         } else {
           this.getBuyOrders(regionId, stationId, page, this.buyOrders);
@@ -63,7 +63,7 @@ Route.prototype.startRoute = function() {
             stationId = parseInt(this.endLocations[i].station);
 
             for(page = 1; page <= PAGE_MULTIPLE; page++){
-                if (orderTypeEnd == "BUY") {
+                if (orderTypeEnd == "buy") {
                   this.getBuyOrders(regionId, stationId, page, this.sellOrders[rI]);
                 } else {
                   this.getSellOrders(regionId, stationId, page, this.sellOrders[rI]);
@@ -334,11 +334,11 @@ Route.prototype.calculate = function() {
  */
 Route.prototype.calculateNext = function(itemId) {
 
-    var buyPrice = getMarketData(this.buyOrders[itemId], this.startLocation.station, (orderTypeStart == "BUY" ? BUY_ORDER : SELL_ORDER), itemId, true);
+    var buyPrice = getMarketData(this.buyOrders[itemId], this.startLocation.station, (orderTypeStart == "buy" ? BUY_ORDER : SELL_ORDER), itemId, true);
 
     if (buyPrice.length > 0) {
-        if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
-          if(orderTypeStart=="BUY"){
+        if(orderTypeStart != "sell" || orderTypeEnd != "buy") {
+          if(orderTypeStart=="buy"){
             buyPrice = [buyPrice[0]]
           } else {
             buyPrice = [buyPrice[buyPrice.length-1]]
@@ -353,10 +353,10 @@ Route.prototype.calculateNext = function(itemId) {
                 var endLocation = this.endLocations[i];
 
                 if (sellOrder[itemId]) {
-                    var sellPrice = getMarketData(sellOrder[itemId], endLocation.station, (orderTypeEnd == "BUY" ? BUY_ORDER : SELL_ORDER), itemId, true);
+                    var sellPrice = getMarketData(sellOrder[itemId], endLocation.station, (orderTypeEnd == "buy" ? BUY_ORDER : SELL_ORDER), itemId, true);
                     if (sellPrice.length > 0) {
-                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
-                        if(orderTypeStart=="BUY"){
+                      if(orderTypeStart != "sell" || orderTypeEnd != "buy") {
+                        if(orderTypeStart=="buy"){
                           sellPrice = [sellPrice[0]]
                         } else {
                           sellPrice = [sellPrice[sellPrice.length-1]]
