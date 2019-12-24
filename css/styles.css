@@ -362,7 +362,7 @@ tr > td:first-child {
 /** END DATATABLES **/
 
 /** START DIALOGUE **/
-#buyingHeader {
+#buying_header {
     font-size: 1.5em !important;
 }
   #route_trade, #station_trade, #region_trade, #buying_footer, #buying_header {

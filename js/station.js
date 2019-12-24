@@ -216,7 +216,7 @@ Station.prototype.asyncRefresh = function() {
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh_timer").remove();
-            $("#buyingFooter").append('<div id="refresh_button">' +
+            $("#buying_footer").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -242,7 +242,7 @@ Station.prototype.asyncCalculate = function() {
     this.asyncCalculator = setInterval(function(){
         if(!thiz.filtered){
             thiz.filtered = true;
-            $("#buyingFooter").append("<div id='filtering-data'>Filtering Results. Please wait.</br>If it takes too long try a smaller margin range.</div>");
+            $("#buying_footer").append("<div id='filtering-data'>Filtering Results. Please wait.</br>If it takes too long try a smaller margin range.</div>");
             thiz.asyncFiltering();
         }
 
@@ -261,7 +261,7 @@ Station.prototype.asyncCalculate = function() {
                 $(".loading").hide();
             }
 
-            $("#buyingFooter").append('<div id="refresh_timer"></div>');
+            $("#buying_footer").append('<div id="refresh_timer"></div>');
 
             thiz.asyncRefresh();
         }

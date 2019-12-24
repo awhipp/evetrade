@@ -304,7 +304,7 @@ Region.prototype.executeRoutes = function() {
 
             $(".tableLoadingIcon").hide();
 
-            $("#buyingFooter").append('<div id="refresh_timer"></div>');
+            $("#buying_footer").append('<div id="refresh_timer"></div>');
 
             thiz.asyncRefresh();
         }
@@ -360,7 +360,7 @@ Region.prototype.asyncRefresh = function() {
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh_timer").remove();
-            $("#buyingFooter").append('<div id="refresh_button">' +
+            $("#buying_footer").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {

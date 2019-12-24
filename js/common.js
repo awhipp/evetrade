@@ -408,8 +408,8 @@ function createTradeHeader() {
     var buyingFooter = "";
     var buyingFrom = "";
     var sellingTo = "";
-    var buyingHeaderDOM = $("#buyingHeader");
-    var buyingFooterDOM = $("#buyingFooter");
+    var buyingHeaderDOM = $("#buying_header");
+    var buyingFooterDOM = $("#buying_footer");
     var coreDOM = $("#core");
 
     if (tradingStyle == STATION_HAUL) {

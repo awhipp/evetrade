@@ -272,7 +272,7 @@ Route.prototype.asyncRefresh = function() {
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh_timer").remove();
-            $("#buyingFooter").append('<div id="refresh_button">' +
+            $("#buying_footer").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -299,7 +299,7 @@ Route.prototype.asyncProgress = function() {
         if (totalProgress == 100) {
             clearInterval(thiz.asyncProgressUpdate);
 
-            $("#buyingFooter").append('<div id="refresh_timer"></div>');
+            $("#buying_footer").append('<div id="refresh_timer"></div>');
 
             $(".tableLoadingIcon").hide();
 
