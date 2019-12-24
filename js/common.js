@@ -50,32 +50,32 @@ var defaultValues = [
     {
         "station_sales_tax": ["sales_tax", 5],
         "broker_fee": ["broker_fee", 5],
-        "lower-margin-threshold": ["min_margin", 20],
-        "upper-margin-threshold": ["max_margin", 40],
-        "volume-threshold": ["min_volume", 1000]
+        "lower_margin_threshold": ["min_margin", 20],
+        "upper_margin_threshold": ["max_margin", 40],
+        "volume_threshold": ["min_volume", 1000]
     },
     // Station haul
     {
-        "buying-type-station": ["buy_type", "sell"],
-        "selling-type-station": ["sell_type", "buy"],
+        "buying_type_station": ["buy_type", "sell"],
+        "selling_type_station": ["sell_type", "buy"],
         "route_sales_tax": ["sales_tax", 5],
-        "profit-threshold": ["min_profit", 500000],
-        "weight-threshold": ["max_cargo", 999999999999999999],
-        "roi-threshold": ["min_roi", 4],
-        "buy-threshold": ["max_budget", 999999999999999999]
+        "profit_threshold": ["min_profit", 500000],
+        "weight_threshold": ["max_cargo", 999999999999999999],
+        "roi_threshold": ["min_roi", 4],
+        "buy_threshold": ["max_budget", 999999999999999999]
     },
     // Region haul
     {
-        "buying-type-region": ["buy_type", "sell"],
-        "selling-type-region": ["sell_type", "buy"],
+        "buying_type_region": ["buy_type", "sell"],
+        "selling_type_region": ["sell_type", "buy"],
         "region_sales_tax": ["sales_tax", 5],
-        "region-profit-threshold": ["min_profit", 500000],
-        "region-weight-threshold": ["max_cargo", 999999999999999999],
-        "region-roi-threshold": ["min_roi", 4],
-        "region-buy-threshold": ["max_budget", 999999999999999999],
-        "security-threshold": ["min_security", "null"],
-        "route-preference": ["route_type", "secure"],
-        "include-citadels": ["include_citadels", false]
+        "region_profit_threshold": ["min_profit", 500000],
+        "region_weight_threshold": ["max_cargo", 999999999999999999],
+        "region_roi_threshold": ["min_roi", 4],
+        "region_buy_threshold": ["max_budget", 999999999999999999],
+        "security_threshold": ["min_security", "null"],
+        "route_preference": ["route_type", "secure"],
+        "include_citadels": ["include_citadels", false]
     },
     // Taxes
     [5, 4.45, 3.9, 3.35, 2.8, 2.25]
@@ -86,11 +86,11 @@ var defaultValues = [
 */
 function setCopyWording() {
   if (tradingStyle == STATION_HAUL) {
-    orderTypeStart = $("#buying-type-station").val();
-    orderTypeEnd = $("#selling-type-station").val();
+    orderTypeStart = $("#buying_type_station").val();
+    orderTypeEnd = $("#selling_type_station").val();
   } else if (tradingStyle == REGION_HAUL) {
-    orderTypeStart = $("#buying-type-region").val();
-    orderTypeEnd = $("#selling-type-region").val();
+    orderTypeStart = $("#buying_type_region").val();
+    orderTypeEnd = $("#selling_type_region").val();
   }
 
   if(orderTypeStart == "buy") {
@@ -450,7 +450,7 @@ function createTradeHeader() {
         }
         if (tradingStyle == REGION_HAUL) {
             extraData += "<span id='citadelsLine'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
-            extraData += "<br>Only showing system security status of " + $("#security-threshold").val() + " SEC or better.";
+            extraData += "<br>Only showing system security status of " + $("#security_threshold").val() + " SEC or better.";
         }
 
         if(threshold_cost !== 999999999999999999){

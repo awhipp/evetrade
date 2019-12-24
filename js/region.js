@@ -29,12 +29,12 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = setDefaultVal($("#security-threshold").val(), "null");
-    this.safety = setDefaultVal($("#route-preference").val(), "shortest");
+    this.security = setDefaultVal($("#security_threshold").val(), "null");
+    this.safety = setDefaultVal($("#route_preference").val(), "shortest");
 
     this.completed = false;
 
-    this.includeCitadels = $("#include-citadels").is(":checked");
+    this.includeCitadels = $("#include_citadels").is(":checked");
 
     if(!this.includeCitadels) {
         $("#citadelsLine").hide();
