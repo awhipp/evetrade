@@ -323,14 +323,14 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
     buyPrice = bestBuyPrice;
     sellPrice = bestSellPrice;
 
-    var itemSellTax = sellPrice * sales_tax / 100;
-    var itemBuyFee = buyPrice * broker_fee / 100;
-    var itemSellFee = sellPrice * broker_fee / 100;
+    var itemSellTax = sellPrice * salesTax / 100;
+    var itemBuyFee = buyPrice * brokerFee / 100;
+    var itemSellFee = sellPrice * brokerFee / 100;
     var grossMargin = sellPrice - buyPrice;
     var itemProfit = grossMargin - itemSellTax - itemBuyFee - itemSellFee;
     var itemMargin = itemProfit / buyPrice;
 
-    if(itemMargin*100 >= threshold_margin_lower && itemMargin*100 <= threshold_margin_upper && itemProfit > 1000){
+    if(itemMargin*100 >= thresholdMarginLower && itemMargin*100 <= thresholdMarginUpper && itemProfit > 1000){
         row.buyPrice = buyPrice;
         row.sellPrice = sellPrice;
         row.itemId = itemId;
@@ -400,7 +400,7 @@ Station.prototype.getItemVolume = function(itemId, row){
                 row.volume14 = parseInt(row.volume14 / 14);
                 row.volume30 = parseInt(row.volume30 / 30);
 
-                if(row.volume14 >= volume_threshold){
+                if(row.volume14 >= thresholdVolume){
                     thiz.getItemWeight(itemId, row);
                 }else{
                     executingCount--;

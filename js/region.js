@@ -402,7 +402,7 @@ Region.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, start, end)
 */
 Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, start, end){
     if(buyPrice < sellPrice && sellPrice > 0){
-        var itemSellTax = sellPrice * sales_tax / 100;
+        var itemSellTax = sellPrice * salesTax / 100;
         var itemProfit = sellPrice - itemSellTax - buyPrice;
 
         if(itemProfit > 0){
@@ -422,7 +422,7 @@ Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice,
 
             var iskRatio = itemProfit / buyPrice;
 
-            if(netProfit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && netCosts <= threshold_cost ){
+            if(netProfit >= thresholdProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= thresholdRoi && netCosts <= thresholdCost ){
                 return [itemId, start, volume, buyPrice, netCosts, end, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio];
             }else{
                 return [];
@@ -634,7 +634,7 @@ Region.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
 
-    if(storageVolume > threshold_weight) {
+    if(storageVolume > thresholdWeight) {
         return;
     }
 

@@ -1,12 +1,12 @@
-var threshold_margin_lower;
-var threshold_margin_upper;
-var volume_threshold;
-var threshold_profit;
-var threshold_roi;
-var threshold_cost;
-var threshold_weight;
-var sales_tax;
-var broker_fee;
+var thresholdMarginLower;
+var thresholdMarginUpper;
+var thresholdVolume;
+var thresholdProfit;
+var thresholdRoi;
+var thresholdCost;
+var thresholdWeight;
+var salesTax;
+var brokerFee;
 
 var tradingStyle = null;
 var errorShown = false;
@@ -16,8 +16,8 @@ var addedToEndList = [];
 var stationsReady = false;
 var regionsReady = false;
 
-var popup_table_buy;
-var popup_table_sell;
+var popupTableBuy;
+var popupTableSell;
 
 var universeList = {};
 var stationIdToName = {};
@@ -38,12 +38,12 @@ var urlParams;
 * > Setup the about, cookies, and custom station dropdowns
 */
 $( document ).ready(function() {
-    popup_table_buy = $("#popup_table_buy").DataTable({
+    popupTableBuy = $("#popup_table_buy").DataTable({
         "order": [[ 0, "asc" ]],
         "lengthMenu": [[10], ["10"]]
     });
 
-    popup_table_sell = $("#popup_table_sell").DataTable({
+    popupTableSell = $("#popup_table_sell").DataTable({
         "order": [[ 0, "desc" ]],
         "lengthMenu": [[10], ["10"]]
     });
@@ -284,12 +284,12 @@ function setupCustomDropdown() {
             clearInterval(pageReadyInterval);
 
             $(function () {
-                var tabindex = 1;
+                var tabIndex = 1;
                 $('input').each(function () {
                     if (this.type != "hidden") {
                         var $input = $(this);
-                        $input.attr("tabindex", tabindex);
-                        tabindex++;
+                        $input.attr("tabindex", tabIndex);
+                        tabIndex++;
                     }
                 });
             });
@@ -629,8 +629,8 @@ function open_popup(itemId, name, fromStation, toStation){
         }
     }
 
-    popup_table_buy.clear();
-    popup_table_sell.clear();
+    popupTableBuy.clear();
+    popupTableSell.clear();
 
     var toStationName = getStationName(toStation) || toStation.name;
     var toStationId = toStation.station || toStation;
@@ -664,8 +664,8 @@ function open_popup(itemId, name, fromStation, toStation){
     }
 
     $('#popup').modal('show');
-    popup_table_buy.draw();
-    popup_table_sell.draw();
+    popupTableBuy.draw();
+    popupTableSell.draw();
 
 
     if(orderTypeStart == "buy") {
@@ -854,36 +854,36 @@ function init(style){
     try {
         if(tradingStyle == STATION_TRADE){
             if ($("#station_sales_tax").val() === "other") {
-                sales_tax = setDefaultVal($("#station_sales_tax_in").val(), 5);
+                salesTax = setDefaultVal($("#station_sales_tax_in").val(), 5);
             } else {
-                sales_tax = setDefaultVal($("#station_sales_tax").val(), 5);
+                salesTax = setDefaultVal($("#station_sales_tax").val(), 5);
             }
-            broker_fee = setDefaultVal($("#broker_fee").val(), 5);
-            threshold_margin_lower = setDefaultVal($("#lower_margin_threshold").val(), 20);
-            threshold_margin_upper = setDefaultVal($("#upper_margin_threshold").val(), 40);
-            volume_threshold = setDefaultVal($("#volume_threshold").val(), 1000);
+            brokerFee = setDefaultVal($("#broker_fee").val(), 5);
+            thresholdMarginLower = setDefaultVal($("#lower_margin_threshold").val(), 20);
+            thresholdMarginUpper = setDefaultVal($("#upper_margin_threshold").val(), 40);
+            thresholdVolume = setDefaultVal($("#volume_threshold").val(), 1000);
             setStationTradingLocations();
         } else if (tradingStyle == STATION_HAUL) {
             if ($("#route_sales_tax").val() === "other") {
-                sales_tax = setDefaultVal($("#route_sales_tax_in").val(), 5);
+                salesTax = setDefaultVal($("#route_sales_tax_in").val(), 5);
             } else {
-                sales_tax = setDefaultVal($("#route_sales_tax").val(), 5);
+                salesTax = setDefaultVal($("#route_sales_tax").val(), 5);
             }
-            threshold_profit = setDefaultVal($("#profit_threshold").val(), 500000);
-            threshold_roi = setDefaultVal($("#roi_threshold").val(), 4);
-            threshold_cost = setDefaultVal($("#buy_threshold").val(), 999999999999999999);
-            threshold_weight = setDefaultVal($("#weight_threshold").val(), 999999999999999999);
+            thresholdProfit = setDefaultVal($("#profit_threshold").val(), 500000);
+            thresholdRoi = setDefaultVal($("#roi_threshold").val(), 4);
+            thresholdCost = setDefaultVal($("#buy_threshold").val(), 999999999999999999);
+            thresholdWeight = setDefaultVal($("#weight_threshold").val(), 999999999999999999);
             setRouteStationTradingLocations();
         } else if (tradingStyle == REGION_HAUL) {
             if ($("#region_sales_tax").val() === "other") {
-                sales_tax = setDefaultVal($("#region_sales_tax_in").val(), 5);
+                salesTax = setDefaultVal($("#region_sales_tax_in").val(), 5);
             } else {
-                sales_tax = setDefaultVal($("#region_sales_tax").val(), 5);
+                salesTax = setDefaultVal($("#region_sales_tax").val(), 5);
             }
-            threshold_profit = setDefaultVal($("#region_profit_threshold").val(), 500000);
-            threshold_roi = setDefaultVal($("#region_roi_threshold").val(), 4);
-            threshold_cost = setDefaultVal($("#region_buy_threshold").val(), 999999999999999999);
-            threshold_weight = setDefaultVal($("#region_weight_threshold").val(), 999999999999999999);
+            thresholdProfit = setDefaultVal($("#region_profit_threshold").val(), 500000);
+            thresholdRoi = setDefaultVal($("#region_roi_threshold").val(), 4);
+            thresholdCost = setDefaultVal($("#region_buy_threshold").val(), 999999999999999999);
+            thresholdWeight = setDefaultVal($("#region_weight_threshold").val(), 999999999999999999);
             setRouteRegionTradingLocations();
         }
         createBookmarks();

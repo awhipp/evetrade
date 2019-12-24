@@ -440,24 +440,24 @@ function createTradeHeader() {
 
         var extraData = "";
         if(orderTypeEnd == "sell") {
-          extraData = "<div id='route_to'>Selling as Sell Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
-            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
-            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
+          extraData = "<div id='route_to'>Selling as Sell Orders at " + sellingTo + " with " + salesTax + "% tax</div> " +
+            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + thresholdRoi + "% " +
+            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(thresholdProfit) + "&nbsp;ISK";
         } else {
-          extraData = "<div id='route_to'>Selling to Buy Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
-            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
-            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
+          extraData = "<div id='route_to'>Selling to Buy Orders at " + sellingTo + " with " + salesTax + "% tax</div> " +
+            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + thresholdRoi + "% " +
+            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(thresholdProfit) + "&nbsp;ISK";
         }
         if (tradingStyle == REGION_HAUL) {
             extraData += "<span id='citadelsLine'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
             extraData += "<br>Only showing system security status of " + $("#security_threshold").val() + " SEC or better.";
         }
 
-        if(threshold_cost !== 999999999999999999){
-            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(threshold_cost) + "&nbsp;ISK";
+        if(thresholdCost !== 999999999999999999){
+            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(thresholdCost) + "&nbsp;ISK";
         }
-        if(threshold_weight !== 999999999999999999){
-            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(threshold_weight) + "&nbsp;m3";
+        if(thresholdWeight !== 999999999999999999){
+            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(thresholdWeight) + "&nbsp;m3";
         }
 
         buyingHeaderDOM.show();
@@ -478,9 +478,9 @@ function createTradeHeader() {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
-        buyingFooter = "With Sales Tax at " + numberWithCommas(sales_tax) + "% and Broker Fee at " + numberWithCommas(broker_fee) + "%<br />" +
-            "Volume greater than: " + numberWithCommas(volume_threshold) +
-            " | Margins between " + threshold_margin_lower + "% and " + threshold_margin_upper + "%" +
+        buyingFooter = "With Sales Tax at " + numberWithCommas(salesTax) + "% and Broker Fee at " + numberWithCommas(brokerFee) + "%<br />" +
+            "Volume greater than: " + numberWithCommas(thresholdVolume) +
+            " | Margins between " + thresholdMarginLower + "% and " + thresholdMarginUpper + "%" +
             "<div class='loading'>Loading. Please wait...</div>";
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
