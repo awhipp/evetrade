@@ -216,7 +216,7 @@ Station.prototype.asyncRefresh = function() {
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
             $("#refresh-timer").remove();
-            $("#buyingFooter").append('<div id="refresh-button">' +
+            $("#buyingFooter").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {

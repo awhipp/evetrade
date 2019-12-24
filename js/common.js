@@ -330,7 +330,7 @@ function getTotalProgress() {
 * Generic refresh function which will clear and reinitialize the query
 */
 function refresh() {
-    $("#refresh-button").remove();
+    $("#refresh_button").remove();
     iteration += 1;
     for (var i = 0; i < routes.length; i++) {
         routes[i].clear();
@@ -440,11 +440,11 @@ function createTradeHeader() {
 
         var extraData = "";
         if(orderTypeEnd == "sell") {
-          extraData = "<div id='route-to'>Selling as Sell Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
+          extraData = "<div id='route_to'>Selling as Sell Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         } else {
-          extraData = "<div id='route-to'>Selling to Buy Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
+          extraData = "<div id='route_to'>Selling to Buy Orders at " + sellingTo + " with " + sales_tax + "% tax</div> " +
             "ROI&nbsp;Greater&nbsp;Than&nbsp;" + threshold_roi + "% " +
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(threshold_profit) + "&nbsp;ISK";
         }
@@ -501,7 +501,7 @@ function createTradeHeader() {
 function createDataTable() {
     if(!tableCreated) {
         tableCreated = true;
-        $('#noselect-object').html('<table id="dataTable" class="display"></table>');
+        $('#noselect_object').html('<table id="dataTable" class="display"></table>');
         $(".dataTableFilters").html("");
 
         var dataTableDOM = $("#dataTable");
@@ -640,7 +640,7 @@ function createDataTable() {
         $(".dt-button").addClass("btn-default");
 
         $(".deal_note").hide();
-        $("#show-hide").show();
+        $("#show_hide").show();
         $("#dataTable").show();
 
         $(".dataTables_paginate").on("click", function(){

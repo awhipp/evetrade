@@ -212,7 +212,7 @@ section {
     color: white !important;
 }
 
-#show-hide, #dataTable_length, #core{
+#show_hide, #dataTable_length, #core{
   display: none;
 }
 
@@ -305,7 +305,7 @@ tr > td:first-child {
   text-align: center;
 }
 
-#show-hide{
+#show_hide{
     background-color: rgba(0,0,100,0.7) !important;
     border-color: black !important;
     min-width: 200px !important;
