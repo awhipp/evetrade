@@ -466,7 +466,7 @@ tr > td:first-child {
     margin: 4px;
   }
 
-  #addingToStartStationList, #addingToEndStationList {
+  #adding_to_start_station_list, #adding_to_end_station_list {
       position: relative;
   }
 

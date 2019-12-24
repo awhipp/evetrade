@@ -526,11 +526,11 @@ function checkDirection() {
     var regionEndType = $("#selling_type_region").val();
 
     if(stationStartType == "sell" && stationEndType == "buy") {
-      $("#directionWarningStation").hide();
+      $("#direction_warning_station").hide();
     } else {
-      $("#directionWarningStation > .startDirection").text(stationStartType);
-      $("#directionWarningStation > .endDirection").text(stationEndType);
-      $("#directionWarningStation").show();
+      $("#direction_warning_station > .startDirection").text(stationStartType);
+      $("#direction_warning_station > .endDirection").text(stationEndType);
+      $("#direction_warning_station").show();
     }
 
     if(regionStartType == "sell" && regionEndType == "buy") {
