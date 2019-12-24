@@ -18,7 +18,7 @@
         </h4>
 
         <div class="form-group standard">
-            <div id="addingToStartRegionList">
+            <div id="adding_to_start_region_list">
                 <div id='start_region' style='border:1px solid #999;'></div>
             </div>
         </div>
@@ -30,7 +30,7 @@
           Destination Region
         </h4>
         <div class="form-group standard">
-            <div id="addingToEndRegionList">
+            <div id="adding_to_end_region_list">
                 <div id='end_region' style='border:1px solid #999;'>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                 </p>
             </div>
             <div class="col-sm-2 col-xs-12"></div>
-            <p class="directionWarning" id="directionWarningRegion">
+            <p class="directionWarning" id="direction_warning_region">
               PROCEED WITH CAUTION. It is highly recommended to only search from SELL Orders to BUY Orders. If you continue, be sure to set your ROI and Profit limit higher than usual.<br>
               Searching from <span class="startDirection"></span> Orders to <span class="endDirection"></span> Orders returns a very large resultset and can take a while or crash your browser.<br>
               Be sure to completely understand what information you are searching for in order to minimize the number of results returned to your browser.<br>
@@ -99,7 +99,7 @@
           <div class="col-sm-2 col-xs-12"></div>
           <div class="col-sm-4 col-xs-12">
               <p>
-                <label for="profit_threshold" class="control-label">
+                <label for="region_profit_threshold" class="control-label">
                   Only Return Profits Above
                 </label>
                 <input
@@ -113,7 +113,7 @@
           </div>
           <div class="col-sm-4 col-xs-12">
               <p>
-                <label for="weight_threshold" class="control-label">
+                <label for="region_weight_threshold" class="control-label">
                   Max Cargo Capacity (in m3)
                 </label>
                 <input
@@ -131,7 +131,7 @@
           <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="roi_threshold" class="control-label">
+                  <label for="region_roi_threshold" class="control-label">
                     Minimum ROI (in %)
                   </label>
                   <input
@@ -145,12 +145,12 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="buy_threshold" class="control-label">
+                  <label for="region_buy_threshold" class="control-label">
                     Maximum Budget
                   </label>
                   <input
                     type="number"
-                    id="region-buy_threshold"
+                    id="region_buy_threshold"
                     name="region_buy_threshold"
                     class="minor-text form-control"
                     placeholder="Default: Infinity"

@@ -534,11 +534,11 @@ function checkDirection() {
     }
 
     if(regionStartType == "sell" && regionEndType == "buy") {
-      $("#directionWarningRegion").hide();
+      $("#direction_warning_region").hide();
     } else {
-      $("#directionWarningRegion > .startDirection").text(regionStartType);
-      $("#directionWarningRegion > .endDirection").text(regionEndType);
-      $("#directionWarningRegion").show();
+      $("#direction_warning_region > .startDirection").text(regionStartType);
+      $("#direction_warning_region > .endDirection").text(regionEndType);
+      $("#direction_warning_region").show();
     }
 }
 
