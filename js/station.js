@@ -215,7 +215,7 @@ Station.prototype.asyncRefresh = function() {
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
-            $("#refresh-timer").remove();
+            $("#refresh_timer").remove();
             $("#buyingFooter").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
@@ -228,7 +228,7 @@ Station.prototype.asyncRefresh = function() {
 
             $(".tableLoadingIcon").hide();
 
-            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            $("#refresh_timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -261,7 +261,7 @@ Station.prototype.asyncCalculate = function() {
                 $(".loading").hide();
             }
 
-            $("#buyingFooter").append('<div id="refresh-timer"></div>');
+            $("#buyingFooter").append('<div id="refresh_timer"></div>');
 
             thiz.asyncRefresh();
         }

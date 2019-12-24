@@ -271,7 +271,7 @@ Route.prototype.asyncRefresh = function() {
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
-            $("#refresh-timer").remove();
+            $("#refresh_timer").remove();
             $("#buyingFooter").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
@@ -282,7 +282,7 @@ Route.prototype.asyncRefresh = function() {
                 $(".loading").text("No trades found for your filters.");
             }
 
-            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            $("#refresh_timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -299,7 +299,7 @@ Route.prototype.asyncProgress = function() {
         if (totalProgress == 100) {
             clearInterval(thiz.asyncProgressUpdate);
 
-            $("#buyingFooter").append('<div id="refresh-timer"></div>');
+            $("#buyingFooter").append('<div id="refresh_timer"></div>');
 
             $(".tableLoadingIcon").hide();
 
