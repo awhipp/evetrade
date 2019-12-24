@@ -669,20 +669,20 @@ function open_popup(itemId, name, fromStation, toStation){
 
 
     if(orderTypeStart == "buy") {
-      $("#buyLocation").text("Buy Orders at " + fromStation.name);
+      $("#buy_location").text("Buy Orders at " + fromStation.name);
       $("#popup_table_buy th:first-of-type")[0].textContent = "Buy Orders";
       $('#popup_table_buy').dataTable().fnSort( [0,'desc'] );
     } else {
-      $("#buyLocation").text("Sell Orders at " + fromStation.name);
+      $("#buy_location").text("Sell Orders at " + fromStation.name);
       $("#popup_table_buy th:first-of-type")[0].textContent = "Sell Orders";
       $('#popup_table_buy').dataTable().fnSort( [0,'asc'] );
     }
     if(orderTypeEnd == "buy") {
-      $("#sellLocation").text("Buy Orders at " + toStationName);
+      $("#sell_location").text("Buy Orders at " + toStationName);
       $("#popup_table_sell th:first-of-type")[0].textContent = "Buy Orders";
       $('#popup_table_sell').dataTable().fnSort( [0,'desc'] );
     } else {
-      $("#sellLocation").text("Sell Orders at " + toStationName);
+      $("#sell_location").text("Sell Orders at " + toStationName);
       $("#popup_table_sell th:first-of-type")[0].textContent = "Sell Orders";
       $('#popup_table_sell').dataTable().fnSort( [0,'asc'] );
     }
