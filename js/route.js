@@ -271,8 +271,8 @@ Route.prototype.asyncRefresh = function() {
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
-            $("#refresh-timer").remove();
-            $("#buyingFooter").append('<div id="refresh-button">' +
+            $("#refresh_timer").remove();
+            $("#buying_footer").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -282,7 +282,7 @@ Route.prototype.asyncRefresh = function() {
                 $(".loading").text("No trades found for your filters.");
             }
 
-            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            $("#refresh_timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -299,7 +299,7 @@ Route.prototype.asyncProgress = function() {
         if (totalProgress == 100) {
             clearInterval(thiz.asyncProgressUpdate);
 
-            $("#buyingFooter").append('<div id="refresh-timer"></div>');
+            $("#buying_footer").append('<div id="refresh_timer"></div>');
 
             $(".tableLoadingIcon").hide();
 
@@ -410,7 +410,7 @@ Route.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, locationInfo
 */
 Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, locationInfo){
     if(buyPrice < sellPrice && sellPrice > 0){
-        var itemSellTax = sellPrice * sales_tax / 100;
+        var itemSellTax = sellPrice * salesTax / 100;
         var itemProfit =  sellPrice - itemSellTax - buyPrice;
 
         if(itemProfit > 0){
@@ -430,7 +430,7 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
     
             var iskRatio = itemProfit / buyPrice;
 
-            if(netProfit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && netCosts <= threshold_cost ){
+            if(netProfit >= thresholdProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= thresholdRoi && netCosts <= thresholdCost ){
                 return [itemId, volume, buyPrice, netCosts, locationInfo, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio, itemProfit];
             }
         }
@@ -516,7 +516,7 @@ Route.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
 
-    if(storageVolume > threshold_weight) {
+    if(storageVolume > thresholdWeight) {
         return;
     }
 

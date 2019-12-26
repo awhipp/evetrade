@@ -18,7 +18,7 @@
         </h4>
 
         <div class="form-group standard">
-            <div id="addingToStartRegionList">
+            <div id="adding_to_start_region_list">
                 <div id='start_region' style='border:1px solid #999;'></div>
             </div>
         </div>
@@ -30,7 +30,7 @@
           Destination Region
         </h4>
         <div class="form-group standard">
-            <div id="addingToEndRegionList">
+            <div id="adding_to_end_region_list">
                 <div id='end_region' style='border:1px solid #999;'>
                 </div>
             </div>
@@ -42,10 +42,10 @@
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="buying-type-region" class="control-label">
+                  <label for="buying_type_region" class="control-label">
                     Buying from
                   </label>
-                  <select id="buying-type-region" name="buying-type-region" class="directionChange">
+                  <select id="buying_type_region" name="buying_type_region" class="directionChange">
                     <option value="sell" selected>Sell Orders</option>
                     <option value="buy">Buy Orders</option>
                   </select>
@@ -53,17 +53,17 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="selling-type-region" class="control-label">
+                  <label for="selling_type_region" class="control-label">
                     Selling as
                   </label>
-                  <select id="selling-type-region" name="selling-type-region" class="directionChange">
+                  <select id="selling_type_region" name="selling_type_region" class="directionChange">
                     <option value="sell">Sell Orders</option>
                     <option value="buy" selected>Buy Orders</option>
                   </select>
                 </p>
             </div>
             <div class="col-sm-2 col-xs-12"></div>
-            <p class="directionWarning" id="directionWarningRegion">
+            <p class="directionWarning" id="direction_warning_region">
               PROCEED WITH CAUTION. It is highly recommended to only search from SELL Orders to BUY Orders. If you continue, be sure to set your ROI and Profit limit higher than usual.<br>
               Searching from <span class="startDirection"></span> Orders to <span class="endDirection"></span> Orders returns a very large resultset and can take a while or crash your browser.<br>
               Be sure to completely understand what information you are searching for in order to minimize the number of results returned to your browser.<br>
@@ -99,13 +99,13 @@
           <div class="col-sm-2 col-xs-12"></div>
           <div class="col-sm-4 col-xs-12">
               <p>
-                <label for="profit-threshold" class="control-label">
+                <label for="region_profit_threshold" class="control-label">
                   Only Return Profits Above
                 </label>
                 <input
                   type="number"
-                  id="region-profit-threshold"
-                  name="region-profit-threshold"
+                  id="region_profit_threshold"
+                  name="region_profit_threshold"
                   class="minor-text form-control"
                   placeholder="Default: 500,000"
                 />
@@ -113,13 +113,13 @@
           </div>
           <div class="col-sm-4 col-xs-12">
               <p>
-                <label for="weight-threshold" class="control-label">
+                <label for="region_weight_threshold" class="control-label">
                   Max Cargo Capacity (in m3)
                 </label>
                 <input
                   type="number"
-                  id="region-weight-threshold"
-                  name="region-weight-threshold"
+                  id="region_weight_threshold"
+                  name="region_weight_threshold"
                   class="minor-text form-control"
                   placeholder="Default: Not Included"
                 />
@@ -131,13 +131,13 @@
           <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="roi-threshold" class="control-label">
+                  <label for="region_roi_threshold" class="control-label">
                     Minimum ROI (in %)
                   </label>
                   <input
                     type="number"
-                    id="region-roi-threshold"
-                    name="region-roi-threshold"
+                    id="region_roi_threshold"
+                    name="region_roi_threshold"
                     class="minor-text form-control"
                     placeholder="Default: 4"
                   />
@@ -145,13 +145,13 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="buy-threshold" class="control-label">
+                  <label for="region_buy_threshold" class="control-label">
                     Maximum Budget
                   </label>
                   <input
                     type="number"
-                    id="region-buy-threshold"
-                    name="region-buy-threshold"
+                    id="region_buy_threshold"
+                    name="region_buy_threshold"
                     class="minor-text form-control"
                     placeholder="Default: Infinity"
                   />
@@ -162,12 +162,12 @@
         <div class="row">
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
-                    <label for="security-threshold" class="control-label">
+                    <label for="security_threshold" class="control-label">
                       Security Status Filter
                     </label>
                     <select
-                      id="security-threshold"
-                      name="security-threshold"
+                      id="security_threshold"
+                      name="security_threshold"
                       class="minor-text form-control">
                         <option value="null" selected>No Filter</option>
                         <option value="low">Only Low or High Sec</option>
@@ -175,12 +175,12 @@
                     </select>
             </div>
             <div class="col-sm-4 col-xs-12">
-                    <label for="route-preference" class="control-label">
+                    <label for="route_preference" class="control-label">
                       Route Preference
                     </label>
                     <select
-                      id="route-preference"
-                      name="route-preference"
+                      id="route_preference"
+                      name="route_preference"
                       class="minor-text form-control">
                         <option value="shortest">Shortest Route</option>
                         <option value="secure" selected>Safest Route</option>
@@ -192,14 +192,14 @@
         <div class="row">
           <div class="col-sm-5 col-xs-12"></div>
           <div class="col-sm-2 col-xs-12">
-                  <label for="include-citadels" class="control-label">
+                  <label for="include_citadels" class="control-label">
                     Include Citadels
                   </label>
                   <br>
                   <input
                     type="checkbox"
-                    id="include-citadels"
-                    name="include-citadels"
+                    id="include_citadels"
+                    name="include_citadels"
                   />
           </div>
           <div class="col-sm-5 col-xs-12"></div>

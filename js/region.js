@@ -29,12 +29,12 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = setDefaultVal($("#security-threshold").val(), "null");
-    this.safety = setDefaultVal($("#route-preference").val(), "shortest");
+    this.security = setDefaultVal($("#security_threshold").val(), "null");
+    this.safety = setDefaultVal($("#route_preference").val(), "shortest");
 
     this.completed = false;
 
-    this.includeCitadels = $("#include-citadels").is(":checked");
+    this.includeCitadels = $("#include_citadels").is(":checked");
 
     if(!this.includeCitadels) {
         $("#citadelsLine").hide();
@@ -304,7 +304,7 @@ Region.prototype.executeRoutes = function() {
 
             $(".tableLoadingIcon").hide();
 
-            $("#buyingFooter").append('<div id="refresh-timer"></div>');
+            $("#buying_footer").append('<div id="refresh_timer"></div>');
 
             thiz.asyncRefresh();
         }
@@ -359,8 +359,8 @@ Region.prototype.asyncRefresh = function() {
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
-            $("#refresh-timer").remove();
-            $("#buyingFooter").append('<div id="refresh-button">' +
+            $("#refresh_timer").remove();
+            $("#buying_footer").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -370,7 +370,7 @@ Region.prototype.asyncRefresh = function() {
                 $(".loading").text("No trades found for your filters.");
             }
 
-            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            $("#refresh_timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -402,7 +402,7 @@ Region.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, start, end)
 */
 Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, start, end){
     if(buyPrice < sellPrice && sellPrice > 0){
-        var itemSellTax = sellPrice * sales_tax / 100;
+        var itemSellTax = sellPrice * salesTax / 100;
         var itemProfit = sellPrice - itemSellTax - buyPrice;
 
         if(itemProfit > 0){
@@ -422,7 +422,7 @@ Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice,
 
             var iskRatio = itemProfit / buyPrice;
 
-            if(netProfit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && netCosts <= threshold_cost ){
+            if(netProfit >= thresholdProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= thresholdRoi && netCosts <= thresholdCost ){
                 return [itemId, start, volume, buyPrice, netCosts, end, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio];
             }else{
                 return [];
@@ -634,7 +634,7 @@ Region.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
 
-    if(storageVolume > threshold_weight) {
+    if(storageVolume > thresholdWeight) {
         return;
     }
 
