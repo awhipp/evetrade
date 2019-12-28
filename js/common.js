@@ -139,7 +139,8 @@ function getMarketData(data, stationId, orderType, itemId, isRoute){
 /**
 * Given a null or empty value it will return the default
 */
-function setDefaultVal(ele, def) {
+function setDefaultVal(input) {
+  ele = $("#" + input).val();
   if (ele && ele.length > 0) {
       if(isNaN(ele)){
         return ele;
@@ -147,7 +148,10 @@ function setDefaultVal(ele, def) {
         return parseFloat(ele);
       }
   }
-  return def;
+  if(input.includes("_in")) {
+    return defaultValues[input.slice[0,-3]][1];
+  }
+  return defaultValues[input][1];
 }
 
 /**

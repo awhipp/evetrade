@@ -854,36 +854,36 @@ function init(style){
     try {
         if(tradingStyle == STATION_TRADE){
             if ($("#station_sales_tax").val() === "other") {
-                salesTax = setDefaultVal($("#station_sales_tax_in").val(), 5);
+                salesTax = setDefaultVal("station_sales_tax_in");
             } else {
-                salesTax = setDefaultVal($("#station_sales_tax").val(), 5);
+                salesTax = setDefaultVal("station_sales_tax");
             }
-            brokerFee = setDefaultVal($("#broker_fee").val(), 5);
-            thresholdMarginLower = setDefaultVal($("#lower_margin_threshold").val(), 20);
-            thresholdMarginUpper = setDefaultVal($("#upper_margin_threshold").val(), 40);
-            thresholdVolume = setDefaultVal($("#volume_threshold").val(), 1000);
+            brokerFee = setDefaultVal("broker_fee");
+            thresholdMarginLower = setDefaultVal("lower_margin_threshold");
+            thresholdMarginUpper = setDefaultVal("upper_margin_threshold");
+            thresholdVolume = setDefaultVal("volume_threshold");
             setStationTradingLocations();
         } else if (tradingStyle == STATION_HAUL) {
             if ($("#route_sales_tax").val() === "other") {
-                salesTax = setDefaultVal($("#route_sales_tax_in").val(), 5);
+                salesTax = setDefaultVal("route_sales_tax_in");
             } else {
-                salesTax = setDefaultVal($("#route_sales_tax").val(), 5);
+                salesTax = setDefaultVal("route_sales_tax");
             }
-            thresholdProfit = setDefaultVal($("#profit_threshold").val(), 500000);
-            thresholdRoi = setDefaultVal($("#roi_threshold").val(), 4);
-            thresholdCost = setDefaultVal($("#buy_threshold").val(), 999999999999999999);
-            thresholdWeight = setDefaultVal($("#weight_threshold").val(), 999999999999999999);
+            thresholdProfit = setDefaultVal("profit_threshold");
+            thresholdRoi = setDefaultVal("roi_threshold");
+            thresholdCost = setDefaultVal("buy_threshold");
+            thresholdWeight = setDefaultVal("weight_threshold");
             setRouteStationTradingLocations();
         } else if (tradingStyle == REGION_HAUL) {
             if ($("#region_sales_tax").val() === "other") {
-                salesTax = setDefaultVal($("#region_sales_tax_in").val(), 5);
+                salesTax = setDefaultVal("region_sales_tax_in");
             } else {
-                salesTax = setDefaultVal($("#region_sales_tax").val(), 5);
+                salesTax = setDefaultVal("region_sales_tax");
             }
-            thresholdProfit = setDefaultVal($("#region_profit_threshold").val(), 500000);
-            thresholdRoi = setDefaultVal($("#region_roi_threshold").val(), 4);
-            thresholdCost = setDefaultVal($("#region_buy_threshold").val(), 999999999999999999);
-            thresholdWeight = setDefaultVal($("#region_weight_threshold").val(), 999999999999999999);
+            thresholdProfit = setDefaultVal("region_profit_threshold");
+            thresholdRoi = setDefaultVal("region_roi_threshold");
+            thresholdCost = setDefaultVal("region_buy_threshold");
+            thresholdWeight = setDefaultVal("region_weight_threshold");
             setRouteRegionTradingLocations();
         }
         createBookmarks();
