@@ -2,6 +2,7 @@ var BUY_ORDER = "buy";
 var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
+var RES_ENDPOINT = "https://raw.githubusercontent.com/awhipp/evetrade_resources/master/resources/";
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
@@ -45,7 +46,7 @@ var spamItems = [
 * External JSON for updated stations information
 */
 var station_ids;
-$.getJSON("http://sde.zzeve.com/staStations.json", function(data) {
+$.getJSON(RES_ENDPOINT + "staStations.json", function(data) {
     station_ids = data;
 });
 
@@ -53,7 +54,7 @@ $.getJSON("http://sde.zzeve.com/staStations.json", function(data) {
 * External JSON for updated stations information
 */
 var region_ids;
-$.getJSON("http://sde.zzeve.com/mapRegions.json", function(data) {
+$.getJSON(RES_ENDPOINT + "mapRegions.json", function(data) {
     region_ids = data;
 });
 
