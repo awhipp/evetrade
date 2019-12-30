@@ -1,4 +1,4 @@
 language: ruby
 cache: bundler
 script:
-  - JEKYLL_ENV=production bundle install jekyll build
+  - bundle install && jekyll build
