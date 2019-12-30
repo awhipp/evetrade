@@ -4,6 +4,8 @@ A speghetti code SPA that gets the job done. The goal is to eventually move it o
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4daf6162-578e-4ff5-a99a-ab44e8cbdace/deploy-status)](https://app.netlify.com/sites/evetrade/deploys)
 
+[![Build Status](https://travis-ci.org/awhipp/evetrade.svg?branch=master)](https://travis-ci.org/awhipp/evetrade)
+
 ## About
 Implements the [EVE ESI API](https://esi.tech.ccp.is/) to find:
 
