@@ -149,9 +149,9 @@ function setDefaultVal(input) {
       }
   }
   if(input.includes("_in")) {
-    return defaultValues[input.slice[0,-3]][1];
+    return defaultValues[tradingStyle][input.slice[0,-3]][1];
   }
-  return defaultValues[input][1];
+  return defaultValues[tradingStyle][input][1];
 }
 
 /**
