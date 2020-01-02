@@ -542,7 +542,7 @@ tr > td:first-child {
     overflow-y: hidden !important;
 }
 
-.closeStation {
+.closeStartStation, .closeEndStation {
     color: white;
     text-shadow: 0 3px 0 #00aeff;
     cursor:pointer;

@@ -391,18 +391,18 @@ function newStartStation(e) {
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
-            span.className = "closeStation";
+            span.className = "closeStartStation";
             span.title = "Remove: " + inputValue;
             span.appendChild(txt);
             li.appendChild(span);
         }
 
-        var close = document.getElementsByClassName("closeStation");
+        var close = document.getElementsByClassName("closeStartStation");
         var i;
         for (i = 0; i < close.length; i++) {
             close[i].onclick = function () {
                 var data = $(this)[0].previousSibling.data;
-                addedToStartList[addedToStartList.indexOf(data)] = "";
+                addedToStartList.splice(addedToStartList.indexOf(data), 1);
                 $(this.parentElement).remove();
             }
         }
@@ -453,18 +453,18 @@ function newEndStation(e) {
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
-            span.className = "closeStation";
+            span.className = "closeEndStation";
             span.title = "Remove: " + inputValue;
             span.appendChild(txt);
             li.appendChild(span);
         }
 
-        var close = document.getElementsByClassName("closeStation");
+        var close = document.getElementsByClassName("closeEndStation");
         var i;
         for (i = 0; i < close.length; i++) {
             close[i].onclick = function () {
                 var data = $(this)[0].previousSibling.data;
-                addedToEndList[addedToEndList.indexOf(data)] = "";
+                addedToEndList.splice(addedToEndList.indexOf(data), 1);
                 $(this.parentElement).remove();
             }
         }
