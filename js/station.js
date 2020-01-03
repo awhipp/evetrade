@@ -215,8 +215,8 @@ Station.prototype.asyncRefresh = function() {
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
-            $("#refresh-timer").remove();
-            $("#buyingFooter").append('<div id="refresh-button">' +
+            $("#refresh_timer").remove();
+            $("#buying_footer").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -228,7 +228,7 @@ Station.prototype.asyncRefresh = function() {
 
             $(".tableLoadingIcon").hide();
 
-            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            $("#refresh_timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -242,7 +242,7 @@ Station.prototype.asyncCalculate = function() {
     this.asyncCalculator = setInterval(function(){
         if(!thiz.filtered){
             thiz.filtered = true;
-            $("#buyingFooter").append("<div id='filtering-data'>Filtering Results. Please wait.</br>If it takes too long try a smaller margin range.</div>");
+            $("#buying_footer").append("<div id='filtering-data'>Filtering Results. Please wait.</br>If it takes too long try a smaller margin range.</div>");
             thiz.asyncFiltering();
         }
 
@@ -261,7 +261,7 @@ Station.prototype.asyncCalculate = function() {
                 $(".loading").hide();
             }
 
-            $("#buyingFooter").append('<div id="refresh-timer"></div>');
+            $("#buying_footer").append('<div id="refresh_timer"></div>');
 
             thiz.asyncRefresh();
         }
@@ -323,14 +323,14 @@ Station.prototype.getItemInfo = function(itemId, buyPrice, sellPrice){
     buyPrice = bestBuyPrice;
     sellPrice = bestSellPrice;
 
-    var itemSellTax = sellPrice * sales_tax / 100;
-    var itemBuyFee = buyPrice * broker_fee / 100;
-    var itemSellFee = sellPrice * broker_fee / 100;
+    var itemSellTax = sellPrice * salesTax / 100;
+    var itemBuyFee = buyPrice * brokerFee / 100;
+    var itemSellFee = sellPrice * brokerFee / 100;
     var grossMargin = sellPrice - buyPrice;
     var itemProfit = grossMargin - itemSellTax - itemBuyFee - itemSellFee;
     var itemMargin = itemProfit / buyPrice;
 
-    if(itemMargin*100 >= threshold_margin_lower && itemMargin*100 <= threshold_margin_upper && itemProfit > 1000){
+    if(itemMargin*100 >= thresholdMarginLower && itemMargin*100 <= thresholdMarginUpper && itemProfit > 1000){
         row.buyPrice = buyPrice;
         row.sellPrice = sellPrice;
         row.itemId = itemId;
@@ -400,7 +400,7 @@ Station.prototype.getItemVolume = function(itemId, row){
                 row.volume14 = parseInt(row.volume14 / 14);
                 row.volume30 = parseInt(row.volume30 / 30);
 
-                if(row.volume14 >= volume_threshold){
+                if(row.volume14 >= thresholdVolume){
                     thiz.getItemWeight(itemId, row);
                 }else{
                     executingCount--;

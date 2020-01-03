@@ -29,12 +29,12 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = setDefaultVal($("#security-threshold").val(), "NULL");
-    this.safety = setDefaultVal($("#route-preference").val(), "shortest");
+    this.security = setDefaultVal("security_threshold");
+    this.safety = setDefaultVal("route_preference");
 
     this.completed = false;
 
-    this.includeCitadels = $("#include-citadels").is(":checked");
+    this.includeCitadels = $("#include_citadels").is(":checked");
 
     if(!this.includeCitadels) {
         $("#citadelsLine").hide();
@@ -230,8 +230,8 @@ Region.prototype.executeOrders = function() {
                     var buyPrice = getMarketData(this.buyOrders[startStationId][itemId], start.station, SELL_ORDER, itemId, true);
 
                     if (buyPrice.length > 0) {
-                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
-                        if(orderTypeStart=="BUY"){
+                      if(orderTypeStart != "sell" || orderTypeEnd != "buy") {
+                        if(orderTypeStart=="buy"){
                           buyPrice = [buyPrice[0]]
                         } else {
                           buyPrice = [buyPrice[buyPrice.length-1]]
@@ -254,8 +254,8 @@ Region.prototype.executeOrders = function() {
                                 if (sellOrder && sellOrder[itemId]) {
                                     var sellPrice = getMarketData(sellOrder[itemId], end.station, BUY_ORDER, itemId, true);
                                     if (sellPrice.length > 0) {
-                                      if(orderTypeStart != "SELL" || orderTypeEnd != "BUY") {
-                                        if(orderTypeStart=="BUY"){
+                                      if(orderTypeStart != "sell" || orderTypeEnd != "buy") {
+                                        if(orderTypeStart=="buy"){
                                           sellPrice = [sellPrice[0]]
                                         } else {
                                           sellPrice = [sellPrice[sellPrice.length-1]]
@@ -304,7 +304,7 @@ Region.prototype.executeRoutes = function() {
 
             $(".tableLoadingIcon").hide();
 
-            $("#buyingFooter").append('<div id="refresh-timer"></div>');
+            $("#buying_footer").append('<div id="refresh_timer"></div>');
 
             thiz.asyncRefresh();
         }
@@ -359,8 +359,8 @@ Region.prototype.asyncRefresh = function() {
     this.asyncRefresher = setInterval(function(){
         if(thiz.secondsToRefresh <= 0){
             clearInterval(thiz.asyncRefresher);
-            $("#refresh-timer").remove();
-            $("#buyingFooter").append('<div id="refresh-button">' +
+            $("#refresh_timer").remove();
+            $("#buying_footer").append('<div id="refresh_button">' +
                 '<input type="button" class="btn btn-default" onclick="refresh()" value="Refresh Table with Last Query"/>' +
                 '</div>');
         } else {
@@ -370,7 +370,7 @@ Region.prototype.asyncRefresh = function() {
                 $(".loading").text("No trades found for your filters.");
             }
 
-            $("#refresh-timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
+            $("#refresh_timer").html("<p>Refresh allowed in: " + thiz.secondsToRefresh + " seconds.");
             thiz.secondsToRefresh--;
         }
     }, 1000);
@@ -402,7 +402,7 @@ Region.prototype.getItemInfo = function(itemId, buyPrice, sellPrice, start, end)
 */
 Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, sellVolume, start, end){
     if(buyPrice < sellPrice && sellPrice > 0){
-        var itemSellTax = sellPrice * sales_tax / 100;
+        var itemSellTax = sellPrice * salesTax / 100;
         var itemProfit = sellPrice - itemSellTax - buyPrice;
 
         if(itemProfit > 0){
@@ -422,7 +422,7 @@ Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice,
 
             var iskRatio = itemProfit / buyPrice;
 
-            if(netProfit >= threshold_profit && (iskRatio.toFixed(3)*100).toFixed(1) >= threshold_roi && netCosts <= threshold_cost ){
+            if(netProfit >= thresholdProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= thresholdRoi && netCosts <= thresholdCost ){
                 return [itemId, start, volume, buyPrice, netCosts, end, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio];
             }else{
                 return [];
@@ -634,7 +634,7 @@ Region.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
 
-    if(storageVolume > threshold_weight) {
+    if(storageVolume > thresholdWeight) {
         return;
     }
 
@@ -653,9 +653,9 @@ Region.prototype.addRow = function(row) {
 Region.prototype.getSecurityCode = function (sec) {
     if (sec >= 0.5) {
         return "high_sec";
-    } else if (sec > 0 && (this.security == "NULL" || this.security == "LOW")) {
+    } else if (sec > 0 && (this.security == "null" || this.security == "low")) {
         return "low_sec";
-    } else if (sec <= 0 && (this.security == "NULL")) {
+    } else if (sec <= 0 && (this.security == "null")) {
         return "null_sec";
     } else {
         return -1;
