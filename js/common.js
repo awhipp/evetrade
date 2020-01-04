@@ -2,6 +2,7 @@ var BUY_ORDER = "buy";
 var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
+var RES_ENDPOINT = "https://raw.githubusercontent.com/awhipp/evetrade_resources/master/resources/";
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
@@ -40,6 +41,22 @@ var spamItems = [
     "selynne's", "setele's", "shaqil's", "tairei's", "thon's", "tuvan's",
     "vizen's", "zor's"
 ];
+
+/**
+* External JSON for updated stations information
+*/
+var station_ids;
+$.getJSON(RES_ENDPOINT + "staStations.json", function(data) {
+    station_ids = data;
+});
+
+/**
+* External JSON for updated stations information
+*/
+var region_ids;
+$.getJSON(RES_ENDPOINT + "mapRegions.json", function(data) {
+    region_ids = data;
+});
 
 /**
  * Defaults values and parameters of forms inputs by trade style

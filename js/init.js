@@ -195,7 +195,7 @@ function setupCustomDropdown() {
 
             for (var i = 0; i < station_ids.length; i++) {
 
-                var stationName = station_ids[i][2];
+                var stationName = station_ids[i].stationName;
 
                 // add trade hubs for easy of use
                 var tradeHubName = getTradeHubName(stationName);
@@ -203,20 +203,20 @@ function setupCustomDropdown() {
                     var lowerCaseStationName = tradeHubName.toLowerCase();
 
                     universeList[lowerCaseStationName] = {};
-                    universeList[lowerCaseStationName].region = station_ids[i][1];
-                    universeList[lowerCaseStationName].station = station_ids[i][0];
+                    universeList[lowerCaseStationName].region = station_ids[i].regionID;
+                    universeList[lowerCaseStationName].station = station_ids[i].stationID;
                     universeList[lowerCaseStationName].name = tradeHubName;
                     stationList.push(tradeHubName);
                 }
 
                 var lowerCaseStationName = stationName.toLowerCase();
                 universeList[lowerCaseStationName] = {};
-                universeList[lowerCaseStationName].region = station_ids[i][1];
-                universeList[lowerCaseStationName].station = station_ids[i][0];
+                universeList[lowerCaseStationName].region = station_ids[i].regionID;
+                universeList[lowerCaseStationName].station = station_ids[i].stationID;
                 universeList[lowerCaseStationName].name = stationName;
                 stationList.push(stationName);
 
-                stationIdToName[station_ids[i][0]] = stationName;
+                stationIdToName[station_ids[i].stationID] = stationName;
 
             }
 
@@ -252,13 +252,15 @@ function setupCustomDropdown() {
             var regionList = [""];
 
             for (var i = 0; i < region_ids.length; i++) {
-                var regionName = region_ids[i][1];
-                var lcRegionName = regionName.toLowerCase();
+                if (region_ids[i].regionID < 11000000) { // Avoid special regions
+                    var regionName = region_ids[i].regionName;
+                    var lcRegionName = regionName.toLowerCase();
 
-                universeList[lcRegionName] = {};
-                universeList[lcRegionName].name = region_ids[i][1];
-                universeList[lcRegionName].id = region_ids[i][0];
-                regionList.push(regionName);
+                    universeList[lcRegionName] = {};
+                    universeList[lcRegionName].name = region_ids[i].regionName;
+                    universeList[lcRegionName].id = region_ids[i].regionID;
+                    regionList.push(regionName);
+                }
             }
 
             regionList.sort();
