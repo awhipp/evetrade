@@ -205,6 +205,7 @@ function setupCustomDropdown() {
                     universeList[lowerCaseStationName] = {};
                     universeList[lowerCaseStationName].region = station_ids[i].regionID;
                     universeList[lowerCaseStationName].station = station_ids[i].stationID;
+                    universeList[lowerCaseStationName].system = station_ids[i].solarSystemID;
                     universeList[lowerCaseStationName].name = tradeHubName;
                     stationList.push(tradeHubName);
                 }
@@ -213,6 +214,7 @@ function setupCustomDropdown() {
                 universeList[lowerCaseStationName] = {};
                 universeList[lowerCaseStationName].region = station_ids[i].regionID;
                 universeList[lowerCaseStationName].station = station_ids[i].stationID;
+                universeList[lowerCaseStationName].system = station_ids[i].solarSystemID;
                 universeList[lowerCaseStationName].name = stationName;
                 stationList.push(stationName);
 
@@ -332,18 +334,12 @@ if (!String.prototype.startsWith) {
 */
 function findAllStations(stationName) {
     var stationsInSystem = [];
-    var systemName = stationName.toLowerCase();
-    if(stationName.indexOf(" ") > -1) {
-        systemName = stationName.substr(0, stationName.indexOf(" ")).toLowerCase();
-    }
-
-    if(systemName.length >= 3) {
-        for (station in universeList) {
-            if (!universeList.hasOwnProperty(station)) continue;
-            if (station && station.startsWith(systemName)
-                && station.indexOf(" ") > -1) {
-                stationsInSystem.push(station);
-            }
+    var systemID = universeList[stationName.toLowerCase()].system;
+    for (station in universeList) {
+        if (!universeList.hasOwnProperty(station)) continue;
+        if (universeList[station].system == systemID
+            && station.indexOf(" ") > -1) {
+            stationsInSystem.push(station);
         }
     }
     return stationsInSystem;
