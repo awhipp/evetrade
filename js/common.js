@@ -3,6 +3,7 @@ var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
 var RES_ENDPOINT = "https://raw.githubusercontent.com/awhipp/evetrade_resources/master/resources/";
+var GH_ENDPOINT = "https://api.github.com/repos/awhipp/evetrade_resources/";
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
@@ -42,21 +43,8 @@ var spamItems = [
     "vizen's", "zor's"
 ];
 
-/**
-* External JSON for updated stations information
-*/
 var station_ids;
-$.getJSON(RES_ENDPOINT + "staStations.json", function(data) {
-    station_ids = data;
-});
-
-/**
-* External JSON for updated stations information
-*/
 var region_ids;
-$.getJSON(RES_ENDPOINT + "mapRegions.json", function(data) {
-    region_ids = data;
-});
 
 /**
  * Defaults values and parameters of forms inputs by trade style
@@ -826,4 +814,28 @@ function setupBookmark(urlParams) {
             setDefaultInput(tradeDefaultValues, key, paramValue);
         };
     }
+}
+
+function jsonCache(){
+    var jsonData = [
+        ["staStations", station_ids],
+        ["mapRegions", region_ids]
+    ];
+    $.getJSON(GH_ENDPOINT + "commits?path=resources", function(data) {
+        var jsonVersion = data[0].commit.message.split(" ")[3]
+        if ( window.localStorage.getItem("jsonVersion") != jsonVersion) {
+            window.localStorage.setItem("jsonVersion", jsonVersion);
+            jsonData.forEach(function(item){
+                $.getJSON(RES_ENDPOINT + item[0] + ".json", function(data) {
+                    item[1] = data;
+                    window.localStorage.setItem(item[0], JSON.stringify(data));
+                });
+            });
+        } else {
+            jsonData.forEach(function(item){
+                item[1] = JSON.parse(window.localStorage.getItem(item[0]));
+            });
+        }
+    });
+
 }

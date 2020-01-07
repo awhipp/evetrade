@@ -38,6 +38,8 @@ var urlParams;
 * > Setup the about, cookies, and custom station dropdowns
 */
 $( document ).ready(function() {
+    jsonCache();
+
     popupTableBuy = $("#popup_table_buy").DataTable({
         "order": [[ 0, "asc" ]],
         "lengthMenu": [[10], ["10"]]
