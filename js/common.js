@@ -28,7 +28,7 @@ var orderTypeStart = "sell";
 var orderTypeEnd = "buy";
 
 var regionHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
-var routeHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
+var s2sHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
 var sstHeader = ["Item", "Buy Price", "Sell Price", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
 /**
@@ -73,13 +73,13 @@ var defaultValues = [
     },
     // Station haul
     {
-        "buying_type_station": ["buy_type", "sell"],
-        "selling_type_station": ["sell_type", "buy"],
-        "route_sales_tax": ["sales_tax", 5],
-        "profit_threshold": ["min_profit", 500000],
-        "weight_threshold": ["max_cargo", 999999999999999999],
-        "roi_threshold": ["min_roi", 4],
-        "buy_threshold": ["max_budget", 999999999999999999]
+        "s2s_buying_type": ["buy_type", "sell"],
+        "s2s_selling_type": ["sell_type", "buy"],
+        "s2s_sales_tax": ["sales_tax", 5],
+        "s2s_min_profit": ["min_profit", 500000],
+        "s2s_max_cargo": ["max_cargo", 999999999999999999],
+        "s2s_min_roi": ["min_roi", 4],
+        "s2s_max_budget": ["max_budget", 999999999999999999]
     },
     // Region haul
     {
@@ -103,8 +103,8 @@ var defaultValues = [
 */
 function setCopyWording() {
   if (tradingStyle == STATION_HAUL) {
-    orderTypeStart = $("#buying_type_station").val();
-    orderTypeEnd = $("#selling_type_station").val();
+    orderTypeStart = $("#s2s_buying_type").val();
+    orderTypeEnd = $("#s2s_selling_type").val();
   } else if (tradingStyle == REGION_HAUL) {
     orderTypeStart = $("#buying_type_region").val();
     orderTypeEnd = $("#selling_type_region").val();
@@ -113,21 +113,21 @@ function setCopyWording() {
   if(orderTypeStart == "buy") {
     regionHeader[1] = "Buy Order";
     regionHeader[4] = "Sell Price";
-    routeHeader[1] = "Buy Order";
-    routeHeader[4] = "Sell Price";
+    s2sHeader[1] = "Buy Order";
+    s2sHeader[4] = "Sell Price";
   } else {
     regionHeader[1] = "Sell Order";
     regionHeader[4] = "Buy Price";
-    routeHeader[1] = "Sell Order";
-    routeHeader[4] = "Buy Price";
+    s2sHeader[1] = "Sell Order";
+    s2sHeader[4] = "Buy Price";
   }
 
   if(orderTypeEnd == "buy") {
     regionHeader[7] = "Sell Price";
-    routeHeader[7] = "Sell Price";
+    s2sHeader[7] = "Sell Price";
   } else {
     regionHeader[7] = "Buy Price";
-    routeHeader[7] = "Buy Price";
+    s2sHeader[7] = "Buy Price";
   }
 }
 
@@ -529,7 +529,7 @@ function createDataTable() {
         dataTableDOM.html("");
 
         var dtHTML = "<thead>";
-        var headers = tradingStyle === STATION_TRADE ? sstHeader : tradingStyle === STATION_HAUL ? routeHeader : regionHeader;
+        var headers = tradingStyle === STATION_TRADE ? sstHeader : tradingStyle === STATION_HAUL ? s2sHeader : regionHeader;
         for (var i = 0; i < headers.length; i++) {
             dtHTML += ("<th>" + headers[i] + "</th>");
         }
@@ -778,7 +778,7 @@ function setupBookmark(urlParams) {
             case STATION_HAUL:
                 // We have to wait for input element
                 var waitForInputStation = setInterval(function () {
-                    if ($("#start_station input").length) {
+                    if ($("#s2s_start_station input").length) {
                         clearInterval(waitForInputStation);
                         urlParams.get("start").split(',').forEach(function(item) {
                             addStart(item);
