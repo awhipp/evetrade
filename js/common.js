@@ -29,7 +29,7 @@ var orderTypeEnd = "buy";
 
 var regionHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
 var routeHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
-var stationHeader = ["Item", "Buy Price", "Sell Price", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
+var sstHeader = ["Item", "Buy Price", "Sell Price", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
 /**
 * The keyword for known scam items
@@ -65,11 +65,11 @@ $.getJSON(RES_ENDPOINT + "mapRegions.json", function(data) {
 var defaultValues = [
     // Station trading
     {
-        "station_sales_tax": ["sales_tax", 5],
-        "broker_fee": ["broker_fee", 5],
-        "lower_margin_threshold": ["min_margin", 20],
-        "upper_margin_threshold": ["max_margin", 40],
-        "volume_threshold": ["min_volume", 1000]
+        "sst_sales_tax": ["sales_tax", 5],
+        "sst_broker_fee": ["broker_fee", 5],
+        "sst_lower_margin": ["min_margin", 20],
+        "sst_upper_margin": ["max_margin", 40],
+        "sst_min_volume": ["min_volume", 1000]
     },
     // Station haul
     {
@@ -499,9 +499,9 @@ function createTradeHeader() {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
-        buyingFooter = "With Sales Tax at " + numberWithCommas(salesTax) + "% and Broker Fee at " + numberWithCommas(brokerFee) + "%<br />" +
-            "Volume greater than: " + numberWithCommas(thresholdVolume) +
-            " | Margins between " + thresholdMarginLower + "% and " + thresholdMarginUpper + "%" +
+        buyingFooter = "With Sales Tax at " + numberWithCommas(salesTax) + "% and Broker Fee at " + numberWithCommas(sstBrokerFee) + "%<br />" +
+            "Volume greater than: " + numberWithCommas(sstMinVolume) +
+            " | Margins between " + sstLowerMargin + "% and " + sstUpperMargin + "%" +
             "<div class='loading'>Loading. Please wait...</div>";
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
@@ -529,7 +529,7 @@ function createDataTable() {
         dataTableDOM.html("");
 
         var dtHTML = "<thead>";
-        var headers = tradingStyle === STATION_TRADE ? stationHeader : tradingStyle === STATION_HAUL ? routeHeader : regionHeader;
+        var headers = tradingStyle === STATION_TRADE ? sstHeader : tradingStyle === STATION_HAUL ? routeHeader : regionHeader;
         for (var i = 0; i < headers.length; i++) {
             dtHTML += ("<th>" + headers[i] + "</th>");
         }
@@ -804,7 +804,7 @@ function setupBookmark(urlParams) {
             case STATION_TRADE:
                 // We have to wait for input element
                 var waitForInputTrade = setInterval(function () {
-                    if ($("#custom_station input").length) {
+                    if ($("#sst_start_station input").length) {
                         clearInterval(waitForInputTrade);
                         addStart(urlParams.get("start"));
                     }

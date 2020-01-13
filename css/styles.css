@@ -401,7 +401,7 @@ tr > td:first-child {
       border: 2px solid black;
   }
 
-  input[type="text"], input[type="number"], #security_threshold, #route_preference, #region_sales_tax, #route_sales_tax, #station_sales_tax{
+  input[type="text"], input[type="number"], #security_threshold, #route_preference, #region_sales_tax, #route_sales_tax, #sst_sales_tax{
       text-align: center;
       background: rgba(0,0,0,0.5) !important;
       color: white !important;
@@ -410,7 +410,7 @@ tr > td:first-child {
       margin: 0 auto 1em auto;
   }
 
-  #custom_station, #start_station, #end_station {
+  #sst_start_station, #start_station, #end_station {
       max-width: 100%;
       margin: 0 auto;
   }
@@ -427,7 +427,7 @@ tr > td:first-child {
         margin: 0 auto;
     }
 
-    #custom_station input[type="text"],
+    #sst_start_station input[type="text"],
     #start_station input[type="text"],
     #end_station input[type="text"] {
         text-align: left !important;

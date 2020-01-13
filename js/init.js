@@ -1,12 +1,12 @@
-var thresholdMarginLower;
-var thresholdMarginUpper;
-var thresholdVolume;
+var sstLowerMargin;
+var sstUpperMargin;
+var sstMinVolume;
 var thresholdProfit;
 var thresholdRoi;
 var thresholdCost;
 var thresholdWeight;
 var salesTax;
-var brokerFee;
+var sstBrokerFee;
 
 var tradingStyle = null;
 var errorShown = false;
@@ -116,7 +116,7 @@ $( document ).ready(function() {
     }
     //window.history.replaceState(null, null, window.location.pathname);
     
-    ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
+    ["#region_sales_tax", "#route_sales_tax", "#sst_sales_tax"].forEach(function(id) {
         if ($(id).val() === "other") {
             $(id + "_in").show();
         }
@@ -224,7 +224,7 @@ function setupCustomDropdown() {
 
             stationList.sort();
 
-            initCompletely("custom_station", stationList);
+            initCompletely("sst_start_station", stationList);
             initCompletely("start_station", stationList);
             initCompletely("end_station", stationList);
 
@@ -302,7 +302,7 @@ function setupCustomDropdown() {
                 if (event.keyCode == '9') { //9 is the tab key
                     var lastChar = parseInt(event.target.id.charAt(event.target.id.length - 1));
                     if (lastChar == 1) {
-                        $("#volume_threshold").focus();
+                        $("#sst_min_volume").focus();
                     } else if (lastChar == 2 || lastChar == 4) {
                         $("#location-input-" + (lastChar + 1)).focus();
                     } else if (lastChar == 3) {
@@ -486,7 +486,7 @@ function onClickListeners() {
         setupTradeOptions(1);
     });
 
-    $(".station-trader").on('click', function(){
+    $(".station-trading").on('click', function(){
         setupTradeOptions(0);
     });
 
@@ -505,7 +505,7 @@ function onClickListeners() {
         });
     });
 
-    ["#region_sales_tax", "#route_sales_tax", "#station_sales_tax"].forEach(function(id) {
+    ["#region_sales_tax", "#route_sales_tax", "#sst_sales_tax"].forEach(function(id) {
         $(id).on('change', function() {
             if ($(id).val() === "other") {
                 $(id + "_in").show();
@@ -564,14 +564,14 @@ function setAbout() {
 */
 function setupCookies() {
   var formInputs = [
-      "lower_margin_threshold", "upper_margin_threshold", "volume_threshold",
+      "sst_lower_margin", "sst_upper_margin", "sst_min_volume",
       "profit_threshold", "roi_threshold", "buy_threshold", "weight_threshold",
       "route_preference", "include_citadels", "security_threshold",
       "region_buy_threshold", "region_roi_threshold", "region_weight_threshold",
       "region_profit_threshold", "buying_type_station", "selling_type_station",
-      "buying_type_region", "selling_type_region", "station_sales_tax", "station_sales_tax_in",
+      "buying_type_region", "selling_type_region", "sst_sales_tax", "sst_sales_tax_in",
       "region_sales_tax", "region_sales_tax_in", "route_sales_tax", "route_sales_tax_in",
-      "broker_fee"
+      "sst_broker_fee"
   ];
 
   for(var i = 0; i < formInputs.length; i++) {
@@ -691,8 +691,8 @@ function open_popup(itemId, name, fromStation, toStation){
 */
 function addStart(variable) {
     if (tradingStyle == STATION_TRADE) {
-        $("#custom_station input")[0].value = variable;
-        $("#custom_station input")[1].value = variable;
+        $("#sst_start_station input")[0].value = variable;
+        $("#sst_start_station input")[1].value = variable;
     } else if (tradingStyle == STATION_HAUL) {
         $("#start_station input")[0].value = variable;
         $("#start_station input")[1].value = variable;
@@ -735,7 +735,7 @@ function addEnd(variable) {
 * Gets the station trading coordinates based on the input
 */
 function setStationTradingLocations() {
-    var inputValue = $("#custom_station input")[0].value || $("#custom_station input")[1].value;
+    var inputValue = $("#sst_start_station input")[0].value || $("#sst_start_station input")[1].value;
     startLocations = inputValue.toLowerCase();
 
     var start_region = universeList[startLocations].region;
@@ -851,15 +851,15 @@ function init(style){
     tradingStyle = style;
     try {
         if(tradingStyle == STATION_TRADE){
-            if ($("#station_sales_tax").val() === "other") {
-                salesTax = setDefaultVal("station_sales_tax_in");
+            if ($("#sst_sales_tax").val() === "other") {
+                salesTax = setDefaultVal("sst_sales_tax_in");
             } else {
-                salesTax = setDefaultVal("station_sales_tax");
+                salesTax = setDefaultVal("sst_sales_tax");
             }
-            brokerFee = setDefaultVal("broker_fee");
-            thresholdMarginLower = setDefaultVal("lower_margin_threshold");
-            thresholdMarginUpper = setDefaultVal("upper_margin_threshold");
-            thresholdVolume = setDefaultVal("volume_threshold");
+            sstBrokerFee = setDefaultVal("sst_broker_fee");
+            sstLowerMargin = setDefaultVal("sst_lower_margin");
+            sstUpperMargin = setDefaultVal("sst_upper_margin");
+            sstMinVolume = setDefaultVal("sst_min_volume");
             setStationTradingLocations();
         } else if (tradingStyle == STATION_HAUL) {
             if ($("#route_sales_tax").val() === "other") {

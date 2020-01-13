@@ -17,7 +17,7 @@
 
         <div class="col-xs-12 mx-auto">
             <div class="form-group standard">
-                <div id='custom_station' style='border:1px solid #999;'></div>
+                <div id='sst_start_station' style='border:1px solid #999;'></div>
                 <p class="suggestions">
                     Suggestions:
                     <span onclick="addStart('Jita');">Jita</span>
@@ -37,7 +37,7 @@
                 <p title="Calculation = 5 * (1 - 0.11 * AccountingLevel) %" style="cursor: pointer">
                     Sales Tax (in %)
                 </p>
-                <select class="minor-text form-control" id="station_sales_tax" name="station_sales_tax">
+                <select class="minor-text form-control" id="sst_sales_tax" name="sst_sales_tax">
                   <option value="" selected>Choose your Accounting Level</option>
                   <option value="5">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.00%</option>
                   <option value="4.45">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.45%</option>
@@ -47,13 +47,13 @@
                   <option value="2.25">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.25%</option>
                   <option value="other">Other</option>
                 </select>
-                <input type="number" id="station_sales_tax_in" name="station_sales_tax_in" class="form-control" placeholder="Default: 5" style="display:none" step="0.05" min="0" max="5"/>
+                <input type="number" id="sst_sales_tax_in" name="sst_sales_tax_in" class="form-control" placeholder="Default: 5" style="display:none" step="0.05" min="0" max="5"/>
             </div>
             <div class="col-sm-4 col-xs-12 mx-auto">
                 <p title="Calculation = 5 - ( 0.3 * BrokersRelationsLevel) - (0.03 * FactionStanding) - (0.02 * CorpStanding) %" style="cursor: pointer">
                     Broker Fee (in %)
                 </p>
-                <input type="number" id="broker_fee" name="broker_fee" class="form-control" placeholder="Default: 5" step="0.01" min="0" max="5"/>
+                <input type="number" id="sst_broker_fee" name="sst_broker_fee" class="form-control" placeholder="Default: 5" step="0.01" min="0" max="5"/>
             </div>
             
             <div class="col-sm-2 col-xs-12"></div>
@@ -67,8 +67,8 @@
               <br/>
               <input
                 type="number"
-                id="lower_margin_threshold"
-                name="lower_margin_threshold"
+                id="sst_lower_margin"
+                name="sst_lower_margin"
                 class="minor-text form-control threshold-margin"
                 placeholder="Default: 20"
               />
@@ -80,8 +80,8 @@
               <br/>
               <input
                 type="number"
-                id="upper_margin_threshold"
-                name="upper_margin_threshold"
+                id="sst_upper_margin"
+                name="sst_upper_margin"
                 class="minor-text form-control threshold-margin"
                 placeholder="Default: 40"
               />
@@ -98,8 +98,8 @@
               <br/>
               <input
                 type="number"
-                id="volume_threshold"
-                name="volume_threshold"
+                id="sst_min_volume"
+                name="sst_min_volume"
                 class="minor-text form-control threshold-margin"
                 placeholder="Default: 1,000"
               />
