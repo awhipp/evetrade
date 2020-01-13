@@ -29,17 +29,17 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = setDefaultVal("security_threshold");
-    this.safety = setDefaultVal("route_preference");
+    this.security = setDefaultVal("r2r_min_security");
+    this.safety = setDefaultVal("r2r_route_preference");
 
     this.completed = false;
 
-    this.includeCitadels = $("#include_citadels").is(":checked");
+    this.includeCitadels = $("#r2r_include_citadels").is(":checked");
 
     if(!this.includeCitadels) {
-        $("#citadelsLine").hide();
+        $("#r2r_citadels_line").hide();
     } else {
-        $("#citadelsLine").show();
+        $("#r2r_citadels_line").show();
     }
 
     routes.push(this);

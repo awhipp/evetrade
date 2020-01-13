@@ -27,7 +27,7 @@ var rowAdded = false;
 var orderTypeStart = "sell";
 var orderTypeEnd = "buy";
 
-var regionHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
+var r2rHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
 var s2sHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
 var sstHeader = ["Item", "Buy Price", "Sell Price", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
@@ -83,16 +83,16 @@ var defaultValues = [
     },
     // Region haul
     {
-        "buying_type_region": ["buy_type", "sell"],
-        "selling_type_region": ["sell_type", "buy"],
-        "region_sales_tax": ["sales_tax", 5],
-        "region_profit_threshold": ["min_profit", 500000],
-        "region_weight_threshold": ["max_cargo", 999999999999999999],
-        "region_roi_threshold": ["min_roi", 4],
-        "region_buy_threshold": ["max_budget", 999999999999999999],
-        "security_threshold": ["min_security", "null"],
-        "route_preference": ["route_type", "secure"],
-        "include_citadels": ["include_citadels", false]
+        "r2r_buying_type": ["buy_type", "sell"],
+        "r2r_selling_type": ["sell_type", "buy"],
+        "r2r_sales_tax": ["sales_tax", 5],
+        "r2r_min_profit": ["min_profit", 500000],
+        "r2r_max_cargo": ["max_cargo", 999999999999999999],
+        "r2r_min_roi": ["min_roi", 4],
+        "r2r_max_budget": ["max_budget", 999999999999999999],
+        "r2r_min_security": ["min_security", "null"],
+        "r2r_route_preference": ["route_type", "secure"],
+        "r2r_include_citadels": ["r2r_include_citadels", false]
     },
     // Taxes
     [5, 4.45, 3.9, 3.35, 2.8, 2.25]
@@ -106,27 +106,27 @@ function setCopyWording() {
     orderTypeStart = $("#s2s_buying_type").val();
     orderTypeEnd = $("#s2s_selling_type").val();
   } else if (tradingStyle == REGION_HAUL) {
-    orderTypeStart = $("#buying_type_region").val();
-    orderTypeEnd = $("#selling_type_region").val();
+    orderTypeStart = $("#r2r_buying_type").val();
+    orderTypeEnd = $("#r2r_selling_type").val();
   }
 
   if(orderTypeStart == "buy") {
-    regionHeader[1] = "Buy Order";
-    regionHeader[4] = "Sell Price";
+    r2rHeader[1] = "Buy Order";
+    r2rHeader[4] = "Sell Price";
     s2sHeader[1] = "Buy Order";
     s2sHeader[4] = "Sell Price";
   } else {
-    regionHeader[1] = "Sell Order";
-    regionHeader[4] = "Buy Price";
+    r2rHeader[1] = "Sell Order";
+    r2rHeader[4] = "Buy Price";
     s2sHeader[1] = "Sell Order";
     s2sHeader[4] = "Buy Price";
   }
 
   if(orderTypeEnd == "buy") {
-    regionHeader[7] = "Sell Price";
+    r2rHeader[7] = "Sell Price";
     s2sHeader[7] = "Sell Price";
   } else {
-    regionHeader[7] = "Buy Price";
+    r2rHeader[7] = "Buy Price";
     s2sHeader[7] = "Buy Price";
   }
 }
@@ -470,8 +470,8 @@ function createTradeHeader() {
             "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(thresholdProfit) + "&nbsp;ISK";
         }
         if (tradingStyle == REGION_HAUL) {
-            extraData += "<span id='citadelsLine'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
-            extraData += "<br>Only showing system security status of " + $("#security_threshold").val() + " SEC or better.";
+            extraData += "<span id='r2r_citadels_line'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
+            extraData += "<br>Only showing system security status of " + $("#r2r_min_security").val() + " SEC or better.";
         }
 
         if(thresholdCost !== 999999999999999999){
@@ -529,7 +529,7 @@ function createDataTable() {
         dataTableDOM.html("");
 
         var dtHTML = "<thead>";
-        var headers = tradingStyle === STATION_TRADE ? sstHeader : tradingStyle === STATION_HAUL ? s2sHeader : regionHeader;
+        var headers = tradingStyle === STATION_TRADE ? sstHeader : tradingStyle === STATION_HAUL ? s2sHeader : r2rHeader;
         for (var i = 0; i < headers.length; i++) {
             dtHTML += ("<th>" + headers[i] + "</th>");
         }
@@ -793,7 +793,7 @@ function setupBookmark(urlParams) {
             case REGION_HAUL:
                 // We have to wait for input element
                 var waitForInputRegion = setInterval(function () {
-                    if ($("#start_region input").length) {
+                    if ($("#r2r_start_region input").length) {
                         clearInterval(waitForInputRegion);
                         addStart(urlParams.get("start"));
                         addEnd(urlParams.get("end"))

@@ -116,7 +116,7 @@ $( document ).ready(function() {
     }
     //window.history.replaceState(null, null, window.location.pathname);
     
-    ["#region_sales_tax", "#s2s_sales_tax", "#sst_sales_tax"].forEach(function(id) {
+    ["#r2r_sales_tax", "#s2s_sales_tax", "#sst_sales_tax"].forEach(function(id) {
         if ($(id).val() === "other") {
             $(id + "_in").show();
         }
@@ -228,12 +228,12 @@ function setupCustomDropdown() {
             initCompletely("s2s_start_station", stationList);
             initCompletely("s2s_end_station", stationList);
 
-            if($("#route_preference").val() == null) {
-              $("#route_preference").val("shortest");
+            if($("#r2r_route_preference").val() == null) {
+              $("#r2r_route_preference").val("shortest");
             }
 
-            if($("#security_threshold").val() == null) {
-              $("#security_threshold").val("null");
+            if($("#r2r_min_security").val() == null) {
+              $("#r2r_min_security").val("null");
             }
 
             if($("#s2s_buying_type").val() == null) {
@@ -267,15 +267,15 @@ function setupCustomDropdown() {
 
             regionList.sort();
 
-            initCompletely("start_region", regionList);
-            initCompletely("end_region", regionList);
+            initCompletely("r2r_start_region", regionList);
+            initCompletely("r2r_end_region", regionList);
 
-            if($("#buying_type_region").val() == null) {
-              $("#buying_type_region").val("sell");
+            if($("#r2r_buying_type").val() == null) {
+              $("#r2r_buying_type").val("sell");
             }
 
-            if($("#selling_type_region").val() == null) {
-              $("#selling_type_region").val("buy");
+            if($("#r2r_selling_type").val() == null) {
+              $("#r2r_selling_type").val("buy");
             }
 
             regionsReady = true;
@@ -308,7 +308,7 @@ function setupCustomDropdown() {
                     } else if (lastChar == 3) {
                         $("#s2s_min_profit").focus();
                     } else if (lastChar == 5) {
-                        $("#region_profit_threshold").focus();
+                        $("#r2r_min_profit").focus();
                     }
                 }
             });
@@ -478,7 +478,7 @@ function onClickListeners() {
         $(this).hasClass("end-selected") ? $(this).removeClass("end-selected") : $(this).addClass("end-selected");
     });
 
-    $(".hauling-region-trader").on('click', function () {
+    $(".region-hauling").on('click', function () {
         setupTradeOptions(2);
     });
 
@@ -505,7 +505,7 @@ function onClickListeners() {
         });
     });
 
-    ["#region_sales_tax", "#s2s_sales_tax", "#sst_sales_tax"].forEach(function(id) {
+    ["#r2r_sales_tax", "#s2s_sales_tax", "#sst_sales_tax"].forEach(function(id) {
         $(id).on('change', function() {
             if ($(id).val() === "other") {
                 $(id + "_in").show();
@@ -520,8 +520,8 @@ function checkDirection() {
     var s2sBuyingType = $("#s2s_buying_type").val();
     var s2sSellingType = $("#s2s_selling_type").val();
 
-    var regionStartType = $("#buying_type_region").val();
-    var regionEndType = $("#selling_type_region").val();
+    var r2rBuyingType = $("#r2r_buying_type").val();
+    var r2rSellingType = $("#r2r_selling_type").val();
 
     if(s2sBuyingType == "sell" && s2sSellingType == "buy") {
       $("#direction_warning_station").hide();
@@ -531,11 +531,11 @@ function checkDirection() {
       $("#direction_warning_station").show();
     }
 
-    if(regionStartType == "sell" && regionEndType == "buy") {
+    if(r2rBuyingType == "sell" && r2rSellingType == "buy") {
       $("#direction_warning_region").hide();
     } else {
-      $("#direction_warning_region > .startDirection").text(regionStartType);
-      $("#direction_warning_region > .endDirection").text(regionEndType);
+      $("#direction_warning_region > .startDirection").text(r2rBuyingType);
+      $("#direction_warning_region > .endDirection").text(r2rSellingType);
       $("#direction_warning_region").show();
     }
 }
@@ -566,11 +566,11 @@ function setupCookies() {
   var formInputs = [
       "sst_lower_margin", "sst_upper_margin", "sst_min_volume",
       "s2s_min_profit", "s2s_min_roi", "s2s_max_budget", "s2s_max_cargo",
-      "route_preference", "include_citadels", "security_threshold",
-      "region_buy_threshold", "region_roi_threshold", "region_weight_threshold",
-      "region_profit_threshold", "s2s_buying_type", "s2s_selling_type",
-      "buying_type_region", "selling_type_region", "sst_sales_tax", "sst_sales_tax_in",
-      "region_sales_tax", "region_sales_tax_in", "s2s_sales_tax", "s2s_sales_tax_in",
+      "r2r_route_preference", "r2r_include_citadels", "r2r_min_security",
+      "r2r_max_budget", "r2r_min_roi", "r2r_max_cargo",
+      "r2r_min_profit", "s2s_buying_type", "s2s_selling_type",
+      "r2r_buying_type", "r2r_selling_type", "sst_sales_tax", "sst_sales_tax_in",
+      "r2r_sales_tax", "r2r_sales_tax_in", "s2s_sales_tax", "s2s_sales_tax_in",
       "sst_broker_fee"
   ];
 
@@ -601,7 +601,7 @@ function setupTradeOptions(tradeType){
         $("#station_trade").slideToggle();
         eventLabel = "Station Trader";
     } else if (tradingStyle == REGION_HAUL) {
-        $("#region_trade").slideToggle();
+        $("#region_haul").slideToggle();
         eventLabel = "Hauler - Region";
     }
 
@@ -704,8 +704,8 @@ function addStart(variable) {
             newStartStation();
         }
     } else if (tradingStyle == REGION_HAUL) {
-        $("#start_region input")[0].value = variable;
-        $("#start_region input")[1].value = variable;
+        $("#r2r_start_region input")[0].value = variable;
+        $("#r2r_start_region input")[1].value = variable;
     }
 }
 
@@ -726,8 +726,8 @@ function addEnd(variable) {
             newEndStation();
         }
     } else if (tradingStyle == REGION_HAUL) {
-        $("#end_region input")[0].value = variable;
-        $("#end_region input")[1].value = variable;
+        $("#r2r_end_region input")[0].value = variable;
+        $("#r2r_end_region input")[1].value = variable;
     }
 }
 
@@ -738,11 +738,11 @@ function setStationTradingLocations() {
     var inputValue = $("#sst_start_station input")[0].value || $("#sst_start_station input")[1].value;
     startLocations = inputValue.toLowerCase();
 
-    var start_region = universeList[startLocations].region;
+    var r2r_start_region = universeList[startLocations].region;
     var s2s_start_station = universeList[startLocations].station;
     startLocations = universeList[startLocations].name;
 
-    startCoordinates.region = start_region;
+    startCoordinates.region = r2r_start_region;
     startCoordinates.station = s2s_start_station;
 }
 
@@ -750,13 +750,13 @@ function setStationTradingLocations() {
 * Gets the region trading coordinates based on the input
 */
 function setRouteRegionTradingLocations() {
-    var inputValue = $("#start_region input")[0].value || $("#start_region input")[1].value;
+    var inputValue = $("#r2r_start_region input")[0].value || $("#r2r_start_region input")[1].value;
     startLocations = inputValue.toLowerCase();
 
     startCoordinates = universeList[startLocations];
     startLocations = startCoordinates.name;
 
-    inputValue = $("#end_region input")[0].value || $("#end_region input")[1].value;
+    inputValue = $("#r2r_end_region input")[0].value || $("#r2r_end_region input")[1].value;
     endLocations = inputValue.toLowerCase();
 
     endCoordinates = universeList[endLocations];
@@ -873,15 +873,15 @@ function init(style){
             thresholdWeight = setDefaultVal("s2s_max_cargo");
             setRouteStationTradingLocations();
         } else if (tradingStyle == REGION_HAUL) {
-            if ($("#region_sales_tax").val() === "other") {
-                salesTax = setDefaultVal("region_sales_tax_in");
+            if ($("#r2r_sales_tax").val() === "other") {
+                salesTax = setDefaultVal("r2r_sales_tax_in");
             } else {
-                salesTax = setDefaultVal("region_sales_tax");
+                salesTax = setDefaultVal("r2r_sales_tax");
             }
-            thresholdProfit = setDefaultVal("region_profit_threshold");
-            thresholdRoi = setDefaultVal("region_roi_threshold");
-            thresholdCost = setDefaultVal("region_buy_threshold");
-            thresholdWeight = setDefaultVal("region_weight_threshold");
+            thresholdProfit = setDefaultVal("r2r_min_profit");
+            thresholdRoi = setDefaultVal("r2r_min_roi");
+            thresholdCost = setDefaultVal("r2r_max_budget");
+            thresholdWeight = setDefaultVal("r2r_max_cargo");
             setRouteRegionTradingLocations();
         }
         createBookmarks();

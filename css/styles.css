@@ -365,7 +365,7 @@ tr > td:first-child {
 #buying_header {
     font-size: 1.5em !important;
 }
-  #station_haul, #station_trade, #region_trade, #buying_footer, #buying_header {
+  #station_haul, #station_trade, #region_haul, #buying_footer, #buying_header {
     display: none;
   }
 
@@ -401,7 +401,7 @@ tr > td:first-child {
       border: 2px solid black;
   }
 
-  input[type="text"], input[type="number"], #security_threshold, #route_preference, #region_sales_tax, #s2s_sales_tax, #sst_sales_tax{
+  input[type="text"], input[type="number"], #r2r_min_security, #r2r_route_preference, #r2r_sales_tax, #s2s_sales_tax, #sst_sales_tax{
       text-align: center;
       background: rgba(0,0,0,0.5) !important;
       color: white !important;
@@ -415,7 +415,7 @@ tr > td:first-child {
       margin: 0 auto;
   }
 
-    #start_region, #end_region {
+    #r2r_start_region, #r2r_end_region {
         max-width: 400px;
         width: 100%;
         margin: 0 auto;
@@ -436,8 +436,8 @@ tr > td:first-child {
     }
 
 
-#start_region input[type="text"],
-#end_region input[type="text"] {
+#r2r_start_region input[type="text"],
+#r2r_end_region input[type="text"] {
     text-align: left !important;
     max-width: 400px !important;
     padding: 0 100px 0 1em !important;

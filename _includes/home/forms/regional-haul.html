@@ -1,4 +1,4 @@
-<form id="region_trade"  onsubmit="return init(REGION_HAUL)">
+<form id="region_haul"  onsubmit="return init(REGION_HAUL)">
     <input type="hidden" name="form_type" value="REGION_HAUL"/>
     <div class="col-xs-12 mx-auto">
         <h2>
@@ -19,7 +19,7 @@
 
         <div class="form-group standard">
             <div id="adding_to_start_region_list">
-                <div id='start_region' style='border:1px solid #999;'></div>
+                <div id='r2r_start_region' style='border:1px solid #999;'></div>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
         </h4>
         <div class="form-group standard">
             <div id="adding_to_end_region_list">
-                <div id='end_region' style='border:1px solid #999;'>
+                <div id='r2r_end_region' style='border:1px solid #999;'>
                 </div>
             </div>
         </div>
@@ -42,10 +42,10 @@
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="buying_type_region" class="control-label">
+                  <label for="r2r_buying_type" class="control-label">
                     Buying from
                   </label>
-                  <select id="buying_type_region" name="buying_type_region" class="directionChange">
+                  <select id="r2r_buying_type" name="r2r_buying_type" class="directionChange">
                     <option value="sell" selected>Sell Orders</option>
                     <option value="buy">Buy Orders</option>
                   </select>
@@ -53,10 +53,10 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="selling_type_region" class="control-label">
+                  <label for="r2r_selling_type" class="control-label">
                     Selling as
                   </label>
-                  <select id="selling_type_region" name="selling_type_region" class="directionChange">
+                  <select id="r2r_selling_type" name="r2r_selling_type" class="directionChange">
                     <option value="sell">Sell Orders</option>
                     <option value="buy" selected>Buy Orders</option>
                   </select>
@@ -76,8 +76,8 @@
         <div class="row align-items-center">
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-8 col-xs-12">
-                <label class="control-label" for="region_sales_tax" title="Calculation = 5 * (1 - 0.11 * AccountingLevel)" style="cursor: pointer;">Sales Tax (in %)</label>
-                <select class="minor-text form-control" id="region_sales_tax" name="region_sales_tax">
+                <label class="control-label" for="r2r_sales_tax" title="Calculation = 5 * (1 - 0.11 * AccountingLevel)" style="cursor: pointer;">Sales Tax (in %)</label>
+                <select class="minor-text form-control" id="r2r_sales_tax" name="r2r_sales_tax">
                   <option value="" selected>Choose your Accounting Level</option>
                   <option value="5">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.00%</option>
                   <option value="4.45">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.45%</option>
@@ -87,7 +87,7 @@
                   <option value="2.25">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.25%</option>
                   <option value="other">Other</option>
                 </select>
-                <input type="number" id="region_sales_tax_in" name="region_sales_tax_in" class="form-control my-1" placeholder="Default: 5" style="display:none" step="0.05" min="0" max="5"/>
+                <input type="number" id="r2r_sales_tax_in" name="r2r_sales_tax_in" class="form-control my-1" placeholder="Default: 5" style="display:none" step="0.05" min="0" max="5"/>
             </div>
             <div class="col-sm-2 col-xs-12"></div>
         </div>
@@ -99,13 +99,13 @@
           <div class="col-sm-2 col-xs-12"></div>
           <div class="col-sm-4 col-xs-12">
               <p>
-                <label for="region_profit_threshold" class="control-label">
+                <label for="r2r_min_profit" class="control-label">
                   Only Return Profits Above
                 </label>
                 <input
                   type="number"
-                  id="region_profit_threshold"
-                  name="region_profit_threshold"
+                  id="r2r_min_profit"
+                  name="r2r_min_profit"
                   class="minor-text form-control"
                   placeholder="Default: 500,000"
                 />
@@ -113,13 +113,13 @@
           </div>
           <div class="col-sm-4 col-xs-12">
               <p>
-                <label for="region_weight_threshold" class="control-label">
+                <label for="r2r_max_cargo" class="control-label">
                   Max Cargo Capacity (in m3)
                 </label>
                 <input
                   type="number"
-                  id="region_weight_threshold"
-                  name="region_weight_threshold"
+                  id="r2r_max_cargo"
+                  name="r2r_max_cargo"
                   class="minor-text form-control"
                   placeholder="Default: Not Included"
                 />
@@ -131,13 +131,13 @@
           <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="region_roi_threshold" class="control-label">
+                  <label for="r2r_min_roi" class="control-label">
                     Minimum ROI (in %)
                   </label>
                   <input
                     type="number"
-                    id="region_roi_threshold"
-                    name="region_roi_threshold"
+                    id="r2r_min_roi"
+                    name="r2r_min_roi"
                     class="minor-text form-control"
                     placeholder="Default: 4"
                   />
@@ -145,13 +145,13 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="region_buy_threshold" class="control-label">
+                  <label for="r2r_max_budget" class="control-label">
                     Maximum Budget
                   </label>
                   <input
                     type="number"
-                    id="region_buy_threshold"
-                    name="region_buy_threshold"
+                    id="r2r_max_budget"
+                    name="r2r_max_budget"
                     class="minor-text form-control"
                     placeholder="Default: Infinity"
                   />
@@ -162,12 +162,12 @@
         <div class="row">
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
-                    <label for="security_threshold" class="control-label">
+                    <label for="r2r_min_security" class="control-label">
                       Security Status Filter
                     </label>
                     <select
-                      id="security_threshold"
-                      name="security_threshold"
+                      id="r2r_min_security"
+                      name="r2r_min_security"
                       class="minor-text form-control">
                         <option value="null" selected>No Filter</option>
                         <option value="low">Only Low or High Sec</option>
@@ -175,12 +175,12 @@
                     </select>
             </div>
             <div class="col-sm-4 col-xs-12">
-                    <label for="route_preference" class="control-label">
+                    <label for="r2r_route_preference" class="control-label">
                       Route Preference
                     </label>
                     <select
-                      id="route_preference"
-                      name="route_preference"
+                      id="r2r_route_preference"
+                      name="r2r_route_preference"
                       class="minor-text form-control">
                         <option value="shortest">Shortest Route</option>
                         <option value="secure" selected>Safest Route</option>
@@ -192,14 +192,14 @@
         <div class="row">
           <div class="col-sm-5 col-xs-12"></div>
           <div class="col-sm-2 col-xs-12">
-                  <label for="include_citadels" class="control-label">
+                  <label for="r2r_include_citadels" class="control-label">
                     Include Citadels
                   </label>
                   <br>
                   <input
                     type="checkbox"
-                    id="include_citadels"
-                    name="include_citadels"
+                    id="r2r_include_citadels"
+                    name="r2r_include_citadels"
                   />
           </div>
           <div class="col-sm-5 col-xs-12"></div>
