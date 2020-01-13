@@ -462,23 +462,23 @@ function createTradeHeader() {
         var extraData = "";
         if(orderTypeEnd == "sell") {
           extraData = "<div id='route_to'>Selling as Sell Orders at " + sellingTo + " with " + salesTax + "% tax</div> " +
-            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + thresholdRoi + "% " +
-            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(thresholdProfit) + "&nbsp;ISK";
+            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + haulingMinRoi + "% " +
+            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(haulingMinProfit) + "&nbsp;ISK";
         } else {
           extraData = "<div id='route_to'>Selling to Buy Orders at " + sellingTo + " with " + salesTax + "% tax</div> " +
-            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + thresholdRoi + "% " +
-            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(thresholdProfit) + "&nbsp;ISK";
+            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + haulingMinRoi + "% " +
+            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(haulingMinProfit) + "&nbsp;ISK";
         }
         if (tradingStyle == REGION_HAUL) {
             extraData += "<span id='r2r_citadels_line'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
             extraData += "<br>Only showing system security status of " + $("#r2r_min_security").val() + " SEC or better.";
         }
 
-        if(thresholdCost !== 999999999999999999){
-            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(thresholdCost) + "&nbsp;ISK";
+        if(haulingMaxBudget !== 999999999999999999){
+            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(haulingMaxBudget) + "&nbsp;ISK";
         }
-        if(thresholdWeight !== 999999999999999999){
-            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(thresholdWeight) + "&nbsp;m3";
+        if(haulingMaxCargo !== 999999999999999999){
+            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(haulingMaxCargo) + "&nbsp;m3";
         }
 
         buyingHeaderDOM.show();

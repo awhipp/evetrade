@@ -430,7 +430,7 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
     
             var iskRatio = itemProfit / buyPrice;
 
-            if(netProfit >= thresholdProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= thresholdRoi && netCosts <= thresholdCost ){
+            if(netProfit >= haulingMinProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= haulingMinRoi && netCosts <= haulingMaxBudget ){
                 return [itemId, volume, buyPrice, netCosts, locationInfo, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio, itemProfit];
             }
         }
@@ -516,7 +516,7 @@ Route.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
 
-    if(storageVolume > thresholdWeight) {
+    if(storageVolume > haulingMaxCargo) {
         return;
     }
 

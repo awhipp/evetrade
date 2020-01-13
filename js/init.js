@@ -1,10 +1,10 @@
 var sstLowerMargin;
 var sstUpperMargin;
 var sstMinVolume;
-var thresholdProfit;
-var thresholdRoi;
-var thresholdCost;
-var thresholdWeight;
+var haulingMinProfit;
+var haulingMinRoi;
+var haulingMaxBudget;
+var haulingMaxCargo;
 var salesTax;
 var sstBrokerFee;
 
@@ -867,10 +867,10 @@ function init(style){
             } else {
                 salesTax = setDefaultVal("s2s_sales_tax");
             }
-            thresholdProfit = setDefaultVal("s2s_min_profit");
-            thresholdRoi = setDefaultVal("s2s_min_roi");
-            thresholdCost = setDefaultVal("s2s_max_budget");
-            thresholdWeight = setDefaultVal("s2s_max_cargo");
+            haulingMinProfit = setDefaultVal("s2s_min_profit");
+            haulingMinRoi = setDefaultVal("s2s_min_roi");
+            haulingMaxBudget = setDefaultVal("s2s_max_budget");
+            haulingMaxCargo = setDefaultVal("s2s_max_cargo");
             setRouteStationTradingLocations();
         } else if (tradingStyle == REGION_HAUL) {
             if ($("#r2r_sales_tax").val() === "other") {
@@ -878,10 +878,10 @@ function init(style){
             } else {
                 salesTax = setDefaultVal("r2r_sales_tax");
             }
-            thresholdProfit = setDefaultVal("r2r_min_profit");
-            thresholdRoi = setDefaultVal("r2r_min_roi");
-            thresholdCost = setDefaultVal("r2r_max_budget");
-            thresholdWeight = setDefaultVal("r2r_max_cargo");
+            haulingMinProfit = setDefaultVal("r2r_min_profit");
+            haulingMinRoi = setDefaultVal("r2r_min_roi");
+            haulingMaxBudget = setDefaultVal("r2r_max_budget");
+            haulingMaxCargo = setDefaultVal("r2r_max_cargo");
             setRouteRegionTradingLocations();
         }
         createBookmarks();
