@@ -29,17 +29,17 @@ function Region(startLocation, endLocation) {
     this.asyncProgressUpdate = null;
     this.routesExecutor = null;
 
-    this.security = setDefaultVal("security_threshold");
-    this.safety = setDefaultVal("route_preference");
+    this.security = setDefaultVal("r2r_min_security");
+    this.safety = setDefaultVal("r2r_route_preference");
 
     this.completed = false;
 
-    this.includeCitadels = $("#include_citadels").is(":checked");
+    this.includeCitadels = $("#r2r_include_citadels").is(":checked");
 
     if(!this.includeCitadels) {
-        $("#citadelsLine").hide();
+        $("#r2r_citadels_line").hide();
     } else {
-        $("#citadelsLine").show();
+        $("#r2r_citadels_line").show();
     }
 
     routes.push(this);
@@ -422,7 +422,7 @@ Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice,
 
             var iskRatio = itemProfit / buyPrice;
 
-            if(netProfit >= thresholdProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= thresholdRoi && netCosts <= thresholdCost ){
+            if(netProfit >= haulingMinProfit && (iskRatio.toFixed(3)*100).toFixed(1) >= haulingMinRoi && netCosts <= haulingMaxBudget ){
                 return [itemId, start, volume, buyPrice, netCosts, end, sellPrice, netSales, grossMargin, sellTax, netProfit, iskRatio];
             }else{
                 return [];
@@ -634,7 +634,7 @@ Region.prototype.addRow = function(row) {
 
     var storageVolume = row.itemWeight * row.quantity;
 
-    if(storageVolume > thresholdWeight) {
+    if(storageVolume > haulingMaxCargo) {
         return;
     }
 

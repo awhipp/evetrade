@@ -27,9 +27,9 @@ var rowAdded = false;
 var orderTypeStart = "sell";
 var orderTypeEnd = "buy";
 
-var regionHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
-var routeHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
-var stationHeader = ["Item", "Buy Price", "Sell Price", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
+var r2rHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales",  "Gross Margin", "Sell Taxes", "Net Profit", "Jumps", "Profit per Jump", "R.O.I", "Total Volume (m3)"];
+var s2sHeader = ["", "Buy Item", "From", "Quantity", "Buy Price", "Net Costs", "Take To", "Sell Price", "Net Sales", "Gross Margin", "Sell Taxes", "Net Profit", "Profit Per Item", "R.O.I", "Total Volume (m3)"];
+var sstHeader = ["Item", "Buy Price", "Sell Price", "Gross Margin", "Buy Fees", "Sell Fees", "Sell Taxes",  "Net Profit", "R.O.I", "24-Hour Volume", "14-Day Volume", "30-Day Volume"];
 
 /**
 * The keyword for known scam items
@@ -65,34 +65,34 @@ $.getJSON(RES_ENDPOINT + "mapRegions.json", function(data) {
 var defaultValues = [
     // Station trading
     {
-        "station_sales_tax": ["sales_tax", 5],
-        "broker_fee": ["broker_fee", 5],
-        "lower_margin_threshold": ["min_margin", 20],
-        "upper_margin_threshold": ["max_margin", 40],
-        "volume_threshold": ["min_volume", 1000]
+        "sst_sales_tax": ["sales_tax", 5],
+        "sst_broker_fee": ["broker_fee", 5],
+        "sst_lower_margin": ["min_margin", 20],
+        "sst_upper_margin": ["max_margin", 40],
+        "sst_min_volume": ["min_volume", 1000]
     },
     // Station haul
     {
-        "buying_type_station": ["buy_type", "sell"],
-        "selling_type_station": ["sell_type", "buy"],
-        "route_sales_tax": ["sales_tax", 5],
-        "profit_threshold": ["min_profit", 500000],
-        "weight_threshold": ["max_cargo", 999999999999999999],
-        "roi_threshold": ["min_roi", 4],
-        "buy_threshold": ["max_budget", 999999999999999999]
+        "s2s_buying_type": ["buy_type", "sell"],
+        "s2s_selling_type": ["sell_type", "buy"],
+        "s2s_sales_tax": ["sales_tax", 5],
+        "s2s_min_profit": ["min_profit", 500000],
+        "s2s_max_cargo": ["max_cargo", 999999999999999999],
+        "s2s_min_roi": ["min_roi", 4],
+        "s2s_max_budget": ["max_budget", 999999999999999999]
     },
     // Region haul
     {
-        "buying_type_region": ["buy_type", "sell"],
-        "selling_type_region": ["sell_type", "buy"],
-        "region_sales_tax": ["sales_tax", 5],
-        "region_profit_threshold": ["min_profit", 500000],
-        "region_weight_threshold": ["max_cargo", 999999999999999999],
-        "region_roi_threshold": ["min_roi", 4],
-        "region_buy_threshold": ["max_budget", 999999999999999999],
-        "security_threshold": ["min_security", "null"],
-        "route_preference": ["route_type", "secure"],
-        "include_citadels": ["include_citadels", false]
+        "r2r_buying_type": ["buy_type", "sell"],
+        "r2r_selling_type": ["sell_type", "buy"],
+        "r2r_sales_tax": ["sales_tax", 5],
+        "r2r_min_profit": ["min_profit", 500000],
+        "r2r_max_cargo": ["max_cargo", 999999999999999999],
+        "r2r_min_roi": ["min_roi", 4],
+        "r2r_max_budget": ["max_budget", 999999999999999999],
+        "r2r_min_security": ["min_security", "null"],
+        "r2r_route_preference": ["route_type", "secure"],
+        "r2r_include_citadels": ["r2r_include_citadels", false]
     },
     // Taxes
     [5, 4.45, 3.9, 3.35, 2.8, 2.25]
@@ -103,31 +103,31 @@ var defaultValues = [
 */
 function setCopyWording() {
   if (tradingStyle == STATION_HAUL) {
-    orderTypeStart = $("#buying_type_station").val();
-    orderTypeEnd = $("#selling_type_station").val();
+    orderTypeStart = $("#s2s_buying_type").val();
+    orderTypeEnd = $("#s2s_selling_type").val();
   } else if (tradingStyle == REGION_HAUL) {
-    orderTypeStart = $("#buying_type_region").val();
-    orderTypeEnd = $("#selling_type_region").val();
+    orderTypeStart = $("#r2r_buying_type").val();
+    orderTypeEnd = $("#r2r_selling_type").val();
   }
 
   if(orderTypeStart == "buy") {
-    regionHeader[1] = "Buy Order";
-    regionHeader[4] = "Sell Price";
-    routeHeader[1] = "Buy Order";
-    routeHeader[4] = "Sell Price";
+    r2rHeader[1] = "Buy Order";
+    r2rHeader[4] = "Sell Price";
+    s2sHeader[1] = "Buy Order";
+    s2sHeader[4] = "Sell Price";
   } else {
-    regionHeader[1] = "Sell Order";
-    regionHeader[4] = "Buy Price";
-    routeHeader[1] = "Sell Order";
-    routeHeader[4] = "Buy Price";
+    r2rHeader[1] = "Sell Order";
+    r2rHeader[4] = "Buy Price";
+    s2sHeader[1] = "Sell Order";
+    s2sHeader[4] = "Buy Price";
   }
 
   if(orderTypeEnd == "buy") {
-    regionHeader[7] = "Sell Price";
-    routeHeader[7] = "Sell Price";
+    r2rHeader[7] = "Sell Price";
+    s2sHeader[7] = "Sell Price";
   } else {
-    regionHeader[7] = "Buy Price";
-    routeHeader[7] = "Buy Price";
+    r2rHeader[7] = "Buy Price";
+    s2sHeader[7] = "Buy Price";
   }
 }
 
@@ -462,23 +462,23 @@ function createTradeHeader() {
         var extraData = "";
         if(orderTypeEnd == "sell") {
           extraData = "<div id='route_to'>Selling as Sell Orders at " + sellingTo + " with " + salesTax + "% tax</div> " +
-            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + thresholdRoi + "% " +
-            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(thresholdProfit) + "&nbsp;ISK";
+            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + haulingMinRoi + "% " +
+            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(haulingMinProfit) + "&nbsp;ISK";
         } else {
           extraData = "<div id='route_to'>Selling to Buy Orders at " + sellingTo + " with " + salesTax + "% tax</div> " +
-            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + thresholdRoi + "% " +
-            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(thresholdProfit) + "&nbsp;ISK";
+            "ROI&nbsp;Greater&nbsp;Than&nbsp;" + haulingMinRoi + "% " +
+            "|&nbsp;Profits&nbsp;Greater&nbsp;Than&nbsp;" + numberWithCommas(haulingMinProfit) + "&nbsp;ISK";
         }
         if (tradingStyle == REGION_HAUL) {
-            extraData += "<span id='citadelsLine'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
-            extraData += "<br>Only showing system security status of " + $("#security_threshold").val() + " SEC or better.";
+            extraData += "<span id='r2r_citadels_line'><br>* Indicates that the station is a citadel (confirm access at your own risk).</span>"
+            extraData += "<br>Only showing system security status of " + $("#r2r_min_security").val() + " SEC or better.";
         }
 
-        if(thresholdCost !== 999999999999999999){
-            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(thresholdCost) + "&nbsp;ISK";
+        if(haulingMaxBudget !== 999999999999999999){
+            extraData += " |&nbsp;Buy&nbsp;Costs&nbsp;Less&nbsp;Than&nbsp;" + numberWithCommas(haulingMaxBudget) + "&nbsp;ISK";
         }
-        if(thresholdWeight !== 999999999999999999){
-            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(thresholdWeight) + "&nbsp;m3";
+        if(haulingMaxCargo !== 999999999999999999){
+            extraData += " |&nbsp;Total&nbsp;Volume&nbsp;Under&nbsp;" + numberWithCommas(haulingMaxCargo) + "&nbsp;m3";
         }
 
         buyingHeaderDOM.show();
@@ -499,9 +499,9 @@ function createTradeHeader() {
         buyingHeaderDOM.text("Station Trading at " + startLocations);
         buyingHeaderDOM.show();
 
-        buyingFooter = "With Sales Tax at " + numberWithCommas(salesTax) + "% and Broker Fee at " + numberWithCommas(brokerFee) + "%<br />" +
-            "Volume greater than: " + numberWithCommas(thresholdVolume) +
-            " | Margins between " + thresholdMarginLower + "% and " + thresholdMarginUpper + "%" +
+        buyingFooter = "With Sales Tax at " + numberWithCommas(salesTax) + "% and Broker Fee at " + numberWithCommas(sstBrokerFee) + "%<br />" +
+            "Volume greater than: " + numberWithCommas(sstMinVolume) +
+            " | Margins between " + sstLowerMargin + "% and " + sstUpperMargin + "%" +
             "<div class='loading'>Loading. Please wait...</div>";
         buyingFooterDOM.html(buyingFooter);
         buyingFooterDOM.show();
@@ -529,7 +529,7 @@ function createDataTable() {
         dataTableDOM.html("");
 
         var dtHTML = "<thead>";
-        var headers = tradingStyle === STATION_TRADE ? stationHeader : tradingStyle === STATION_HAUL ? routeHeader : regionHeader;
+        var headers = tradingStyle === STATION_TRADE ? sstHeader : tradingStyle === STATION_HAUL ? s2sHeader : r2rHeader;
         for (var i = 0; i < headers.length; i++) {
             dtHTML += ("<th>" + headers[i] + "</th>");
         }
@@ -778,7 +778,7 @@ function setupBookmark(urlParams) {
             case STATION_HAUL:
                 // We have to wait for input element
                 var waitForInputStation = setInterval(function () {
-                    if ($("#start_station input").length) {
+                    if ($("#s2s_start_station input").length) {
                         clearInterval(waitForInputStation);
                         urlParams.get("start").split(',').forEach(function(item) {
                             addStart(item);
@@ -793,7 +793,7 @@ function setupBookmark(urlParams) {
             case REGION_HAUL:
                 // We have to wait for input element
                 var waitForInputRegion = setInterval(function () {
-                    if ($("#start_region input").length) {
+                    if ($("#r2r_start_region input").length) {
                         clearInterval(waitForInputRegion);
                         addStart(urlParams.get("start"));
                         addEnd(urlParams.get("end"))
@@ -804,7 +804,7 @@ function setupBookmark(urlParams) {
             case STATION_TRADE:
                 // We have to wait for input element
                 var waitForInputTrade = setInterval(function () {
-                    if ($("#custom_station input").length) {
+                    if ($("#sst_start_station input").length) {
                         clearInterval(waitForInputTrade);
                         addStart(urlParams.get("start"));
                     }
