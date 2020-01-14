@@ -1,6 +1,6 @@
 name: EVE Trade
-version: v6.3.0
-version_full: Version 6.3.0
+version: v6.4
+version_full: Version 6.4
 baseurl:
 url: https://evetrade.space
 
@@ -11,6 +11,9 @@ exclude:
     - netlify.toml
     - CNAME
     - LICENSE
+    - Gemfile
+    - .gitignore
+    - .github
 
 plugins:
     - jekyll-minifier

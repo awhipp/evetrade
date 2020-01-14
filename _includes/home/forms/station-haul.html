@@ -1,4 +1,4 @@
-<form id="route_trade" onsubmit="return init(STATION_HAUL)">
+<form id="station_haul" onsubmit="return init(STATION_HAUL)">
     <input type="hidden" name="form_type" value="STATION_HAUL"/>
     <div class="col-xs-12 mx-auto">
         <h2>
@@ -24,8 +24,8 @@
         </h4>
 
         <div class="form-group standard">
-            <div id="addingToStartStationList">
-                <div id='start_station' style='border:1px solid #999;'></div>
+            <div id="adding_to_start_station_list">
+                <div id='s2s_start_station' style='border:1px solid #999;'></div>
                 <input
                   type="button"
                   class="btn btn-default add-station-button"
@@ -42,7 +42,7 @@
                 <span onclick="addStart('Hek');">Hek</span>
             </p>
 
-            <ul id="custom_route_start" class="location_checklist form-control">
+            <ul id="s2s_route_start" class="location_checklist form-control">
             </ul>
         </div>
     </div>
@@ -54,8 +54,8 @@
         </h4>
 
         <div class="form-group standard">
-            <div id="addingToEndStationList">
-                <div id='end_station' style='border:1px solid #999;'></div>
+            <div id="adding_to_end_station_list">
+                <div id='s2s_end_station' style='border:1px solid #999;'></div>
                 <input
                   type="button"
                   class="btn btn-default add-station-button"
@@ -71,7 +71,7 @@
                 <span onclick="addEnd('Rens');">Rens</span>
                 <span onclick="addEnd('Hek');">Hek</span>
             </p>
-            <ul id="custom_route_end" class="location_checklist form-control">
+            <ul id="s2s_route_end" class="location_checklist form-control">
             </ul>
         </div>
     </div>
@@ -81,28 +81,28 @@
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="buying-type-station" class="control-label">
+                  <label for="s2s_buying_type" class="control-label">
                     Buying from
                   </label>
-                  <select id="buying-type-station" name="buying-type-station" class="directionChange">
-                    <option value="SELL" selected>Sell Orders</option>
-                    <option value="BUY">Buy Orders</option>
+                  <select id="s2s_buying_type" name="s2s_buying_type" class="directionChange">
+                    <option value="sell" selected>Sell Orders</option>
+                    <option value="buy">Buy Orders</option>
                   </select>
                 </p>
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="selling-type-station" class="control-label">
+                  <label for="s2s_selling_type" class="control-label">
                     Selling to
                   </label>
-                  <select id="selling-type-station" name="selling-type-station" class="directionChange">
-                    <option value="SELL">Sell Orders</option>
-                    <option value="BUY" selected>Buy Orders</option>
+                  <select id="s2s_selling_type" name="s2s_selling_type" class="directionChange">
+                    <option value="sell">Sell Orders</option>
+                    <option value="buy" selected>Buy Orders</option>
                   </select>
                 </p>
             </div>
             <div class="col-sm-2 col-xs-12"></div>
-            <p class="directionWarning" id="directionWarningStation">
+            <p class="directionWarning" id="direction_warning_station">
               PROCEED WITH CAUTION. It is highly recommended to only search from SELL Orders to BUY Orders. If you continue, be sure to set your ROI and Profit limit higher than usual.<br>
               Searching from <span class="startDirection"></span> Orders to <span class="endDirection"></span> Orders returns a very large resultset and can take a while or crash your browser.<br>
               Be sure to completely understand what information you are searching for in order to minimize the number of results returned to your browser.<br>
@@ -115,8 +115,8 @@
         <div class="row align-items-center">
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-8 col-xs-12">
-                <label class="control-label" for="route_sales_tax" title="Calculation = 5 * (1 - 0.11 * AccountingLevel)" style="cursor: pointer;">Sales Tax (in %)</label>
-                <select class="minor-text form-control" id="route_sales_tax" name="route_sales_tax">
+                <label class="control-label" for="s2s_sales_tax" title="Calculation = 5 * (1 - 0.11 * AccountingLevel)" style="cursor: pointer;">Sales Tax (in %)</label>
+                <select class="minor-text form-control" id="s2s_sales_tax" name="s2s_sales_tax">
                   <option value="" selected>Choose your Accounting Level</option>
                   <option value="5">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.00%</option>
                   <option value="4.45">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.45%</option>
@@ -124,9 +124,9 @@
                   <option value="3.35">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.35%</option>
                   <option value="2.8">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.80%</option>
                   <option value="2.25">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.25%</option>
-                  <option value="Other">Other</option>
+                  <option value="other">Other</option>
                 </select>
-                <input type="number" id="route_sales_tax_in" name="route_sales_tax_in" class="form-control my-1" placeholder="Default: 5" style="display:none" step="0.05"  min="0" max="5"/>
+                <input type="number" id="s2s_sales_tax_in" name="s2s_sales_tax_in" class="form-control my-1" placeholder="Default: 5" style="display:none" step="0.05"  min="0" max="5"/>
             </div>            
             <div class="col-sm-2 col-xs-12"></div>
         </div>
@@ -137,13 +137,13 @@
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="profit-threshold" class="control-label">
+                  <label for="s2s_min_profit" class="control-label">
                     Only Return Profits Above
                   </label>
                   <input
                     type="number"
-                    id="profit-threshold"
-                    name="profit-threshold"
+                    id="s2s_min_profit"
+                    name="s2s_min_profit"
                     class="minor-text form-control"
                     placeholder="Default: 500,000"
                   />
@@ -151,13 +151,13 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="weight-threshold" class="control-label">
+                  <label for="s2s_max_cargo" class="control-label">
                     Max Cargo Capacity (in m3)
                   </label>
                   <input
                     type="number"
-                    id="weight-threshold"
-                    name="weight-threshold"
+                    id="s2s_max_cargo"
+                    name="s2s_max_cargo"
                     class="minor-text form-control"
                     placeholder="Default: Not Included"
                   />
@@ -169,13 +169,13 @@
             <div class="col-sm-2 col-xs-12"></div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="roi-threshold" class="control-label">
+                  <label for="s2s_min_roi" class="control-label">
                     Minimum ROI (in %)
                   </label>
                   <input
                     type="number"
-                    id="roi-threshold"
-                    name="roi-threshold"
+                    id="s2s_min_roi"
+                    name="s2s_min_roi"
                     class="minor-text form-control"
                     placeholder="Default: 4"
                   />
@@ -183,13 +183,13 @@
             </div>
             <div class="col-sm-4 col-xs-12">
                 <p>
-                  <label for="buy-threshold" class="control-label">
+                  <label for="s2s_max_budget" class="control-label">
                     Maximum Budget
                   </label>
                   <input
                     type="number"
-                    id="buy-threshold"
-                    name="buy-threshold"
+                    id="s2s_max_budget"
+                    name="s2s_max_budget"
                     class="minor-text form-control"
                     placeholder="Default: Infinity"
                   />

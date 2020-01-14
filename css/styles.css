@@ -212,7 +212,7 @@ section {
     color: white !important;
 }
 
-#show-hide, #dataTable_length, #core{
+#show_hide, #dataTable_length, #core{
   display: none;
 }
 
@@ -305,7 +305,7 @@ tr > td:first-child {
   text-align: center;
 }
 
-#show-hide{
+#show_hide{
     background-color: rgba(0,0,100,0.7) !important;
     border-color: black !important;
     min-width: 200px !important;
@@ -362,10 +362,10 @@ tr > td:first-child {
 /** END DATATABLES **/
 
 /** START DIALOGUE **/
-#buyingHeader {
+#buying_header {
     font-size: 1.5em !important;
 }
-  #route_trade, #station_trade, #region_trade, #buying_footer, #buying_header {
+  #station_haul, #station_trade, #region_haul, #buying_footer, #buying_header {
     display: none;
   }
 
@@ -401,7 +401,7 @@ tr > td:first-child {
       border: 2px solid black;
   }
 
-  input[type="text"], input[type="number"], #security-threshold, #route-preference, #region_sales_tax, #route_sales_tax, #station_sales_tax{
+  input[type="text"], input[type="number"], #r2r_min_security, #r2r_route_preference, #r2r_sales_tax, #s2s_sales_tax, #sst_sales_tax{
       text-align: center;
       background: rgba(0,0,0,0.5) !important;
       color: white !important;
@@ -410,12 +410,12 @@ tr > td:first-child {
       margin: 0 auto 1em auto;
   }
 
-  #custom_station, #start_station, #end_station {
+  #sst_start_station, #s2s_start_station, #s2s_end_station {
       max-width: 100%;
       margin: 0 auto;
   }
 
-    #start_region, #end_region {
+    #r2r_start_region, #r2r_end_region {
         max-width: 400px;
         width: 100%;
         margin: 0 auto;
@@ -427,24 +427,24 @@ tr > td:first-child {
         margin: 0 auto;
     }
 
-    #custom_station input[type="text"],
-    #start_station input[type="text"],
-    #end_station input[type="text"] {
+    #sst_start_station input[type="text"],
+    #s2s_start_station input[type="text"],
+    #s2s_end_station input[type="text"] {
         text-align: left !important;
         max-width: unset !important;
         padding: 0 100px 0 1em !important;
     }
 
 
-#start_region input[type="text"],
-#end_region input[type="text"] {
+#r2r_start_region input[type="text"],
+#r2r_end_region input[type="text"] {
     text-align: left !important;
     max-width: 400px !important;
     padding: 0 100px 0 1em !important;
 }
 
   /** START CUSTOM FEATURE **/
-  #custom_route_end, #custom_route_start{
+  #s2s_route_end, #s2s_route_start{
       height: auto;
       text-align: center;
       max-width: 700px;
@@ -455,18 +455,18 @@ tr > td:first-child {
       display: none;
   }
 
-  #custom_route_end > li, #custom_route_start > li{
+  #s2s_route_end > li, #s2s_route_start > li{
       list-style: none;
       white-space: nowrap;
       text-overflow: ellipsis;
       width: 100%;
       overflow: hidden;
   }
-  #custom_route_end input, #custom_route_start input {
+  #s2s_route_end input, #s2s_route_start input {
     margin: 4px;
   }
 
-  #addingToStartStationList, #addingToEndStationList {
+  #adding_to_start_station_list, #adding_to_end_station_list {
       position: relative;
   }
 
@@ -542,7 +542,7 @@ tr > td:first-child {
     overflow-y: hidden !important;
 }
 
-.closeStation {
+.s2sCloseStartStation, .s2sCloseEndStation {
     color: white;
     text-shadow: 0 3px 0 #00aeff;
     cursor:pointer;
