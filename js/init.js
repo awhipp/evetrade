@@ -254,15 +254,13 @@ function setupCustomDropdown() {
             var regionList = [""];
 
             for (var i = 0; i < region_ids.length; i++) {
-                if (region_ids[i].regionID < 11000000) { // Avoid special regions
-                    var regionName = region_ids[i].regionName;
-                    var lcRegionName = regionName.toLowerCase();
+                var regionName = region_ids[i].regionName;
+                var lcRegionName = regionName.toLowerCase();
 
-                    universeList[lcRegionName] = {};
-                    universeList[lcRegionName].name = region_ids[i].regionName;
-                    universeList[lcRegionName].id = region_ids[i].regionID;
-                    regionList.push(regionName);
-                }
+                universeList[lcRegionName] = {};
+                universeList[lcRegionName].name = region_ids[i].regionName;
+                universeList[lcRegionName].id = region_ids[i].regionID;
+                regionList.push(regionName);
             }
 
             regionList.sort();
