@@ -2,15 +2,11 @@
 title: EVE Online Market Trade Tool | Realtime Hauling & Station Trading
 layout: home
 announcement: {
-  enabled: true,
+  enabled: false,
   header: Version 6.4,
-  include_date: true,
+  include_date: false,
   text: '
-    <ul>
-    <li>Browser bookmark links now available for searches</li>
-    <li>Update Stations and Regions directly from EVE Online database</li>
-    <li>Minor Bugfixes and other features...</li>
-    </ul>
+  
   '
 }
 ---
