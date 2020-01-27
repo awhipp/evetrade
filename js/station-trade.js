@@ -10,7 +10,7 @@ function Station(stationLocation) {
     this.allOrders = {};
     this.allOrders.completePages = [];
     this.allOrders.complete = false;
-    this.allOrders.pageBookend = PAGE_MULTIPLE;
+    this.allOrders.pageBookend = null;
 
     this.itemCache = {};
 
@@ -36,26 +36,12 @@ Station.prototype.className = function() {
  * Begins the process for finding station information and displaying the best trades for the station.
  */
 Station.prototype.startStation = function() {
-    var page;
     var regionId = parseInt(this.stationLocation.region);
     var stationId = parseInt(this.stationLocation.station);
 
-    for(page = 1; page <= PAGE_MULTIPLE; page++){
-        this.getOrders(regionId, stationId, page, this.allOrders, ALL_ORDER);
-    }
+    this.getOrders(regionId, stationId, this.allOrders, ALL_ORDER);
 
     $("#selection").hide();
-    this.asyncCheck();
-};
-
-/**
- * Asynchronous checking function that periodically checks all of the orders to ensure they are still running
- */
-Station.prototype.asyncCheck = function() {
-    var thiz = this;
-    this.asyncChecker = setInterval(function(){
-        thiz.executeOrders();
-    }, 1000);
 };
 
 /**
@@ -74,66 +60,63 @@ Station.prototype.recalculateProgress = function() {
  *
  * @param region The region ID in question.
  * @param station The station ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  * @param orderType The order type to get orders for.
  */
-Station.prototype.getOrders = function(region, station, page, composite, orderType) {
-    var url = marketEndpointBuilder(region, page, orderType);
+Station.prototype.getOrders = function(region, station, composite, orderType) {
     var thiz = this;
 
-    if(!composite.completePages[page]) {
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function(data) {
-                incrementProgress(composite, page);
+    this.getOrder(region, station, composite, orderType, 1)
+    .then(function(){
+        for (var page = 2; page <= composite.pageBookend; page++) {
+            thiz.getOrder(region, station, composite, orderType, page)
+        }
+    })
+};
 
-                if (data.length === 0 && !composite.complete) {
-                    composite.complete = true;
-                    console.log("Completed " + station + " order fetch at " + page);
-                    thiz.completed = true;
-                } else {
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i]["location_id"] === station) {
-                            var id = data[i]["type_id"];
-                            if (!composite[id]) {
-                                composite[id] = [];
-                            }
-                            composite[id].push(data[i]);
-                        }
-                    }
+/**
+ * Getting the order for a specific region, station, and page number.
+ *
+ * @param region The region ID in question.
+ * @param station The station ID in question.
+ * @param composite The running buy or sell order list object.
+ * @param orderType The order type to get orders for.
+ * @param page The market page number.
+ */
+Station.prototype.getOrder = function(region, station, composite, orderType, page) {
+    var thiz = this;
 
-                    if (!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                        var _page = page + 1;
-                        composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
+    return $.ajax({
+        type: "get",
+        url: marketEndpointBuilder(region, page, orderType),
+        dataType: "json",
+        contentType: "application/json",
+        async: true,
+        success: function(data, textStatus, jqXHR) {
+            composite.pageBookend = parseInt(jqXHR.getResponseHeader('x-pages'));
+            page = (new URLSearchParams(this.url)).get('page');
+            incrementProgress(composite, page);
 
-                        for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                            thiz.getOrders(region, station, _page, composite, orderType);
-                        }
-                    }
-                }
-
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
-                displayError();
-                incrementProgress(composite, page);
-
-                if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                    var _page = page + 1;
-                    composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
-
-                    for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                        thiz.getOrders(region, station, _page, composite, orderType);
-                    }
+            for (var i = 0; i < data.length; i++) {
+                if (data[i]["location_id"] === station) {
+                    var id = data[i]["type_id"];
+                    if (!composite[id]) composite[id] = [];
+                    composite[id].push(data[i]);
                 }
             }
-        });
-    }
-};
+
+            if (thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
+                composite.complete = true;
+                console.log("Completed " + station + " order fetch at " + page);
+                thiz.executeOrders();
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            displayError();
+            incrementProgress(composite, page);
+        }
+    });
+}
 
 /**
  * Gets the number of completed pages for a specific order
@@ -151,35 +134,18 @@ Station.prototype.getNumberOfCompletePages = function(order) {
     return numberOfCompletedPages;
 };
 
-
-/**
- * Checks all active order requests to verify whether they are complete or not
- *
- * @returns {boolean|*}
- */
-Station.prototype.checkOrdersComplete = function() {
-    var orderFull = (this.getNumberOfCompletePages(this.allOrders) === this.allOrders.pageBookend);
-    var ordersComplete = this.allOrders.complete && this.completed;
-
-    return (orderFull && ordersComplete);
-};
-
 /**
  * If all the active orders are complete then it begins processing them
  */
 Station.prototype.executeOrders = function() {
-    if (this.checkOrdersComplete()) {
+    hideError();
 
-        clearInterval(this.asyncChecker);
-        hideError();
-
-        for(itemId in this.allOrders){
-            if(itemId !== "completePages" && itemId !== "complete" && itemId !== "pageBookend")
-                this.itemIds.push(itemId);
-        }
-
-        this.asyncCalculate();
+    for(itemId in this.allOrders){
+        if(itemId !== "completePages" && itemId !== "complete" && itemId !== "pageBookend")
+            this.itemIds.push(itemId);
     }
+
+    this.asyncCalculate();
 };
 
 /**
@@ -191,7 +157,7 @@ Station.prototype.clear = function() {
     this.allOrders = {};
     this.allOrders.completePages = [];
     this.allOrders.complete = false;
-    this.allOrders.pageBookend = PAGE_MULTIPLE;
+    this.allOrders.pageBookend = null;
 
     this.itemCache = {};
 
