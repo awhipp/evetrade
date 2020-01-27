@@ -195,20 +195,18 @@ Route.prototype.getNumberOfCompletePages = function(order) {
  * @returns {boolean|*}
  */
 Route.prototype.checkOrdersComplete = function() {
-    var orderFull = (this.getNumberOfCompletePages(this.buyOrders) === this.buyOrders.pageBookend);
     var ordersComplete = this.buyOrders.complete;
 
     // running index
     var rI = 0;
     for (var i = 0; i < this.endLocations.length; i++) {
         if(this.endLocations[i].station !== this.startLocation.station) {
-            orderFull = orderFull && (this.getNumberOfCompletePages(this.sellOrders[rI]) === this.sellOrders[rI].pageBookend);
             ordersComplete = ordersComplete && this.sellOrders[rI].complete;
             rI += 1;
         }
     }
 
-    return (orderFull && ordersComplete);
+    return ordersComplete;
 };
 
 /**
