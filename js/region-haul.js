@@ -14,13 +14,13 @@ function Region(startLocation, endLocation) {
     this.buyOrders = {};
     this.buyOrders.completePages = [];
     this.buyOrders.complete = false;
-    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+    this.buyOrders.pageBookend = null;
 
 
     this.sellOrders = {};
     this.sellOrders.completePages = [];
     this.sellOrders.complete = false;
-    this.sellOrders.pageBookend = PAGE_MULTIPLE;
+    this.sellOrders.pageBookend = null;
 
     this.regionRoutes = [];
     this.secondsToRefresh = 60;
@@ -54,18 +54,13 @@ Region.prototype.className = function() {
  * Begins the process for finding route information and displaying the best trades for the route.
  */
 Region.prototype.startRoute = function() {
-    var page;
     var regionId = parseInt(this.startLocation.id);
 
-    for(page = 1; page <= PAGE_MULTIPLE; page++){
-        this.getSellOrders(regionId, page, this.buyOrders);
-    }
+    this.getSellOrders(regionId, this.buyOrders);
 
     regionId = parseInt(this.endLocations.id);
 
-    for(page = 1; page <= PAGE_MULTIPLE; page++){
-        this.getBuyOrders(regionId, page, this.sellOrders);
-    }
+    this.getBuyOrders(regionId, this.sellOrders);
 
     $("#selection").hide();
 };
@@ -85,96 +80,85 @@ Region.prototype.recalculateProgress = function() {
  * Helper function that gets buy orders only.
  *
  * @param region The region ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  */
-Region.prototype.getBuyOrders = function(region, page, composite) {
-    this.getOrders(region, page, composite, BUY_ORDER);
+Region.prototype.getBuyOrders = function(region, composite) {
+    this.getOrders(region, composite, BUY_ORDER);
 };
 
 /**
  * Helper function that gets sell orders only.
  *
  * @param region The region ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  */
-Region.prototype.getSellOrders = function(region, page, composite) {
-    this.getOrders(region, page, composite, SELL_ORDER);
+Region.prototype.getSellOrders = function(region, composite) {
+    this.getOrders(region, composite, SELL_ORDER);
 };
 
 /**
  * Getting the orders for a specific region, station, and page number.
  *
  * @param region The region ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  * @param orderType The order type to get orders for.
  */
-Region.prototype.getOrders = function(region, page, composite, orderType) {
-
-    var url = marketEndpointBuilder(region, page, orderType);
+Region.prototype.getOrders = function(region, composite, orderType) {
     var thiz = this;
 
-    if(!composite.completePages[page]) {
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function(data) {
-                incrementProgress(composite, page);
-
-                if (data.length === 0 && !composite.complete) {
-                    composite.complete = true;
-                    console.log("Completed " + region + " order fetch at " + page);
-                } else {
-                    for (var i = 0; i < data.length; i++) {
-                        var stationId = data[i]["location_id"];
-                        var id = data[i]["type_id"];
-
-
-                        if (!composite[stationId]) {
-                            composite[stationId] = {};
-                        }
-
-                        if (!composite[stationId][id]) {
-                            composite[stationId][id] = [];
-                        }
-
-                        composite[stationId][id].push(data[i]);
-                    }
-
-                    if (!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                        var _page = page + 1;
-                        composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
-
-                        for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                            thiz.getOrders(region, _page, composite, orderType);
-                        }
-                    } else {
-                        thiz.executeOrders();
-                    }
-                }
-
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
-                displayError();
-                incrementProgress(composite, page);
-
-                if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                    var _page = page + 1;
-                    composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
-
-                    for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                        thiz.getOrders(region, _page, composite, orderType);
-                    }
-                }
-            }
-        });
-    }
+    this.getOrder(region, composite, orderType, 1)
+    .then(function(){
+        for (var page = 2; page <= composite.pageBookend; page++) {
+            thiz.getOrder(region, composite, orderType, page)
+        }
+    })
 };
+
+/**
+ * Getting the order for a specific region and page number.
+ *
+ * @param region The region ID in question.
+ * @param composite The running buy or sell order list object.
+ * @param orderType The order type to get orders for.
+ * @param page The market page number.
+ */
+Region.prototype.getOrder = function(region, composite, orderType, page) {
+    var thiz = this;
+    
+    return $.ajax({
+        type: "get",
+        url: marketEndpointBuilder(region, page, orderType),
+        dataType: "json",
+        contentType: "application/json",
+        async: true,
+        success: function(data, textStatus, jqXHR) {
+            composite.pageBookend = parseInt(jqXHR.getResponseHeader('x-pages'));
+            page = (new URLSearchParams(this.url)).get('page');
+            incrementProgress(composite, page);
+
+            for (var i = 0; i < data.length; i++) {
+                var stationId = data[i]["location_id"];
+                var id = data[i]["type_id"];
+
+                if (!composite[stationId]) composite[stationId] = {};
+
+                if (!composite[stationId][id]) composite[stationId][id] = [];
+
+                composite[stationId][id].push(data[i]);
+            }
+
+            if (thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
+                composite.complete = true;
+                console.log("Completed " + region + " order fetch at " + page);
+                thiz.executeOrders();
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            displayError();
+            incrementProgress(composite, page);
+        }
+    });
+}
 
 /**
  * Gets the number of completed pages for a specific order
@@ -333,12 +317,12 @@ Region.prototype.clear = function() {
     this.buyOrders = {};
     this.buyOrders.completePages = [];
     this.buyOrders.complete = false;
-    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+    this.buyOrders.pageBookend = null;
 
     this.sellOrders = {};
     this.sellOrders.completePages = [];
     this.sellOrders.complete = false;
-    this.sellOrders.pageBookend = PAGE_MULTIPLE;
+    this.sellOrders.pageBookend = null;
 
     this.regionRoutes = [];
     this.secondsToRefresh = 120;
