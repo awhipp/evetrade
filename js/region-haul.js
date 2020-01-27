@@ -183,13 +183,11 @@ Region.prototype.getNumberOfCompletePages = function(order) {
  * @returns {boolean|*}
  */
 Region.prototype.checkOrdersComplete = function() {
-    var orderFull = (this.getNumberOfCompletePages(this.buyOrders) === this.buyOrders.pageBookend);
     var ordersComplete = this.buyOrders.complete;
 
-    orderFull = orderFull && (this.getNumberOfCompletePages(this.sellOrders) === this.sellOrders.pageBookend);
     ordersComplete = ordersComplete && this.sellOrders.complete;
 
-    return (orderFull && ordersComplete);
+    return ordersComplete;
 };
 
 /**
