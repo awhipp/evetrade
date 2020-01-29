@@ -418,42 +418,11 @@ Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice,
 * Gets the item weight for a given itemId and adds it to the row
 */
 Region.prototype.getItemWeight = function(itemId, row){
-    if(itemCache[itemId]){
-        var name = itemCache[itemId].name;
-        var weight = itemCache[itemId].weight;
-        row.itemName = name;
-        row.itemWeight = weight;
-        this.addRow(row);
-    }else{
-        var thiz = this;
-        var url = getWeightEndpointBuilder(itemId);
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            async: true,
-            cache: false,
-            contentType: "application/json",
-            success: function(weightData) {
-                var name = weightData.name;
-                var weight = weightData.packaged_volume;
+    var weightData = getWeight(itemId);
+    row.itemName = weightData.typeName;
+    row.itemWeight = weightData.volume;
 
-                itemCache[itemId] = {};
-                itemCache[itemId].name = name;
-                itemCache[itemId].weight = weight;
-
-                row.itemName = name;
-                row.itemWeight = weight;
-
-                thiz.addRow(row);
-            },
-            error: function (request, error) {
-                if(request.status != 404 && request.statusText !== "parsererror") {
-                    thiz.getItemWeight(itemId, row);
-                }
-            }
-        });
-    }
+    this.addRow(row);
 };
 
 /**

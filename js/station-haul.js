@@ -425,51 +425,11 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
 * Gets the itemweight of a given itemId (checks cache if it was already retrieved)
 */
 Route.prototype.getItemWeight = function(itemId, row){
+    var weightData = getWeight(itemId);
+    row.itemName = weightData.typeName;
+    row.itemWeight = weightData.volume;
 
-    if(itemCache[itemId]){
-        var name = itemCache[itemId].name;
-        var weight = itemCache[itemId].weight;
-
-        row.itemName = name;
-        row.itemWeight = weight;
-
-        this.addRow(row);
-
-        executingCount--;
-    }else{
-        var thiz = this;
-        var url = getWeightEndpointBuilder(itemId);
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            async: true,
-            cache: false,
-            contentType: "application/json",
-            success: function(weightData) {
-                executingCount--;
-
-                var name = weightData.name;
-                var weight = weightData.packaged_volume;
-
-                itemCache[itemId] = {};
-                itemCache[itemId].name = name;
-                itemCache[itemId].weight = weight;
-
-                row.itemName = name;
-                row.itemWeight = weight;
-
-                thiz.addRow(row);
-            },
-            error: function (request, error) {
-                if(request.status != 404 && request.statusText !== "parsererror") {
-                    thiz.getItemWeight(itemId, row);
-                } else {
-                    executingCount--;
-                }
-            }
-        });
-    }
+    this.addRow(row);
 };
 
 /**

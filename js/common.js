@@ -16,7 +16,6 @@ var totalProgress = 0;
 var executingCount = 0;
 var customBuy = {};
 var customSell = {};
-var itemCache = {};
 var citadelCache = {};
 var systemSecurity = {};
 var routeCache = {};
@@ -47,6 +46,7 @@ var stationIdToName = {};
 var stationList = [];
 var regionList = [];
 var tablesReady = false;
+var invTypes = [];
 
 /**
  * Defaults values and parameters of forms inputs by trade style
@@ -389,14 +389,14 @@ function marketEndpointBuilder(region, page, orderType) {
 }
 
 /**
-* Item weight endpoint URI builder
+* Return item weight from items DB
 */
-function getWeightEndpointBuilder(itemId) {
-    var url = ESI_ENDPOINT + "/latest/universe/types/" + itemId + "/" +
-        "?datasource=tranquility" +
-        "&language=en-us" +
-        "&iteration=" + iteration;
-    return url.replace(/\s/g, '');
+function getWeight(itemId) {
+    for( var i = 0; i < invTypes.length; i++ ) {
+        if( invTypes[i].typeID == itemId) {
+            return invTypes[i];
+        }
+    }
 }
 
 /**
@@ -825,7 +825,8 @@ function getJsonFiles(){
         var neededFiles = ["universeList.json",
                            "stationList.json",
                            "stationIdToName.json",
-                           "regionList.json"
+                           "regionList.json",
+                           "invTypes.json"
                         ];
         var filesSha = JSON.parse(window.localStorage.getItem("filesSha"));
         if ($.isEmptyObject(filesSha)) filesSha = {};
@@ -848,6 +849,7 @@ function getJsonFiles(){
                         if (fileName == neededFiles[1]) stationList = jsonFile;
                         if (fileName == neededFiles[2]) stationIdToName = jsonFile;
                         if (fileName == neededFiles[3]) regionList = jsonFile;
+                        if (fileName == neededFiles[4]) invTypes = jsonFile;
                         window.localStorage.setItem(fileName, JSON.stringify(jsonFile));
                         nbQuery++;
                         if (nbQuery === neededFiles.length) tablesReady = true;
@@ -860,6 +862,7 @@ function getJsonFiles(){
             stationList = JSON.parse(window.localStorage.getItem(neededFiles[1]));
             stationIdToName = JSON.parse(window.localStorage.getItem(neededFiles[2]));
             regionList = JSON.parse(window.localStorage.getItem(neededFiles[3]));
+            invTypes = JSON.parse(window.localStorage.getItem(neededFiles[4]));
             tablesReady = true;
         }
     });

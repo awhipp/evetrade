@@ -12,8 +12,6 @@ function Station(stationLocation) {
     this.allOrders.complete = false;
     this.allOrders.pageBookend = null;
 
-    this.itemCache = {};
-
     this.itemIds = [];
     this.secondsToRefresh = 60;
     this.filtered = false;
@@ -158,8 +156,6 @@ Station.prototype.clear = function() {
     this.allOrders.completePages = [];
     this.allOrders.complete = false;
     this.allOrders.pageBookend = null;
-
-    this.itemCache = {};
 
     this.itemIds = [];
     this.secondsToRefresh = 60;
@@ -392,41 +388,11 @@ Station.prototype.getItemVolume = function(itemId, row){
 * @param row the data row that this will be applied to
 */
 Station.prototype.getItemWeight = function(itemId, row){
-    if(this.itemCache[itemId]){
-        row.itemName = this.itemCache[itemId].name;
-        this.addRow(row);
-        executingCount--;
-    }else{
-        var thiz = this;
-        var url = getWeightEndpointBuilder(itemId);
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            async: true,
-            cache: false,
-            contentType: "application/json",
-            success: function(weightData) {
-                executingCount--;
+    var weightData = getWeight(itemId);
+    row.itemName = weightData.typeName;
 
-                var name = weightData.name;
-
-                thiz.itemCache[itemId] = {};
-                thiz.itemCache[itemId].name = name;
-
-                row.itemName = name;
-
-                thiz.addRow(row);
-            },
-            error: function (request, error) {
-                if(request.status != 404 && request.statusText !== "parsererror") {
-                    thiz.getItemWeight(itemId, row);
-                } else {
-                    executingCount--;
-                }
-            }
-        });
-    }
+    this.addRow(row);
+    executingCount--;
 };
 
 /**
