@@ -139,48 +139,6 @@ function getTradeHubName(stationName) {
 }
 
 /**
-* Initializes completely which is the suggestion engine behind the inputs
-*/
-function initCompletely(domId, stationList) {
-    var completelyInput = completely(document.getElementById(domId), {
-        fontSize: '18px',
-        fontFamily: "Roboto",
-        color: '#333',
-        ignoreCase: true
-    });
-    completelyInput.options = stationList;
-    completelyInput.repaint();
-
-    if (domId == "s2s_start_station") {
-        $($("#" + domId + " input")[1]).on('keydown', function (e) {
-            if (e.keyCode == 13) {
-                if (shifted) {
-                    var e = {};
-                    e.shiftKey = true;
-                    newStartStation(e);
-                } else {
-                    newStartStation();
-                }
-            }
-        });
-    }
-
-    if (domId == "s2s_end_station") {
-        $($("#" + domId + " input")[1]).on('keydown', function (e) {
-            if (e.keyCode == 13) {
-                if (shifted) {
-                    var e = {};
-                    e.shiftKey = true;
-                    newEndStation(e);
-                } else {
-                    newEndStation();
-                }
-            }
-        });
-    }
-}
-
-/**
 * Initializes awesomplete which is the suggestion engine behind the inputs
 */
 function initAwesomplete(domId, list) {
