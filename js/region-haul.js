@@ -485,38 +485,22 @@ Region.prototype.updateEndWithCitadel = function (row) {
     var thiz = this;
 
     if (citadelId < 999999999) {
-        if (citadelCache[citadelId]) {
-            var citadelName = citadelCache[citadelId].name;
-            var citadelSystem = citadelCache[citadelId].system;
-            row.sellToStation.name = citadelName;
-            row.sellToStation.system = citadelSystem;
-            this.getStartSystemSecurity(row);
-        } else {
-            $.ajax({
-                type: "get",
-                url: "https://esi.evetech.net/latest/universe/stations/" + row.sellToStation.station + "/?datasource=tranquility",
-                dataType: "json",
-                contentType: "application/json",
-                async: true,
-                success: function (data) {
-                    var citadelName = data.name;
-                    var citadelSystem = data["system_id"];
-                    var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
-                    citadelCache[citadelId] = citadel;
-                    row.sellToStation.name = citadelName;
-                    row.sellToStation.system = citadelSystem;
-                    thiz.getStartSystemSecurity(row);
-                }
-            });
-        }
+        $.each(universeList, function(stationName, stationData) {
+            if (stationData.station == citadelId) {
+                var citadel = {};
+                citadel.name = stationData.name;
+                citadel.system = stationData.system;
+                citadelCache[citadelId] = citadel;
+                row.sellToStation.name = stationData.name;
+                row.sellToStation.system = stationData.system;
+                thiz.getStartSystemSecurity(row);
+                return false;
+            }
+        });
     } else if(this.includeCitadels) {
         if (citadelCache[citadelId]) {
-            var citadelName = citadelCache[citadelId].name;
-            var citadelSystem = citadelCache[citadelId].system;
-            row.sellToStation.name = "<strong><em>" + citadelName + "*</em></strong>";
-            row.sellToStation.system = citadelSystem;
+            row.sellToStation.name = "<strong><em>" + citadelCache[citadelId].name + "*</em></strong>";
+            row.sellToStation.system = citadelCache[citadelId].system;
             this.getStartSystemSecurity(row);
         } else {
             $.ajax({
@@ -527,14 +511,12 @@ Region.prototype.updateEndWithCitadel = function (row) {
                 async: true,
                 success: function (data) {
                     data = data[citadelId];
-                    var citadelName = data.name;
-                    var citadelSystem = data.systemId;
                     var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
+                    citadel.name = data.name;
+                    citadel.system = data.systemId;
                     citadelCache[citadelId] = citadel;
-                    row.sellToStation.name = "<strong><em>" + citadelName + "*</em></strong>";
-                    row.sellToStation.system = citadelSystem;
+                    row.sellToStation.name = "<strong><em>" + data.name + "*</em></strong>";
+                    row.sellToStation.system = data.systemId;
                     thiz.getStartSystemSecurity(row);
                 }
             });
@@ -547,37 +529,23 @@ Region.prototype.updateEndWithCitadel = function (row) {
 * If the user requested citadel data as well this will swap out the citadel id
 * at the startpoint with the citadel data provided by stop.hammerti.me.uk
 */
-Region.prototype.updateStartWithCitdael = function (row) {
+Region.prototype.updateStartWithCitadel = function (row) {
     var citadelId = row.buyFromStation.station;
     var thiz = this;
 
     if (citadelId < 999999999) {
-        if (citadelCache[citadelId]) {
-            var citadelName = citadelCache[citadelId].name;
-            var citadelSystem = citadelCache[citadelId].system;
-            row.buyFromStation.name = citadelName;
-            row.buyFromStation.system = citadelSystem;
-            this.updateEndWithCitadel(row);
-        } else {
-            $.ajax({
-                type: "get",
-                url: "https://esi.evetech.net/latest/universe/stations/" + row.buyFromStation.station + "/?datasource=tranquility",
-                dataType: "json",
-                contentType: "application/json",
-                async: true,
-                success: function (data) {
-                    var citadelName = data.name;
-                    var citadelSystem = data["system_id"];
-                    var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
-                    citadelCache[citadelId] = citadel;
-                    row.buyFromStation.name = citadelName;
-                    row.buyFromStation.system = citadelSystem;
-                    thiz.updateEndWithCitadel(row);
-                }
-            });
-        }
+        $.each(universeList, function(stationName, stationData) {
+            if (stationData.station == citadelId) {
+                var citadel = {};
+                citadel.name = stationData.name;
+                citadel.system = stationData.system;
+                citadelCache[citadelId] = citadel;
+                row.buyFromStation.name = stationData.name;
+                row.buyFromStation.system = stationData.system;
+                thiz.updateEndWithCitadel(row);
+                return false;
+            }
+        });
     } else if(this.includeCitadels) {
         if (citadelCache[citadelId]) {
             var citadelName = citadelCache[citadelId].name;
@@ -594,14 +562,12 @@ Region.prototype.updateStartWithCitdael = function (row) {
                 async: true,
                 success: function (data) {
                     data = data[citadelId];
-                    var citadelName = data.name;
-                    var citadelSystem = data.systemId;
                     var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
+                    citadel.name = data.name;
+                    citadel.system = data.systemId;
                     citadelCache[citadelId] = citadel;
-                    row.buyFromStation.name = "<strong><em>"+citadelName+"*</em></strong>";
-                    row.buyFromStation.system = citadelSystem;
+                    row.buyFromStation.name = "<strong><em>" + data.name + "*</em></strong>";
+                    row.buyFromStation.system = data.systemId;
                     thiz.updateEndWithCitadel(row);
                 }
             });
@@ -626,7 +592,7 @@ Region.prototype.addRow = function(row) {
 
     createDataTable();
 
-    this.updateStartWithCitdael(row);
+    this.updateStartWithCitadel(row);
 };
 
 /**
@@ -652,29 +618,23 @@ Region.prototype.getEndSystemSecurity = function (row) {
     var thiz = this;
 
     if (systemSecurity[systemId]) {
-        var security = systemSecurity[systemId];
-        var securityCode = this.getSecurityCode(security);
+        var securityCode = this.getSecurityCode(systemSecurity[systemId]);
         if (securityCode == -1) {
             return;
         }
         row.sellToStation.name = "<span class='" + securityCode + "'>" + row.sellToStation.name + "</span>";
         this.getRouteLength(row);
     } else {
-        $.ajax({
-            type: "get",
-            url: "https://esi.evetech.net/latest/universe/systems/" + systemId + "/?datasource=tranquility&language=en-us",
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function (data) {
-                systemSecurity[systemId] = data["security_status"];
-                var security = systemSecurity[systemId];
-                var securityCode = thiz.getSecurityCode(security);
+        $.each(universeList, function (stationName, stationData) {
+            if (stationData.system == systemId) {
+                systemSecurity[systemId] = stationData.security;
+                var securityCode = thiz.getSecurityCode(stationData.security);
                 if (securityCode == -1) {
-                    return;
+                    return false;
                 }
                 row.sellToStation.name = "<span class='" + securityCode + "'>" + row.sellToStation.name + "</span>";
                 thiz.getRouteLength(row);
+                return false;
             }
         });
     }
@@ -688,29 +648,23 @@ Region.prototype.getStartSystemSecurity = function (row) {
     var thiz = this;
 
     if (systemSecurity[systemId]) {
-        var security = systemSecurity[systemId];
-        var securityCode = this.getSecurityCode(security);
+        var securityCode = this.getSecurityCode(systemSecurity[systemId]);
         if(securityCode == -1) {
             return;
         }
         row.buyFromStation.name = "<span class='" + securityCode + "'>" + row.buyFromStation.name + "</span>";
         this.getEndSystemSecurity(row);
     } else {
-        $.ajax({
-            type: "get",
-            url: "https://esi.evetech.net/latest/universe/systems/" + systemId + "/?datasource=tranquility&language=en-us",
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function (data) {
-                systemSecurity[systemId] = data["security_status"];
-                var security = systemSecurity[systemId];
-                var securityCode = thiz.getSecurityCode(security);
+        $.each(universeList, function (stationName, stationData) {
+            if (stationData.system == systemId) {
+                systemSecurity[systemId] = stationData.security;
+                var securityCode = thiz.getSecurityCode(stationData.security);
                 if (securityCode == -1) {
-                    return;
+                    return false;
                 }
                 row.buyFromStation.name = "<span class='" + securityCode + "'>" + row.buyFromStation.name + "</span>";
                 thiz.getEndSystemSecurity(row);
+                return false;
             }
         });
     }
@@ -726,8 +680,7 @@ Region.prototype.getRouteLength = function (row) {
     var thiz = this;
 
     if (routeCache[routeId]) {
-        var routeLength = routeCache[routeId];
-        row.routeLength = routeLength;
+        row.routeLength = routeCache[routeId];
         this.updateDatatable(row);
     } else {
         $.ajax({
@@ -737,9 +690,8 @@ Region.prototype.getRouteLength = function (row) {
             contentType: "application/json",
             async: true,
             success: function (data) {
-                var routeLength = data.length;
-                routeCache[routeId] = routeLength;
-                row.routeLength = routeLength;
+                routeCache[routeId] = data.length;
+                row.routeLength = data.length;
                 thiz.updateDatatable(row);
             }
         });
