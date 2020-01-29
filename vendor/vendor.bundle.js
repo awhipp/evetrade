@@ -6,3 +6,4 @@
 {% include_relative /jquery-easing/jquery.easing.min.js %}
 {% include_relative /jquery/inputStore.jquery.min.js %}
 {% include_relative /complete.ly/complete.ly.js %}
+{% include_relative /awesomplete/js/awesomplete.min.js %}
