@@ -2,7 +2,7 @@ var BUY_ORDER = "buy";
 var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
-var RES_ENDPOINT = "https://raw.githubusercontent.com/awhipp/evetrade_resources/master/resources/";
+var RES_ENDPOINT = "https://api.github.com/repos/awhipp/evetrade_resources/contents/resources";
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
@@ -42,21 +42,11 @@ var spamItems = [
     "vizen's", "zor's"
 ];
 
-/**
-* External JSON for updated stations information
-*/
-var station_ids;
-$.getJSON(RES_ENDPOINT + "staStations.json", function(data) {
-    station_ids = data;
-});
-
-/**
-* External JSON for updated stations information
-*/
-var region_ids;
-$.getJSON(RES_ENDPOINT + "mapRegions.json", function(data) {
-    region_ids = data;
-});
+var universeList = {};
+var stationIdToName = {};
+var stationList = [];
+var regionList = [];
+var tablesReady = false;
 
 /**
  * Defaults values and parameters of forms inputs by trade style
@@ -826,4 +816,51 @@ function setupBookmark(urlParams) {
             setDefaultInput(tradeDefaultValues, key, paramValue);
         };
     }
+}
+
+function getJsonFiles(){
+    var getUniverseList = false;
+
+    $.getJSON(RES_ENDPOINT, function(data) {
+        var neededFiles = ["universeList.json",
+                           "stationList.json",
+                           "stationIdToName.json",
+                           "regionList.json"
+                        ];
+        var filesSha = JSON.parse(window.localStorage.getItem("filesSha"));
+        if ($.isEmptyObject(filesSha)) filesSha = {};
+        for (var i = 0; i < data.length; i++) {
+            if (neededFiles.includes( data[i].name)) {
+                if (data[i].sha != filesSha[data[i].name]) {
+                    getUniverseList = true;
+                    break;
+                }
+            }
+        }
+        if (getUniverseList) {
+            var nbQuery = 0
+            for (var i = 0; i < data.length; i++) {
+                if (neededFiles.includes( data[i].name)) {
+                    filesSha[data[i].name] = data[i].sha;
+                    $.getJSON(data[i].download_url, function(jsonFile) {
+                        var fileName = this.url.split("/")[7];
+                        if (fileName == neededFiles[0]) universeList = jsonFile;
+                        if (fileName == neededFiles[1]) stationList = jsonFile;
+                        if (fileName == neededFiles[2]) stationIdToName = jsonFile;
+                        if (fileName == neededFiles[3]) regionList = jsonFile;
+                        window.localStorage.setItem(fileName, JSON.stringify(jsonFile));
+                        nbQuery++;
+                        if (nbQuery === neededFiles.length) tablesReady = true;
+                    });
+                }
+            }
+            window.localStorage.setItem( "filesSha" , JSON.stringify(filesSha));
+        } else {
+            universeList = JSON.parse(window.localStorage.getItem(neededFiles[0]));
+            stationList = JSON.parse(window.localStorage.getItem(neededFiles[1]));
+            stationIdToName = JSON.parse(window.localStorage.getItem(neededFiles[2]));
+            regionList = JSON.parse(window.localStorage.getItem(neededFiles[3]));
+            tablesReady = true;
+        }
+    });
 }
