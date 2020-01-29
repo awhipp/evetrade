@@ -442,7 +442,9 @@ tr > td:first-child {
 #r2r_end_region input[type="text"] {
     text-align: left !important;
     max-width: 400px !important;
+    width: 100%;
     padding: 0 100px 0 1em !important;
+    margin: unset;
 }
 
   /** START CUSTOM FEATURE **/

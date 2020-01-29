@@ -210,6 +210,11 @@ function setupCustomDropdown() {
                 option.innerHTML = station;
                 $("#stationList").append(option);
             });
+            regionList.forEach(function(region){
+                var option = document.createElement("option");
+                option.innerHTML = region;
+                $("#regionList").append(option);
+            });
             initAwesomplete("sst_start_station", "stationList");
             initAwesomplete("s2s_start_station", "stationList");
             initAwesomplete("s2s_end_station", "stationList");
@@ -228,8 +233,8 @@ function setupCustomDropdown() {
                 $("#s2s_selling_type").val("buy");
             }
 
-            initCompletely("r2r_start_region", regionList);
-            initCompletely("r2r_end_region", regionList);
+            initAwesomplete("r2r_start_region", "regionList");
+            initAwesomplete("r2r_end_region", "regionList");
 
             if($("#r2r_buying_type").val() == null) {
                 $("#r2r_buying_type").val("sell");
@@ -639,7 +644,6 @@ function addStart(variable) {
         }
     } else if (tradingStyle == REGION_HAUL) {
         $("#r2r_start_region input")[0].value = variable;
-        $("#r2r_start_region input")[1].value = variable;
     }
 }
 
@@ -660,7 +664,6 @@ function addEnd(variable) {
         }
     } else if (tradingStyle == REGION_HAUL) {
         $("#r2r_end_region input")[0].value = variable;
-        $("#r2r_end_region input")[1].value = variable;
     }
 }
 
@@ -683,13 +686,13 @@ function setStationTradingLocations() {
 * Gets the region trading coordinates based on the input
 */
 function setRouteRegionTradingLocations() {
-    var inputValue = $("#r2r_start_region input")[0].value || $("#r2r_start_region input")[1].value;
+    var inputValue = $("#r2r_start_region input")[0].value;
     startLocations = inputValue.toLowerCase();
 
     startCoordinates = universeList[startLocations];
     startLocations = startCoordinates.name;
 
-    inputValue = $("#r2r_end_region input")[0].value || $("#r2r_end_region input")[1].value;
+    inputValue = $("#r2r_end_region input")[0].value;
     endLocations = inputValue.toLowerCase();
 
     endCoordinates = universeList[endLocations];
