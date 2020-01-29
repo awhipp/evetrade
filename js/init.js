@@ -211,9 +211,8 @@ function setupCustomDropdown() {
                 $("#stationList").append(option);
             });
             initAwesomplete("sst_start_station", "stationList");
-            
-            initCompletely("s2s_start_station", stationList);
-            initCompletely("s2s_end_station", stationList);
+            initAwesomplete("s2s_start_station", "stationList");
+            initAwesomplete("s2s_end_station", "stationList");
 
             if($("#r2r_route_preference").val() == null) {
                 $("#r2r_route_preference").val("shortest");
@@ -308,21 +307,13 @@ function newStartStation(e) {
     && universeList[$("#s2s_start_station input")[0].value.toLowerCase()]
     && universeList[$("#s2s_start_station input")[0].value.toLowerCase()].name);
 
-    if (inputValue.length == 0) {
-        inputValue = ($("#s2s_start_station input")[1].value
-        && universeList[$("#s2s_start_station input")[1].value.toLowerCase()]
-        && universeList[$("#s2s_start_station input")[1].value.toLowerCase()].name);
-    }
-
     var systems = [];
     if(e && e.shiftKey) {
         systems = findAllStations(inputValue);
         for(var i = 0; i < systems.length; i++) {
             $("#s2s_start_station input")[0].value = systems[i];
-            $("#s2s_start_station input")[1].value = systems[i];
             newStartStation();
             $("#s2s_start_station input")[0].value = "";
-            $("#s2s_start_station input")[1].value = "";
         }
     } else {
         var t = document.createTextNode(inputValue);
@@ -339,7 +330,6 @@ function newStartStation(e) {
             }
 
             $("#s2s_start_station input")[0].value = "";
-            $("#s2s_start_station input")[1].value = "";
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
@@ -370,21 +360,14 @@ function newEndStation(e) {
     var inputValue = ($("#s2s_end_station input")[0].value
     && universeList[$("#s2s_end_station input")[0].value.toLowerCase()]
     && universeList[$("#s2s_end_station input")[0].value.toLowerCase()].name);
-    if(inputValue.length == 0) {
-        inputValue = ($("#s2s_end_station input")[1].value
-        && universeList[$("#s2s_end_station input")[1].value.toLowerCase()]
-        && universeList[$("#s2s_end_station input")[1].value.toLowerCase()].name);
-    }
 
     var systems = [];
     if (e && e.shiftKey) {
         systems = findAllStations(inputValue);
         for (var i = 0; i < systems.length; i++) {
             $("#s2s_end_station input")[0].value = systems[i];
-            $("#s2s_end_station input")[1].value = systems[i];
             newEndStation();
             $("#s2s_end_station input")[0].value = "";
-            $("#s2s_end_station input")[1].value = "";
         }
     } else {
         var t = document.createTextNode(inputValue);
@@ -401,7 +384,6 @@ function newEndStation(e) {
             }
 
             $("#s2s_end_station input")[0].value = "";
-            $("#s2s_end_station input")[1].value = "";
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
@@ -648,7 +630,6 @@ function addStart(variable) {
         $("#sst_start_station input")[0].value = variable;
     } else if (tradingStyle == STATION_HAUL) {
         $("#s2s_start_station input")[0].value = variable;
-        $("#s2s_start_station input")[1].value = variable;
         if(shifted){
             var e = {};
             e.shiftKey = true;
@@ -670,7 +651,6 @@ function addEnd(variable) {
         return;
     } else if (tradingStyle == STATION_HAUL) {
         $("#s2s_end_station input")[0].value = variable;
-        $("#s2s_end_station input")[1].value = variable;
         if (shifted) {
             var e = {};
             e.shiftKey = true;
@@ -743,7 +723,7 @@ function getCoordinatesFor(listId, inputId) {
     });
 
     if($(inputId + " input")[0].value) {
-        var inputValue = $(inputId + " input")[0].value || $(inputId + " input")[1].value;
+        var inputValue = $(inputId + " input")[0].value;
         universeItem = universeList[inputValue.toLowerCase()];
 
         if (universeItem) {
