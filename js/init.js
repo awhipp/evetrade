@@ -181,13 +181,37 @@ function initCompletely(domId, stationList) {
 }
 
 /**
+* Initializes awesomplete which is the suggestion engine behind the inputs
+*/
+function initAwesomplete(domId, list) {
+    var input = document.querySelector("#" + domId + " input");
+    var inputPlete  = new Awesomplete(input, {
+        list: "#" + list,
+        minChars: 0,
+        maxItems: 20,
+        autoFirst: true,
+        filter: Awesomplete.FILTER_STARTSWITH,
+        sort: false,
+    });
+    $(input).on('focus', function(){
+        inputPlete.evaluate();
+    });
+}
+
+/**
 * Custom station dropdown initializer
 */
 function setupCustomDropdown() {
     var isTablesReady = setInterval(function () {
         if (tablesReady) {
             clearInterval(isTablesReady);
-            initCompletely("sst_start_station", stationList);
+            stationList.forEach(function(station){
+                var option = document.createElement("option");
+                option.innerHTML = station;
+                $("#stationList").append(option);
+            });
+            initAwesomplete("sst_start_station", "stationList");
+            
             initCompletely("s2s_start_station", stationList);
             initCompletely("s2s_end_station", stationList);
 
@@ -622,7 +646,6 @@ function open_popup(itemId, name, fromStation, toStation){
 function addStart(variable) {
     if (tradingStyle == STATION_TRADE) {
         $("#sst_start_station input")[0].value = variable;
-        $("#sst_start_station input")[1].value = variable;
     } else if (tradingStyle == STATION_HAUL) {
         $("#s2s_start_station input")[0].value = variable;
         $("#s2s_start_station input")[1].value = variable;
@@ -665,7 +688,7 @@ function addEnd(variable) {
 * Gets the station trading coordinates based on the input
 */
 function setStationTradingLocations() {
-    var inputValue = $("#sst_start_station input")[0].value || $("#sst_start_station input")[1].value;
+    var inputValue = $("#sst_start_station input")[0].value;
     startLocations = inputValue.toLowerCase();
 
     var r2r_start_region = universeList[startLocations].region;
