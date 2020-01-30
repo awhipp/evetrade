@@ -309,6 +309,7 @@ function newStartStation(e) {
                 var data = $(this)[0].previousSibling.data;
                 addedToStartList.splice(addedToStartList.indexOf(data), 1);
                 $(this.parentElement).remove();
+                if (addedToStartList.length == 0) $("#s2s_route_start").hide();
             }
         }
     }
@@ -363,6 +364,7 @@ function newEndStation(e) {
                 var data = $(this)[0].previousSibling.data;
                 addedToEndList.splice(addedToEndList.indexOf(data), 1);
                 $(this.parentElement).remove();
+                if (addedToEndList.length == 0) $("#s2s_route_end").hide();
             }
         }
     }
