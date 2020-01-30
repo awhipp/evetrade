@@ -14,7 +14,7 @@ function Route(startLocation, endLocations) {
     this.buyOrders = {};
     this.buyOrders.completePages = [];
     this.buyOrders.complete = false;
-    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+    this.buyOrders.pageBookend = null;
 
     this.sellOrders = {};
 
@@ -39,16 +39,13 @@ Route.prototype.className = function() {
  * Begins the process for finding route information and displaying the best trades for the route.
  */
 Route.prototype.startRoute = function() {
-    var page;
     var regionId = parseInt(this.startLocation.region);
     var stationId = parseInt(this.startLocation.station);
 
-    for(page = 1; page <= PAGE_MULTIPLE; page++){
-        if (orderTypeStart == "sell") {
-          this.getSellOrders(regionId, stationId, page, this.buyOrders);
-        } else {
-          this.getBuyOrders(regionId, stationId, page, this.buyOrders);
-        }
+    if (orderTypeStart == "sell") {
+        this.getSellOrders(regionId, stationId, this.buyOrders);
+    } else {
+        this.getBuyOrders(regionId, stationId, this.buyOrders);
     }
 
     var rI = 0;
@@ -57,17 +54,15 @@ Route.prototype.startRoute = function() {
             this.sellOrders[rI] = {};
             this.sellOrders[rI].completePages = [];
             this.sellOrders[rI].complete = false;
-            this.sellOrders[rI].pageBookend = PAGE_MULTIPLE;
+            this.sellOrders[rI].pageBookend = null;
 
             regionId = parseInt(this.endLocations[i].region);
             stationId = parseInt(this.endLocations[i].station);
 
-            for(page = 1; page <= PAGE_MULTIPLE; page++){
-                if (orderTypeEnd == "buy") {
-                  this.getBuyOrders(regionId, stationId, page, this.sellOrders[rI]);
-                } else {
-                  this.getSellOrders(regionId, stationId, page, this.sellOrders[rI]);
-                }
+            if (orderTypeEnd == "buy") {
+                this.getBuyOrders(regionId, stationId, this.sellOrders[rI]);
+            } else {
+                this.getSellOrders(regionId, stationId, this.sellOrders[rI]);
             }
             rI += 1;
         }
@@ -98,11 +93,10 @@ Route.prototype.recalculateProgress = function() {
  *
  * @param region The region ID in question.
  * @param station The station ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  */
-Route.prototype.getBuyOrders = function(region, station, page, composite) {
-    this.getOrders(region, station, page, composite, BUY_ORDER);
+Route.prototype.getBuyOrders = function(region, station, composite) {
+    this.getOrders(region, station, composite, BUY_ORDER);
 };
 
 /**
@@ -110,82 +104,73 @@ Route.prototype.getBuyOrders = function(region, station, page, composite) {
  *
  * @param region The region ID in question.
  * @param station The station ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  */
-Route.prototype.getSellOrders = function(region, station, page, composite) {
-    this.getOrders(region, station, page, composite, SELL_ORDER);
+Route.prototype.getSellOrders = function(region, station, composite) {
+    this.getOrders(region, station, composite, SELL_ORDER);
 };
 
 /**
- * Getting the orders for a specific region, station, and page number.
+ * Getting the orders for a specific region and station.
  *
  * @param region The region ID in question.
  * @param station The station ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  * @param orderType The order type to get orders for.
  */
-Route.prototype.getOrders = function(region, station, page, composite, orderType) {
-
-    var url = marketEndpointBuilder(region, page, orderType);
+Route.prototype.getOrders = function(region, station, composite, orderType) {
     var thiz = this;
 
-    if(!composite.completePages[page]) {
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function(data) {
-                incrementProgress(composite, page);
+    this.getOrder(region, station, composite, orderType, 1)
+    .then(function() {
+            for (var page = 2; page <= composite.pageBookend; page++) {
+                thiz.getOrder(region, station, composite, orderType, page)
+            }
+    });
+};
 
-                if (data.length === 0 && !composite.complete) {
-                    composite.complete = true;
-                    console.log("Completed " + station + " order fetch at " + page);
-                } else {
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i]["location_id"] === station) {
-                            var id = data[i]["type_id"];
-                            if (!composite[id]) {
-                                composite[id] = [];
-                            }
-                            composite[id].push(data[i]);
-                        }
-                    }
+/**
+ * Getting the order for a specific region, station, and page number.
+ *
+ * @param region The region ID in question.
+ * @param station The station ID in question.
+ * @param composite The running buy or sell order list object.
+ * @param orderType The order type to get orders for.
+ * @param page The market page number.
+ */
+Route.prototype.getOrder = function(region, station, composite, orderType, page) {
+    var thiz = this;
 
-                    if (!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                        var _page = page + 1;
-                        composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
+    return $.ajax({
+        type: "get",
+        url: marketEndpointBuilder(region, page, orderType),
+        dataType: "json",
+        contentType: "application/json",
+        async: true,
+        success: function(data, textStatus, jqXHR) {
+            composite.pageBookend = parseInt(jqXHR.getResponseHeader('x-pages'));
+            page = (new URLSearchParams(this.url)).get('page');
+            incrementProgress(composite, page);
 
-                        for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                            thiz.getOrders(region, station, _page, composite, orderType);
-                        }
-                    } else {
-                        thiz.executeOrders();
-                    }
-                }
-
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
-                displayError();
-                incrementProgress(composite, page);
-
-                if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                    var _page = page + 1;
-                    composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
-
-                    for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                        thiz.getOrders(region, station, _page, composite, orderType);
-                    }
-                } else {
-                    thiz.executeOrders();
+            for (var i = 0; i < data.length; i++) {
+                if (data[i]["location_id"] === station) {
+                    var id = data[i]["type_id"];
+                    if (!composite[id]) composite[id] = [];
+                    composite[id].push(data[i]);
                 }
             }
-        });
-    }
-};
+            if (thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
+                composite.complete = true;
+                console.log("Completed " + station + " order fetch at " + page);
+                thiz.executeOrders();
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            displayError();
+            incrementProgress(composite, page);
+        }
+    });
+}
 
 /**
  * Gets the number of completed pages for a specific order
@@ -210,20 +195,18 @@ Route.prototype.getNumberOfCompletePages = function(order) {
  * @returns {boolean|*}
  */
 Route.prototype.checkOrdersComplete = function() {
-    var orderFull = (this.getNumberOfCompletePages(this.buyOrders) === this.buyOrders.pageBookend);
     var ordersComplete = this.buyOrders.complete;
 
     // running index
     var rI = 0;
     for (var i = 0; i < this.endLocations.length; i++) {
         if(this.endLocations[i].station !== this.startLocation.station) {
-            orderFull = orderFull && (this.getNumberOfCompletePages(this.sellOrders[rI]) === this.sellOrders[rI].pageBookend);
             ordersComplete = ordersComplete && this.sellOrders[rI].complete;
             rI += 1;
         }
     }
 
-    return (orderFull && ordersComplete);
+    return ordersComplete;
 };
 
 /**
@@ -252,7 +235,7 @@ Route.prototype.clear = function() {
     this.buyOrders = {};
     this.buyOrders.completePages = [];
     this.buyOrders.complete = false;
-    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+    this.buyOrders.pageBookend = null;
 
     this.sellOrders = {};
 
@@ -442,51 +425,11 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
 * Gets the itemweight of a given itemId (checks cache if it was already retrieved)
 */
 Route.prototype.getItemWeight = function(itemId, row){
+    var weightData = getWeight(itemId);
+    row.itemName = weightData.typeName;
+    row.itemWeight = weightData.volume;
 
-    if(itemCache[itemId]){
-        var name = itemCache[itemId].name;
-        var weight = itemCache[itemId].weight;
-
-        row.itemName = name;
-        row.itemWeight = weight;
-
-        this.addRow(row);
-
-        executingCount--;
-    }else{
-        var thiz = this;
-        var url = getWeightEndpointBuilder(itemId);
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            async: true,
-            cache: false,
-            contentType: "application/json",
-            success: function(weightData) {
-                executingCount--;
-
-                var name = weightData.name;
-                var weight = weightData.packaged_volume;
-
-                itemCache[itemId] = {};
-                itemCache[itemId].name = name;
-                itemCache[itemId].weight = weight;
-
-                row.itemName = name;
-                row.itemWeight = weight;
-
-                thiz.addRow(row);
-            },
-            error: function (request, error) {
-                if(request.status != 404 && request.statusText !== "parsererror") {
-                    thiz.getItemWeight(itemId, row);
-                } else {
-                    executingCount--;
-                }
-            }
-        });
-    }
+    this.addRow(row);
 };
 
 /**

@@ -13,14 +13,8 @@ var errorShown = false;
 var addedToStartList = [];
 var addedToEndList = [];
 
-var stationsReady = false;
-var regionsReady = false;
-
 var popupTableBuy;
 var popupTableSell;
-
-var universeList = {};
-var stationIdToName = {};
 
 var startCoordinates = [];
 var endCoordinates = [];
@@ -38,6 +32,8 @@ var urlParams;
 * > Setup the about, cookies, and custom station dropdowns
 */
 $( document ).ready(function() {
+    getJsonFiles();
+
     popupTableBuy = $("#popup_table_buy").DataTable({
         "order": [[ 0, "asc" ]],
         "lengthMenu": [[10], ["10"]]
@@ -188,104 +184,38 @@ function initCompletely(domId, stationList) {
 * Custom station dropdown initializer
 */
 function setupCustomDropdown() {
-    var customStationsDropdown = setInterval(function () {
-        if (station_ids !== undefined) {
-            clearInterval(customStationsDropdown);
-            var stationList = [""];
-
-            for (var i = 0; i < station_ids.length; i++) {
-
-                var stationName = station_ids[i].stationName;
-
-                // add trade hubs for easy of use
-                var tradeHubName = getTradeHubName(stationName);
-                if (stationName !== tradeHubName) {
-                    var lowerCaseStationName = tradeHubName.toLowerCase();
-
-                    universeList[lowerCaseStationName] = {};
-                    universeList[lowerCaseStationName].region = station_ids[i].regionID;
-                    universeList[lowerCaseStationName].station = station_ids[i].stationID;
-                    universeList[lowerCaseStationName].system = station_ids[i].solarSystemID;
-                    universeList[lowerCaseStationName].name = tradeHubName;
-                    stationList.push(tradeHubName);
-                }
-
-                var lowerCaseStationName = stationName.toLowerCase();
-                universeList[lowerCaseStationName] = {};
-                universeList[lowerCaseStationName].region = station_ids[i].regionID;
-                universeList[lowerCaseStationName].station = station_ids[i].stationID;
-                universeList[lowerCaseStationName].system = station_ids[i].solarSystemID;
-                universeList[lowerCaseStationName].name = stationName;
-                stationList.push(stationName);
-
-                stationIdToName[station_ids[i].stationID] = stationName;
-
-            }
-
-            stationList.sort();
-
+    var isTablesReady = setInterval(function () {
+        if (tablesReady) {
+            clearInterval(isTablesReady);
             initCompletely("sst_start_station", stationList);
             initCompletely("s2s_start_station", stationList);
             initCompletely("s2s_end_station", stationList);
 
             if($("#r2r_route_preference").val() == null) {
-              $("#r2r_route_preference").val("shortest");
+                $("#r2r_route_preference").val("shortest");
             }
-
             if($("#r2r_min_security").val() == null) {
-              $("#r2r_min_security").val("null");
+                $("#r2r_min_security").val("null");
             }
 
             if($("#s2s_buying_type").val() == null) {
-              $("#s2s_buying_type").val("sell");
+                $("#s2s_buying_type").val("sell");
             }
-
             if($("#s2s_selling_type").val() == null) {
-              $("#s2s_selling_type").val("buy");
+                $("#s2s_selling_type").val("buy");
             }
-
-            stationsReady = true;
-        }
-    }, 1000);
-
-    var customRegionsDropdown = setInterval(function () {
-        if (region_ids !== undefined) {
-            clearInterval(customRegionsDropdown);
-            var regionList = [""];
-
-            for (var i = 0; i < region_ids.length; i++) {
-                if (region_ids[i].regionID < 11000000) { // Avoid special regions
-                    var regionName = region_ids[i].regionName;
-                    var lcRegionName = regionName.toLowerCase();
-
-                    universeList[lcRegionName] = {};
-                    universeList[lcRegionName].name = region_ids[i].regionName;
-                    universeList[lcRegionName].id = region_ids[i].regionID;
-                    regionList.push(regionName);
-                }
-            }
-
-            regionList.sort();
 
             initCompletely("r2r_start_region", regionList);
             initCompletely("r2r_end_region", regionList);
 
             if($("#r2r_buying_type").val() == null) {
-              $("#r2r_buying_type").val("sell");
+                $("#r2r_buying_type").val("sell");
             }
-
             if($("#r2r_selling_type").val() == null) {
-              $("#r2r_selling_type").val("buy");
+                $("#r2r_selling_type").val("buy");
             }
 
-            regionsReady = true;
-        }
-    }, 1000);
-
-    var pageReadyInterval = setInterval(function () {
-        if (stationsReady && regionsReady) {
             checkDirection();
-            clearInterval(pageReadyInterval);
 
             $(function () {
                 var tabIndex = 1;
@@ -316,7 +246,7 @@ function setupCustomDropdown() {
             $(".loadingIcon").remove();
             $(".core-section").css("opacity", 1);
         }
-    }, 1000);
+    }, 10);
 }
 
 /**

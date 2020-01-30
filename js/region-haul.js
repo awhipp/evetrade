@@ -14,13 +14,13 @@ function Region(startLocation, endLocation) {
     this.buyOrders = {};
     this.buyOrders.completePages = [];
     this.buyOrders.complete = false;
-    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+    this.buyOrders.pageBookend = null;
 
 
     this.sellOrders = {};
     this.sellOrders.completePages = [];
     this.sellOrders.complete = false;
-    this.sellOrders.pageBookend = PAGE_MULTIPLE;
+    this.sellOrders.pageBookend = null;
 
     this.regionRoutes = [];
     this.secondsToRefresh = 60;
@@ -54,18 +54,13 @@ Region.prototype.className = function() {
  * Begins the process for finding route information and displaying the best trades for the route.
  */
 Region.prototype.startRoute = function() {
-    var page;
     var regionId = parseInt(this.startLocation.id);
 
-    for(page = 1; page <= PAGE_MULTIPLE; page++){
-        this.getSellOrders(regionId, page, this.buyOrders);
-    }
+    this.getSellOrders(regionId, this.buyOrders);
 
     regionId = parseInt(this.endLocations.id);
 
-    for(page = 1; page <= PAGE_MULTIPLE; page++){
-        this.getBuyOrders(regionId, page, this.sellOrders);
-    }
+    this.getBuyOrders(regionId, this.sellOrders);
 
     $("#selection").hide();
 };
@@ -85,96 +80,85 @@ Region.prototype.recalculateProgress = function() {
  * Helper function that gets buy orders only.
  *
  * @param region The region ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  */
-Region.prototype.getBuyOrders = function(region, page, composite) {
-    this.getOrders(region, page, composite, BUY_ORDER);
+Region.prototype.getBuyOrders = function(region, composite) {
+    this.getOrders(region, composite, BUY_ORDER);
 };
 
 /**
  * Helper function that gets sell orders only.
  *
  * @param region The region ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  */
-Region.prototype.getSellOrders = function(region, page, composite) {
-    this.getOrders(region, page, composite, SELL_ORDER);
+Region.prototype.getSellOrders = function(region, composite) {
+    this.getOrders(region, composite, SELL_ORDER);
 };
 
 /**
  * Getting the orders for a specific region, station, and page number.
  *
  * @param region The region ID in question.
- * @param page The market page number.
  * @param composite The running buy or sell order list object.
  * @param orderType The order type to get orders for.
  */
-Region.prototype.getOrders = function(region, page, composite, orderType) {
-
-    var url = marketEndpointBuilder(region, page, orderType);
+Region.prototype.getOrders = function(region, composite, orderType) {
     var thiz = this;
 
-    if(!composite.completePages[page]) {
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function(data) {
-                incrementProgress(composite, page);
-
-                if (data.length === 0 && !composite.complete) {
-                    composite.complete = true;
-                    console.log("Completed " + region + " order fetch at " + page);
-                } else {
-                    for (var i = 0; i < data.length; i++) {
-                        var stationId = data[i]["location_id"];
-                        var id = data[i]["type_id"];
-
-
-                        if (!composite[stationId]) {
-                            composite[stationId] = {};
-                        }
-
-                        if (!composite[stationId][id]) {
-                            composite[stationId][id] = [];
-                        }
-
-                        composite[stationId][id].push(data[i]);
-                    }
-
-                    if (!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                        var _page = page + 1;
-                        composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
-
-                        for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                            thiz.getOrders(region, _page, composite, orderType);
-                        }
-                    } else {
-                        thiz.executeOrders();
-                    }
-                }
-
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
-                displayError();
-                incrementProgress(composite, page);
-
-                if(!composite.complete && thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
-                    var _page = page + 1;
-                    composite.pageBookend = (composite.pageBookend + PAGE_MULTIPLE);
-
-                    for (var newBookend = composite.pageBookend; _page <= newBookend; _page++) {
-                        thiz.getOrders(region, _page, composite, orderType);
-                    }
-                }
-            }
-        });
-    }
+    this.getOrder(region, composite, orderType, 1)
+    .then(function(){
+        for (var page = 2; page <= composite.pageBookend; page++) {
+            thiz.getOrder(region, composite, orderType, page)
+        }
+    })
 };
+
+/**
+ * Getting the order for a specific region and page number.
+ *
+ * @param region The region ID in question.
+ * @param composite The running buy or sell order list object.
+ * @param orderType The order type to get orders for.
+ * @param page The market page number.
+ */
+Region.prototype.getOrder = function(region, composite, orderType, page) {
+    var thiz = this;
+    
+    return $.ajax({
+        type: "get",
+        url: marketEndpointBuilder(region, page, orderType),
+        dataType: "json",
+        contentType: "application/json",
+        async: true,
+        success: function(data, textStatus, jqXHR) {
+            composite.pageBookend = parseInt(jqXHR.getResponseHeader('x-pages'));
+            page = (new URLSearchParams(this.url)).get('page');
+            incrementProgress(composite, page);
+
+            for (var i = 0; i < data.length; i++) {
+                var stationId = data[i]["location_id"];
+                var id = data[i]["type_id"];
+
+                if (!composite[stationId]) composite[stationId] = {};
+
+                if (!composite[stationId][id]) composite[stationId][id] = [];
+
+                composite[stationId][id].push(data[i]);
+            }
+
+            if (thiz.getNumberOfCompletePages(composite) === composite.pageBookend) {
+                composite.complete = true;
+                console.log("Completed " + region + " order fetch at " + page);
+                thiz.executeOrders();
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            displayError();
+            incrementProgress(composite, page);
+        }
+    });
+}
 
 /**
  * Gets the number of completed pages for a specific order
@@ -199,13 +183,11 @@ Region.prototype.getNumberOfCompletePages = function(order) {
  * @returns {boolean|*}
  */
 Region.prototype.checkOrdersComplete = function() {
-    var orderFull = (this.getNumberOfCompletePages(this.buyOrders) === this.buyOrders.pageBookend);
     var ordersComplete = this.buyOrders.complete;
 
-    orderFull = orderFull && (this.getNumberOfCompletePages(this.sellOrders) === this.sellOrders.pageBookend);
     ordersComplete = ordersComplete && this.sellOrders.complete;
 
-    return (orderFull && ordersComplete);
+    return ordersComplete;
 };
 
 /**
@@ -333,12 +315,12 @@ Region.prototype.clear = function() {
     this.buyOrders = {};
     this.buyOrders.completePages = [];
     this.buyOrders.complete = false;
-    this.buyOrders.pageBookend = PAGE_MULTIPLE;
+    this.buyOrders.pageBookend = null;
 
     this.sellOrders = {};
     this.sellOrders.completePages = [];
     this.sellOrders.complete = false;
-    this.sellOrders.pageBookend = PAGE_MULTIPLE;
+    this.sellOrders.pageBookend = null;
 
     this.regionRoutes = [];
     this.secondsToRefresh = 120;
@@ -436,42 +418,11 @@ Region.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice,
 * Gets the item weight for a given itemId and adds it to the row
 */
 Region.prototype.getItemWeight = function(itemId, row){
-    if(itemCache[itemId]){
-        var name = itemCache[itemId].name;
-        var weight = itemCache[itemId].weight;
-        row.itemName = name;
-        row.itemWeight = weight;
-        this.addRow(row);
-    }else{
-        var thiz = this;
-        var url = getWeightEndpointBuilder(itemId);
-        $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            async: true,
-            cache: false,
-            contentType: "application/json",
-            success: function(weightData) {
-                var name = weightData.name;
-                var weight = weightData.packaged_volume;
+    var weightData = getWeight(itemId);
+    row.itemName = weightData.typeName;
+    row.itemWeight = weightData.volume;
 
-                itemCache[itemId] = {};
-                itemCache[itemId].name = name;
-                itemCache[itemId].weight = weight;
-
-                row.itemName = name;
-                row.itemWeight = weight;
-
-                thiz.addRow(row);
-            },
-            error: function (request, error) {
-                if(request.status != 404 && request.statusText !== "parsererror") {
-                    thiz.getItemWeight(itemId, row);
-                }
-            }
-        });
-    }
+    this.addRow(row);
 };
 
 /**
@@ -503,38 +454,22 @@ Region.prototype.updateEndWithCitadel = function (row) {
     var thiz = this;
 
     if (citadelId < 999999999) {
-        if (citadelCache[citadelId]) {
-            var citadelName = citadelCache[citadelId].name;
-            var citadelSystem = citadelCache[citadelId].system;
-            row.sellToStation.name = citadelName;
-            row.sellToStation.system = citadelSystem;
-            this.getStartSystemSecurity(row);
-        } else {
-            $.ajax({
-                type: "get",
-                url: "https://esi.evetech.net/latest/universe/stations/" + row.sellToStation.station + "/?datasource=tranquility",
-                dataType: "json",
-                contentType: "application/json",
-                async: true,
-                success: function (data) {
-                    var citadelName = data.name;
-                    var citadelSystem = data["system_id"];
-                    var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
-                    citadelCache[citadelId] = citadel;
-                    row.sellToStation.name = citadelName;
-                    row.sellToStation.system = citadelSystem;
-                    thiz.getStartSystemSecurity(row);
-                }
-            });
-        }
+        $.each(universeList, function(stationName, stationData) {
+            if (stationData.station == citadelId) {
+                var citadel = {};
+                citadel.name = stationData.name;
+                citadel.system = stationData.system;
+                citadelCache[citadelId] = citadel;
+                row.sellToStation.name = stationData.name;
+                row.sellToStation.system = stationData.system;
+                thiz.getStartSystemSecurity(row);
+                return false;
+            }
+        });
     } else if(this.includeCitadels) {
         if (citadelCache[citadelId]) {
-            var citadelName = citadelCache[citadelId].name;
-            var citadelSystem = citadelCache[citadelId].system;
-            row.sellToStation.name = "<strong><em>" + citadelName + "*</em></strong>";
-            row.sellToStation.system = citadelSystem;
+            row.sellToStation.name = "<strong><em>" + citadelCache[citadelId].name + "*</em></strong>";
+            row.sellToStation.system = citadelCache[citadelId].system;
             this.getStartSystemSecurity(row);
         } else {
             $.ajax({
@@ -545,14 +480,12 @@ Region.prototype.updateEndWithCitadel = function (row) {
                 async: true,
                 success: function (data) {
                     data = data[citadelId];
-                    var citadelName = data.name;
-                    var citadelSystem = data.systemId;
                     var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
+                    citadel.name = data.name;
+                    citadel.system = data.systemId;
                     citadelCache[citadelId] = citadel;
-                    row.sellToStation.name = "<strong><em>" + citadelName + "*</em></strong>";
-                    row.sellToStation.system = citadelSystem;
+                    row.sellToStation.name = "<strong><em>" + data.name + "*</em></strong>";
+                    row.sellToStation.system = data.systemId;
                     thiz.getStartSystemSecurity(row);
                 }
             });
@@ -565,37 +498,23 @@ Region.prototype.updateEndWithCitadel = function (row) {
 * If the user requested citadel data as well this will swap out the citadel id
 * at the startpoint with the citadel data provided by stop.hammerti.me.uk
 */
-Region.prototype.updateStartWithCitdael = function (row) {
+Region.prototype.updateStartWithCitadel = function (row) {
     var citadelId = row.buyFromStation.station;
     var thiz = this;
 
     if (citadelId < 999999999) {
-        if (citadelCache[citadelId]) {
-            var citadelName = citadelCache[citadelId].name;
-            var citadelSystem = citadelCache[citadelId].system;
-            row.buyFromStation.name = citadelName;
-            row.buyFromStation.system = citadelSystem;
-            this.updateEndWithCitadel(row);
-        } else {
-            $.ajax({
-                type: "get",
-                url: "https://esi.evetech.net/latest/universe/stations/" + row.buyFromStation.station + "/?datasource=tranquility",
-                dataType: "json",
-                contentType: "application/json",
-                async: true,
-                success: function (data) {
-                    var citadelName = data.name;
-                    var citadelSystem = data["system_id"];
-                    var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
-                    citadelCache[citadelId] = citadel;
-                    row.buyFromStation.name = citadelName;
-                    row.buyFromStation.system = citadelSystem;
-                    thiz.updateEndWithCitadel(row);
-                }
-            });
-        }
+        $.each(universeList, function(stationName, stationData) {
+            if (stationData.station == citadelId) {
+                var citadel = {};
+                citadel.name = stationData.name;
+                citadel.system = stationData.system;
+                citadelCache[citadelId] = citadel;
+                row.buyFromStation.name = stationData.name;
+                row.buyFromStation.system = stationData.system;
+                thiz.updateEndWithCitadel(row);
+                return false;
+            }
+        });
     } else if(this.includeCitadels) {
         if (citadelCache[citadelId]) {
             var citadelName = citadelCache[citadelId].name;
@@ -612,14 +531,12 @@ Region.prototype.updateStartWithCitdael = function (row) {
                 async: true,
                 success: function (data) {
                     data = data[citadelId];
-                    var citadelName = data.name;
-                    var citadelSystem = data.systemId;
                     var citadel = {};
-                    citadel.name = citadelName;
-                    citadel.system = citadelSystem;
+                    citadel.name = data.name;
+                    citadel.system = data.systemId;
                     citadelCache[citadelId] = citadel;
-                    row.buyFromStation.name = "<strong><em>"+citadelName+"*</em></strong>";
-                    row.buyFromStation.system = citadelSystem;
+                    row.buyFromStation.name = "<strong><em>" + data.name + "*</em></strong>";
+                    row.buyFromStation.system = data.systemId;
                     thiz.updateEndWithCitadel(row);
                 }
             });
@@ -644,7 +561,7 @@ Region.prototype.addRow = function(row) {
 
     createDataTable();
 
-    this.updateStartWithCitdael(row);
+    this.updateStartWithCitadel(row);
 };
 
 /**
@@ -670,29 +587,23 @@ Region.prototype.getEndSystemSecurity = function (row) {
     var thiz = this;
 
     if (systemSecurity[systemId]) {
-        var security = systemSecurity[systemId];
-        var securityCode = this.getSecurityCode(security);
+        var securityCode = this.getSecurityCode(systemSecurity[systemId]);
         if (securityCode == -1) {
             return;
         }
         row.sellToStation.name = "<span class='" + securityCode + "'>" + row.sellToStation.name + "</span>";
         this.getRouteLength(row);
     } else {
-        $.ajax({
-            type: "get",
-            url: "https://esi.evetech.net/latest/universe/systems/" + systemId + "/?datasource=tranquility&language=en-us",
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function (data) {
-                systemSecurity[systemId] = data["security_status"];
-                var security = systemSecurity[systemId];
-                var securityCode = thiz.getSecurityCode(security);
+        $.each(universeList, function (stationName, stationData) {
+            if (stationData.system == systemId) {
+                systemSecurity[systemId] = stationData.security;
+                var securityCode = thiz.getSecurityCode(stationData.security);
                 if (securityCode == -1) {
-                    return;
+                    return false;
                 }
                 row.sellToStation.name = "<span class='" + securityCode + "'>" + row.sellToStation.name + "</span>";
                 thiz.getRouteLength(row);
+                return false;
             }
         });
     }
@@ -706,29 +617,23 @@ Region.prototype.getStartSystemSecurity = function (row) {
     var thiz = this;
 
     if (systemSecurity[systemId]) {
-        var security = systemSecurity[systemId];
-        var securityCode = this.getSecurityCode(security);
+        var securityCode = this.getSecurityCode(systemSecurity[systemId]);
         if(securityCode == -1) {
             return;
         }
         row.buyFromStation.name = "<span class='" + securityCode + "'>" + row.buyFromStation.name + "</span>";
         this.getEndSystemSecurity(row);
     } else {
-        $.ajax({
-            type: "get",
-            url: "https://esi.evetech.net/latest/universe/systems/" + systemId + "/?datasource=tranquility&language=en-us",
-            dataType: "json",
-            contentType: "application/json",
-            async: true,
-            success: function (data) {
-                systemSecurity[systemId] = data["security_status"];
-                var security = systemSecurity[systemId];
-                var securityCode = thiz.getSecurityCode(security);
+        $.each(universeList, function (stationName, stationData) {
+            if (stationData.system == systemId) {
+                systemSecurity[systemId] = stationData.security;
+                var securityCode = thiz.getSecurityCode(stationData.security);
                 if (securityCode == -1) {
-                    return;
+                    return false;
                 }
                 row.buyFromStation.name = "<span class='" + securityCode + "'>" + row.buyFromStation.name + "</span>";
                 thiz.getEndSystemSecurity(row);
+                return false;
             }
         });
     }
@@ -744,8 +649,7 @@ Region.prototype.getRouteLength = function (row) {
     var thiz = this;
 
     if (routeCache[routeId]) {
-        var routeLength = routeCache[routeId];
-        row.routeLength = routeLength;
+        row.routeLength = routeCache[routeId];
         this.updateDatatable(row);
     } else {
         $.ajax({
@@ -755,9 +659,8 @@ Region.prototype.getRouteLength = function (row) {
             contentType: "application/json",
             async: true,
             success: function (data) {
-                var routeLength = data.length;
-                routeCache[routeId] = routeLength;
-                row.routeLength = routeLength;
+                routeCache[routeId] = data.length;
+                row.routeLength = data.length;
                 thiz.updateDatatable(row);
             }
         });
