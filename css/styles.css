@@ -401,6 +401,10 @@ tr > td:first-child {
       border: 2px solid black;
   }
 
+  .suggestions .clean {
+    float: right;
+  }
+
   input[type="text"], input[type="number"], #r2r_min_security, #r2r_route_preference, #r2r_sales_tax, #s2s_sales_tax, #sst_sales_tax{
       text-align: center;
       background: rgba(0,0,0,0.5) !important;
