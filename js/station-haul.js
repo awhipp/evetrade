@@ -221,6 +221,8 @@ Route.prototype.executeOrders = function() {
                 this.itemIds.push(itemId);
         }
 
+        if (this.itemIds.length === 0) this.completed = true;
+
         this.calculate();
     }
 };
