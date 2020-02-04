@@ -8,8 +8,6 @@ var STATION_TRADE = 0;
 var STATION_HAUL = 1;
 var REGION_HAUL = 2;
 
-var PAGE_MULTIPLE = 50;
-
 var tableCreated = false;
 var createdRefresher = false;
 var totalProgress = 0;
