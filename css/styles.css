@@ -436,7 +436,9 @@ tr > td:first-child {
     #s2s_end_station input[type="text"] {
         text-align: left !important;
         max-width: unset !important;
+        width: 100%;
         padding: 0 100px 0 1em !important;
+        margin: unset;
     }
 
 
@@ -444,7 +446,9 @@ tr > td:first-child {
 #r2r_end_region input[type="text"] {
     text-align: left !important;
     max-width: 400px !important;
+    width: 100%;
     padding: 0 100px 0 1em !important;
+    margin: unset;
 }
 
   /** START CUSTOM FEATURE **/
@@ -695,4 +699,30 @@ form option {
   padding: 1em;
   text-align: center;
   margin: 0 auto;
+}
+
+.awesomplete {
+  width: 100%;
+}
+
+.awesomplete > ul > li {
+  text-align: left;
+  color: black;
+  background-color: white;
+  font-weight: bold;
+}
+
+.awesomplete > ul > li[aria-selected=true] {
+  background-color: #ccc;
+  color: black;
+}
+
+.awesomplete > ul > li[aria-selected=true] mark {
+  background-color: #999;
+  color: black;
+}
+
+.awesomplete > ul > li mark {
+  background-color: #999;
+  color: black;
 }
