@@ -419,7 +419,7 @@ tr > td:first-child {
       margin: 0 auto;
   }
 
-    #r2r_start_region, #r2r_end_region {
+    #r2r_start_region, #r2r_end_region, .r2r-checkbox {
         max-width: 400px;
         width: 100%;
         margin: 0 auto;

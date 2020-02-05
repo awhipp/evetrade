@@ -46,6 +46,8 @@ var regionList = [];
 var tablesReady = false;
 var invTypes = [];
 
+var mapRegionJumps = [];
+
 /**
  * Defaults values and parameters of forms inputs by trade style
  * + Predefined values taxes
@@ -824,7 +826,8 @@ function getJsonFiles(){
                            "stationList.json",
                            "stationIdToName.json",
                            "regionList.json",
-                           "invTypes.json"
+                           "invTypes.json",
+                           "mapRegionJumps.json"
                         ];
         var filesSha = JSON.parse(window.localStorage.getItem("filesSha"));
         if ($.isEmptyObject(filesSha)) filesSha = {};
@@ -848,6 +851,7 @@ function getJsonFiles(){
                         if (fileName == neededFiles[2]) stationIdToName = jsonFile;
                         if (fileName == neededFiles[3]) regionList = jsonFile;
                         if (fileName == neededFiles[4]) invTypes = jsonFile;
+                        if (fileName == neededFiles[5]) mapRegionJumps = jsonFile;
                         window.localStorage.setItem(fileName, JSON.stringify(jsonFile));
                         nbQuery++;
                         if (nbQuery === neededFiles.length) tablesReady = true;
@@ -861,6 +865,7 @@ function getJsonFiles(){
             stationIdToName = JSON.parse(window.localStorage.getItem(neededFiles[2]));
             regionList = JSON.parse(window.localStorage.getItem(neededFiles[3]));
             invTypes = JSON.parse(window.localStorage.getItem(neededFiles[4]));
+            mapRegionJumps = JSON.parse(window.localStorage.getItem(neededFiles[5]));
             tablesReady = true;
         }
     });
