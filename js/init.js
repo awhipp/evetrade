@@ -309,9 +309,12 @@ function newStartStation(e) {
                 var data = $(this)[0].previousSibling.data;
                 addedToStartList.splice(addedToStartList.indexOf(data), 1);
                 $(this.parentElement).remove();
+                if (addedToStartList.length < 5) $("#s2s_start_clean").hide();
                 if (addedToStartList.length == 0) $("#s2s_route_start").hide();
             }
         }
+
+        if (addedToStartList.length >= 5) $("#s2s_start_clean").show();
     }
 
 }
@@ -364,9 +367,12 @@ function newEndStation(e) {
                 var data = $(this)[0].previousSibling.data;
                 addedToEndList.splice(addedToEndList.indexOf(data), 1);
                 $(this.parentElement).remove();
+                if (addedToEndList.length < 5) $("#s2s_end_clean").hide();
                 if (addedToEndList.length == 0) $("#s2s_route_end").hide();
             }
         }
+
+        if (addedToEndList.length >= 5) $("#s2s_end_clean").show();
     }
 }
 
@@ -806,4 +812,18 @@ function init(style){
         return false;
     }
     return false;
+}
+
+function cleanStartList() {
+    $("#s2s_route_start").empty();
+    $("#s2s_route_start").hide();
+    addedToStartList = [];
+    $("#s2s_start_clean").hide();
+}
+
+function cleanEndList() {
+    $("#s2s_route_end").empty();
+    $("#s2s_route_end").hide();
+    addedToEndList = [];
+    $("#s2s_end_clean").hide();
 }
