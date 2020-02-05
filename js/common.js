@@ -670,7 +670,11 @@ function setTitle() {
     } else if (tradingStyle == STATION_HAUL) {
         trade = startLocations.join("-") + " => " + endLocations.join("-");
     } else if (tradingStyle == REGION_HAUL) {
-        trade = startLocations + " => " + endLocations;
+        if ($.isArray(endLocations)) {
+            trade = startLocations + " => " + endLocations.join("-");
+        } else {
+            trade = startLocations + " => " + endLocations;
+        }
     }
     document.title = trade + " | " + document.title
 }
