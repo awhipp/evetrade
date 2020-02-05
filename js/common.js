@@ -439,7 +439,11 @@ function createTradeHeader() {
         sellingTo = sellingTo.substring(0, sellingTo.length - 2);
     } else if (tradingStyle == REGION_HAUL) {
         buyingFrom = startLocations;
-        sellingTo = endLocations;
+        if ($.isArray(endLocations)) {
+            sellingTo = endLocations.join(", ")
+        } else {
+            sellingTo = endLocations;
+        }
     }
 
     if (tradingStyle == STATION_HAUL || tradingStyle == REGION_HAUL) {
