@@ -725,7 +725,11 @@ function createBookmarks() {
             case REGION_HAUL:
                 bookmarkURL = window.location.pathname + "?trade=r2r";
                 bookmarkURL += "&start=" + startLocations;
-                bookmarkURL += "&end=" + endLocations ;
+                if ($.isArray(endLocations)) {
+                    bookmarkURL += "&end=Sell nearby" ;
+                } else {
+                    bookmarkURL += "&end=" + endLocations ;
+                }
                 break;
             case STATION_TRADE:
                 bookmarkURL = window.location.pathname + "?trade=sst";
@@ -794,7 +798,12 @@ function setupBookmark(urlParams) {
                     if ($("#r2r_start_region input").length) {
                         clearInterval(waitForInputRegion);
                         addStart(urlParams.get("start"));
-                        addEnd(urlParams.get("end"))
+                        if (urlParams.get("end") == "Sell nearby") {
+                            $("#r2r_sell_nearby").prop("checked", true);
+                            $("#adding_to_end_region_list").hide();
+                        } else {
+                            addEnd(urlParams.get("end"))
+                        }
                     }
                 }, 1000);
 
