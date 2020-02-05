@@ -11,7 +11,9 @@ var sstBrokerFee;
 var tradingStyle = null;
 var errorShown = false;
 var addedToStartList = [];
+var addedToStartInput;
 var addedToEndList = [];
+var addedToEndInput;
 
 var popupTableBuy;
 var popupTableSell;
@@ -266,9 +268,9 @@ function findAllStations(stationName) {
 */
 function newStartStation(e) {
     var li = document.createElement("li");
-    var inputValue = ($("#s2s_start_station input")[0].value
-    && universeList[$("#s2s_start_station input")[0].value.toLowerCase()]
-    && universeList[$("#s2s_start_station input")[0].value.toLowerCase()].name);
+    var inputValue = (addedToStartInput
+    && universeList[addedToStartInput.toLowerCase()]
+    && universeList[addedToStartInput.toLowerCase()].name);
 
     var systems = [];
     if(e && e.shiftKey) {
@@ -324,9 +326,9 @@ function newStartStation(e) {
 */
 function newEndStation(e) {
     var li = document.createElement("li");
-    var inputValue = ($("#s2s_end_station input")[0].value
-    && universeList[$("#s2s_end_station input")[0].value.toLowerCase()]
-    && universeList[$("#s2s_end_station input")[0].value.toLowerCase()].name);
+    var inputValue = (addedToEndInput
+    && universeList[addedToEndInput.toLowerCase()]
+    && universeList[addedToEndInput.toLowerCase()].name);
 
     var systems = [];
     if (e && e.shiftKey) {
@@ -419,6 +421,24 @@ function onClickListeners() {
             } else {
                 $(id + "_in").hide();
             }
+        });
+    });
+
+    ["#sst_start_station", "#s2s_start_station", "#r2r_start_region"].forEach(function(id) {
+        $(id + " input").on('awesomplete-select', function(selection) {
+            addedToStartInput = selection.originalEvent.text.value;
+        });
+        $(id + " input").on("change", function() {
+            addedToStartInput = $(id + " input").val();
+        });
+    });
+
+    ["#s2s_end_station", "#r2r_end_region"].forEach(function(id) {
+        $(id + " input").on('awesomplete-select', function(selection) {
+            addedToEndInput = selection.originalEvent.text.value;
+        });
+        $(id + " input").on("change", function() {
+            addedToEndInput = $(id + " input").val();
         });
     });
 }
@@ -598,9 +618,9 @@ function open_popup(itemId, name, fromStation, toStation){
 */
 function addStart(variable) {
     if (tradingStyle == STATION_TRADE) {
-        $("#sst_start_station input")[0].value = variable;
+        addedToStartInput = variable;
     } else if (tradingStyle == STATION_HAUL) {
-        $("#s2s_start_station input")[0].value = variable;
+        addedToStartInput = variable;
         if(shifted){
             var e = {};
             e.shiftKey = true;
@@ -609,7 +629,7 @@ function addStart(variable) {
             newStartStation();
         }
     } else if (tradingStyle == REGION_HAUL) {
-        $("#r2r_start_region input")[0].value = variable;
+        addedToStartInput = variable;
     }
 }
 
@@ -620,7 +640,7 @@ function addEnd(variable) {
     if (tradingStyle == STATION_TRADE) {
         return;
     } else if (tradingStyle == STATION_HAUL) {
-        $("#s2s_end_station input")[0].value = variable;
+        addedToEndInput = variable;
         if (shifted) {
             var e = {};
             e.shiftKey = true;
@@ -629,7 +649,7 @@ function addEnd(variable) {
             newEndStation();
         }
     } else if (tradingStyle == REGION_HAUL) {
-        $("#r2r_end_region input")[0].value = variable;
+        addedToEndInput = variable;
     }
 }
 
@@ -637,7 +657,7 @@ function addEnd(variable) {
 * Gets the station trading coordinates based on the input
 */
 function setStationTradingLocations() {
-    var inputValue = $("#sst_start_station input")[0].value;
+    var inputValue = addedToStartInput;
     startLocations = inputValue.toLowerCase();
 
     var r2r_start_region = universeList[startLocations].region;
@@ -652,14 +672,12 @@ function setStationTradingLocations() {
 * Gets the region trading coordinates based on the input
 */
 function setRouteRegionTradingLocations() {
-    var inputValue = $("#r2r_start_region input")[0].value;
-    startLocations = inputValue.toLowerCase();
+    startLocations = addedToStartInput.toLowerCase();
 
     startCoordinates = universeList[startLocations];
     startLocations = startCoordinates.name;
 
-    inputValue = $("#r2r_end_region input")[0].value;
-    endLocations = inputValue.toLowerCase();
+    endLocations = addedToEndInput.toLowerCase();
 
     endCoordinates = universeList[endLocations];
     endLocations = endCoordinates.name;
@@ -674,12 +692,10 @@ function getCoordinatesFor(listId, inputId) {
     var existingPoints = [];
     var universeItem;
 
-    $.each($(listId + " > li"), function () {
+    $.each(listId, function (index, stationLocation) {
         var coordinate = {};
-        var unrefined = $(this).text();
-        var stationLocation = unrefined.substring(0, unrefined.length - 2).toLowerCase();
 
-        universeItem = universeList[stationLocation];
+        universeItem = universeList[stationLocation.toLowerCase()];
 
         coordinate.region = universeItem.region;
         coordinate.station = universeItem.station;
@@ -691,9 +707,8 @@ function getCoordinatesFor(listId, inputId) {
         }
     });
 
-    if($(inputId + " input")[0].value) {
-        var inputValue = $(inputId + " input")[0].value;
-        universeItem = universeList[inputValue.toLowerCase()];
+    if(inputId) {
+        universeItem = universeList[inputId.toLowerCase()];
 
         if (universeItem) {
             var coordinate = {};
@@ -714,7 +729,7 @@ function getCoordinatesFor(listId, inputId) {
 * Sets up the start and end locations for a given form input
 */
 function setRouteStationTradingLocations() {
-    startCoordinates = getCoordinatesFor("#s2s_route_start", "#s2s_start_station");
+    startCoordinates = getCoordinatesFor(addedToStartList, addedToStartInput);
 
     if(startCoordinates.length > 0) {
         startLocations = [];
@@ -722,7 +737,7 @@ function setRouteStationTradingLocations() {
             startLocations.push(startCoordinates[i].name);
         }
 
-        endCoordinates = getCoordinatesFor("#s2s_route_end", "#s2s_end_station");
+        endCoordinates = getCoordinatesFor(addedToEndList, addedToEndInput);
         for (i = 0; i < endCoordinates.length; i++) {
             endLocations.push(endCoordinates[i].name);
         }
