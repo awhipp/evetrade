@@ -784,7 +784,9 @@ function setupBookmark(urlParams) {
                     if ($("#r2r_start_region input").length) {
                         clearInterval(waitForInputRegion);
                         addStart(urlParams.get("start"));
-                        addEnd(urlParams.get("end"))
+                        $("#r2r_start_region input")[0].value = urlParams.get("start");
+                        addEnd(urlParams.get("end"));
+                        $("#r2r_end_region input")[0].value = urlParams.get("end");
                     }
                 }, 1000);
 
@@ -795,6 +797,7 @@ function setupBookmark(urlParams) {
                     if ($("#sst_start_station input").length) {
                         clearInterval(waitForInputTrade);
                         addStart(urlParams.get("start"));
+                        $("#sst_start_station input")[0].value = urlParams.get("start");
                     }
                 }, 1000);
 
