@@ -11,9 +11,9 @@ var sstBrokerFee;
 var tradingStyle = null;
 var errorShown = false;
 var addedToStartList = [];
-var addedToStartInput;
+var addedToStartInput = "";
 var addedToEndList = [];
-var addedToEndInput;
+var addedToEndInput = "";
 
 var popupTableBuy;
 var popupTableSell;
