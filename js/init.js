@@ -276,9 +276,9 @@ function newStartStation(e) {
     if(e && e.shiftKey) {
         systems = findAllStations(inputValue);
         for(var i = 0; i < systems.length; i++) {
-            $("#s2s_start_station input")[0].value = systems[i];
+            addedToStartInput = systems[i];
             newStartStation();
-            $("#s2s_start_station input")[0].value = "";
+            addedToStartInput = "";
         }
     } else {
         var t = document.createTextNode(inputValue);
@@ -294,7 +294,7 @@ function newStartStation(e) {
                 document.getElementById("s2s_route_start").appendChild(li);
             }
 
-            $("#s2s_start_station input")[0].value = "";
+            addedToStartInput = "";
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
@@ -334,9 +334,9 @@ function newEndStation(e) {
     if (e && e.shiftKey) {
         systems = findAllStations(inputValue);
         for (var i = 0; i < systems.length; i++) {
-            $("#s2s_end_station input")[0].value = systems[i];
+            addedToEndInput = systems[i];
             newEndStation();
-            $("#s2s_end_station input")[0].value = "";
+            addedToEndInput = "";
         }
     } else {
         var t = document.createTextNode(inputValue);
@@ -352,7 +352,7 @@ function newEndStation(e) {
                 document.getElementById("s2s_route_end").appendChild(li);
             }
 
-            $("#s2s_end_station input")[0].value = "";
+            addedToEndInput = "";
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
