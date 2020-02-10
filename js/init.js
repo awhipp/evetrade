@@ -441,6 +441,13 @@ function onClickListeners() {
             addedToEndInput = $(id + " input").val();
         });
     });
+    $("#r2r_sell_nearby").on('click', function() {
+        if ($(this).is(':checked')) {
+            $("#adding_to_end_region_list").hide();
+        } else {
+            $("#adding_to_end_region_list").show();
+        }
+    })
 }
 
 function checkDirection() {
@@ -677,10 +684,17 @@ function setRouteRegionTradingLocations() {
     startCoordinates = universeList[startLocations];
     startLocations = startCoordinates.name;
 
-    endLocations = addedToEndInput.toLowerCase();
-
-    endCoordinates = universeList[endLocations];
-    endLocations = endCoordinates.name;
+    if ($("#r2r_sell_nearby").is(':checked')) {
+        endLocations = [];
+        universeList[startLocations.toLowerCase()].around.forEach(function(station){
+            endCoordinates.push(universeList[station]);
+            endLocations.push(universeList[station].name);
+        });
+    } else {
+        endLocations = addedToEndInput.toLowerCase();
+        endCoordinates = universeList[endLocations];
+        endLocations = endCoordinates.name;
+    }
 }
 
 /**
@@ -756,7 +770,14 @@ function execute() {
     } else if (tradingStyle == STATION_TRADE) {
         new Station(startCoordinates).startStation();
     } else if (tradingStyle == REGION_HAUL) {
-        new Region(startCoordinates, endCoordinates).startRoute();
+        if ($.isArray(endCoordinates)) {
+            routes = [];
+            for (var i = 0; i < endCoordinates.length; i++) {
+                new Region(startCoordinates, endCoordinates[i]).startRoute();
+            }
+        } else {
+            new Region(startCoordinates, endCoordinates).startRoute();
+        }
     }
 
 }

@@ -284,11 +284,14 @@ Region.prototype.executeRoutes = function() {
                 $(".loading").hide();
             }
 
-            $(".tableLoadingIcon").hide();
-
             $("#buying_footer").append('<div id="refresh_timer"></div>');
 
-            thiz.asyncRefresh();
+            $(".tableLoadingIcon").hide();
+
+            if (!createdRefresher) {
+                createdRefresher = true;
+                thiz.asyncRefresh();
+            }
         }
 
         for(var i = 0; i < thiz.regionRoutes.length && i < 1000; i++ ) {
