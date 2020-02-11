@@ -1,6 +1,6 @@
 name: EVE Trade
-version: v6.4
-version_full: Version 6.4
+version: v6.5
+version_full: Version 6.5
 baseurl:
 url: https://evetrade.space
 
