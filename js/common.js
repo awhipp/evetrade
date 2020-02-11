@@ -798,11 +798,13 @@ function setupBookmark(urlParams) {
                     if ($("#r2r_start_region input").length) {
                         clearInterval(waitForInputRegion);
                         addStart(urlParams.get("start"));
+                        $("#r2r_start_region input")[0].value = urlParams.get("start");
                         if (urlParams.get("end") == "Sell nearby") {
                             $("#r2r_sell_nearby").prop("checked", true);
                             $("#adding_to_end_region_list").hide();
                         } else {
-                            addEnd(urlParams.get("end"))
+                            addEnd(urlParams.get("end"));
+                            $("#r2r_end_region input")[0].value = urlParams.get("end");
                         }
                     }
                 }, 1000);
@@ -814,6 +816,7 @@ function setupBookmark(urlParams) {
                     if ($("#sst_start_station input").length) {
                         clearInterval(waitForInputTrade);
                         addStart(urlParams.get("start"));
+                        $("#sst_start_station input")[0].value = urlParams.get("start");
                     }
                 }, 1000);
 
