@@ -403,6 +403,7 @@ tr > td:first-child {
 
   .suggestions .clean {
     float: right;
+    margin-top: -0.4em;
   }
 
   input[type="text"], input[type="number"], #r2r_min_security, #r2r_route_preference, #r2r_sales_tax, #s2s_sales_tax, #sst_sales_tax{
