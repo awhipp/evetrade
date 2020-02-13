@@ -626,6 +626,7 @@ function open_popup(itemId, name, fromStation, toStation){
 function addStart(variable) {
     if (tradingStyle == STATION_TRADE) {
         addedToStartInput = variable;
+        $("#sst_start_station input").val(variable);
     } else if (tradingStyle == STATION_HAUL) {
         addedToStartInput = variable;
         if(shifted){
