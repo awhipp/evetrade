@@ -11,16 +11,12 @@ var sstBrokerFee;
 var tradingStyle = null;
 var errorShown = false;
 var addedToStartList = [];
+var addedToStartInput = "";
 var addedToEndList = [];
-
-var stationsReady = false;
-var regionsReady = false;
+var addedToEndInput = "";
 
 var popupTableBuy;
 var popupTableSell;
-
-var universeList = {};
-var stationIdToName = {};
 
 var startCoordinates = [];
 var endCoordinates = [];
@@ -38,6 +34,8 @@ var urlParams;
 * > Setup the about, cookies, and custom station dropdowns
 */
 $( document ).ready(function() {
+    getJsonFiles();
+
     popupTableBuy = $("#popup_table_buy").DataTable({
         "order": [[ 0, "asc" ]],
         "lengthMenu": [[10], ["10"]]
@@ -143,149 +141,69 @@ function getTradeHubName(stationName) {
 }
 
 /**
-* Initializes completely which is the suggestion engine behind the inputs
+* Initializes awesomplete which is the suggestion engine behind the inputs
 */
-function initCompletely(domId, stationList) {
-    var completelyInput = completely(document.getElementById(domId), {
-        fontSize: '18px',
-        fontFamily: "Roboto",
-        color: '#333',
-        ignoreCase: true
+function initAwesomplete(domId, list) {
+    var input = document.querySelector("#" + domId + " input");
+    var inputPlete  = new Awesomplete(input, {
+        list: "#" + list,
+        minChars: 0,
+        maxItems: 20,
+        autoFirst: true,
+        filter: Awesomplete.FILTER_STARTSWITH,
+        sort: false,
     });
-    completelyInput.options = stationList;
-    completelyInput.repaint();
-
-    if (domId == "s2s_start_station") {
-        $($("#" + domId + " input")[1]).on('keydown', function (e) {
-            if (e.keyCode == 13) {
-                if (shifted) {
-                    var e = {};
-                    e.shiftKey = true;
-                    newStartStation(e);
-                } else {
-                    newStartStation();
-                }
-            }
-        });
-    }
-
-    if (domId == "s2s_end_station") {
-        $($("#" + domId + " input")[1]).on('keydown', function (e) {
-            if (e.keyCode == 13) {
-                if (shifted) {
-                    var e = {};
-                    e.shiftKey = true;
-                    newEndStation(e);
-                } else {
-                    newEndStation();
-                }
-            }
-        });
-    }
+    $(input).on('focus', function(){
+        inputPlete.evaluate();
+    });
 }
 
 /**
 * Custom station dropdown initializer
 */
 function setupCustomDropdown() {
-    var customStationsDropdown = setInterval(function () {
-        if (station_ids !== undefined) {
-            clearInterval(customStationsDropdown);
-            var stationList = [""];
-
-            for (var i = 0; i < station_ids.length; i++) {
-
-                var stationName = station_ids[i].stationName;
-
-                // add trade hubs for easy of use
-                var tradeHubName = getTradeHubName(stationName);
-                if (stationName !== tradeHubName) {
-                    var lowerCaseStationName = tradeHubName.toLowerCase();
-
-                    universeList[lowerCaseStationName] = {};
-                    universeList[lowerCaseStationName].region = station_ids[i].regionID;
-                    universeList[lowerCaseStationName].station = station_ids[i].stationID;
-                    universeList[lowerCaseStationName].system = station_ids[i].solarSystemID;
-                    universeList[lowerCaseStationName].name = tradeHubName;
-                    stationList.push(tradeHubName);
-                }
-
-                var lowerCaseStationName = stationName.toLowerCase();
-                universeList[lowerCaseStationName] = {};
-                universeList[lowerCaseStationName].region = station_ids[i].regionID;
-                universeList[lowerCaseStationName].station = station_ids[i].stationID;
-                universeList[lowerCaseStationName].system = station_ids[i].solarSystemID;
-                universeList[lowerCaseStationName].name = stationName;
-                stationList.push(stationName);
-
-                stationIdToName[station_ids[i].stationID] = stationName;
-
-            }
-
-            stationList.sort();
-
-            initCompletely("sst_start_station", stationList);
-            initCompletely("s2s_start_station", stationList);
-            initCompletely("s2s_end_station", stationList);
+    var isTablesReady = setInterval(function () {
+        if (tablesReady) {
+            clearInterval(isTablesReady);
+            stationList.forEach(function(station){
+                var option = document.createElement("option");
+                option.innerHTML = station;
+                $("#stationList").append(option);
+            });
+            regionList.forEach(function(region){
+                var option = document.createElement("option");
+                option.innerHTML = region;
+                $("#regionList").append(option);
+            });
+            initAwesomplete("sst_start_station", "stationList");
+            initAwesomplete("s2s_start_station", "stationList");
+            initAwesomplete("s2s_end_station", "stationList");
 
             if($("#r2r_route_preference").val() == null) {
-              $("#r2r_route_preference").val("shortest");
+                $("#r2r_route_preference").val("shortest");
             }
-
             if($("#r2r_min_security").val() == null) {
-              $("#r2r_min_security").val("null");
+                $("#r2r_min_security").val("null");
             }
 
             if($("#s2s_buying_type").val() == null) {
-              $("#s2s_buying_type").val("sell");
+                $("#s2s_buying_type").val("sell");
             }
-
             if($("#s2s_selling_type").val() == null) {
-              $("#s2s_selling_type").val("buy");
+                $("#s2s_selling_type").val("buy");
             }
 
-            stationsReady = true;
-        }
-    }, 1000);
-
-    var customRegionsDropdown = setInterval(function () {
-        if (region_ids !== undefined) {
-            clearInterval(customRegionsDropdown);
-            var regionList = [""];
-
-            for (var i = 0; i < region_ids.length; i++) {
-                if (region_ids[i].regionID < 11000000) { // Avoid special regions
-                    var regionName = region_ids[i].regionName;
-                    var lcRegionName = regionName.toLowerCase();
-
-                    universeList[lcRegionName] = {};
-                    universeList[lcRegionName].name = region_ids[i].regionName;
-                    universeList[lcRegionName].id = region_ids[i].regionID;
-                    regionList.push(regionName);
-                }
-            }
-
-            regionList.sort();
-
-            initCompletely("r2r_start_region", regionList);
-            initCompletely("r2r_end_region", regionList);
+            initAwesomplete("r2r_start_region", "regionList");
+            initAwesomplete("r2r_end_region", "regionList");
 
             if($("#r2r_buying_type").val() == null) {
-              $("#r2r_buying_type").val("sell");
+                $("#r2r_buying_type").val("sell");
             }
-
             if($("#r2r_selling_type").val() == null) {
-              $("#r2r_selling_type").val("buy");
+                $("#r2r_selling_type").val("buy");
             }
 
-            regionsReady = true;
-        }
-    }, 1000);
-
-    var pageReadyInterval = setInterval(function () {
-        if (stationsReady && regionsReady) {
             checkDirection();
-            clearInterval(pageReadyInterval);
 
             $(function () {
                 var tabIndex = 1;
@@ -316,7 +234,7 @@ function setupCustomDropdown() {
             $(".loadingIcon").remove();
             $(".core-section").css("opacity", 1);
         }
-    }, 1000);
+    }, 10);
 }
 
 /**
@@ -350,25 +268,17 @@ function findAllStations(stationName) {
 */
 function newStartStation(e) {
     var li = document.createElement("li");
-    var inputValue = ($("#s2s_start_station input")[0].value
-    && universeList[$("#s2s_start_station input")[0].value.toLowerCase()]
-    && universeList[$("#s2s_start_station input")[0].value.toLowerCase()].name);
-
-    if (inputValue.length == 0) {
-        inputValue = ($("#s2s_start_station input")[1].value
-        && universeList[$("#s2s_start_station input")[1].value.toLowerCase()]
-        && universeList[$("#s2s_start_station input")[1].value.toLowerCase()].name);
-    }
+    var inputValue = (addedToStartInput
+    && universeList[addedToStartInput.toLowerCase()]
+    && universeList[addedToStartInput.toLowerCase()].name);
 
     var systems = [];
     if(e && e.shiftKey) {
         systems = findAllStations(inputValue);
         for(var i = 0; i < systems.length; i++) {
-            $("#s2s_start_station input")[0].value = systems[i];
-            $("#s2s_start_station input")[1].value = systems[i];
+            addedToStartInput = systems[i];
             newStartStation();
-            $("#s2s_start_station input")[0].value = "";
-            $("#s2s_start_station input")[1].value = "";
+            addedToStartInput = "";
         }
     } else {
         var t = document.createTextNode(inputValue);
@@ -384,8 +294,7 @@ function newStartStation(e) {
                 document.getElementById("s2s_route_start").appendChild(li);
             }
 
-            $("#s2s_start_station input")[0].value = "";
-            $("#s2s_start_station input")[1].value = "";
+            addedToStartInput = "";
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
@@ -402,8 +311,12 @@ function newStartStation(e) {
                 var data = $(this)[0].previousSibling.data;
                 addedToStartList.splice(addedToStartList.indexOf(data), 1);
                 $(this.parentElement).remove();
+                if (addedToStartList.length < 5) $("#s2s_start_clean").hide();
+                if (addedToStartList.length == 0) $("#s2s_route_start").hide();
             }
         }
+
+        if (addedToStartList.length >= 5) $("#s2s_start_clean").show();
     }
 
 }
@@ -413,24 +326,17 @@ function newStartStation(e) {
 */
 function newEndStation(e) {
     var li = document.createElement("li");
-    var inputValue = ($("#s2s_end_station input")[0].value
-    && universeList[$("#s2s_end_station input")[0].value.toLowerCase()]
-    && universeList[$("#s2s_end_station input")[0].value.toLowerCase()].name);
-    if(inputValue.length == 0) {
-        inputValue = ($("#s2s_end_station input")[1].value
-        && universeList[$("#s2s_end_station input")[1].value.toLowerCase()]
-        && universeList[$("#s2s_end_station input")[1].value.toLowerCase()].name);
-    }
+    var inputValue = (addedToEndInput
+    && universeList[addedToEndInput.toLowerCase()]
+    && universeList[addedToEndInput.toLowerCase()].name);
 
     var systems = [];
     if (e && e.shiftKey) {
         systems = findAllStations(inputValue);
         for (var i = 0; i < systems.length; i++) {
-            $("#s2s_end_station input")[0].value = systems[i];
-            $("#s2s_end_station input")[1].value = systems[i];
+            addedToEndInput = systems[i];
             newEndStation();
-            $("#s2s_end_station input")[0].value = "";
-            $("#s2s_end_station input")[1].value = "";
+            addedToEndInput = "";
         }
     } else {
         var t = document.createTextNode(inputValue);
@@ -446,8 +352,7 @@ function newEndStation(e) {
                 document.getElementById("s2s_route_end").appendChild(li);
             }
 
-            $("#s2s_end_station input")[0].value = "";
-            $("#s2s_end_station input")[1].value = "";
+            addedToEndInput = "";
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode(" \u00D7");
@@ -464,8 +369,12 @@ function newEndStation(e) {
                 var data = $(this)[0].previousSibling.data;
                 addedToEndList.splice(addedToEndList.indexOf(data), 1);
                 $(this.parentElement).remove();
+                if (addedToEndList.length < 5) $("#s2s_end_clean").hide();
+                if (addedToEndList.length == 0) $("#s2s_route_end").hide();
             }
         }
+
+        if (addedToEndList.length >= 5) $("#s2s_end_clean").show();
     }
 }
 
@@ -514,6 +423,31 @@ function onClickListeners() {
             }
         });
     });
+
+    ["#sst_start_station", "#s2s_start_station", "#r2r_start_region"].forEach(function(id) {
+        $(id + " input").on('awesomplete-select', function(selection) {
+            addedToStartInput = selection.originalEvent.text.value;
+        });
+        $(id + " input").on("change", function() {
+            addedToStartInput = $(id + " input").val();
+        });
+    });
+
+    ["#s2s_end_station", "#r2r_end_region"].forEach(function(id) {
+        $(id + " input").on('awesomplete-select', function(selection) {
+            addedToEndInput = selection.originalEvent.text.value;
+        });
+        $(id + " input").on("change", function() {
+            addedToEndInput = $(id + " input").val();
+        });
+    });
+    $("#r2r_sell_nearby").on('click', function() {
+        if ($(this).is(':checked')) {
+            $("#adding_to_end_region_list").hide();
+        } else {
+            $("#adding_to_end_region_list").show();
+        }
+    })
 }
 
 function checkDirection() {
@@ -691,11 +625,10 @@ function open_popup(itemId, name, fromStation, toStation){
 */
 function addStart(variable) {
     if (tradingStyle == STATION_TRADE) {
-        $("#sst_start_station input")[0].value = variable;
-        $("#sst_start_station input")[1].value = variable;
+        addedToStartInput = variable;
+        $("#sst_start_station input").val(variable);
     } else if (tradingStyle == STATION_HAUL) {
-        $("#s2s_start_station input")[0].value = variable;
-        $("#s2s_start_station input")[1].value = variable;
+        addedToStartInput = variable;
         if(shifted){
             var e = {};
             e.shiftKey = true;
@@ -704,8 +637,7 @@ function addStart(variable) {
             newStartStation();
         }
     } else if (tradingStyle == REGION_HAUL) {
-        $("#r2r_start_region input")[0].value = variable;
-        $("#r2r_start_region input")[1].value = variable;
+        addedToStartInput = variable;
     }
 }
 
@@ -716,8 +648,7 @@ function addEnd(variable) {
     if (tradingStyle == STATION_TRADE) {
         return;
     } else if (tradingStyle == STATION_HAUL) {
-        $("#s2s_end_station input")[0].value = variable;
-        $("#s2s_end_station input")[1].value = variable;
+        addedToEndInput = variable;
         if (shifted) {
             var e = {};
             e.shiftKey = true;
@@ -726,8 +657,7 @@ function addEnd(variable) {
             newEndStation();
         }
     } else if (tradingStyle == REGION_HAUL) {
-        $("#r2r_end_region input")[0].value = variable;
-        $("#r2r_end_region input")[1].value = variable;
+        addedToEndInput = variable;
     }
 }
 
@@ -735,7 +665,7 @@ function addEnd(variable) {
 * Gets the station trading coordinates based on the input
 */
 function setStationTradingLocations() {
-    var inputValue = $("#sst_start_station input")[0].value || $("#sst_start_station input")[1].value;
+    var inputValue = addedToStartInput;
     startLocations = inputValue.toLowerCase();
 
     var r2r_start_region = universeList[startLocations].region;
@@ -750,17 +680,22 @@ function setStationTradingLocations() {
 * Gets the region trading coordinates based on the input
 */
 function setRouteRegionTradingLocations() {
-    var inputValue = $("#r2r_start_region input")[0].value || $("#r2r_start_region input")[1].value;
-    startLocations = inputValue.toLowerCase();
+    startLocations = addedToStartInput.toLowerCase();
 
     startCoordinates = universeList[startLocations];
     startLocations = startCoordinates.name;
 
-    inputValue = $("#r2r_end_region input")[0].value || $("#r2r_end_region input")[1].value;
-    endLocations = inputValue.toLowerCase();
-
-    endCoordinates = universeList[endLocations];
-    endLocations = endCoordinates.name;
+    if ($("#r2r_sell_nearby").is(':checked')) {
+        endLocations = [];
+        universeList[startLocations.toLowerCase()].around.forEach(function(station){
+            endCoordinates.push(universeList[station]);
+            endLocations.push(universeList[station].name);
+        });
+    } else {
+        endLocations = addedToEndInput.toLowerCase();
+        endCoordinates = universeList[endLocations];
+        endLocations = endCoordinates.name;
+    }
 }
 
 /**
@@ -772,12 +707,10 @@ function getCoordinatesFor(listId, inputId) {
     var existingPoints = [];
     var universeItem;
 
-    $.each($(listId + " > li"), function () {
+    $.each(listId, function (index, stationLocation) {
         var coordinate = {};
-        var unrefined = $(this).text();
-        var stationLocation = unrefined.substring(0, unrefined.length - 2).toLowerCase();
 
-        universeItem = universeList[stationLocation];
+        universeItem = universeList[stationLocation.toLowerCase()];
 
         coordinate.region = universeItem.region;
         coordinate.station = universeItem.station;
@@ -789,9 +722,8 @@ function getCoordinatesFor(listId, inputId) {
         }
     });
 
-    if($(inputId + " input")[0].value) {
-        var inputValue = $(inputId + " input")[0].value || $(inputId + " input")[1].value;
-        universeItem = universeList[inputValue.toLowerCase()];
+    if(inputId) {
+        universeItem = universeList[inputId.toLowerCase()];
 
         if (universeItem) {
             var coordinate = {};
@@ -812,7 +744,7 @@ function getCoordinatesFor(listId, inputId) {
 * Sets up the start and end locations for a given form input
 */
 function setRouteStationTradingLocations() {
-    startCoordinates = getCoordinatesFor("#s2s_route_start", "#s2s_start_station");
+    startCoordinates = getCoordinatesFor(addedToStartList, addedToStartInput);
 
     if(startCoordinates.length > 0) {
         startLocations = [];
@@ -820,7 +752,7 @@ function setRouteStationTradingLocations() {
             startLocations.push(startCoordinates[i].name);
         }
 
-        endCoordinates = getCoordinatesFor("#s2s_route_end", "#s2s_end_station");
+        endCoordinates = getCoordinatesFor(addedToEndList, addedToEndInput);
         for (i = 0; i < endCoordinates.length; i++) {
             endLocations.push(endCoordinates[i].name);
         }
@@ -839,7 +771,14 @@ function execute() {
     } else if (tradingStyle == STATION_TRADE) {
         new Station(startCoordinates).startStation();
     } else if (tradingStyle == REGION_HAUL) {
-        new Region(startCoordinates, endCoordinates).startRoute();
+        if ($.isArray(endCoordinates)) {
+            routes = [];
+            for (var i = 0; i < endCoordinates.length; i++) {
+                new Region(startCoordinates, endCoordinates[i]).startRoute();
+            }
+        } else {
+            new Region(startCoordinates, endCoordinates).startRoute();
+        }
     }
 
 }
@@ -910,4 +849,18 @@ function init(style){
         return false;
     }
     return false;
+}
+
+function cleanStartList() {
+    $("#s2s_route_start").empty();
+    $("#s2s_route_start").hide();
+    addedToStartList = [];
+    $("#s2s_start_clean").hide();
+}
+
+function cleanEndList() {
+    $("#s2s_route_end").empty();
+    $("#s2s_route_end").hide();
+    addedToEndList = [];
+    $("#s2s_end_clean").hide();
 }

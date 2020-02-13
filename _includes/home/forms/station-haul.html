@@ -25,7 +25,9 @@
 
         <div class="form-group standard">
             <div id="adding_to_start_station_list">
-                <div id='s2s_start_station' style='border:1px solid #999;'></div>
+                <div id='s2s_start_station' style='border:1px solid #999;'>
+                  <input type='text' style="font-size: 18px;"/>
+                </div>
                 <input
                   type="button"
                   class="btn btn-default add-station-button"
@@ -40,6 +42,7 @@
                 <span onclick="addStart('Dodixie');">Dodixie</span>
                 <span onclick="addStart('Rens');">Rens</span>
                 <span onclick="addStart('Hek');">Hek</span>
+                <span id="s2s_start_clean" class="clean" onclick="cleanStartList()" style="display:none">Reset</span>
             </p>
 
             <ul id="s2s_route_start" class="location_checklist form-control">
@@ -55,7 +58,9 @@
 
         <div class="form-group standard">
             <div id="adding_to_end_station_list">
-                <div id='s2s_end_station' style='border:1px solid #999;'></div>
+                <div id='s2s_end_station' style='border:1px solid #999;'>
+                  <input type='text' style="font-size: 18px;"/>
+                </div>
                 <input
                   type="button"
                   class="btn btn-default add-station-button"
@@ -70,6 +75,7 @@
                 <span onclick="addEnd('Dodixie');">Dodixie</span>
                 <span onclick="addEnd('Rens');">Rens</span>
                 <span onclick="addEnd('Hek');">Hek</span>
+                <span id="s2s_end_clean" class="clean" onclick="cleanEndList();" style="display:none">Reset</span>
             </p>
             <ul id="s2s_route_end" class="location_checklist form-control">
             </ul>

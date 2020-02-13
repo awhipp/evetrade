@@ -2,13 +2,11 @@ var BUY_ORDER = "buy";
 var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
-var RES_ENDPOINT = "https://raw.githubusercontent.com/awhipp/evetrade_resources/master/resources/";
+var RES_ENDPOINT = "https://api.github.com/repos/awhipp/evetrade_resources/contents/resources";
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
 var REGION_HAUL = 2;
-
-var PAGE_MULTIPLE = 50;
 
 var tableCreated = false;
 var createdRefresher = false;
@@ -16,7 +14,6 @@ var totalProgress = 0;
 var executingCount = 0;
 var customBuy = {};
 var customSell = {};
-var itemCache = {};
 var citadelCache = {};
 var systemSecurity = {};
 var routeCache = {};
@@ -42,21 +39,14 @@ var spamItems = [
     "vizen's", "zor's"
 ];
 
-/**
-* External JSON for updated stations information
-*/
-var station_ids;
-$.getJSON(RES_ENDPOINT + "staStations.json", function(data) {
-    station_ids = data;
-});
+var universeList = {};
+var stationIdToName = {};
+var stationList = [];
+var regionList = [];
+var tablesReady = false;
+var invTypes = [];
 
-/**
-* External JSON for updated stations information
-*/
-var region_ids;
-$.getJSON(RES_ENDPOINT + "mapRegions.json", function(data) {
-    region_ids = data;
-});
+var mapRegionJumps = [];
 
 /**
  * Defaults values and parameters of forms inputs by trade style
@@ -399,14 +389,14 @@ function marketEndpointBuilder(region, page, orderType) {
 }
 
 /**
-* Item weight endpoint URI builder
+* Return item weight from items DB
 */
-function getWeightEndpointBuilder(itemId) {
-    var url = ESI_ENDPOINT + "/latest/universe/types/" + itemId + "/" +
-        "?datasource=tranquility" +
-        "&language=en-us" +
-        "&iteration=" + iteration;
-    return url.replace(/\s/g, '');
+function getWeight(itemId) {
+    for( var i = 0; i < invTypes.length; i++ ) {
+        if( invTypes[i].typeID == itemId) {
+            return invTypes[i];
+        }
+    }
 }
 
 /**
@@ -449,7 +439,11 @@ function createTradeHeader() {
         sellingTo = sellingTo.substring(0, sellingTo.length - 2);
     } else if (tradingStyle == REGION_HAUL) {
         buyingFrom = startLocations;
-        sellingTo = endLocations;
+        if ($.isArray(endLocations)) {
+            sellingTo = endLocations.join(", ")
+        } else {
+            sellingTo = endLocations;
+        }
     }
 
     if (tradingStyle == STATION_HAUL || tradingStyle == REGION_HAUL) {
@@ -676,7 +670,11 @@ function setTitle() {
     } else if (tradingStyle == STATION_HAUL) {
         trade = startLocations.join("-") + " => " + endLocations.join("-");
     } else if (tradingStyle == REGION_HAUL) {
-        trade = startLocations + " => " + endLocations;
+        if ($.isArray(endLocations)) {
+            trade = startLocations + " => " + endLocations.join("-");
+        } else {
+            trade = startLocations + " => " + endLocations;
+        }
     }
     document.title = trade + " | " + document.title
 }
@@ -727,7 +725,11 @@ function createBookmarks() {
             case REGION_HAUL:
                 bookmarkURL = window.location.pathname + "?trade=r2r";
                 bookmarkURL += "&start=" + startLocations;
-                bookmarkURL += "&end=" + endLocations ;
+                if ($.isArray(endLocations)) {
+                    bookmarkURL += "&end=Sell nearby" ;
+                } else {
+                    bookmarkURL += "&end=" + endLocations ;
+                }
                 break;
             case STATION_TRADE:
                 bookmarkURL = window.location.pathname + "?trade=sst";
@@ -796,7 +798,14 @@ function setupBookmark(urlParams) {
                     if ($("#r2r_start_region input").length) {
                         clearInterval(waitForInputRegion);
                         addStart(urlParams.get("start"));
-                        addEnd(urlParams.get("end"))
+                        $("#r2r_start_region input")[0].value = urlParams.get("start");
+                        if (urlParams.get("end") == "Sell nearby") {
+                            $("#r2r_sell_nearby").prop("checked", true);
+                            $("#adding_to_end_region_list").hide();
+                        } else {
+                            addEnd(urlParams.get("end"));
+                            $("#r2r_end_region input")[0].value = urlParams.get("end");
+                        }
                     }
                 }, 1000);
 
@@ -807,6 +816,7 @@ function setupBookmark(urlParams) {
                     if ($("#sst_start_station input").length) {
                         clearInterval(waitForInputTrade);
                         addStart(urlParams.get("start"));
+                        $("#sst_start_station input")[0].value = urlParams.get("start");
                     }
                 }, 1000);
 
@@ -826,4 +836,57 @@ function setupBookmark(urlParams) {
             setDefaultInput(tradeDefaultValues, key, paramValue);
         };
     }
+}
+
+function getJsonFiles(){
+    var getUniverseList = false;
+
+    $.getJSON(RES_ENDPOINT, function(data) {
+        var neededFiles = ["universeList.json",
+                           "stationList.json",
+                           "stationIdToName.json",
+                           "regionList.json",
+                           "invTypes.json",
+                           "mapRegionJumps.json"
+                        ];
+        var filesSha = JSON.parse(window.localStorage.getItem("filesSha"));
+        if ($.isEmptyObject(filesSha)) filesSha = {};
+        for (var i = 0; i < data.length; i++) {
+            if (neededFiles.includes( data[i].name)) {
+                if (data[i].sha != filesSha[data[i].name]) {
+                    getUniverseList = true;
+                    break;
+                }
+            }
+        }
+        if (getUniverseList) {
+            var nbQuery = 0
+            for (var i = 0; i < data.length; i++) {
+                if (neededFiles.includes( data[i].name)) {
+                    filesSha[data[i].name] = data[i].sha;
+                    $.getJSON(data[i].download_url, function(jsonFile) {
+                        var fileName = this.url.split("/")[7];
+                        if (fileName == neededFiles[0]) universeList = jsonFile;
+                        if (fileName == neededFiles[1]) stationList = jsonFile;
+                        if (fileName == neededFiles[2]) stationIdToName = jsonFile;
+                        if (fileName == neededFiles[3]) regionList = jsonFile;
+                        if (fileName == neededFiles[4]) invTypes = jsonFile;
+                        if (fileName == neededFiles[5]) mapRegionJumps = jsonFile;
+                        window.localStorage.setItem(fileName, JSON.stringify(jsonFile));
+                        nbQuery++;
+                        if (nbQuery === neededFiles.length) tablesReady = true;
+                    });
+                }
+            }
+            window.localStorage.setItem( "filesSha" , JSON.stringify(filesSha));
+        } else {
+            universeList = JSON.parse(window.localStorage.getItem(neededFiles[0]));
+            stationList = JSON.parse(window.localStorage.getItem(neededFiles[1]));
+            stationIdToName = JSON.parse(window.localStorage.getItem(neededFiles[2]));
+            regionList = JSON.parse(window.localStorage.getItem(neededFiles[3]));
+            invTypes = JSON.parse(window.localStorage.getItem(neededFiles[4]));
+            mapRegionJumps = JSON.parse(window.localStorage.getItem(neededFiles[5]));
+            tablesReady = true;
+        }
+    });
 }

@@ -19,7 +19,9 @@
 
         <div class="form-group standard">
             <div id="adding_to_start_region_list">
-                <div id='r2r_start_region' style='border:1px solid #999;'></div>
+                <div id='r2r_start_region' style='border:1px solid #999;'>
+                  <input type='text' style="font-size: 18px;"/>
+                </div>
             </div>
         </div>
     </div>
@@ -30,8 +32,17 @@
           Destination Region
         </h4>
         <div class="form-group standard">
-            <div id="adding_to_end_region_list">
+          <div class="r2r-checkbox">
+              <input
+                  type="checkbox"
+                  id="r2r_sell_nearby"
+                  name="r2r_sell_nearby"
+                />
+                &nbsp;Sell to nearby regions
+            </div>
+            <div id="adding_to_end_region_list" style='display:block'>
                 <div id='r2r_end_region' style='border:1px solid #999;'>
+                  <input type='text' style="font-size: 18px;"/>
                 </div>
             </div>
         </div>
