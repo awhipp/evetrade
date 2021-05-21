@@ -389,9 +389,13 @@ Station.prototype.getItemVolume = function(itemId, row){
 */
 Station.prototype.getItemWeight = function(itemId, row){
     var weightData = getWeight(itemId);
-    row.itemName = weightData.typeName;
+    if (weightData) {
+        row.itemName = weightData.typeName;
 
-    this.addRow(row);
+        this.addRow(row);
+    } else {
+        console.log('Error: Cannot find itemId: ' + itemId)
+    }
     executingCount--;
 };
 

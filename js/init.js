@@ -500,7 +500,7 @@ function setupCookies() {
   var formInputs = [
       "sst_lower_margin", "sst_upper_margin", "sst_min_volume",
       "s2s_min_profit", "s2s_min_roi", "s2s_max_budget", "s2s_max_cargo",
-      "r2r_route_preference", "r2r_include_citadels", "r2r_min_security",
+      "r2r_route_preference", "r2r_min_security",
       "r2r_max_budget", "r2r_min_roi", "r2r_max_cargo",
       "r2r_min_profit", "s2s_buying_type", "s2s_selling_type",
       "r2r_buying_type", "r2r_selling_type", "sst_sales_tax", "sst_sales_tax_in",

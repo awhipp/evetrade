@@ -2,15 +2,13 @@
 title: EVE Online Market Trade Tool | Realtime Hauling & Station Trading
 layout: home
 announcement: {
-  enabled: false,
-  header: Version 6.5,
+  enabled: true,
+  header: Version 6.51,
   include_date: true,
   text: '
     <ul>
-    <li>Improved and optimized resource fetching for quicker load times</li>
-    <li>Added feature to search nearby regions</li>
-    <li>Updated autocomplete feature to be more robust</li>
-    <li>Fixed bugs and error</li>
+      <li>Fixed Bug where searches would not complete</li>
+      <li>Temporarily Removed Citadels checkbox as API is unavailable</li>
     </ul>
   '
 }

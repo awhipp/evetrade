@@ -428,10 +428,15 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
 */
 Route.prototype.getItemWeight = function(itemId, row){
     var weightData = getWeight(itemId);
-    row.itemName = weightData.typeName;
-    row.itemWeight = weightData.volume;
-
-    this.addRow(row);
+    if(weightData) {
+        console.log(weightData)
+        row.itemName = weightData.typeName;
+        row.itemWeight = weightData.volume;
+    
+        this.addRow(row);
+    } else {
+        console.log('Item ID not found: ' + itemId)
+    }
 };
 
 /**

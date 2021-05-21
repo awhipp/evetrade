@@ -81,8 +81,7 @@ var defaultValues = [
         "r2r_min_roi": ["min_roi", 4],
         "r2r_max_budget": ["max_budget", 999999999999999999],
         "r2r_min_security": ["min_security", "null"],
-        "r2r_route_preference": ["route_type", "secure"],
-        "r2r_include_citadels": ["r2r_include_citadels", false]
+        "r2r_route_preference": ["route_type", "secure"]
     },
     // Taxes
     [5, 4.45, 3.9, 3.35, 2.8, 2.25]
@@ -390,6 +389,7 @@ function marketEndpointBuilder(region, page, orderType) {
 
 /**
 * Return item weight from items DB
+* TODO: Can be improved
 */
 function getWeight(itemId) {
     for( var i = 0; i < invTypes.length; i++ ) {
