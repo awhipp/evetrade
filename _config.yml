@@ -22,3 +22,5 @@ jekyll-minifier:
   exclude:
     - release.html
     - sitemap.xml
+  uglifier_args:
+    harmony: true
