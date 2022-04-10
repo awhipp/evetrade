@@ -36,7 +36,7 @@ var urlParams;
 
 
 $( document ).ready(function() {
-    getJsonFiles();
+    getResourceFiles();
     
     popupTableBuy = $("#popup_table_buy").DataTable({
         "order": [[ 0, "asc" ]],
