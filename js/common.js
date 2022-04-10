@@ -47,8 +47,6 @@ var regionList = [];
 var tablesReady = false;
 var invTypes = [];
 
-var mapRegionJumps = [];
-
 /**
  * Defaults values and parameters of forms inputs by trade style
  * + Predefined values taxes
@@ -56,8 +54,8 @@ var mapRegionJumps = [];
 var defaultValues = [
     // Station trading
     {
-        "sst_sales_tax": ["sales_tax", 5],
-        "sst_broker_fee": ["broker_fee", 5],
+        "sst_sales_tax": ["sales_tax", 8],
+        "sst_broker_fee": ["broker_fee", 3],
         "sst_lower_margin": ["min_margin", 20],
         "sst_upper_margin": ["max_margin", 40],
         "sst_min_volume": ["min_volume", 1000]
@@ -66,7 +64,7 @@ var defaultValues = [
     {
         "s2s_buying_type": ["buy_type", "sell"],
         "s2s_selling_type": ["sell_type", "buy"],
-        "s2s_sales_tax": ["sales_tax", 5],
+        "s2s_sales_tax": ["sales_tax", 8],
         "s2s_min_profit": ["min_profit", 500000],
         "s2s_max_cargo": ["max_cargo", 999999999999999999],
         "s2s_min_roi": ["min_roi", 4],
@@ -76,7 +74,7 @@ var defaultValues = [
     {
         "r2r_buying_type": ["buy_type", "sell"],
         "r2r_selling_type": ["sell_type", "buy"],
-        "r2r_sales_tax": ["sales_tax", 5],
+        "r2r_sales_tax": ["sales_tax", 8],
         "r2r_min_profit": ["min_profit", 500000],
         "r2r_max_cargo": ["max_cargo", 999999999999999999],
         "r2r_min_roi": ["min_roi", 4],
@@ -85,7 +83,7 @@ var defaultValues = [
         "r2r_route_preference": ["route_type", "secure"]
     },
     // Taxes
-    [5, 4.45, 3.9, 3.35, 2.8, 2.25]
+    [8, 7.12, 6.24, 5.36, 4.48, 3.6]
 ]
 
 /**
@@ -839,6 +837,7 @@ function setupBookmark(urlParams) {
     }
 }
 
+// Generic function to get JSON data from API endpoin t
 function getDataFromAPI(route) {
     return fetch(API_ENDPOINT + route)
     .then(response => response.json())
@@ -847,57 +846,62 @@ function getDataFromAPI(route) {
     });
 }
 
-const resources_needed = 6;
+const resources_needed = 5;
 let resources_loaded = 0;
 
+// Function gets all resource files needed from backend
 function getResourceFiles(){
-    var getUniverseList = false;
-    getDataFromAPI('/stations').then(function(response) {
-        stationList = response;
-        resources_loaded ++;
-    });
+    const date = new Date();
+    const dateString = "" + date.getFullYear() + date.getMonth() + date.getDate();
+    const lastRetrieved = window.localStorage.getItem('evetrade_cache_retrieval_date');
+
+    if(dateString == lastRetrieved) {
+        console.log('Same Day - Retrieving Resource Cache.');
+
+        universeList = JSON.parse(window.localStorage.getItem('universeList'));
+        stationList = JSON.parse(window.localStorage.getItem('stationList'));
+        stationIdToName = JSON.parse(window.localStorage.getItem('stationIdToName'));
+        regionList = JSON.parse(window.localStorage.getItem('regionList'));
+        invTypes = JSON.parse(window.localStorage.getItem('invTypes'));
+        resources_loaded = 5;
+
+    } else {
+        console.log('New Day - Refreshing Resource Cache.');
+        window.localStorage.clear();
+        window.localStorage.setItem('evetrade_cache_retrieval_date', dateString);
+
+        getDataFromAPI('/stations').then(function(response) {
+            stationList = response;
+            window.localStorage.setItem('stationList', JSON.stringify(response));
+            resources_loaded ++;
+        });
     
-    $.getJSON(RES_ENDPOINT, function(data) {
-        var neededFiles = ["universeList.json",
-                           "stationIdToName.json",
-                           "regionList.json",
-                           "invTypes.json",
-                           "mapRegionJumps.json"
-                        ];
-        var filesSha = JSON.parse(window.localStorage.getItem("filesSha"));
-        if ($.isEmptyObject(filesSha)) filesSha = {};
-        for (var i = 0; i < data.length; i++) {
-            if (neededFiles.includes( data[i].name)) {
-                if (data[i].sha != filesSha[data[i].name]) {
-                    getUniverseList = true;
-                    break;
-                }
-            }
-        }
-        if (getUniverseList) {
-            for (var i = 0; i < data.length; i++) {
-                if (neededFiles.includes( data[i].name)) {
-                    filesSha[data[i].name] = data[i].sha;
-                    $.getJSON(data[i].download_url, function(jsonFile) {
-                        var fileName = this.url.split("/")[7];
-                        if (fileName == neededFiles[0]) universeList = jsonFile;
-                        if (fileName == neededFiles[2]) stationIdToName = jsonFile;
-                        if (fileName == neededFiles[3]) regionList = jsonFile;
-                        if (fileName == neededFiles[4]) invTypes = jsonFile;
-                        if (fileName == neededFiles[5]) mapRegionJumps = jsonFile;
-                        window.localStorage.setItem(fileName, JSON.stringify(jsonFile));
-                        resources_loaded ++;
-                    });
-                }
-            }
-            window.localStorage.setItem( "filesSha" , JSON.stringify(filesSha));
-        } else {
-            universeList = JSON.parse(window.localStorage.getItem(neededFiles[0]));
-            stationIdToName = JSON.parse(window.localStorage.getItem(neededFiles[2]));
-            regionList = JSON.parse(window.localStorage.getItem(neededFiles[3]));
-            invTypes = JSON.parse(window.localStorage.getItem(neededFiles[4]));
-            mapRegionJumps = JSON.parse(window.localStorage.getItem(neededFiles[5]));
-            resources_loaded += 5;
-        }
-    });
+        // TODO verify if universeList is needed after refactor
+        getDataFromAPI('/universe').then(function(response) {
+            universeList = response;
+            window.localStorage.setItem('universeList', JSON.stringify(response));
+            resources_loaded ++;
+        });
+    
+        // TODO verify if stationIdToName is needed after refactor 
+        getDataFromAPI('/stationIdMapping').then(function(response) {
+            stationIdToName = response;
+            window.localStorage.setItem('stationIdToName', JSON.stringify(response));
+            resources_loaded ++;
+        });
+    
+        // TODO verify if regionList is needed after refactor
+        getDataFromAPI('/regionList').then(function(response) {
+            regionList = response;
+            window.localStorage.setItem('regionList', JSON.stringify(response));
+            resources_loaded ++;
+        });
+    
+        // TODO verify if invTypes is needed after refactor
+        getDataFromAPI('/invTypes').then(function(response) {
+            invTypes = response;
+            window.localStorage.setItem('invTypes', JSON.stringify(response));
+            resources_loaded ++;
+        });
+    }
 }

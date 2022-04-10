@@ -429,7 +429,6 @@ Route.prototype.calculateRow = function(itemId, buyPrice, buyVolume, sellPrice, 
 Route.prototype.getItemWeight = function(itemId, row){
     var weightData = getWeight(itemId);
     if(weightData) {
-        console.log(weightData)
         row.itemName = weightData.typeName;
         row.itemWeight = weightData.volume;
     
