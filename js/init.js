@@ -33,9 +33,11 @@ var urlParams;
 * > ensuring numeric input is only entered
 * > Setup the about, cookies, and custom station dropdowns
 */
+
+
 $( document ).ready(function() {
     getJsonFiles();
-
+    
     popupTableBuy = $("#popup_table_buy").DataTable({
         "order": [[ 0, "asc" ]],
         "lengthMenu": [[10], ["10"]]
@@ -162,9 +164,9 @@ function initAwesomplete(domId, list) {
 * Custom station dropdown initializer
 */
 function setupCustomDropdown() {
-    var isTablesReady = setInterval(function () {
-        if (tablesReady) {
-            clearInterval(isTablesReady);
+    var areResourcesReady = setInterval(function () {
+        if (resources_loaded == resources_needed) {
+            clearInterval(areResourcesReady);
             stationList.forEach(function(station){
                 var option = document.createElement("option");
                 option.innerHTML = station;

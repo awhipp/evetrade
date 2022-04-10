@@ -3,6 +3,7 @@ var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
 var RES_ENDPOINT = "https://api.github.com/repos/awhipp/evetrade_resources/contents/resources";
+var API_ENDPOINT = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1"
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
@@ -838,12 +839,26 @@ function setupBookmark(urlParams) {
     }
 }
 
-function getJsonFiles(){
-    var getUniverseList = false;
+function getDataFromAPI(route) {
+    return fetch(API_ENDPOINT + route)
+    .then(response => response.json())
+    .then(function(response) {
+        return response.body;
+    });
+}
 
+const resources_needed = 6;
+let resources_loaded = 0;
+
+function getResourceFiles(){
+    var getUniverseList = false;
+    getDataFromAPI('/stations').then(function(response) {
+        stationList = response;
+        resources_loaded ++;
+    });
+    
     $.getJSON(RES_ENDPOINT, function(data) {
         var neededFiles = ["universeList.json",
-                           "stationList.json",
                            "stationIdToName.json",
                            "regionList.json",
                            "invTypes.json",
@@ -860,33 +875,29 @@ function getJsonFiles(){
             }
         }
         if (getUniverseList) {
-            var nbQuery = 0
             for (var i = 0; i < data.length; i++) {
                 if (neededFiles.includes( data[i].name)) {
                     filesSha[data[i].name] = data[i].sha;
                     $.getJSON(data[i].download_url, function(jsonFile) {
                         var fileName = this.url.split("/")[7];
                         if (fileName == neededFiles[0]) universeList = jsonFile;
-                        if (fileName == neededFiles[1]) stationList = jsonFile;
                         if (fileName == neededFiles[2]) stationIdToName = jsonFile;
                         if (fileName == neededFiles[3]) regionList = jsonFile;
                         if (fileName == neededFiles[4]) invTypes = jsonFile;
                         if (fileName == neededFiles[5]) mapRegionJumps = jsonFile;
                         window.localStorage.setItem(fileName, JSON.stringify(jsonFile));
-                        nbQuery++;
-                        if (nbQuery === neededFiles.length) tablesReady = true;
+                        resources_loaded ++;
                     });
                 }
             }
             window.localStorage.setItem( "filesSha" , JSON.stringify(filesSha));
         } else {
             universeList = JSON.parse(window.localStorage.getItem(neededFiles[0]));
-            stationList = JSON.parse(window.localStorage.getItem(neededFiles[1]));
             stationIdToName = JSON.parse(window.localStorage.getItem(neededFiles[2]));
             regionList = JSON.parse(window.localStorage.getItem(neededFiles[3]));
             invTypes = JSON.parse(window.localStorage.getItem(neededFiles[4]));
             mapRegionJumps = JSON.parse(window.localStorage.getItem(neededFiles[5]));
-            tablesReady = true;
+            resources_loaded += 5;
         }
     });
 }
