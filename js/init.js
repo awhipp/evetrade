@@ -167,6 +167,8 @@ function setupCustomDropdown() {
     var areResourcesReady = setInterval(function () {
         if (resources_loaded == resources_needed) {
             clearInterval(areResourcesReady);
+            window.localStorage.setItem('evetrade_cache_retrieval_date', dateString);
+
             stationList.forEach(function(station){
                 var option = document.createElement("option");
                 option.innerHTML = station;
