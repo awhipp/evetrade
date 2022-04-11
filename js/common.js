@@ -849,10 +849,11 @@ function getDataFromAPI(route) {
 const resources_needed = 5;
 let resources_loaded = 0;
 
+const date = new Date();
+const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
+
 // Function gets all resource files needed from backend
 function getResourceFiles(){
-    const date = new Date();
-    const dateString = "" + date.getFullYear() + date.getMonth() + date.getDate();
     const lastRetrieved = window.localStorage.getItem('evetrade_cache_retrieval_date');
 
     if(dateString == lastRetrieved) {
@@ -868,7 +869,6 @@ function getResourceFiles(){
     } else {
         console.log('New Day - Refreshing Resource Cache.');
         window.localStorage.clear();
-        window.localStorage.setItem('evetrade_cache_retrieval_date', dateString);
 
         getDataFromAPI('/stations').then(function(response) {
             stationList = response;
