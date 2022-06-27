@@ -842,7 +842,7 @@ function getDataFromAPI(route) {
     return fetch(API_ENDPOINT + route)
     .then(response => response.json())
     .then(function(response) {
-        return response.body;
+        return response;
     });
 }
 
@@ -859,49 +859,61 @@ function getResourceFiles(){
     if(dateString == lastRetrieved) {
         console.log('Same Day - Retrieving Resource Cache.');
 
-        universeList = JSON.parse(window.localStorage.getItem('universeList'));
-        stationList = JSON.parse(window.localStorage.getItem('stationList'));
-        stationIdToName = JSON.parse(window.localStorage.getItem('stationIdToName'));
-        regionList = JSON.parse(window.localStorage.getItem('regionList'));
-        invTypes = JSON.parse(window.localStorage.getItem('invTypes'));
-        resources_loaded = 5;
+        try {
+            universeList = JSON.parse(window.localStorage.getItem('universeList'));
+            stationList = JSON.parse(window.localStorage.getItem('stationList'));
+            stationIdToName = JSON.parse(window.localStorage.getItem('stationIdToName'));
+            regionList = JSON.parse(window.localStorage.getItem('regionList'));
+            invTypes = JSON.parse(window.localStorage.getItem('invTypes'));
+            resources_loaded = 5;
 
+            return;
+        } catch(e) {
+            console.log('Error Retrieving Resource Cache. Retrying.');
+        }
     } else {
-        console.log('New Day - Refreshing Resource Cache.');
-        window.localStorage.clear();
-
-        getDataFromAPI('/stations').then(function(response) {
-            stationList = response;
-            window.localStorage.setItem('stationList', JSON.stringify(response));
-            resources_loaded ++;
-        });
-    
-        // TODO verify if universeList is needed after refactor
-        getDataFromAPI('/universe').then(function(response) {
-            universeList = response;
-            window.localStorage.setItem('universeList', JSON.stringify(response));
-            resources_loaded ++;
-        });
-    
-        // TODO verify if stationIdToName is needed after refactor 
-        getDataFromAPI('/stationIdMapping').then(function(response) {
-            stationIdToName = response;
-            window.localStorage.setItem('stationIdToName', JSON.stringify(response));
-            resources_loaded ++;
-        });
-    
-        // TODO verify if regionList is needed after refactor
-        getDataFromAPI('/regionList').then(function(response) {
-            regionList = response;
-            window.localStorage.setItem('regionList', JSON.stringify(response));
-            resources_loaded ++;
-        });
-    
-        // TODO verify if invTypes is needed after refactor
-        getDataFromAPI('/invTypes').then(function(response) {
-            invTypes = response;
-            window.localStorage.setItem('invTypes', JSON.stringify(response));
-            resources_loaded ++;
-        });
+        console.log('New Day - Retrieving Resource Cache.');
     }
+
+    window.localStorage.clear();
+
+    getDataFromAPI('/resource?file=stationList.json').then(function(response) {
+        console.log('Station List Loaded.');
+        stationList = response;
+        window.localStorage.setItem('stationList', JSON.stringify(response));
+        resources_loaded ++;
+    });
+
+    // TODO verify if universeList is needed after refactor
+    getDataFromAPI('/resource?file=universeList.json').then(function(response) {
+        console.log('Universe List Loaded.');
+        universeList = response;
+        window.localStorage.setItem('universeList', JSON.stringify(response));
+        resources_loaded ++;
+    });
+
+    // TODO verify if stationIdToName is needed after refactor 
+    getDataFromAPI('/resource?file=stationIdToName.json').then(function(response) {
+        console.log('Station Id To Name Loaded.');
+        stationIdToName = response;
+        window.localStorage.setItem('stationIdToName', JSON.stringify(response));
+        resources_loaded ++;
+    });
+
+    // TODO verify if regionList is needed after refactor
+    getDataFromAPI('/resource?file=regionList.json').then(function(response) {
+        console.log('Region List Loaded.');
+        regionList = response;
+        window.localStorage.setItem('regionList', JSON.stringify(response));
+        resources_loaded ++;
+    });
+
+    // TODO verify if invTypes is needed after refactor
+    getDataFromAPI('/resource?file=invTypes.json').then(function(response) {
+        console.log('Inv Types Loaded.');
+        invTypes = response;
+        window.localStorage.setItem('invTypes', JSON.stringify(response));
+        resources_loaded ++;
+    });
+
 }

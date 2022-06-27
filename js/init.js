@@ -166,6 +166,8 @@ function initAwesomplete(domId, list) {
 function setupCustomDropdown() {
     var areResourcesReady = setInterval(function () {
         if (resources_loaded == resources_needed) {
+            console.log('Resources loaded.');
+            
             clearInterval(areResourcesReady);
             window.localStorage.setItem('evetrade_cache_retrieval_date', dateString);
 
