@@ -870,35 +870,35 @@ function getResourceFiles(){
         console.log('New Day - Refreshing Resource Cache.');
         window.localStorage.clear();
 
-        getDataFromAPI('/stations').then(function(response) {
+        getDataFromAPI('/resource?file=stationList.json').then(function(response) {
             stationList = response;
             window.localStorage.setItem('stationList', JSON.stringify(response));
             resources_loaded ++;
         });
     
         // TODO verify if universeList is needed after refactor
-        getDataFromAPI('/universe').then(function(response) {
+        getDataFromAPI('/resource?file=universeList.json').then(function(response) {
             universeList = response;
             window.localStorage.setItem('universeList', JSON.stringify(response));
             resources_loaded ++;
         });
     
         // TODO verify if stationIdToName is needed after refactor 
-        getDataFromAPI('/stationIdMapping').then(function(response) {
+        getDataFromAPI('/resource?file=stationIdToName.json').then(function(response) {
             stationIdToName = response;
             window.localStorage.setItem('stationIdToName', JSON.stringify(response));
             resources_loaded ++;
         });
     
         // TODO verify if regionList is needed after refactor
-        getDataFromAPI('/regionList').then(function(response) {
+        getDataFromAPI('/resource?file=regionList.json').then(function(response) {
             regionList = response;
             window.localStorage.setItem('regionList', JSON.stringify(response));
             resources_loaded ++;
         });
     
         // TODO verify if invTypes is needed after refactor
-        getDataFromAPI('/invTypes').then(function(response) {
+        getDataFromAPI('/resource?file=invTypes.json').then(function(response) {
             invTypes = response;
             window.localStorage.setItem('invTypes', JSON.stringify(response));
             resources_loaded ++;
