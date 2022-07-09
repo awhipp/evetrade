@@ -3,4 +3,4 @@ http://dazzling-torvalds-4dd129.netlify.com/* http://evetrade.space/:splat 301!
 https://dazzling-torvalds-4dd129.netlify.com/* https://evetrade.space/:splat 301!
 
 # Redirect old subdomain to new one
-https://api.evetrade.space/* https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/:splat 301!
+https://evetrade.space/api/* https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/:splat 301!
