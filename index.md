@@ -5,7 +5,6 @@ announcement: {
   enabled: false
   header: Version 6.6.2,
   include_date: true,
-  text: '
-  '
+  text: 'Enabled queries to the backend via the /api route'
 }
 ---
