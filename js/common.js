@@ -3,7 +3,9 @@ var SELL_ORDER = "sell";
 var ALL_ORDER = "all";
 var ESI_ENDPOINT = "https://esi.evetech.net";
 var RES_ENDPOINT = "https://api.github.com/repos/awhipp/evetrade_resources/contents/resources";
-var API_ENDPOINT = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1"
+
+// For local development otherwise hit backend route
+const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 ? "https://evetrade.space/api" : ""
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
@@ -838,8 +840,8 @@ function setupBookmark(urlParams) {
 }
 
 // Generic function to get JSON data from API endpoin t
-function getDataFromAPI(route) {
-    return fetch(API_ENDPOINT + route)
+function getResourceData(fileName) {
+    return fetch(API_ENDPOINT + '/resource?file=' + fileName)
     .then(response => response.json())
     .then(function(response) {
         return response;
@@ -877,7 +879,7 @@ function getResourceFiles(){
 
     window.localStorage.clear();
 
-    getDataFromAPI('/resource?file=stationList.json').then(function(response) {
+    getResourceData('stationList.json').then(function(response) {
         console.log('Station List Loaded.');
         stationList = response;
         window.localStorage.setItem('stationList', JSON.stringify(response));
@@ -885,7 +887,7 @@ function getResourceFiles(){
     });
 
     // TODO verify if universeList is needed after refactor
-    getDataFromAPI('/resource?file=universeList.json').then(function(response) {
+    getResourceData('universeList.json').then(function(response) {
         console.log('Universe List Loaded.');
         universeList = response;
         window.localStorage.setItem('universeList', JSON.stringify(response));
@@ -893,7 +895,7 @@ function getResourceFiles(){
     });
 
     // TODO verify if stationIdToName is needed after refactor 
-    getDataFromAPI('/resource?file=stationIdToName.json').then(function(response) {
+    getResourceData('stationIdToName.json').then(function(response) {
         console.log('Station Id To Name Loaded.');
         stationIdToName = response;
         window.localStorage.setItem('stationIdToName', JSON.stringify(response));
@@ -901,7 +903,7 @@ function getResourceFiles(){
     });
 
     // TODO verify if regionList is needed after refactor
-    getDataFromAPI('/resource?file=regionList.json').then(function(response) {
+    getResourceData('regionList.json').then(function(response) {
         console.log('Region List Loaded.');
         regionList = response;
         window.localStorage.setItem('regionList', JSON.stringify(response));
@@ -909,7 +911,7 @@ function getResourceFiles(){
     });
 
     // TODO verify if invTypes is needed after refactor
-    getDataFromAPI('/resource?file=invTypes.json').then(function(response) {
+    getResourceData('invTypes.json').then(function(response) {
         console.log('Inv Types Loaded.');
         invTypes = response;
         window.localStorage.setItem('invTypes', JSON.stringify(response));

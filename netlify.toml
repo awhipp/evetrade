@@ -3,6 +3,12 @@
   publish = "/dist"
   command = "jekyll build"
 
+[[headers]]
+  # Enable CORS on API
+  for = "/api/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
+
 [[redirects]]
   from = "/api/resource"
   to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/resource"
