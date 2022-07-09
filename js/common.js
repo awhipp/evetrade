@@ -5,7 +5,7 @@ var ESI_ENDPOINT = "https://esi.evetech.net";
 var RES_ENDPOINT = "https://api.github.com/repos/awhipp/evetrade_resources/contents/resources";
 
 // For local development otherwise hit backend route
-const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 ? "https://evetrade.space/api" : ""
+const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 ? "https://evetrade.space/api" : "/api"
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
