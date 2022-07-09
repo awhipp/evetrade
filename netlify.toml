@@ -2,3 +2,8 @@
   base = "/"
   publish = "/dist"
   command = "jekyll build"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/:splat"
+  status = 200

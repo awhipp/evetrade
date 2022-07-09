@@ -4,13 +4,7 @@
 
 .DS_Store
 
-dist/css/*
-dist/js/*
-dist/images/*
-dist/vendor/*
-dist/*.txt
-dist/*.html
-dist/*.xml
+dist/*
 
 Gemfile.lock
 
