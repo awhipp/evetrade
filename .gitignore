@@ -1,6 +1,11 @@
 .vs/*
+
 .idea/*
+
 .DS_Store
+
 dist/*
+
 Gemfile.lock
+
 .jekyll-cache/*

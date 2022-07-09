@@ -2,3 +2,15 @@
   base = "/"
   publish = "/dist"
   command = "jekyll build"
+
+[[redirects]]
+  from = "/api/resource"
+  to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/resource"
+  status = 301
+  query = {file = ":file"}
+
+[[redirects]]
+  from = "/api/hauling"
+  to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/hauling"
+  status = 301
+  query = {from = ":from", to = ":to", tax = ":tax", minProfit = ":minProfit", minROI = ":minROI", maxBudget = ":maxBudget", maxWeight = ":maxWeight", routeSafety = ":routeSafety", systemSecurity = ":systemSecurity" }
