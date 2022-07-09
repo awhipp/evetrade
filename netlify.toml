@@ -12,11 +12,11 @@
 [[redirects]]
   from = "/api/resource"
   to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/resource"
-  status = 301
+  status = 200
   query = {file = ":file"}
 
 [[redirects]]
   from = "/api/hauling"
   to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/hauling"
-  status = 301
+  status = 200
   query = {from = ":from", to = ":to", tax = ":tax", minProfit = ":minProfit", minROI = ":minROI", maxBudget = ":maxBudget", maxWeight = ":maxWeight", routeSafety = ":routeSafety", systemSecurity = ":systemSecurity" }
