@@ -1,22 +1,16 @@
 /* ========================================================================= */
 /*	Preloader
 /* ========================================================================= */
-
 jQuery(window).load(function(){
-	$("#preloader").fadeOut();
-});
-
-
-
-$(document).ready(function(){
-	/* ========================================================================= */
-	/*	Fix Slider Height
-	/* ========================================================================= */	
-
-    // Slider Height
-    var slideHeight = $(window).height();
-    
-    $('#main, .main, #slider, .sl-slider, .sl-content-wrapper').css('height', slideHeight);
-
-	
+    fetch('./config.json')
+    .then(response => response.json())
+    .then((config) => {
+        console.log(`Config Loaded.`);
+        for (const key in config) {
+            const value = config[key];
+            document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
+        }
+        $("#preloader").fadeOut();
+    })
+    .catch(error => console.log(error));
 });

@@ -12,8 +12,8 @@ Implements the [EVE ESI API](https://esi.tech.ccp.is/) on the [backend](https://
 * the best trades between systems.
 * the best trades between regions.
 
-### Development
+### Recommended Development
 
-* Pure Vanilla Javascript, CSS, and HTML. No additional build dependencies required.
-* Netlify handles minification and optimizations.
-* Simply open `index.html` in your browser of choice.
+* Jekyll or tool required to build and serve locally to avoid CORs issues
+    * ie: `jekyll serve`
+* Other options include `browsersync`, `http-server`, `npx serve` `python SimpleHTTPServer`, and more...
