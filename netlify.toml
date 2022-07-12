@@ -1,7 +1,6 @@
 [build]
   base = "/"
-  publish = "/dist"
-  command = "jekyll build"
+  publish = "/"
 
 [[headers]]
   # Enable CORS on API
