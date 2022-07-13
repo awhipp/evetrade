@@ -38,8 +38,11 @@
 
 		<!-- preloader -->
 		<div id="preloader">
-            <div class="loder-box">
-            	<div class="battery"></div>
+            <div class="loader-box">
+                <div class="background-container">
+                    <div class="stars"></div>
+                    <div class="twinkling"></div>
+                </div>
             </div>
 		</div>
 		<!-- end preloader -->
@@ -76,7 +79,6 @@
                     <ul id="nav" class="nav navbar-nav">
                         <li><a href="./index.html">Home</a></li>
                         <li><a href="./help.html" target="_blank">Help</a></li>
-                        <li><a href="https://ko-fi.com/evetrade" target="_blank">Donate</a></li>
                     </ul>
                 </nav>
 				<!-- /main nav -->
@@ -105,14 +107,81 @@
                                         <div class="form-holder">
                                             <div class="form-content">
                                                 <div class="form-items">
+                                                    <datalist id="stationList"></datalist>
                                                     <form>
-                                                        <div class="col-md-12">
-                                                            <datalist id="stationList"></datalist>
-                                                            <input id="station-from" class="form-control" type="text" placeholder="Starting Station(s)">
+                                                        <div class="col-sm-12 col-md-6">
+                                                            <label class="control-label"> Starting Station(s) </label> 
+                                                            <input id="station-from" class="form-control" type="text" placeholder="Station Name">
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-6">
+                                                            <label class="control-label"> Ending Station(s) </label> 
+                                                            <input id="station-to" class="form-control" type="text" placeholder="Station Name">
+                                                        </div>
+
+                                                        <div class="col-md-3"> 
+                                                            <p> 
+                                                                <label class="control-label"> Only Profit Above </label> 
+                                                                <input type="number" class="form-control" placeholder="Default: 500,000"> 
+                                                            </p> 
+                                                        </div> 
+                                                        
+                                                        <div class="col-md-3"> 
+                                                            <p> 
+                                                                <label class="control-label"> Cargo Capacity </label> 
+                                                                <input type="number" class="form-control" placeholder="Default: Infinity"> 
+                                                            </p> 
+                                                        </div> 
+                                                        
+                                                        <div class="col-md-3"> 
+                                                            <p> 
+                                                                <label class="control-label"> Return on Investment (%) </label> 
+                                                                <input type="number" class="form-control" placeholder="Default: 4"> 
+                                                            </p> 
+                                                        </div> 
+                                                        
+                                                        <div class="col-md-3">
+                                                            <p> 
+                                                                <label class="control-label"> Budget </label> 
+                                                                <input type="number" class="form-control" placeholder="Default: Infinity"> 
+                                                            </p> 
+                                                        </div> 
+                                                        
+
+                                                        <div class="col-md-4"> 
+                                                            <label class="control-label" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
+                                                            <select class="form-control"> 
+                                                                <option value="" selected="">Accounting Level</option> 
+                                                                <option value="8">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.00%</option>
+                                                                <option value="7.12">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.12%</option>
+                                                                <option value="6.24">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.24%</option>
+                                                                <option value="5.36">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.36%</option>
+                                                                <option value="4.48">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.48%</option>
+                                                                <option value="3.6">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.60%</option>
+                                                                <option value="other">Other</option> 
+                                                            </select> 
+                                                            <input type="number" class="form-control" placeholder="Default: 8" style="display:none" step="0.01" min="0" max="8">
+                                                        </div>
+                                                        
+                                                        <div class="col-md-4"> 
+                                                            <label class="control-label"> Security Status Filter </label>
+                                                            <select class="form-control"> 
+                                                                <option value="null" selected="">No Filter</option> 
+                                                                <option value="low">Only Low or High Sec</option> 
+                                                                <option value="high">Only High Sec</option> 
+                                                            </select> 
+                                                        </div> 
+                                                        
+                                                        <div class="col-md-4"> 
+                                                            <label class="control-label"> Route Preference </label> 
+                                                            <select class="form-control"> 
+                                                                <option value="shortest" selected="">Shortest Route</option>
+                                                                <option value="secure">Safest Route</option>
+                                                                <option value="insecure">Least Safe Route</option> 
+                                                            </select> 
                                                         </div>
 
                                                         <div class="col-md-12">
-                                                            <button id="submit" type="submit" class="btn btn-grey">Search</button>
+                                                            <button id="submit" type="submit" class="btn btn-grey btn-border btn-effect">Search</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -128,16 +197,15 @@
             </section>
 		</main>
         <!-- End Main Section -->
-		
 		<footer id="footer">
-			<div class="container">
+			<main class="container">
 				<div class="row text-center">
 					<div class="footer-content">
                         <p><a href="./release.html" target="_blank">Version {{version}}</a> | Updated {{release_date}} | <a href="https://github.com/awhipp/evetrade" target="_blank">Source Code</a></li> | <a href="https://github.com/awhipp/evetrade/releases" target="_blank">Download</a></p>		
 						<p>Copyright &copy; {{years_active}} EVETrade. All Rights Reserved.</p>
 					</div>
 				</div>
-			</div>
+			</main>
 		</footer>
 
         <!-- CSS -->
@@ -153,5 +221,16 @@
         <script src="js/main.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js" integrity="sha512-HcBl0GSJvt4Qecm4srHapirUx0HJDi2zYXm6KUKNNUGdTIN9cBwakVZHWmRVj4MKgy1AChqhWGYcMDbRKgO0zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="js/station-hauling.js"></script>
+        
+
+        <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+        <script>
+            kofiWidgetOverlay.draw('evetrade', {
+                'type': 'floating-chat',
+                'floating-chat.donateButton.text': 'Donate',
+                'floating-chat.donateButton.background-color': '#323842',
+                'floating-chat.donateButton.text-color': '#fff'
+            });
+        </script>
     </body>
 </html>

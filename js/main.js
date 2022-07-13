@@ -1,3 +1,7 @@
+function loadComplete() {
+    $('main').fadeTo('slow', 1, function() {});
+}
+
 /* ========================================================================= */
 /*	Preloader
 /* ========================================================================= */
@@ -10,7 +14,8 @@ jQuery(window).load(function(){
             const value = config[key];
             document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
         }
-        $("#preloader").fadeOut();
+
+        loadComplete();
     })
     .catch(error => console.log(error));
 

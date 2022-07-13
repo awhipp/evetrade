@@ -2,7 +2,7 @@
 const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
 
-const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 ? "https://evetrade.space/api":"/api";
+const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 || window.location.href.indexOf("127.0.0.1") > 0 ? "https://evetrade.space/api":"/api";
 
 /**
  * Generic function to get JSON data from API endpoint
@@ -61,7 +61,7 @@ function initAwesomplete(domId, list) {
         minChars: 0,
         maxItems: 10,
         autoFirst: true,
-        filter: Awesomplete.FILTER_CONTAINS,
+        filter: Awesomplete.FILTER_STARTSWITH,
         sort: false,
     });
 
@@ -91,9 +91,8 @@ function initAwesomplete(domId, list) {
         });
 
         initAwesomplete("station-from", "stationList");
-
-        $('#hauling-form').fadeTo('fast', 1, function() {
-            console.log("Ready to search.");
-        });
+        initAwesomplete("station-to", "stationList");
+        
+        loadComplete();
     });
 })();

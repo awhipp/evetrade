@@ -1,14 +1,5 @@
 .hauling-form {
-    max-width: 600px;
+    max-width: 1100px;
     width: 100%;
     margin: 2em auto;
-    opacity: 0;
-}
-
-input[type=text] {
-    text-align: center;
-    background: rgba(0,0,0,.5);
-    color: #fff;
-    border: 1px solid #333;
-    margin: 0 auto 1em auto;
 }

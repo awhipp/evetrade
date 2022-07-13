@@ -14,6 +14,5 @@ Implements the [EVE ESI API](https://esi.tech.ccp.is/) on the [backend](https://
 
 ### Recommended Development
 
-* Jekyll or tool required to build and serve locally to avoid CORs issues
-    * ie: `jekyll serve`
-* Other options include `browsersync`, `http-server`, `npx serve` `python SimpleHTTPServer`, and more...
+* [Live Server](https://github.com/ritwickdey/vscode-live-server) or other tool required to build and serve locally to avoid CORs issues
+* Other options include `jekyll`, `browsersync`, `http-server`, `npx serve` `python SimpleHTTPServer`, and more...

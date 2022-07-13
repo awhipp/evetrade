@@ -34,14 +34,6 @@
 	
     <body id="body">
 
-		<!-- preloader -->
-		<div id="preloader">
-            <div class="loder-box">
-            	<div class="battery"></div>
-            </div>
-		</div>
-		<!-- end preloader -->
-
         <!-- Background container -->
         <div class="background-container">
             <div class="stars"></div>
@@ -108,14 +100,14 @@
         <!-- End Main Section -->
 		
 		<footer id="footer">
-			<div class="container">
+			<main class="container">
 				<div class="row text-center">
 					<div class="footer-content">
                         <p><a href="./release.html" target="_blank">Version {{version}}</a> | Updated {{release_date}} | <a href="https://github.com/awhipp/evetrade" target="_blank">Source Code</a></li> | <a href="https://github.com/awhipp/evetrade/releases" target="_blank">Download</a></p>		
 						<p>Copyright &copy; {{years_active}} EVETrade. All Rights Reserved.</p>
 					</div>
 				</div>
-			</div>
+			</main>
 		</footer>
 		
 		<!-- Javascript  -->
@@ -126,5 +118,15 @@
         <script src="js/bootstrap.min.js"></script>
 		<!-- Custom Functions -->
         <script src="js/main.js"></script>
+        
+        <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+        <script>
+            kofiWidgetOverlay.draw('evetrade', {
+                'type': 'floating-chat',
+                'floating-chat.donateButton.text': 'Donate',
+                'floating-chat.donateButton.background-color': '#323842',
+                'floating-chat.donateButton.text-color': '#fff'
+            });
+        </script>
     </body>
 </html>
