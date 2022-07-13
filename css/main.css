@@ -68,6 +68,14 @@ main > section {
     margin-bottom: 1em; 
 }
 
+.btn-grey {
+    background: rgba(0,0,0,.5);
+    color: #fff;
+    min-width: 100px;
+    border: 1px solid #333;
+    margin: 0.5em auto;
+}
+
 .btn-blue {
     background-color: rgba(0,158,227, 0.78);
     box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.15) inset;
@@ -81,14 +89,10 @@ main > section {
     padding: 12px 35px;
 }
 
-.bg-blue {
-    background-color: #009EE3;
-}
-
 /* Sweep To Right */
 .btn-effect {
     vertical-align: middle;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    box-shadow: 0 0 1px rgba(0,0,0,.5);
     position: relative;
     display: inline-block;
     
@@ -152,7 +156,8 @@ main > section {
 }
 
 .btn-effect:hover, .btn-effect:focus, .btn-effect:active {
-    color: #009EE3;
+    color: black;
+    font-weight: bold;
 }
 
 .btn-effect:hover:before, .btn-effect:focus:before, .btn-effect:active:before {
@@ -507,7 +512,7 @@ Twinkling Background
     right: 0;
     top: 0;
     bottom: 0;
-    z-index: 2;
+    z-index: 1;
     -moz-animation:move-background 40s linear infinite;
     -ms-animation:move-background 40s linear infinite;
     -o-animation:move-background 40s linear infinite;
@@ -515,3 +520,31 @@ Twinkling Background
     animation:move-background 40s linear infinite;
 }
 
+/**
+Awesomplete
+**/
+.awesomplete {
+    width: 100%;
+}
+
+.awesomplete > ul > li {
+    text-align: left;
+    color: black;
+    background-color: white;
+    font-weight: bold;
+}
+
+.awesomplete > ul > li[aria-selected=true] {
+    background-color: #ccc;
+    color: black;
+}
+
+.awesomplete > ul > li[aria-selected=true] mark {
+    background-color: #999;
+    color: black;
+}
+
+.awesomplete > ul > li mark {
+    background-color: #999;
+    color: black;
+}

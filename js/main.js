@@ -13,4 +13,17 @@ jQuery(window).load(function(){
         $("#preloader").fadeOut();
     })
     .catch(error => console.log(error));
+
+    
+
+    $(function () {
+        var tabIndex = 1;
+        $('input').each(function () {
+            if (this.type != "hidden") {
+                var $input = $(this);
+                $input.attr("tabindex", tabIndex);
+                tabIndex++;
+            }
+        });
+    });
 });
