@@ -241,11 +241,11 @@ Home Slider
     height: 100%;
     left: 0;
     min-height: 100%;
-    position: absolute;
     text-align: center;
     top: 0;
     width: 100%;
     z-index: 11;
+    margin-top: 1em;
 }
 
 .slide-caption .caption-content {
@@ -296,6 +296,19 @@ Footer
 }
 
 
+
+.tableLoadingIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    display: none;
+    font-size: 5em;
+    color: rgba(0,158,227, 0.78);
+    text-align: center;
+    line-height: 1em;
+}   
 
 /*============================================================ 
 Responsive Styles

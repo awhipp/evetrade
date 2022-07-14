@@ -15,6 +15,10 @@ jQuery(window).load(function(){
             document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
         }
 
+        if (typeof loadNext !== 'undefined') {
+            loadNext();
+        }
+        
         loadComplete();
     })
     .catch(error => console.log(error));

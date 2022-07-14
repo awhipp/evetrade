@@ -1,0 +1,129 @@
+
+/** START DATATABLES **/
+.noselect {
+    margin-top: 1em;
+    margin-bottom: 5em;
+}
+
+.dt-buttons {
+    text-align: center;
+}
+
+.dt-button {
+    background: rgba(0,0,0,0.5);
+    color: white !important;
+    border: white 1px solid;
+    margin: 0.5em;
+}
+
+#dataTable_paginate {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.dataTables_wrapper .dataTables_paginate .ellipsis {
+    color: white !important;
+}
+
+#show_hide, #dataTable_length, #core{
+    display: none;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: white !important;
+}
+
+.dataTables_info {
+    width: 100%;
+    text-align: center;
+    color: white !important;
+}
+
+#dataTable_filter > label {
+    color: transparent;
+    margin-top: -1em;
+} 
+
+table.dataTable {
+    padding: 0 !important;
+}
+
+
+td {
+    border: 1px rgba(0,0,0,0.1) solid !important;
+    text-align: center;
+}
+
+.sorting, .sorting_desc, .sorting_asc {
+    text-align: center;
+    border: 1px rgba(0,0,0,0.1) solid;
+    background-color: rgba(22,29,38,0.85) !important;
+    color: white;
+}
+
+.dataTable {
+    width: inherit !important;
+    max-width: 98%;
+}
+
+table.dataTable.display tbody tr.odd {
+    background-color: rgba(64,64,64,0.85) !important;
+}
+
+
+table.dataTable.display tbody tr.even {
+    background-color: rgba(32,32,32,0.85) !important;
+}
+
+table.dataTable.display tbody tr:hover {
+    background-color: rgba(22, 29, 38,1) !important;
+}
+
+tr.odd.row-selected, tr.even.row-selected {
+    color: white !important;
+    background-color: #00aeff !important;
+}
+
+table.dataTable.display tbody tr > td {
+    background-color: transparent !important;
+    position: relative;
+}
+
+tr > td:first-child {
+    cursor: pointer;
+}
+
+.sorting_disabled, tr > td:first-child {
+    width: 1px !important;
+}
+
+.row-selected td {
+    background-color: inherit !important;
+}
+
+.dropdown {
+    text-align: center;
+}
+
+.dataTables_filter {
+    margin: 0 auto !important;
+    float: none !important;
+    text-align: center !important;
+}
+
+.dataTables_filter input {
+    margin: 0 !important;
+    color: white !important;
+    background: rgba(0,0,0,0.5) !important;
+}
+
+.colvistoggle {
+    min-width: 200px;
+}
+
+
+.is-true:hover, .is-false:hover{
+    opacity:0.8;
+} 
+/** END DATATABLES **/
