@@ -1,3 +1,39 @@
+{% if jekyll.environment == "production" %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-53648946-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-53648946-3');
+    </script>
+
+    <!--
+    <script data-ad-client="ca-pub-0599578547621989" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    -->
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Horizontal EVETrade -->
+    <div style="width: 100%; text-align: center;" class="ad-div">
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:500px;height:90px"
+             data-ad-client="ca-pub-0599578547621989"
+             data-ad-slot="3900004724"></ins>
+    </div>
+    <style>
+        @media screen and (max-width: 500px) {
+            .ad-div {display: none !important;}
+        }    
+    </style>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+{% else %}
+    <script>
+        function gtag(){}
+    </script>
+{% endif %}
+
+
 <!-- Footer -->
 <footer>
     <div class="container overflow_none">
@@ -38,38 +74,3 @@
 <!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
-
-{% if jekyll.environment == "production" %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-53648946-3"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-53648946-3');
-    </script>
-
-    <!--
-    <script data-ad-client="ca-pub-0599578547621989" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    -->
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- Horizontal EVETrade -->
-    <div style="width: 100%; text-align: center;" class="ad-div">
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:500px;height:90px"
-             data-ad-client="ca-pub-0599578547621989"
-             data-ad-slot="3900004724"></ins>
-    </div>
-    <style>
-        @media screen and (max-width: 500px) {
-            .ad-div {display: none !important;}
-        }    
-    </style>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-{% else %}
-    <script>
-        function gtag(){}
-    </script>
-{% endif %}
