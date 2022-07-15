@@ -27,7 +27,7 @@ jQuery(window).load(function(){
 
     $(function () {
         var tabIndex = 1;
-        $('input').each(function () {
+        $('input,select').each(function () {
             if (this.type != "hidden") {
                 var $input = $(this);
                 $input.attr("tabindex", tabIndex);

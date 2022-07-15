@@ -133,10 +133,10 @@ function createTradeHeader(request) {
     const routeSafety = request.routeSafety.replace('secure', 'Safest').replace('insecure', 'Least Safe').replace('shortest', 'Shortest');
 
     let subHeader = `Profit Above: ${minProfit} | Capacity: ${maxWeight} | R.O.I.: ${minROI}`
-    subHeader += `<br><br>Budget: ${maxBudget} | Sales Tax: ${tax} | Security: ${systemSecurity} | Route: ${routeSafety}`
+    subHeader += `<br><br>Budget: ${maxBudget} | Sales Tax: ${tax} | Security: ${systemSecurity} | Route: ${routeSafety}`;
 
     $('main h1').hide();
-    $('main h2').html(`Buying from: ${$("#from").val()}<br>Selling to: ${$("#to").val()}`);
+    $('main h2').html(`Buying from: <span id='fromLocations'></span> <br>Selling to: <span id='toLocations'></span>`);
     $('main h3').html(subHeader);
 
 }
@@ -145,22 +145,35 @@ function createTradeHeader(request) {
  * Pulls data from form HTML element and creates JSON
  */
 async function getHaulingData() {
-    let from = universeList[$("#from").val().toLowerCase()];
-    let to = universeList[$("#to").val().toLowerCase()];
+    if (!hauling_request.hasOwnProperty('from')) {
+        let from = universeList[$("#from").val().toLowerCase()];
+        let to = universeList[$("#to").val().toLowerCase()];
 
-    hauling_request = {
-        from: `${from.region}:${from.station}`,
-        to: `${to.region}:${to.station}`,
-        maxBudget: parseInt($("#maxBudget").val()) || Number.MAX_SAFE_INTEGER,
-        maxWeight: parseInt($("#maxWeight").val()) || Number.MAX_SAFE_INTEGER,
-        minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
-        minROI: parseFloat((parseFloat($("#minROI").val()) || 0.04).toFixed(2)),
-        routeSafety: $("#routeSafety").val() || "shortest",
-        systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
-        tax: parseFloat((parseFloat($("#tax").val()) || 0.08).toFixed(2))
+        hauling_request = {
+            from: `${from.region}:${from.station}`,
+            to: `${to.region}:${to.station}`,
+            maxBudget: parseInt($("#maxBudget").val()) || Number.MAX_SAFE_INTEGER,
+            maxWeight: parseInt($("#maxWeight").val()) || Number.MAX_SAFE_INTEGER,
+            minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
+            minROI: parseFloat((parseFloat($("#minROI").val()) || 0.04).toFixed(2)),
+            routeSafety: $("#routeSafety").val() || "shortest",
+            systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
+            tax: parseFloat((parseFloat($("#tax").val()) || 0.08).toFixed(2))
+        }
+    } else {
+        console.log('Skipping form. Pre-provided query found.');
     }
 
     console.log(hauling_request);
+
+    const qs = Object.keys(hauling_request)
+        .map(key => `${key}=${hauling_request[key]}`)
+        .join('&');
+
+    if (history.pushState) {
+        var newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${qs}`;
+        window.history.pushState({path:newurl},'',newurl);
+    }
 
     createTradeHeader(hauling_request);
 
@@ -184,7 +197,9 @@ async function getHaulingData() {
 
 function createTable(data) {
     $(".tableLoadingIcon").hide();
-    $('#noselect').html('<table id="dataTable" class="display"></table>');
+    let tableHTML = `<table id="dataTable" class="display"></table>`;
+    tableHTML += `<br><br><a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`
+    $('#noselect').html(tableHTML);
     $(".dataTableFilters").html("");
 
     var dataTableDOM = $("#dataTable");
@@ -250,9 +265,18 @@ function swapTradeHub(stationName) {
 * Creates the datatable based on the trading style that is being queried
 */
 function displayData(data) {
-    data.forEach(function(row) {        
-        row['From'] = `<span class='${row['From']['security_code']}'>${swapTradeHub(row['From']['name'])}</span>`;
-        row['Take To'] = `<span class='${row['Take To']['security_code']}'>${swapTradeHub(row['Take To']['name'])}</span>`;
+    // Unique locations. Used to populate after a query param request since that info is lost.
+    const fromLocations = [];
+    const toLocations = [];
+
+    data.forEach(function(row) {      
+        from = swapTradeHub(row['From']['name']);
+        to = swapTradeHub(row['Take To']['name']);
+        if (!fromLocations.includes(from)) fromLocations.push(from);
+        if (!toLocations.includes(to)) toLocations.push(to);
+        
+        row['From'] = `<span class='${row['From']['security_code']}'>${from}</span>`;
+        row['Take To'] = `<span class='${row['Take To']['security_code']}'>${to}</span>`;
         row['View'] = `<span 
         data-itemid="${row['Item ID']}" 
         data-itemname="${row['Item']}"
@@ -260,6 +284,9 @@ function displayData(data) {
         data-closingstation="${hauling_request['To']}">
         <i class="fa fa-search-plus"></i></span>`;
     });
+
+    $('#fromLocations').text(fromLocations.join(', ')); 
+    $('#toLocations').text(toLocations.join(', ')); 
 
     createTable(data);
 }
@@ -270,7 +297,7 @@ function executeHauling() {
 
     getHaulingData().then((data) => {
         if (data.length == 0) {
-            $(".tableLoadingIcon").html(`No Results Found<br><a class="btn btn-grey btn-border btn-effect" href="javascript:location.reload(true)">Refresh this page</a>`);
+            $(".tableLoadingIcon").html(`No Results Found<br><a class="btn btn-grey btn-border btn-effect" href="javascript:window.location.replace(location.pathname);">Refresh this page</a>`);
         } else {
             displayData(data);
         }
@@ -281,6 +308,25 @@ function executeHauling() {
  * Initializes on window load
  */
 function loadNext() {
+    
+    try {
+        if (window.location.search.length > 0) {
+            var search = window.location.search.substring(1);
+            const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+
+            if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
+                hauling_request = thr;
+                executeHauling();
+                return;
+            }
+
+            console.log(`Invalid search parameters: ${search}`);
+        }
+
+    } catch(e) {
+        console.log(`Error parsing query params ${location.search}.`);
+    }
+    
     getStationList().then(function(stationList) {        
         stationList.forEach(function(station){
             var option = document.createElement("option");
@@ -297,14 +343,20 @@ function loadNext() {
     getUniverseList().then(function(data) {
         universeList = data;
     });
+
         
     $("#submit").click(function(){
         // Form Validation
         if ($("#from").val() == "" || $("#to").val() == "") {
-            alert("Please select a valid from and to station.");
+            window.alert("Please select a valid from and to station.");
         } else {
             $("#submit"). attr("disabled", true);
             executeHauling();
         }
     });
+
+    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety'];
+    for (let i = 0; i < formElements.length; i++) {
+        $(`#${formElements[i]}`).inputStore();
+    }
 }
