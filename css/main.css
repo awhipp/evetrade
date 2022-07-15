@@ -194,7 +194,7 @@ input[type=text], input[type=number], select {
     -o-transition: all 0.8s ease 0s;
     transition: all 0.8s ease 0s;
     
-    background-color: rgba(0,0,0,.1);
+    background-color: rgba(0,0,0,1);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     font-size: 2em;
     border-bottom: 2px solid rgba(0,158,227, 0.78);
@@ -269,12 +269,13 @@ Footer
 
 #footer {    
     position: fixed;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,1);
     padding: 1em 0;
     color: #fff;
     bottom: 0;
     width: 100%;
     z-index: 10000;
+    border-top: 2px solid rgba(0,158,227, 0.78);
 }
 
 .footer-content {
