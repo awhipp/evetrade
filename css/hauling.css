@@ -5,7 +5,7 @@
 }
 
 .hauling-list {
-    border: 2px solid rgba(0,158,227, 0.9);
+    border: 1px solid #333;
     padding: 0.5em 1em;
     list-style: none;
     display: none;
@@ -32,6 +32,25 @@
 
 .hauling-list li:hover .remove-item {
     display: block;
+}
+
+.suggestions {
+    text-align: left;
+    padding: 0.5em;
+    margin: 0.5em 0;
+    font-size: 0.8em;
+}
+
+.suggestions span {
+    padding: 0.5em;
+    border: 2px solid rgba(0,158,227, 0.9);
+    border-radius: 0.5em;
+    margin-left: 0.5em;
+    cursor: pointer;
+}
+
+.suggestions span:hover {
+    background: rgba(0,158,227, 0.4);
 }
 
 .awesomplete > ul > li, .awesomplete > ul > li mark {

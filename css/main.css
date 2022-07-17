@@ -67,6 +67,7 @@ main > section {
 
 label {
     font-weight: 500 !important;
+    margin-top: 1em;
 }
 
 input[type=text], input[type=number], select {
@@ -74,7 +75,7 @@ input[type=text], input[type=number], select {
     background: rgba(0,0,0,1) !important;
     color: #fff !important;
     border: 1px solid #333 !important;
-    margin: 0 auto 1em auto !important;
+    margin: 0 auto !important;
 }
 
 .btn {

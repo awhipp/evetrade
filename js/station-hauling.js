@@ -84,8 +84,6 @@ function getUniverseList() {
 }
 
 function addStationToList(stationName, domId) {
-    console.time(stationName + domId);
-
     const data = universeList[stationName.toLowerCase()];
     const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
 
@@ -108,8 +106,6 @@ function addStationToList(stationName, domId) {
     } else {
         console.log(`Station ${stationName} already added.`);
     }
-
-    console.timeEnd(stationName + domId);
 }
 
 function getStationInfoFromList(domId) {
