@@ -113,13 +113,24 @@
                                                 <div class="form-items">
                                                     <datalist id="stationList"></datalist>
                                                     <form>
-                                                        <div class="col-sm-12 col-md-6">
-                                                            <label class="control-label" for="from"> Starting Station(s) </label> 
-                                                            <input id="from" name="for" class="form-control" type="text" placeholder="Station Name">
+                                                        <div class="row">
+                                                            <div class="col-sm-12 col-md-6">
+                                                                <label class="control-label" for="from"> Starting Station(s) </label> 
+                                                                <input id="from" name="for" class="form-control" type="text" placeholder="Station Name">
+                                                            </div>
+                                                            <div class="col-sm-12 col-md-6">
+                                                                <label class="control-label" for="to"> Ending Station(s) </label> 
+                                                                <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
+                                                            </div>
                                                         </div>
-                                                        <div class="col-sm-12 col-md-6">
-                                                            <label class="control-label" for="to"> Ending Station(s) </label> 
-                                                            <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
+
+                                                        <div class="row">
+                                                            <div class="col-sm-12 col-md-6">
+                                                                <ul id="fromStations" class="hauling-list"></ul>
+                                                            </div>
+                                                            <div class="col-sm-12 col-md-6">
+                                                                <ul id="toStations" class="hauling-list"></ul>
+                                                            </div>
                                                         </div>
 
                                                         <div class="col-md-3"> 
@@ -216,7 +227,7 @@
 		</footer>
 
         <!-- CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.css" integrity="sha512-JreNkqx4723Zhvmy8TtRDue2ZbPrPIzJSjK84o3KUsjA/eKuOW3bhea06M8urMlsFS3Yj+9m3OudzqJDrk3yOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.css"/>
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="css/datatables.css"/>
@@ -224,13 +235,15 @@
 		<!-- Javascript  -->
 
 		<!-- Main jQuery -->
-        <script src="js/jquery-1.11.1.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="js/inputStore.jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+
 		<!-- Twitter Bootstrap -->
         <script src="js/bootstrap.min.js"></script>
 		<!-- Custom Functions -->
         <script src="js/main.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js" integrity="sha512-HcBl0GSJvt4Qecm4srHapirUx0HJDi2zYXm6KUKNNUGdTIN9cBwakVZHWmRVj4MKgy1AChqhWGYcMDbRKgO0zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
         <script src="js/station-hauling.js"></script>
 
         <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>

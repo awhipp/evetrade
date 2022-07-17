@@ -83,6 +83,53 @@ function getUniverseList() {
 
 }
 
+function addStationToList(stationName, domId) {
+    console.time(stationName + domId);
+
+    const data = universeList[stationName.toLowerCase()];
+    const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
+
+    let stationList = $(`#${domId}`);
+
+    if ($(dataAttribute).length == 0) {
+        stationList.show();
+        stationList.append(`<li data-region="${data.region}" data-station="${data.station}"><span class="stationName">${stationName}</span><span class="remove-item">x</span></li>`);
+
+        $(`#${domId} li`).on("click", function() {
+            const parent = $(this.parentElement);
+            $(this).remove();
+            
+            if(parent.children().length == 0) {
+                parent.hide();
+            } else {
+                parent.show();
+            }
+        });
+    } else {
+        console.log(`Station ${stationName} already added.`);
+    }
+
+    console.timeEnd(stationName + domId);
+}
+
+function getStationInfoFromList(domId) {
+    const stations = [];
+    const stationList = $(`#${domId} li`);
+    stationList.each(function() {
+        stations.push(`${$(this).attr('data-region')}:${$(this).attr('data-station')}`);
+    });
+    return stations.join(',');
+}
+
+function getStationNamesFromList(domId) {
+    const stations = [];
+    const stationList = $(`#${domId} li .stationName`);
+    stationList.each(function() {
+        stations.push(`${$(this).text()}`);
+    });
+    return stations.join(',');
+}
+
 /**
  * Initializes the auto complete function for the given input.
  * @param {} domId The id of the input to initialize. 
@@ -92,23 +139,19 @@ function initAwesomplete(domId, list) {
     var input = document.querySelector("#" + domId);
     var inputPlete  = new Awesomplete(input, {
         list: "#" + list,
-        minChars: 0,
-        maxItems: 10,
+        minChars: 1,
+        maxItems: 5,
         autoFirst: true,
+        tabSelect: true,
         filter: Awesomplete.FILTER_STARTSWITH,
         sort: false,
-    });
-
-    $(input).on('focus', function(){
-        inputPlete.evaluate();
     });
         
     $(input).on('awesomplete-select', function(selection) {
         console.log(`Added (select): ${selection.originalEvent.text.value}`);
-    });
-
-    $(input).on("change", function(selection) {
-        console.log(`Added (change): ${$(selection.target).val()}`);
+        addStationToList(selection.originalEvent.text.value, selection.target.id + 'Stations');
+        selection.originalEvent.text.value = '';
+        $(input).focus();
     });
 }
 
@@ -158,31 +201,31 @@ function getNameFromUniverseStations(stationId) {
  * Pulls data from form HTML element and creates JSON
  */
 async function getHaulingData(hasQueryParams) {
-    let from = {}
-    let to = {}
+    let from = [];
+    let to = [];
 
     if (hasQueryParams) {
-        console.log('Pulling from Query Params');
+        // Converting From/To Query Params back to station names.
         fromLocations = hauling_request.from.split(',');
         for(const flocation of fromLocations) {
-            from = getNameFromUniverseStations(flocation.split(':')[1]);
-            hauling_request.from = `${from.region}:${from.station}`
+            from.push(getNameFromUniverseStations(flocation.split(':')[1]).name)
         }
-
 
         toLocations = hauling_request.to.split(',');
         for(const tlocation of toLocations) {
-            to = getNameFromUniverseStations(tlocation);
-            hauling_request.to = `${to.region}:${to.station}`
+            to.push(getNameFromUniverseStations(tlocation.split(':')[1]).name)
         }
+
+        from = from.join(',');
+        to = to.join(',');
     } else {
         console.log('Pulling from Form');
-        from = universeList[$("#from").val().toLowerCase()];
-        to = universeList[$("#to").val().toLowerCase()];
+        from = getStationNamesFromList('fromStations');
+        to = getStationNamesFromList('toStations');
 
         hauling_request = {
-            from: `${from.region}:${from.station}`,
-            to: `${to.region}:${to.station}`,
+            from: getStationInfoFromList('fromStations'),
+            to: getStationInfoFromList('toStations'),
             maxBudget: parseInt($("#maxBudget").val()) || Number.MAX_SAFE_INTEGER,
             maxWeight: parseInt($("#maxWeight").val()) || Number.MAX_SAFE_INTEGER,
             minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
@@ -204,7 +247,7 @@ async function getHaulingData(hasQueryParams) {
         window.history.pushState({path:newurl},'',newurl);
     }
 
-    createTradeHeader(hauling_request, from.name, to.name);
+    createTradeHeader(hauling_request, from, to);
 
     const qp = new URLSearchParams(hauling_request).toString();
     const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
@@ -277,9 +320,9 @@ function swapTradeHub(stationName) {
     switch(stationName) {
         case "Jita IV - Moon 4 - Caldari Navy Assembly Plant":
             return "Jita";
-        case "Rens V - Moon 1 - Caldari Navy Assembly Plant":
+        case "Rens VI - Moon 8 - Brutor Tribe Treasury":
             return "Rens";
-        case "Hek VIII - Moon 1 - Caldari Navy Assembly Plant":
+        case "Hek VIII - Moon 12 - Boundless Creation Factory":
             return "Hek";
         case "Dodixie IX - Moon 20 - Federation Navy Assembly Plant":
             return "Dodixie";
@@ -374,8 +417,9 @@ function loadNext() {
         
     $("#submit").click(function(){
         // Form Validation
-        if ($("#from").val() == "" || $("#to").val() == "") {
+        if (getStationNamesFromList('fromStations') == "" || getStationNamesFromList('toStations') == "") {
             window.alert("Please select a valid from and to station.");
+            return false;
         } else {
             $("#submit"). attr("disabled", true);
             executeHauling(false);
