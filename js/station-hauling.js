@@ -104,15 +104,15 @@ function initAwesomplete(domId, list) {
     });
         
     $(input).on('awesomplete-select', function(selection) {
-        console.log(selection.originalEvent.text.value);
+        console.log(`Added (select): ${selection.originalEvent.text.value}`);
     });
 
     $(input).on("change", function(selection) {
-        console.log($(selection).val());
+        console.log(`Added (change): ${$(selection.target).val()}`);
     });
 }
 
-function createTradeHeader(request) {
+function createTradeHeader(request, from, to) {
 
     const minProfit = request.minProfit;
     const maxWeight = request.maxWeight == Number.MAX_SAFE_INTEGER ? "Infinite" : request.maxWeight;
@@ -136,18 +136,49 @@ function createTradeHeader(request) {
     subHeader += `<br><br>Budget: ${maxBudget} | Sales Tax: ${tax} | Security: ${systemSecurity} | Route: ${routeSafety}`;
 
     $('main h1').hide();
-    $('main h2').html(`Buying from: <span id='fromLocations'></span> <br>Selling to: <span id='toLocations'></span>`);
+    $('main h2').html(`Buying from: ${from} <br>Selling to: ${to}`);
     $('main h3').html(subHeader);
+}
 
+function getNameFromUniverseStations(stationId) {
+    if (stationId.indexOf(':') >= 0) {
+        stationId = stationId.split(':')[1];
+    }
+
+    for (const stationName in universeList) {
+        if (universeList[stationName].station == stationId) {
+            return universeList[stationName];
+        }
+    }
+    window.alert("Station not found in universe list. Retry query parameters.");
+    throw 'Station not found in universe list. Retry query parameters.';
 }
 
 /**
  * Pulls data from form HTML element and creates JSON
  */
-async function getHaulingData() {
-    if (!hauling_request.hasOwnProperty('from')) {
-        let from = universeList[$("#from").val().toLowerCase()];
-        let to = universeList[$("#to").val().toLowerCase()];
+async function getHaulingData(hasQueryParams) {
+    let from = {}
+    let to = {}
+
+    if (hasQueryParams) {
+        console.log('Pulling from Query Params');
+        fromLocations = hauling_request.from.split(',');
+        for(const flocation of fromLocations) {
+            from = getNameFromUniverseStations(flocation.split(':')[1]);
+            hauling_request.from = `${from.region}:${from.station}`
+        }
+
+
+        toLocations = hauling_request.to.split(',');
+        for(const tlocation of toLocations) {
+            to = getNameFromUniverseStations(tlocation);
+            hauling_request.to = `${to.region}:${to.station}`
+        }
+    } else {
+        console.log('Pulling from Form');
+        from = universeList[$("#from").val().toLowerCase()];
+        to = universeList[$("#to").val().toLowerCase()];
 
         hauling_request = {
             from: `${from.region}:${from.station}`,
@@ -155,13 +186,11 @@ async function getHaulingData() {
             maxBudget: parseInt($("#maxBudget").val()) || Number.MAX_SAFE_INTEGER,
             maxWeight: parseInt($("#maxWeight").val()) || Number.MAX_SAFE_INTEGER,
             minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
-            minROI: parseFloat((parseFloat($("#minROI").val()) || 0.04).toFixed(2)),
+            minROI: parseFloat((parseFloat($("#minROI").val()/100) || 0.04).toFixed(2)),
             routeSafety: $("#routeSafety").val() || "shortest",
             systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
             tax: parseFloat((parseFloat($("#tax").val()) || 0.08).toFixed(2))
         }
-    } else {
-        console.log('Skipping form. Pre-provided query found.');
     }
 
     console.log(hauling_request);
@@ -175,7 +204,7 @@ async function getHaulingData() {
         window.history.pushState({path:newurl},'',newurl);
     }
 
-    createTradeHeader(hauling_request);
+    createTradeHeader(hauling_request, from.name, to.name);
 
     const qp = new URLSearchParams(hauling_request).toString();
     const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
@@ -265,16 +294,11 @@ function swapTradeHub(stationName) {
 * Creates the datatable based on the trading style that is being queried
 */
 function displayData(data) {
-    // Unique locations. Used to populate after a query param request since that info is lost.
-    const fromLocations = [];
-    const toLocations = [];
 
     data.forEach(function(row) {      
         from = swapTradeHub(row['From']['name']);
         to = swapTradeHub(row['Take To']['name']);
-        if (!fromLocations.includes(from)) fromLocations.push(from);
-        if (!toLocations.includes(to)) toLocations.push(to);
-        
+
         row['From'] = `<span class='${row['From']['security_code']}'>${from}</span>`;
         row['Take To'] = `<span class='${row['Take To']['security_code']}'>${to}</span>`;
         row['View'] = `<span 
@@ -285,17 +309,14 @@ function displayData(data) {
         <i class="fa fa-search-plus"></i></span>`;
     });
 
-    $('#fromLocations').text(fromLocations.join(', ')); 
-    $('#toLocations').text(toLocations.join(', ')); 
-
     createTable(data);
 }
 
-function executeHauling() {
+function executeHauling(hasQueryParams) {
     $(".tableLoadingIcon").show();
     // createTradeHeader();
 
-    getHaulingData().then((data) => {
+    getHaulingData(hasQueryParams).then((data) => {
         if (data.length == 0) {
             $(".tableLoadingIcon").html(`No Results Found<br><a class="btn btn-grey btn-border btn-effect" href="javascript:window.location.replace(location.pathname);">Refresh this page</a>`);
         } else {
@@ -315,8 +336,14 @@ function loadNext() {
             const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
 
             if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
+                console.log("Found query params:");
+                console.log(thr);
                 hauling_request = thr;
-                executeHauling();
+    
+                getUniverseList().then(function(data) {
+                    universeList = data;
+                    executeHauling(true);
+                });
                 return;
             }
 
@@ -351,7 +378,7 @@ function loadNext() {
             window.alert("Please select a valid from and to station.");
         } else {
             $("#submit"). attr("disabled", true);
-            executeHauling();
+            executeHauling(false);
         }
     });
 
