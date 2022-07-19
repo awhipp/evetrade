@@ -4,273 +4,273 @@
 <!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
-    <head>
-        <!-- Meta Tags -->
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="chrome=1">
-        <title>EVE Online Market Trade Tool | Station Hauling </title>
-        <meta name="Description" content="The EVE Online trading tool that lets you discover what to trade between stations and regions. This tool enables making ISK through hauling or station trading.">
-        <meta name="Keywords" content="eve, eve online, isk, market, eve market, jita, amarr, dodixie, rens, hek, trade, trade finder, regions, stations, tradefinder, help, hauling, haul, route, buy, sell, tool, tools">
-        <meta name="google-site-verification" content="g0f9bRd7w4GdyAXj5bzHhlW725kHswcpIgkzqdEum9s" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv='cache-control' content='no-cache'>
-        <meta http-equiv='expires' content='0'>
-        <meta http-equiv='pragma' content='no-cache'>
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>EVE Online Market Trade Tool | Station Hauling </title>
+    <meta name="Description" content="The EVE Online trading tool that lets you discover what to trade between stations and regions. This tool enables making ISK through hauling or station trading.">
+    <meta name="Keywords" content="eve, eve online, isk, market, eve market, jita, amarr, dodixie, rens, hek, trade, trade finder, regions, stations, tradefinder, help, hauling, haul, route, buy, sell, tool, tools">
+    <meta name="google-site-verification" content="g0f9bRd7w4GdyAXj5bzHhlW725kHswcpIgkzqdEum9s" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    
+    <!-- Favicon -->
+    <link rel='shortcut icon' href='img/favicon.png' type='image/x-icon'/>
+    
+    <!-- CSS -->
+    
+    <!-- Roboto font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    
+    <!-- bootstrap.min -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Hauling Stylesheet -->
+    <link rel="stylesheet" href="css/hauling.css">
+    
+</head>
 
-        <!-- Favicon -->
-        <link rel='shortcut icon' href='img/favicon.png' type='image/x-icon'/>
-
-		<!-- CSS -->
-        
-        <!-- Roboto font -->
-		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		
-		<!-- bootstrap.min -->
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <!-- DataTables CSS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
-		<!-- Main Stylesheet -->
-        <link rel="stylesheet" href="css/main.css">
-		<!-- Hauling Stylesheet -->
-        <link rel="stylesheet" href="css/hauling.css">
-
-    </head>
-	
-    <body id="body">
-
-		<!-- preloader -->
-		<div id="preloader">
-            <div class="loader-box">
-                <div class="background-container">
-                    <div class="stars"></div>
-                    <div class="twinkling"></div>
-                </div>
+<body id="body">
+    
+    <!-- preloader -->
+    <div id="preloader">
+        <div class="loader-box">
+            <div class="background-container">
+                <div class="stars"></div>
+                <div class="twinkling"></div>
             </div>
-		</div>
-		<!-- end preloader -->
-
-        <!-- Background container -->
-        <div class="background-container">
-            <div class="stars"></div>
-            <div class="twinkling"></div>
         </div>
-        <!-- End Background container -->
-
-        <div class="tableLoadingIcon"> <i class="fa fa-circle-o-notch fa-spin"></i></div>
-
-        <!-- Navigation -->
-        <header id="navigation" class="navbar-inverse navbar-fixed-top animated-header">
-            <div class="container">
-                <div class="navbar-header">
-                    <!-- responsive nav button -->
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-                    </button>
-					<!-- /responsive nav button -->
-					
-					<!-- logo -->
-					<h1 class="navbar-brand">
-						<a href="/"><img src="img/logo.png" alt="EVETrade"/></a>
-					</h1>
-					<!-- /logo -->
-                </div>
-
-				<!-- main nav -->
-                <nav class="collapse navbar-collapse navbar-right" role="navigation">
-                    <ul id="nav" class="nav navbar-nav">
-                        <li><a href="./index.html">Home</a></li>
-                        <li><a href="./help.html" target="_blank">Help</a></li>
-                        <li><a href="https://form.jotform.com/221949524774164" target="_blank">Support</a></li>
-                        <li><a href="https://ko-fi.com/evetrade" target="_blank">Donate</a></li>
-                    </ul>
-                </nav>
-				<!-- /main nav -->
-				
+    </div>
+    <!-- end preloader -->
+    
+    <!-- Background container -->
+    <div class="background-container">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+    </div>
+    <!-- End Background container -->
+    
+    <div class="tableLoadingIcon"> <i class="fa fa-circle-o-notch fa-spin"></i></div>
+    
+    <!-- Navigation -->
+    <header id="navigation" class="navbar-inverse navbar-fixed-top animated-header">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- responsive nav button -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- /responsive nav button -->
+                
+                <!-- logo -->
+                <h1 class="navbar-brand">
+                    <a href="/"><img src="img/logo.png" alt="EVETrade"/></a>
+                </h1>
+                <!-- /logo -->
             </div>
-        </header>
-        <!-- End Navigation -->
-		
-        <!-- Main Section-->
-		<main class="site-content" role="main">
-            <section id="main">
-                <div class="main">
-                    <div class="slide-caption">
-                            <h1>Station to Station Trading</h1>
-                            <h2>
-                                Find the most profitable trade routes based on given filter parameters.
-                            </h2>
-                            <h3>
-                                Orders change frequently. Profit is not guaranteed. Verify prices are accurate.
-                            </h3>
-
-                            <div id="hauling-form" class="hauling-form">
-                                <div class="form-body">
-                                    <div class="row">
-                                        <div class="form-holder">
-                                            <div class="form-content">
-                                                <div class="form-items">
-                                                    <datalist id="stationList"></datalist>
-                                                    <form>
-                                                        <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
-                                                                <label class="control-label" for="from"> Starting Station(s) </label> 
-                                                                <input id="from" name="for" class="form-control" type="text" placeholder="Station Name">
-                                                                <p class="suggestions"> 
-                                                                    Trade Hubs: 
-                                                                    <span onclick="addStationToList('Jita', 'fromStations');">Jita</span> 
-                                                                    <span onclick="addStationToList('Amarr', 'fromStations');">Amarr</span> 
-                                                                    <span onclick="addStationToList('Dodixie', 'fromStations');">Dodixie</span> 
-                                                                    <span onclick="addStationToList('Rens', 'fromStations');">Rens</span> 
-                                                                    <span onclick="addStationToList('Hek', 'fromStations');">Hek</span>
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-sm-12 col-md-6">
-                                                                <label class="control-label" for="to"> Ending Station(s) </label> 
-                                                                <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
-                                                                <p class="suggestions"> 
-                                                                    Trade Hubs: 
-                                                                    <span onclick="addStationToList('Jita', 'toStations');">Jita</span> 
-                                                                    <span onclick="addStationToList('Amarr', 'toStations');">Amarr</span> 
-                                                                    <span onclick="addStationToList('Dodixie', 'toStations');">Dodixie</span> 
-                                                                    <span onclick="addStationToList('Rens', 'toStations');">Rens</span> 
-                                                                    <span onclick="addStationToList('Hek', 'toStations');">Hek</span>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
-                                                                <ul id="fromStations" class="hauling-list"></ul>
-                                                            </div>
-                                                            <div class="col-sm-12 col-md-6">
-                                                                <ul id="toStations" class="hauling-list"></ul>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-3"> 
-                                                            <p> 
-                                                                <label class="control-label" for="minProfit"> Only Profit Above </label> 
-                                                                <input id="minProfit" type="number" name="minProfit" class="form-control" placeholder="Default: 500,000"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-3"> 
-                                                            <p> 
-                                                                <label class="control-label" for="maxWeight"> Cargo Capacity </label> 
-                                                                <input id="maxWeight" type="number" name="maxWeight" class="form-control" placeholder="Default: Infinity"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-3"> 
-                                                            <p> 
-                                                                <label class="control-label" for="minROI"> Return on Investment (%) </label> 
-                                                                <input id="minROI" type="number" name="minROI" class="form-control" placeholder="Default: 4"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-3">
-                                                            <p> 
-                                                                <label class="control-label" for="maxBudget"> Budget </label> 
-                                                                <input id="maxBudget" type="number" name="maxBudget" class="form-control" placeholder="Default: Infinity"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-
-                                                        <div class="col-md-4"> 
-                                                            <label class="control-label" for="tax" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
-                                                            <select id="tax" class="form-control" name="tax"> 
-                                                                <option value="" selected="selected">Accounting Level</option> 
-                                                                <option value="0.08">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.00%</option>
-                                                                <option value="0.0712">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.12%</option>
-                                                                <option value="0.0624">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.24%</option>
-                                                                <option value="0.0536">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.36%</option>
-                                                                <option value="0.0448">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.48%</option>
-                                                                <option value="0.036">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.60%</option>
-                                                            </select> 
-                                                        </div>
-                                                        
-                                                        <div class="col-md-4"> 
-                                                            <label class="control-label" for="systemSecurity"> Security Status Filter </label>
-                                                            <select id="systemSecurity" class="form-control" name="systemSecurity"> 
-                                                                <option value="high_sec,low_sec,null_sec" selected="selected">No Filter</option> 
-                                                                <option value="high_sec,low_sec">Only Low or High Sec</option> 
-                                                                <option value="high_sec">Only High Sec</option> 
-                                                            </select> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-4"> 
-                                                            <label class="control-label" for="routeSafety"> Route Preference </label> 
-                                                            <select id="routeSafety" class="form-control" name="routeSafety"> 
-                                                                <option value="shortest" selected="selected">Shortest Route</option>
-                                                                <option value="secure">Safest Route</option>
-                                                                <option value="insecure">Least Safe Route</option> 
-                                                            </select> 
-                                                        </div>
-
-                                                        <div class="col-md-12">
-                                                            <button id="submit" class="btn btn-grey btn-border btn-effect">Search</button>
-                                                        </div>
-                                                    </form>
+            
+            <!-- main nav -->
+            <nav class="collapse navbar-collapse navbar-right" role="navigation">
+                <ul id="nav" class="nav navbar-nav">
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./help.html" target="_blank">Help</a></li>
+                    <li><a href="https://form.jotform.com/221949524774164" target="_blank">Support</a></li>
+                    <li><a href="https://ko-fi.com/evetrade" target="_blank">Donate</a></li>
+                </ul>
+            </nav>
+            <!-- /main nav -->
+            
+        </div>
+    </header>
+    <!-- End Navigation -->
+    
+    <!-- Main Section-->
+    <main class="site-content" role="main">
+        <section id="main">
+            <div class="main">
+                <div class="slide-caption">
+                    <h1>Station to Station Trading</h1>
+                    <h2>
+                        Find the most profitable trade routes based on given filter parameters.
+                    </h2>
+                    <h3>
+                        Orders change frequently. Profit is not guaranteed. Verify prices are accurate.
+                    </h3>
+                    
+                    <div id="hauling-form" class="hauling-form">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="form-holder">
+                                    <div class="form-content">
+                                        <div class="form-items">
+                                            <datalist id="stationList"></datalist>
+                                            <form>
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <label class="control-label" for="from"> Starting Station(s) </label> 
+                                                        <input id="from" name="for" class="form-control" type="text" placeholder="Station Name">
+                                                        <p class="suggestions"> 
+                                                            Trade Hubs: 
+                                                            <span onclick="addStationToList('Jita', 'fromStations');">Jita</span> 
+                                                            <span onclick="addStationToList('Amarr', 'fromStations');">Amarr</span> 
+                                                            <span onclick="addStationToList('Dodixie', 'fromStations');">Dodixie</span> 
+                                                            <span onclick="addStationToList('Rens', 'fromStations');">Rens</span> 
+                                                            <span onclick="addStationToList('Hek', 'fromStations');">Hek</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <label class="control-label" for="to"> Ending Station(s) </label> 
+                                                        <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
+                                                        <p class="suggestions"> 
+                                                            Trade Hubs: 
+                                                            <span onclick="addStationToList('Jita', 'toStations');">Jita</span> 
+                                                            <span onclick="addStationToList('Amarr', 'toStations');">Amarr</span> 
+                                                            <span onclick="addStationToList('Dodixie', 'toStations');">Dodixie</span> 
+                                                            <span onclick="addStationToList('Rens', 'toStations');">Rens</span> 
+                                                            <span onclick="addStationToList('Hek', 'toStations');">Hek</span>
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <ul id="fromStations" class="hauling-list"></ul>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <ul id="toStations" class="hauling-list"></ul>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-3"> 
+                                                    <p> 
+                                                        <label class="control-label" for="minProfit"> Only Profit Above </label> 
+                                                        <input id="minProfit" type="number" name="minProfit" class="form-control" placeholder="Default: 500,000"> 
+                                                    </p> 
+                                                </div> 
+                                                
+                                                <div class="col-md-3"> 
+                                                    <p> 
+                                                        <label class="control-label" for="maxWeight"> Cargo Capacity </label> 
+                                                        <input id="maxWeight" type="number" name="maxWeight" class="form-control" placeholder="Default: Infinity"> 
+                                                    </p> 
+                                                </div> 
+                                                
+                                                <div class="col-md-3"> 
+                                                    <p> 
+                                                        <label class="control-label" for="minROI"> Return on Investment (%) </label> 
+                                                        <input id="minROI" type="number" name="minROI" class="form-control" placeholder="Default: 4"> 
+                                                    </p> 
+                                                </div> 
+                                                
+                                                <div class="col-md-3">
+                                                    <p> 
+                                                        <label class="control-label" for="maxBudget"> Budget </label> 
+                                                        <input id="maxBudget" type="number" name="maxBudget" class="form-control" placeholder="Default: Infinity"> 
+                                                    </p> 
+                                                </div> 
+                                                
+                                                
+                                                <div class="col-md-4"> 
+                                                    <label class="control-label" for="tax" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
+                                                    <select id="tax" class="form-control" name="tax"> 
+                                                        <option value="" selected="selected">Accounting Level</option> 
+                                                        <option value="0.08">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.00%</option>
+                                                        <option value="0.0712">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.12%</option>
+                                                        <option value="0.0624">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.24%</option>
+                                                        <option value="0.0536">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.36%</option>
+                                                        <option value="0.0448">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.48%</option>
+                                                        <option value="0.036">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.60%</option>
+                                                    </select> 
+                                                </div>
+                                                
+                                                <div class="col-md-4"> 
+                                                    <label class="control-label" for="systemSecurity"> Security Status Filter </label>
+                                                    <select id="systemSecurity" class="form-control" name="systemSecurity"> 
+                                                        <option value="high_sec,low_sec,null_sec" selected="selected">No Filter</option> 
+                                                        <option value="high_sec,low_sec">Only Low or High Sec</option> 
+                                                        <option value="high_sec">Only High Sec</option> 
+                                                    </select> 
+                                                </div> 
+                                                
+                                                <div class="col-md-4"> 
+                                                    <label class="control-label" for="routeSafety"> Route Preference </label> 
+                                                    <select id="routeSafety" class="form-control" name="routeSafety"> 
+                                                        <option value="shortest" selected="selected">Shortest Route</option>
+                                                        <option value="secure">Safest Route</option>
+                                                        <option value="insecure">Least Safe Route</option> 
+                                                    </select> 
+                                                </div>
+                                                
+                                                <div class="col-md-12">
+                                                    <button id="submit" class="btn btn-grey btn-border btn-effect">Search</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div id="noselect" class="noselect" oncontextmenu="return false;">
-                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="noselect" class="noselect" oncontextmenu="return false;">
                     </div>
                 </div>
-            </section>
-		</main>
-        
-
-        <!-- End Main Section -->
-		<footer id="footer">
-			<main class="container">
-				<div class="row text-center">
-					<div class="footer-content">
-                        <p><a href="./release.html" target="_blank">Version {{version}}</a> | Updated {{release_date}} | <a href="https://github.com/awhipp/evetrade" target="_blank">Source Code</a></li> | <a href="https://github.com/awhipp/evetrade/releases" target="_blank">Download</a></p>		
-						<p>Copyright &copy; {{years_active}} EVETrade. All Rights Reserved.</p>
-					</div>
-				</div>
-			</main>
-		</footer>
-
-        <!-- CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.css"/>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
-        <link rel="stylesheet" href="css/datatables.css"/>
-
-		<!-- Javascript  -->
-
-		<!-- Main jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="js/inputStore.jquery.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-
-		<!-- Twitter Bootstrap -->
-        <script src="js/bootstrap.min.js"></script>
-		<!-- Custom Functions -->
-        <script src="js/main.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
-        <script src="js/station-hauling.js"></script>
-
-        <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js"></script>
-
-        <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-        <script>
-            kofiWidgetOverlay.draw('evetrade', {
-                'type': 'floating-chat',
-                'floating-chat.donateButton.text': 'Donate',
-                'floating-chat.donateButton.background-color': '#323842',
-                'floating-chat.donateButton.text-color': '#fff'
-            });
-        </script>
-    </body>
+            </div>
+        </section>
+    </main>
+    
+    
+    <!-- End Main Section -->
+    <footer id="footer">
+        <main class="container">
+            <div class="row text-center">
+                <div class="footer-content">
+                    <p><a href="./release.html" target="_blank">Version {{version}}</a> | Updated {{release_date}} | <a href="https://github.com/awhipp/evetrade" target="_blank">Source Code</a></li> | <a href="https://github.com/awhipp/evetrade/releases" target="_blank">Download</a></p>		
+                    <p>Copyright &copy; {{years_active}} EVETrade. All Rights Reserved.</p>
+                </div>
+            </div>
+        </main>
+    </footer>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/datatables.css"/>
+    
+    <!-- Javascript  -->
+    
+    <!-- Main jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/inputStore.jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    
+    <!-- Twitter Bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Custom Functions -->
+    <script src="js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <script src="js/station-hauling.js"></script>
+    
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js"></script>
+    
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+        kofiWidgetOverlay.draw('evetrade', {
+            'type': 'floating-chat',
+            'floating-chat.donateButton.text': 'Donate',
+            'floating-chat.donateButton.background-color': '#323842',
+            'floating-chat.donateButton.text-color': '#fff'
+        });
+    </script>
+</body>
 </html>
