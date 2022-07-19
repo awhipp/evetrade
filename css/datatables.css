@@ -128,8 +128,32 @@ tr > td:first-child {
     min-width: 200px;
 }
 
-
 .is-true:hover, .is-false:hover{
     opacity:0.8;
 } 
+
+.show-hide {
+    margin: 0 1em;
+}
+
+.dropdown-holder {
+    position: relative;
+}
+
+.colvis {
+    padding: 0;
+}
+
+.colvis li button {
+    margin: 0;
+}
+
+.is-true {
+    background-color: green;
+}
+
+.is-false {
+    background-color: red;
+}
+
 /** END DATATABLES **/

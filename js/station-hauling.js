@@ -263,27 +263,46 @@ async function getHaulingData(hasQueryParams) {
     });
 }
 
+let initial_hidden = [];
+
 function createTable(data) {
     $(".tableLoadingIcon").hide();
-    let tableHTML = `<table id="dataTable" class="display"></table>`;
-    tableHTML += `<br><br><a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`
+    let tableHTML = `<span class='dropdown-holder'><button class="btn btn-grey btn-border btn-effect small-btn show-hide dropdown-toggle" type="button" data-toggle="dropdown"> Show/Hide Columns <span class="caret"></span> </button>`
+    tableHTML += `<ul id="colvis" class="colvis dropdown-menu" x-placement="bottom-start"></ul></span>`
+    tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`;
+    tableHTML += `<table id="dataTable" class="display"></table>`;
     $('#noselect').html(tableHTML);
     $(".dataTableFilters").html("");
-
+    
     var dataTableDOM = $("#dataTable");
 
     const columns = [{data: "View", name: "View"}];
 
     let sort_column = 1;
     let idx = 1;
+    let hidden_columns = [];
+
+    initial_hidden = window.localStorage.getItem('evetrade_station_col_preferences');
+    if (initial_hidden == null) {
+        initial_hidden = ["Item ID", "Net Costs", "Net Sales", "Gross Margin", "Sales Taxes", "Jumps", "Profit per Jump"];
+    } else {
+        initial_hidden = initial_hidden.split(',');
+    }
 
     $.each(data[0], function(name, value) {
-        if (name != "View") columns.push({data: name, title: name});
+        if (name != "View") {
+            columns.push({data: name, title: name});
+            $('.colvis').append(`<li><button class="colvistoggle btn btn-effect small-btn is-true" colidx="${idx}">${name}</button></li>`);
+        }
         if (name == "Profit Per Item") sort_column = idx;
+        if (initial_hidden.includes(name)) hidden_columns.push(idx);
         idx += 1;
     });
 
-    dataTableDOM.DataTable({
+    // Append to colvis as we loop
+    // <li><button class="colvistoggle btn btn-default is-true" colidx="1">Sell Order</button></li>
+
+    const dt = dataTableDOM.DataTable({
         "order": [[sort_column, "desc"]],
         "lengthMenu": [[50], ["50"]],
         responsive: true,
@@ -311,9 +330,33 @@ function createTable(data) {
         $(this)[0].scrollIntoView();
     });
 
-    $(".dataTable tr").on('click',function(event) {
+    $(".dataTable tr").on('click',function() {
         $(this).toggleClass('row_selected');
     });
+
+    
+    $(".colvistoggle").on('click',function(e) {
+        e.preventDefault();
+        // Get the column API object
+        var column = dt.column($(this).attr('colidx'));
+        // Toggle the visibility
+        $(this).removeClass("is-" + column.visible());
+        column.visible(!column.visible());
+        $(this).addClass("is-" + column.visible());
+        if (!column.visible()) {
+            initial_hidden.push($(this).text());
+        } else {
+            initial_hidden.splice(initial_hidden.indexOf($(this).text()), 1);
+        }
+
+        window.localStorage.setItem('evetrade_station_col_preferences', initial_hidden.join(','));
+    });
+
+    for (let i = 0; i < hidden_columns.length; i++) {
+        $(`[colidx="${hidden_columns[i]}"]`).removeClass('is-true');
+        $(`[colidx="${hidden_columns[i]}"]`).addClass('is-false');
+        dt.column(hidden_columns[i]).visible(false);
+    }
 }
 
 function swapTradeHub(stationName) {
