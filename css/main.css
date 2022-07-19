@@ -179,7 +179,7 @@ input[type=text], input[type=number], select {
 }
 
 .btn-effect:hover, .btn-effect:focus, .btn-effect:active {
-    color: black;
+    color: black !important;
     font-weight: bold;
 }
 

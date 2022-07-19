@@ -97,7 +97,9 @@ function createTable(domId, data) {
         
         $("label").hide();
         $("input").hide();
-        
+
+        $(".dataTableFilters").append($(".dt-buttons"));
+        $(".dt-button").addClass("btn btn-effect");
         
         $(".dataTables_paginate").on("click", function(){
             $(this)[0].scrollIntoView();

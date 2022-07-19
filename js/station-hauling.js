@@ -273,8 +273,7 @@ function createTable(data) {
     
     $(".dataTableFilters").append($("#dataTable_filter"));
     $(".dataTableFilters").append($(".dt-buttons"));
-    $(".dt-button").addClass("btn");
-    $(".dt-button").addClass("btn-default");
+    $(".dt-button").addClass("btn btn-effect");
     
     $(".dataTables_paginate").on("click", function(){
         $(this)[0].scrollIntoView();
