@@ -19,3 +19,9 @@
   to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/hauling"
   status = 200
   query = {from = ":from", to = ":to", tax = ":tax", minProfit = ":minProfit", minROI = ":minROI", maxBudget = ":maxBudget", maxWeight = ":maxWeight", routeSafety = ":routeSafety", systemSecurity = ":systemSecurity" }
+
+[[redirects]]
+  from = "/api/orders"
+  to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/orders"
+  status = 200
+  query = {itemId = ":itemId", from = ":from", to = ":to"}
