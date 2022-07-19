@@ -310,6 +310,10 @@ function createTable(data) {
     $(".dataTables_paginate").on("click", function(){
         $(this)[0].scrollIntoView();
     });
+
+    $(".dataTable tr").on('click',function(event) {
+        $(this).toggleClass('row_selected');
+    });
 }
 
 function swapTradeHub(stationName) {
@@ -340,12 +344,9 @@ function displayData(data) {
 
         row['From'] = `<span class='${row['From']['security_code']}'>${from}</span>`;
         row['Take To'] = `<span class='${row['Take To']['security_code']}'>${to}</span>`;
-        row['View'] = `<span 
-        data-itemid="${row['Item ID']}" 
-        data-itemname="${row['Item']}"
-        data-initialstation="${hauling_request['From']}"
-        data-closingstation="${hauling_request['To']}">
-        <i class="fa fa-search-plus"></i></span>`;
+        row['View'] = `<a class="investigate" href=
+        '/orders?itemId=${row['Item ID']}&from=${hauling_request['from']}&to=${hauling_request['to']}' 
+        target='_blank'><i class="fa fa-search-plus"></i></a>`;
     });
 
     createTable(data);
