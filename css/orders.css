@@ -1,0 +1,26 @@
+#main {
+    opacity: 0;
+}
+
+span {
+    font-weight: bolder;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    float: unset;
+    text-align: center;
+}
+
+.table-holder {
+    max-width: 1000px;
+    margin:0 auto;
+}
+
+.starting-station-table, .ending-station-table {
+    width: 50%;
+    float: left;
+}
+
+.dataTables_wrapper {
+    width: 100%;
+}

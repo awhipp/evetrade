@@ -1,24 +1,4 @@
-
-const date = new Date();
-const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
-
-const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 || window.location.href.indexOf("127.0.0.1") > 0 ? "https://evetrade.space/api":"/api";
-
-let universeList = {};
 let hauling_request = {};
-
-/**
-* Generic function to get JSON data from API endpoint
-* @param {*} fileName 
-* @returns The Data from the API.
-*/
-function getResourceData(fileName) {
-    return fetch(API_ENDPOINT + '/resource?file=' + fileName)
-    .then(response => response.json())
-    .then(function(response) {
-        return response;
-    });
-}
 
 /**
 * Get's the station list data for the EVE universe.
@@ -26,13 +6,16 @@ function getResourceData(fileName) {
 */
 function getStationList(){
     return new Promise (function(resolve, reject) {
-        const lastRetrieved = window.localStorage.getItem('evetrade_station_list_last_retrieved');
+        const dateCacheKey = 'evetrade_station_list_last_retrieved';
+        const jsonCacheKey = 'stationList';
+
+        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving Resource Cache.');
+            console.log('Same Day - Retrieving StationList Cache.');
             
             try {
-                resolve(JSON.parse(window.localStorage.getItem('stationList')));
+                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
             } catch(e) {
                 console.log('Error Retrieving StationList Cache. Retrying.');
             }
@@ -40,43 +23,10 @@ function getStationList(){
             console.log('New Day - Retrieving StationList Cache.');
         }
         
-        window.localStorage.removeItem('evetrade_station_list_last_retrieved')
-        
         getResourceData('stationList.json').then(function(response) {
             console.log('Station List Loaded.');
-            window.localStorage.setItem('stationList', JSON.stringify(response));
-            resolve(response);
-        });
-    });
-    
-}
-
-
-/**
-* Get's the universe list data for the EVE universe.
-* @returns {Promise<void>}
-*/
-function getUniverseList() {
-    return new Promise (function(resolve, reject) {
-        const lastRetrieved = window.localStorage.getItem('evetrade_universe_list_last_retrieved');
-        
-        if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving Resource Cache.');
-            
-            try {
-                resolve(JSON.parse(window.localStorage.getItem('universeList')));
-            } catch(e) {
-                console.log('Error Retrieving UniverseList Cache. Retrying.');
-            }
-        } else {
-            console.log('New Day - Retrieving UniverseList Cache.');
-        }
-        
-        window.localStorage.removeItem('evetrade_universe_list_last_retrieved')
-        
-        getResourceData('universeList.json').then(function(response) {
-            console.log('Universe List Loaded.');
-            window.localStorage.setItem('universeList', JSON.stringify(response));
+            window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+            window.localStorage.setItem(dateCacheKey, dateString);
             resolve(response);
         });
     });
@@ -388,7 +338,7 @@ function displayData(data) {
         row['From'] = `<span class='${row['From']['security_code']}'>${from}</span>`;
         row['Take To'] = `<span class='${row['Take To']['security_code']}'>${to}</span>`;
         row['View'] = `<a class="investigate" href=
-        '/orders?itemId=${row['Item ID']}&from=${hauling_request['from']}&to=${hauling_request['to']}' 
+        '/orders.html?itemId=${row['Item ID']}&from=${hauling_request['from']}&to=${hauling_request['to']}' 
         target='_blank'><i class="fa fa-search-plus"></i></a>`;
     });
     
