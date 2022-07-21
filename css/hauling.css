@@ -77,7 +77,3 @@
 .awesomplete > ul > li[aria-selected=true] mark {
     background-color: rgba(0,158,227, 0.6);
 }
-
-.refresh-button {
-    display: none;
-}
