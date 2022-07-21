@@ -537,3 +537,42 @@ Awesomplete
     background-color: #999;
     color: black;
 }
+
+/* KOFI */
+
+
+.kofiimg {
+    max-width: 2em !important;
+    /* Start the shake animation and make the animation last for 0.5 seconds */
+    animation: shake 3s infinite;
+}
+
+@keyframes shake {
+    0% {
+        transform: rotate(0) scale(1);
+    }
+    60% {
+        transform: rotate(0) scale(1);
+    }
+    75% {
+        transform: rotate(0) scale(1.12);
+    }
+    80% {
+        transform: rotate(0) scale(1.1);
+    }
+    84% {
+        transform: rotate(-10deg) scale(1.1);
+    }
+    88% {
+        transform: rotate(10deg) scale(1.1);
+    }
+    92% {
+        transform: rotate(-10deg) scale(1.1);
+    }
+    96% {
+        transform: rotate(10deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(0) scale(1);
+    }
+}
