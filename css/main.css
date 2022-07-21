@@ -90,7 +90,7 @@ input[type=text], input[type=number], select {
     color: #fff;
     min-width: 100px;
     border: 1px solid #333;
-    margin: 0.5em auto;
+    margin: 0.5em;
 }
 
 .btn-blue {

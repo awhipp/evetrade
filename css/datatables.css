@@ -132,10 +132,6 @@ tr > td:first-child {
     opacity:0.8;
 } 
 
-.show-hide {
-    margin: 0 1em;
-}
-
 .dropdown-holder {
     position: relative;
 }
