@@ -20,6 +20,15 @@
     cursor: pointer;
 }
 
+.hauling-list p {
+    text-align: left;
+    font-size: 0.9em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.5em;
+    width: 100%;
+    border-bottom: rgba(255,255,255,0.5) 1px solid;
+}
+
 .remove-item {
     color: #fff;
     position: absolute;

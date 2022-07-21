@@ -46,8 +46,9 @@ function addStationToList(stationName, domId) {
         $(`#${domId} li`).on("click", function() {
             const parent = $(this.parentElement);
             $(this).remove();
+            const children = parent.children().length;
             
-            if(parent.children().length == 0) {
+            if(children <= 1) {
                 parent.hide();
             } else {
                 parent.show();
