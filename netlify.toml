@@ -1,4 +1,5 @@
 [build]
+  command = 'echo {"version": \"7.0.0\", \"release_date\": \"`date +%m-%d-%Y`\", \"years_active\": \"2016-`date +%Y`\"} > config.json'
   base = "/"
   publish = "/"
 
