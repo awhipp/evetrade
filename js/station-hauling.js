@@ -310,20 +310,23 @@ function createTable(data) {
     }
 }
 
-function swapTradeHub(stationName) {
+function swapTradeHub(station) {
+    const stationName = station['name'];
+    const stationSecurity = station['rating'].toFixed(1).replace('.', '');
+
     switch(stationName) {
         case "Jita IV - Moon 4 - Caldari Navy Assembly Plant":
-            return "Jita";
+            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Jita</span>`;
         case "Rens VI - Moon 8 - Brutor Tribe Treasury":
-            return "Rens";
+            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Rens</span>`;
         case "Hek VIII - Moon 12 - Boundless Creation Factory":
-            return "Hek";
+            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Hek</span>`;
         case "Dodixie IX - Moon 20 - Federation Navy Assembly Plant":
-            return "Dodixie";
+            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Dodixie</span>`;
         case "Amarr VIII (Oris) - Emperor Family Academy":
-            return "Amarr";
+            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Amarr</span>`;
         default:
-            return stationName;
+            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
     }
 }
 
@@ -333,11 +336,11 @@ function swapTradeHub(stationName) {
 function displayData(data) {
     
     data.forEach(function(row) {      
-        from = swapTradeHub(row['From']['name']);
-        to = swapTradeHub(row['Take To']['name']);
+        from = swapTradeHub(row['From']);
+        to = swapTradeHub(row['Take To']);
         
-        row['From'] = `<span class='${row['From']['security_code']}'>${from}</span>`;
-        row['Take To'] = `<span class='${row['Take To']['security_code']}'>${to}</span>`;
+        row['From'] = from;
+        row['Take To'] = to;
         row['View'] = `<a class="investigate" href=
         '/orders.html?itemId=${row['Item ID']}&from=${hauling_request['from']}&to=${hauling_request['to']}' 
         target='_blank'><i class="fa fa-search-plus"></i></a>`;

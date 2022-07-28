@@ -77,3 +77,47 @@
 .awesomplete > ul > li[aria-selected=true] mark {
     background-color: rgba(0,158,227, 0.6);
 }
+
+.security-code10 {
+    color: #2FEFEF;
+}
+
+.security-code09 {
+    color: #48F0C0;
+}
+
+.security-code08 {
+    color: #00EF47;
+}
+
+.security-code07 {
+    color: #00F000;
+}
+
+.security-code06 {
+    color: #8FEF2F;
+}
+
+.security-code05 {
+    color: #EFEF00;
+}
+
+.security-code04 {
+    color: #D77700;
+}
+
+.security-code03 {
+    color: #F06000;
+}
+
+.security-code02 {
+    color: #F04800;
+}
+
+.security-code01 {
+    color: #D73000;
+}
+
+.security-code00 {
+    color: #F00000;
+}
