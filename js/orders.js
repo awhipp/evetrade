@@ -1,3 +1,6 @@
+let startTime = 0;
+let runTime = 0;
+
 /**
 * Generic function to get JSON data from API endpoint
 * @param {*} fileName 
@@ -16,11 +19,12 @@ function setStationNames() {
     let endSet = false;
 
     for (const stationName in universeList) {
-        if (!startSet && universeList[stationName].station == thr.from.split(':')[1]) {
+        if (!startSet && universeList[stationName].name.indexOf('-') > 0 && universeList[stationName].station == thr.from.split(':')[1]) {
+            console.log(universeList[stationName]);
             $("#starting-station").text(universeList[stationName].name);
             startSet = true;
         }
-        if (!endSet && universeList[stationName].station == thr.to.split(':')[1]) {
+        if (!endSet && universeList[stationName].name.indexOf('-') > 0 && universeList[stationName].station == thr.to.split(':')[1]) {
             $("#ending-station").text(universeList[stationName].name);
             endSet = true;
         }
@@ -87,7 +91,7 @@ function createTable(domId, data) {
             "order": [[0, domId.indexOf('start') >= 0 ? 'asc' : 'desc']],
             "lengthMenu": [[10], ["10"]],
             responsive: true,
-            dom: 'Bfrtip',
+            dom: 'frtipB',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf'
             ],
@@ -125,6 +129,8 @@ function loadNext() {
         if (window.location.search.length > 0) {
             var search = window.location.search.substring(1);
             thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+
+            startTime = new Date();
             
             if (thr.from && thr.to && thr.itemId) {
                 console.log("Found query params:");
@@ -142,6 +148,10 @@ function loadNext() {
 
                                     $(".tableLoadingIcon").hide();    
                                     $('#main').fadeTo('slow', 1, function() {});
+
+                                    runTime = new Date() - startTime;
+                                    console.log(`Request took ${runTime}ms`);
+                                    $("#time_taken").html(`Request took ${runTime/1000} seconds.`);
                                 });
                             });
                         })

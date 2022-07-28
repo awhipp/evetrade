@@ -3,80 +3,36 @@ let startTime = 0;
 let runTime = 0;
 
 /**
-* Get's the station list data for the EVE universe.
+* Get's the region list data for the EVE universe.
 * @returns {Promise<void>}
 */
-function getStationList(){
+function getRegionList(){
     return new Promise (function(resolve, reject) {
-        const dateCacheKey = 'evetrade_station_list_last_retrieved';
-        const jsonCacheKey = 'stationList';
+        const dateCacheKey = 'evetrade_region_list_last_retrieved';
+        const jsonCacheKey = 'regionList';
 
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving StationList Cache.');
+            console.log('Same Day - Retrieving RegionList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
             } catch(e) {
-                console.log('Error Retrieving StationList Cache. Retrying.');
+                console.log('Error Retrieving RegionList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving StationList Cache.');
+            console.log('New Day - Retrieving RegionList Cache.');
         }
         
-        getResourceData('stationList.json').then(function(response) {
-            console.log('Station List Loaded.');
+        getResourceData('regionList.json').then(function(response) {
+            console.log('Region List Loaded.');
             window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
             window.localStorage.setItem(dateCacheKey, dateString);
             resolve(response);
         });
     });
     
-}
-
-function addStationToList(stationName, domId) {
-    const data = universeList[stationName.toLowerCase()];
-    const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
-    
-    let stationList = $(`#${domId}`);
-    
-    if ($(dataAttribute).length == 0) {
-        stationList.show();
-        stationList.append(`<li data-region="${data.region}" data-station="${data.station}"><span class="stationName">${stationName}</span><span class="remove-item">x</span></li>`);
-        
-        $(`#${domId} li`).on("click", function() {
-            const parent = $(this.parentElement);
-            $(this).remove();
-            const children = parent.children().length;
-            
-            if(children <= 1) {
-                parent.hide();
-            } else {
-                parent.show();
-            }
-        });
-    } else {
-        console.log(`Station ${stationName} already added.`);
-    }
-}
-
-function getStationInfoFromList(domId) {
-    const stations = [];
-    const stationList = $(`#${domId} li`);
-    stationList.each(function() {
-        stations.push(`${$(this).attr('data-region')}:${$(this).attr('data-station')}`);
-    });
-    return stations.join(',');
-}
-
-function getStationNamesFromList(domId) {
-    const stations = [];
-    const stationList = $(`#${domId} li .stationName`);
-    stationList.each(function() {
-        stations.push(`${$(this).text()}`);
-    });
-    return stations.join(',');
 }
 
 /**
@@ -98,14 +54,12 @@ function initAwesomplete(domId, list) {
     
     $(input).on('awesomplete-select', function(selection) {
         console.log(`Added (select): ${selection.originalEvent.text.value}`);
-        addStationToList(selection.originalEvent.text.value, selection.target.id + 'Stations');
-        selection.originalEvent.text.value = '';
-        $(input).focus();
+        $(input).blur();
     });
 }
 
 function createTradeHeader(request, from, to) {
-
+    
     const minProfit = request.minProfit;
     const maxWeight = request.maxWeight == Number.MAX_SAFE_INTEGER ? "Infinite" : request.maxWeight;
     const minROI = (request.minROI * 100).toFixed(2) + "%";
@@ -132,30 +86,18 @@ function createTradeHeader(request, from, to) {
     
     $('main h1').hide();
 
-    const fromList = from.split(',');
-    let fromli = '';
-    for (let i = 0; i < fromList.length; i++ ) {
-        fromli += `<li>${fromList[i]}</li>`;
-    }
-
-    const toList = to.split(',');
-    let toli = '';
-    for (let i = 0; i < toList.length; i++ ) {
-        toli += `<li>${toList[i]}</li>`;
-    }
-
     $('main h2').html(`
         <div class="row header-row">
             <div class="col-sm-12 col-md-6">
-                <ul id="fromStations" class="hauling-list header-list">
+                <ul id="fromRegion" class="hauling-list header-list">
                     <p> Buying From </p>
-                    ${fromli}
+                    <li>${from}</li>
                 </ul>
             </div>
             <div class="col-sm-12 col-md-6">
-                <ul id="toStations" class="hauling-list header-list">
+                <ul id="toRegion" class="hauling-list header-list">
                     <p> Selling To </p>
-                    ${toli}
+                    <li>${to}</li>
                 </ul>
             </div>
         </div>`
@@ -163,23 +105,30 @@ function createTradeHeader(request, from, to) {
     $('.header-list').show();
     $('main h3').html(subHeader);
 
-    runTime = new Date() - startTime;
-    console.log(`Request took ${runTime}ms`);
-    $("#time_taken").html(`Request took ${runTime/1000} seconds.`);
-
 }
-function getNameFromUniverseStations(stationId) {
-    if (stationId.indexOf(':') >= 0) {
-        stationId = stationId.split(':')[1];
-    }
+
+
+function getNameFromUniverseRegionName(regionName) {
+    regionName = regionName.toLowerCase();
     
-    for (const stationName in universeList) {
-        if (universeList[stationName].station == stationId) {
-            return universeList[stationName];
+    for (const name in universeList) {
+        if (universeList[name].name.toLowerCase() == regionName) {
+            return universeList[name];
         }
     }
-    window.alert("Station not found in universe list. Retry query parameters.");
-    throw 'Station not found in universe list. Retry query parameters.';
+    window.alert("RegionName not found in universe list. Retry query parameters.");
+    throw 'RegionName not found in universe list. Retry query parameters.';
+}
+
+
+function getNameFromUniverseRegionId(regionId) {   
+    for (const name in universeList) {
+        if (universeList[name].id !== undefined && universeList[name].id == regionId) {
+            return universeList[name];
+        }
+    }
+    window.alert("RegionId not found in universe list. Retry query parameters.");
+    throw 'RegionId not found in universe list. Retry query parameters.';
 }
 
 /**
@@ -190,27 +139,20 @@ async function getHaulingData(hasQueryParams) {
     let to = [];
     
     if (hasQueryParams) {
-        // Converting From/To Query Params back to station names.
-        fromLocations = hauling_request.from.split(',');
-        for(const flocation of fromLocations) {
-            from.push(getNameFromUniverseStations(flocation.split(':')[1]).name)
-        }
+         // Converting From/To Query Params back to station names.
+        from = getNameFromUniverseRegionId(hauling_request.from);
         
-        toLocations = hauling_request.to.split(',');
-        for(const tlocation of toLocations) {
-            to.push(getNameFromUniverseStations(tlocation.split(':')[1]).name)
-        }
+        to = getNameFromUniverseRegionId(hauling_request.to);
+        createTradeHeader(hauling_request, from.name, to.name);
         
-        from = from.join(',');
-        to = to.join(',');
     } else {
-        console.log('Pulling from Form');
-        from = getStationNamesFromList('fromStations');
-        to = getStationNamesFromList('toStations');
+        console.log('Pulling from Form...');
+        from = $('#from').val();
+        to = $('#to').val();
         
         hauling_request = {
-            from: getStationInfoFromList('fromStations'),
-            to: getStationInfoFromList('toStations'),
+            from: getNameFromUniverseRegionName(from).id,
+            to: getNameFromUniverseRegionName(to).id,
             maxBudget: parseInt($("#maxBudget").val()) || Number.MAX_SAFE_INTEGER,
             maxWeight: parseInt($("#maxWeight").val()) || Number.MAX_SAFE_INTEGER,
             minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
@@ -219,6 +161,8 @@ async function getHaulingData(hasQueryParams) {
             systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4))
         }
+
+        createTradeHeader(hauling_request, from, to);
     }
     
     console.log(hauling_request);
@@ -231,8 +175,6 @@ async function getHaulingData(hasQueryParams) {
         var newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${qs}`;
         window.history.pushState({path:newurl},'',newurl);
     }
-    
-    createTradeHeader(hauling_request, from, to);
     
     const qp = new URLSearchParams(hauling_request).toString();
     const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
@@ -257,7 +199,7 @@ function createTable(data) {
     tableHTML += `<ul id="colvis" class="colvis dropdown-menu" x-placement="bottom-start"></ul></span>`
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`;
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.reload();">Refresh Data</a>`;
-    tableHTML += `<table id="dataTable" class="display"></table></table><p><div class="request_time"><p><span id="time_taken"></span></p></div>`;
+    tableHTML += `<table id="dataTable" class="display"></table><div class="request_time"><p><span id="time_taken"></span></p></div>`;
     $('#noselect').html(tableHTML);
     $(".dataTableFilters").html("");
     
@@ -269,7 +211,7 @@ function createTable(data) {
     let idx = 1;
     let hidden_columns = [];
     
-    initial_hidden = window.localStorage.getItem('evetrade_station_col_preferences');
+    initial_hidden = window.localStorage.getItem('evetrade_region_col_preferences');
     if (initial_hidden == null) {
         initial_hidden = ["Item ID", "Net Costs", "Net Sales", "Gross Margin", "Sales Taxes", "Jumps", "Profit per Jump"];
     } else {
@@ -335,7 +277,7 @@ function createTable(data) {
             initial_hidden.splice(initial_hidden.indexOf($(this).text()), 1);
         }
         
-        window.localStorage.setItem('evetrade_station_col_preferences', initial_hidden.join(','));
+        window.localStorage.setItem('evetrade_region_col_preferences', initial_hidden.join(','));
     });
     
     for (let i = 0; i < hidden_columns.length; i++) {
@@ -364,12 +306,14 @@ function displayData(data) {
     data.forEach(function(row) {      
         from = swapTradeHub(row['From']);
         to = swapTradeHub(row['Take To']);
+
+        // Needs to be first before we replace the row values
+        row['View'] = `<a class="investigate" title="View Market Depth for ${row['Item']}" href=
+        '/orders.html?itemId=${row['Item ID']}&from=${hauling_request.from}:${row['From'].station_id}&to=${hauling_request.to}:${row['Take To'].station_id}' 
+        target='_blank'><i class="fa fa-search-plus"></i></a>`;
         
         row['From'] = from;
         row['Take To'] = to;
-        row['View'] = `<a class="investigate" title="View Market Depth for ${row['Item']}"  href=
-        '/orders.html?itemId=${row['Item ID']}&from=${hauling_request['from']}&to=${hauling_request['to']}' 
-        target='_blank'><i class="fa fa-search-plus"></i></a>`;
     });
     
     createTable(data);
@@ -417,17 +361,17 @@ function loadNext() {
         console.log(`Error parsing query params ${location.search}.`);
     }
     
-    getStationList().then(function(stationList) {        
-        stationList.forEach(function(station){
+    getRegionList().then(function(regionList) {        
+        regionList.forEach(function(region){
             var option = document.createElement("option");
-            option.innerHTML = station;
-            $("#stationList").append(option);
+            option.innerHTML = region;
+            $("#regionList").append(option);
         });
         
-        console.log(`${stationList.length} stations loaded.`);
+        console.log(`${regionList.length} regions loaded.`);
         
-        initAwesomplete("from", "stationList");
-        initAwesomplete("to", "stationList");
+        initAwesomplete("from", "regionList");
+        initAwesomplete("to", "regionList");
     });
     
     getUniverseList().then(function(data) {
@@ -437,8 +381,8 @@ function loadNext() {
     
     $("#submit").click(function(){
         // Form Validation
-        if (getStationNamesFromList('fromStations') == "" || getStationNamesFromList('toStations') == "") {
-            window.alert("Please select a valid from and to station.");
+        if ($('#from').val() == "" || $('#to').val() == "") {
+            window.alert("Please select a valid from and to regions.");
             return false;
         } else {
             $("#submit"). attr("disabled", true);
@@ -449,7 +393,7 @@ function loadNext() {
     const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety'];
     for (let i = 0; i < formElements.length; i++) {
         $(`#${formElements[i]}`).inputStore({
-            name: 'station-' + formElements[i]
+            name: 'region-' + formElements[i]
         });
     }
 }

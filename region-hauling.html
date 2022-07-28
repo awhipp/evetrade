@@ -8,7 +8,7 @@
     <!-- Meta Tags -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>EVE Online Market Trade Tool | Station Hauling </title>
+    <title>EVE Online Market Trade Tool | Region Hauling </title>
     <meta name="Description" content="The EVE Online trading tool that lets you discover what to trade between stations and regions. This tool enables making ISK through hauling or station trading.">
     <meta name="Keywords" content="eve, eve online, isk, market, eve market, jita, amarr, dodixie, rens, hek, trade, trade finder, regions, stations, tradefinder, help, hauling, haul, route, buy, sell, tool, tools">
     <meta name="google-site-verification" content="g0f9bRd7w4GdyAXj5bzHhlW725kHswcpIgkzqdEum9s" />
@@ -98,7 +98,7 @@
         <section id="main">
             <div class="main">
                 <div class="slide-caption">
-                    <h1>Station to Station Trading</h1>
+                    <h1>Region to Region Trading</h1>
                     <h2>
                         Find the most profitable trade routes based on given filter parameters.
                     </h2>
@@ -106,57 +106,22 @@
                         Orders change frequently. Profit is not guaranteed. Verify prices are accurate.
                     </h3>
                     
-                    <div id="hauling-form" class="hauling-form stationHaul">
+                    <div id="hauling-form" class="hauling-form regionHaul">
                         <div class="form-body">
                             <div class="row">
                                 <div class="form-holder">
                                     <div class="form-content">
                                         <div class="form-items">
-                                            <datalist id="stationList"></datalist>
+                                            <datalist id="regionList"></datalist>
                                             <form>
                                                 <div class="row">
                                                     <div class="col-sm-12 col-md-6">
-                                                        <label class="control-label" for="from"> Starting Station(s) </label> 
-                                                        <input id="from" name="for" class="form-control" type="text" placeholder="Station Name">
-                                                        <p class="suggestions"> 
-                                                            Trade Hubs: 
-                                                            <span onclick="addStationToList('Jita IV - Moon 4 - Caldari Navy Assembly Plant', 'fromStations');">Jita</span> 
-                                                            <span onclick="addStationToList('Amarr VIII (Oris) - Emperor Family Academy', 'fromStations');">Amarr</span> 
-                                                            <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'fromStations');">Dodixie</span> 
-                                                            <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'fromStations');">Rens</span> 
-                                                            <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'fromStations');">Hek</span>
-                                                            <!-- <span onclick="addStationToList('Oursulaert III - Federation Navy Testing Facilities', 'fromStations');">Oursulaert</span>
-                                                            <span onclick="addStationToList('Tash-Murkon Prime II - Moon 1 - Kaalakiota Corporation Factory', 'fromStations');">Tash-Murkon</span>
-                                                            <span onclick="addStationToList('Agil VI - Moon 2 - CONCORD Logistic Support', 'fromStations');">Agil</span> -->
-                                                        </p>
+                                                        <label class="control-label" for="from"> Starting Region </label> 
+                                                        <input id="from" name="for" class="form-control" type="text" placeholder="Region Name">
                                                     </div>
                                                     <div class="col-sm-12 col-md-6">
-                                                        <label class="control-label" for="to"> Ending Station(s) </label>
-                                                        <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
-                                                        <p class="suggestions"> 
-                                                            Trade Hubs:
-                                                            <span onclick="addStationToList('Jita IV - Moon 4 - Caldari Navy Assembly Plant', 'toStations');">Jita</span> 
-                                                            <span onclick="addStationToList('Amarr VIII (Oris) - Emperor Family Academy', 'toStations');">Amarr</span> 
-                                                            <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'toStations');">Dodixie</span> 
-                                                            <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'toStations');">Rens</span> 
-                                                            <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'toStations');">Hek</span>
-                                                            <!-- <span onclick="addStationToList('Oursulaert III - Federation Navy Testing Facilities', 'toStations');">Oursulaert</span>
-                                                            <span onclick="addStationToList('Tash-Murkon Prime II - Moon 1 - Kaalakiota Corporation Factory', 'toStations');">Tash-Murkon</span>
-                                                            <span onclick="addStationToList('Agil VI - Moon 2 - CONCORD Logistic Support', 'toStations');">Agil</span> -->
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="row">
-                                                    <div class="col-sm-12 col-md-6">
-                                                        <ul id="fromStations" class="hauling-list">
-                                                            <p> Starting Station(s) </p>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col-sm-12 col-md-6">
-                                                        <ul id="toStations" class="hauling-list">
-                                                            <p> Ending Station(s) </p>
-                                                        </ul>
+                                                        <label class="control-label" for="to"> Ending Region </label>
+                                                        <input id="to" name="to" class="form-control" type="text" placeholder="Region Name">
                                                     </div>
                                                 </div>
                                                 
@@ -234,13 +199,13 @@
                     <div id="noselect" class="noselect" oncontextmenu="return false;">
                         <div class="row">
                             <div class="col-sm-12 col-md-6">
-                                <ul id="fromStations" class="hauling-list">
-                                    <p> Starting Station(s) </p>
+                                <ul id="fromRegion" class="hauling-list">
+                                    <p> Starting Region </p>
                                 </ul>
                             </div>
                             <div class="col-sm-12 col-md-6">
-                                <ul id="toStations" class="hauling-list">
-                                    <p> Ending Station(s) </p>
+                                <ul id="toRegion" class="hauling-list">
+                                    <p> Ending Region </p>
                                 </ul>
                             </div>
                         </div>
@@ -281,7 +246,7 @@
     <!-- Custom Functions -->
     <script src="js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
-    <script src="js/station-hauling.js"></script>
+    <script src="js/region-hauling.js"></script>
     
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js" defer></script>
