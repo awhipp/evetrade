@@ -84,7 +84,7 @@ function getStationNamesFromList(domId) {
 */
 function initAwesomplete(domId, list) {
     var input = document.querySelector("#" + domId);
-    var inputPlete  = new Awesomplete(input, {
+    new Awesomplete(input, {
         list: "#" + list,
         minChars: 1,
         maxItems: 5,
@@ -113,23 +113,55 @@ function createTradeHeader(request, from, to) {
     let systemSecurity = request.systemSecurity;
     switch(systemSecurity) {
         case "high_sec,low_sec,null_sec":
-        systemSecurity = "High, Low, Null";
+            systemSecurity = "High, Low, and Null";
+            break;
         case "high_sec,low_sec":
-        systemSecurity = "High, Low";
+            systemSecurity = "High and Low";
+            break;
         default:
-        systemSecurity = "High";
+            systemSecurity = "Only High";
+            break;
     }
     
     const routeSafety = request.routeSafety.replace('secure', 'Safest').replace('insecure', 'Least Safe').replace('shortest', 'Shortest');
     
-    let subHeader = `Profit Above: ${minProfit} | Capacity: ${maxWeight} | R.O.I.: ${minROI}`
-    subHeader += `<br><br>Budget: ${maxBudget} | Sales Tax: ${tax} | Security: ${systemSecurity} | Route: ${routeSafety}`;
+    let subHeader = `<b>Profit&nbsp;Above:</b>&nbsp;${minProfit} | <b>Capacity:</b>&nbsp;${maxWeight} | <b>R.O.I.:</b>&nbsp;${minROI} | <b>Budget:</b>&nbsp;${maxBudget}`;
+    subHeader += `<br><b>Sales&nbsp;Tax:</b>&nbsp;${tax} | <b>Security:</b>&nbsp;${systemSecurity} | <b>Route:</b>&nbsp;${routeSafety}`;
     
     $('main h1').hide();
-    $('main h2').html(`Buying from: ${from} <br>Selling to: ${to}`);
-    $('main h3').html(subHeader);
-}
 
+    const fromList = from.split(',');
+    let fromli = '';
+    for (let i = 0; i < fromList.length; i++ ) {
+        fromli += `<li>${fromList[i]}</li>`;
+    }
+
+    const toList = to.split(',');
+    let toli = '';
+    for (let i = 0; i < toList.length; i++ ) {
+        toli += `<li>${toList[i]}</li>`;
+    }
+
+    $('main h2').html(`
+        <div class="row header-row">
+            <div class="col-sm-12 col-md-6">
+                <ul id="fromStations" class="hauling-list header-list">
+                    <p> Buying From </p>
+                    ${fromli}
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <ul id="toStations" class="hauling-list header-list">
+                    <p> Selling To </p>
+                    ${toli}
+                </ul>
+            </div>
+        </div>`
+    );
+    $('.header-list').show();
+    $('main h3').html(subHeader);
+
+}
 function getNameFromUniverseStations(stationId) {
     if (stationId.indexOf(':') >= 0) {
         stationId = stationId.split(':')[1];
@@ -271,7 +303,7 @@ function createTable(data) {
     });
     
     $("label > input").addClass("form-control").addClass("minor-text");
-    $("label > input").attr("placeholder", "Filter by Station or Item");
+    $("label > input").attr("placeholder", "Search Table ...");
     
     $(".dataTableFilters").append($("#dataTable_filter"));
     $(".dataTableFilters").append($(".dt-buttons"));
@@ -314,20 +346,7 @@ function swapTradeHub(station) {
     const stationName = station['name'];
     const stationSecurity = station['rating'].toFixed(1).replace('.', '');
 
-    switch(stationName) {
-        case "Jita IV - Moon 4 - Caldari Navy Assembly Plant":
-            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Jita</span>`;
-        case "Rens VI - Moon 8 - Brutor Tribe Treasury":
-            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Rens</span>`;
-        case "Hek VIII - Moon 12 - Boundless Creation Factory":
-            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Hek</span>`;
-        case "Dodixie IX - Moon 20 - Federation Navy Assembly Plant":
-            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Dodixie</span>`;
-        case "Amarr VIII (Oris) - Emperor Family Academy":
-            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>Amarr</span>`;
-        default:
-            return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
-    }
+    return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
 
 /**

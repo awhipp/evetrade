@@ -120,23 +120,30 @@
                                                         <input id="from" name="for" class="form-control" type="text" placeholder="Station Name">
                                                         <p class="suggestions"> 
                                                             Trade Hubs: 
-                                                            <span onclick="addStationToList('Jita', 'fromStations');">Jita</span> 
-                                                            <span onclick="addStationToList('Amarr', 'fromStations');">Amarr</span> 
-                                                            <span onclick="addStationToList('Dodixie', 'fromStations');">Dodixie</span> 
-                                                            <span onclick="addStationToList('Rens', 'fromStations');">Rens</span> 
-                                                            <span onclick="addStationToList('Hek', 'fromStations');">Hek</span>
+                                                            <span onclick="addStationToList('Jita IV - Moon 4 - Caldari Navy Assembly Plant', 'fromStations');">Jita</span> 
+                                                            <span onclick="addStationToList('Amarr VIII (Oris) - Emperor Family Academy', 'fromStations');">Amarr</span> 
+                                                            <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'fromStations');">Dodixie</span> 
+                                                            <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'fromStations');">Rens</span> 
+                                                            <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'fromStations');">Hek</span>
+                                                            <!-- <span onclick="addStationToList('Oursulaert III - Federation Navy Testing Facilities', 'fromStations');">Oursulaert</span>
+                                                            <span onclick="addStationToList('Tash-Murkon Prime II - Moon 1 - Kaalakiota Corporation Factory', 'fromStations');">Tash-Murkon</span>
+                                                            <span onclick="addStationToList('Agil VI - Moon 2 - CONCORD Logistic Support', 'fromStations');">Agil</span> -->
                                                         </p>
                                                     </div>
                                                     <div class="col-sm-12 col-md-6">
-                                                        <label class="control-label" for="to"> Ending Station(s) </label> 
+                                                        <label class="control-label" for="to"> Ending Station(s) </label>
                                                         <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
                                                         <p class="suggestions"> 
-                                                            Trade Hubs: 
-                                                            <span onclick="addStationToList('Jita', 'toStations');">Jita</span> 
-                                                            <span onclick="addStationToList('Amarr', 'toStations');">Amarr</span> 
-                                                            <span onclick="addStationToList('Dodixie', 'toStations');">Dodixie</span> 
-                                                            <span onclick="addStationToList('Rens', 'toStations');">Rens</span> 
-                                                            <span onclick="addStationToList('Hek', 'toStations');">Hek</span>
+                                                            Trade Hubs:
+                                                            <span onclick="addStationToList('Jita IV - Moon 4 - Caldari Navy Assembly Plant', 'toStations');">Jita</span> 
+                                                            <span onclick="addStationToList('Amarr VIII (Oris) - Emperor Family Academy', 'toStations');">Amarr</span> 
+                                                            <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'toStations');">Dodixie</span> 
+                                                            <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'toStations');">Rens</span> 
+                                                            <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'toStations');">Hek</span>
+                                                            <!-- <span onclick="addStationToList('Oursulaert III - Federation Navy Testing Facilities', 'toStations');">Oursulaert</span>
+                                                            <span onclick="addStationToList('Tash-Murkon Prime II - Moon 1 - Kaalakiota Corporation Factory', 'toStations');">Tash-Murkon</span>
+                                                            <span onclick="addStationToList('Agil VI - Moon 2 - CONCORD Logistic Support', 'toStations');">Agil</span> -->
+                                                        </p>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -226,6 +233,18 @@
                     </div>
                     
                     <div id="noselect" class="noselect" oncontextmenu="return false;">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <ul id="fromStations" class="hauling-list">
+                                    <p> Starting Station(s) </p>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <ul id="toStations" class="hauling-list">
+                                    <p> Ending Station(s) </p>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
