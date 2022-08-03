@@ -286,8 +286,6 @@ function createTable(data) {
         dt.column(hidden_columns[i]).visible(false);
     }
 
-    $("#coreTable").show();
-
     runTime = new Date() - startTime;
     console.log(`Request took ${runTime}ms`);
     $("#time_taken").html(`Request took ${runTime/1000} seconds.`);
