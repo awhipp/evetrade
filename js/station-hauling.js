@@ -258,7 +258,7 @@ function createTable(data) {
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`;
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.reload();">Refresh Data</a>`;
     tableHTML += `<table id="dataTable" class="display"></table></table><p><div class="request_time"><p><span id="time_taken"></span></p></div>`;
-    $('#noselect').html(tableHTML);
+    $('#coreTable').html(tableHTML);
     $(".dataTableFilters").html("");
     
     var dataTableDOM = $("#dataTable");

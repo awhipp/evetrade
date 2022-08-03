@@ -62,7 +62,7 @@ main {
 }
 
 main > section {
-    padding: 70px 0;
+    padding: 5em 0 15em 0;
 }
 
 label {
@@ -326,6 +326,15 @@ Footer
     text-align: center;
     line-height: 1em;
 }   
+
+.ad-unit-section {
+    max-width: 1100px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
 
 /*============================================================ 
 Responsive Styles
