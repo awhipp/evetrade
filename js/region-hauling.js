@@ -180,7 +180,7 @@ async function getHaulingData(hasQueryParams) {
     const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
     startTime = new Date();
     
-    $("#hauling-form").fadeOut();
+    $("#hauling-form").fadeTo('slow', 0, function() {});
     
     return fetch(requestUrl)
     .then(response => response.json())
@@ -285,6 +285,8 @@ function createTable(data) {
         $(`[colidx="${hidden_columns[i]}"]`).addClass('is-false');
         dt.column(hidden_columns[i]).visible(false);
     }
+
+    $("#coreTable").show();
 
     runTime = new Date() - startTime;
     console.log(`Request took ${runTime}ms`);
