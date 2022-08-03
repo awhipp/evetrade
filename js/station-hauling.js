@@ -238,9 +238,7 @@ async function getHaulingData(hasQueryParams) {
     const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
     startTime = new Date();
     
-    $("#hauling-form").fadeOut(function(){
-        $("#hauling-form").remove();
-    });
+    $("#hauling-form").fadeOut();
     
     return fetch(requestUrl)
     .then(response => response.json())
@@ -252,7 +250,9 @@ async function getHaulingData(hasQueryParams) {
 let initial_hidden = [];
 
 function createTable(data) {
+    $("#hauling-form").remove();
     $(".tableLoadingIcon").hide();
+
     let tableHTML = `<span class='dropdown-holder'><button class="btn btn-grey btn-border btn-effect small-btn show-hide dropdown-toggle" type="button" data-toggle="dropdown"> Show/Hide Columns <span class="caret"></span> </button>`
     tableHTML += `<ul id="colvis" class="colvis dropdown-menu" x-placement="bottom-start"></ul></span>`
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`;
