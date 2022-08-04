@@ -238,10 +238,13 @@ async function getHaulingData(hasQueryParams) {
     const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
     startTime = new Date();
     
-    $("#hauling-form").fadeTo('slow', 0, function() {});
+    $("#hauling-form").fadeTo('fast', 0, function() {});
     
-    return fetch(requestUrl)
-    .then(response => response.json())
+    return fetchWithRetry(
+        url = requestUrl,
+        tries = 3,
+        errorMsg = `Error retrieving orders for this station hauling request. Please try refreshing this page.`
+    ).then(response => response.json())
     .then(function(response) {
         return response;
     });

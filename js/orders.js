@@ -7,8 +7,11 @@ let runTime = 0;
 * @returns The Data from the API.
 */
 function getOrdersData(itemId, from, to) {
-    return fetch(`${API_ENDPOINT}/orders?itemId=${itemId}&from=${from}&to=${to}`)
-    .then(response => response.json())
+    return fetchWithRetry(
+        url = `${API_ENDPOINT}/orders?itemId=${itemId}&from=${from}&to=${to}`,
+        tries = 3,
+        errorMsg = `Unable to retrieve orders from API for given itemId (${itemId}). Please try refreshing this page.`
+    ).then(response => response.json())
     .then(function(response) {
         return response;
     });

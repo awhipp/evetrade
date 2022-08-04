@@ -144,11 +144,11 @@ tr > td:first-child {
 }
 
 .is-true {
-    background-color: green;
+    background-color: #2E7D32;
 }
 
 .is-false {
-    background-color: red;
+    background-color: #B00020;
 }
 
 /** END DATATABLES **/
