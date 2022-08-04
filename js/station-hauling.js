@@ -162,12 +162,8 @@ function createTradeHeader(request, from, to) {
     );
     $('.header-list').show();
     $('main h3').html(subHeader);
-
-    runTime = new Date() - startTime;
-    console.log(`Request took ${runTime}ms`);
-    $("#time_taken").html(`Request took ${runTime/1000} seconds.`);
-
 }
+
 function getNameFromUniverseStations(stationId) {
     if (stationId.indexOf(':') >= 0) {
         stationId = stationId.split(':')[1];
@@ -441,7 +437,7 @@ function loadNext() {
     $("#submit").click(function(){
         // Form Validation
         if (getStationNamesFromList('fromStations') == "" || getStationNamesFromList('toStations') == "") {
-            window.alert("Please select a valid from and to station.");
+            window.alert("Please select a valid starting AND ending stations.");
             return false;
         } else {
             $("#submit"). attr("disabled", true);

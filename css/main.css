@@ -289,7 +289,7 @@ input[type=text], input[type=number], select {
     transform: scaleX(1);
 }
 
-.swal-button--refresh {
+.swal-button--refresh, .swal-button--confirm {
     background: rgba(0,0,0,.5);
     color: #fff;
     min-width: 100px;

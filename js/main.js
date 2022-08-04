@@ -10,23 +10,27 @@ function loadComplete() {
     $('main').fadeTo('slow', 1, function() {});
 }
 
-window.alert = function(msg='An unknown error has occurred. Try refreshing this page.', title='Error has occurred', type='error') {
-    swal(title, msg, type,{
-        buttons: {
-            cancel: "Close",
-            refresh: "Refresh"
-        },
-    })
-    .then((value) => {
-        switch (value) {
-            
-            case "refresh":
-                window.location.reload();
-                break;
-            default:
-                break;
-        }
-    });
+window.alert = function(msg='An unknown error has occurred. Try refreshing this page.', title='Error has occurred', type='error', hasRefresh=false) {
+    if (hasRefresh) {
+        swal(title, msg, type,{
+            buttons: {
+                cancel: "Close",
+                refresh: "Refresh"
+            },
+        })
+        .then((value) => {
+            switch (value) {
+                
+                case "refresh":
+                    window.location.reload();
+                    break;
+                default:
+                    break;
+            }
+        });
+    } else {
+        swal(title, msg, type);
+    }
 }
 
 /**
@@ -49,7 +53,11 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
         }
     }
     
-    window.alert(errorMsg);
+    window.alert(
+        msg = errorMsg,
+        hasRefresh = true
+    );
+    
     throw errs;
 };
     

@@ -116,7 +116,7 @@ function getNameFromUniverseRegionName(regionName) {
             return universeList[name];
         }
     }
-    window.alert("RegionName not found in universe list. Retry query parameters.");
+    window.alert("Region name not found in universe list. Retry query parameters.");
     throw 'RegionName not found in universe list. Retry query parameters.';
 }
 
@@ -127,7 +127,7 @@ function getNameFromUniverseRegionId(regionId) {
             return universeList[name];
         }
     }
-    window.alert("RegionId not found in universe list. Retry query parameters.");
+    window.alert("Region ID not found in universe list. Retry query parameters.");
     throw 'RegionId not found in universe list. Retry query parameters.';
 }
 
@@ -384,7 +384,7 @@ function loadNext() {
     $("#submit").click(function(){
         // Form Validation
         if ($('#from').val() == "" || $('#to').val() == "") {
-            window.alert("Please select a valid from and to regions.");
+            window.alert("Please select a valid starting AND ending regions.");
             return false;
         } else {
             $("#submit"). attr("disabled", true);
