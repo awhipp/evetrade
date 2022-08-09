@@ -27,3 +27,9 @@
   to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/orders"
   status = 200
   query = {itemId = ":itemId", from = ":from", to = ":to"}
+
+[[redirects]]
+  from = "/api/station"
+  to = "https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1/station"
+  status = 200
+  query = {station = ":station", tax = ":tax", fee = ":fee", margins = ":margins", min_volume = ":min_volume", volume_filter = ":volume_filter"}
