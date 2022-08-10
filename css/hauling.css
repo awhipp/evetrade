@@ -9,6 +9,7 @@
     padding: 0.5em 1em;
     list-style: none;
     display: none;
+    text-align: center;
 }
 
 .hauling-list li {
