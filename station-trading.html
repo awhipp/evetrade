@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>EVE Online Market Trade Tool | Station Trading </title>
+    <meta name="Description" content="The EVE Online trading tool that lets you discover what to trade between stations and regions. This tool enables making ISK through hauling or station trading.">
+    <meta name="Keywords" content="eve, eve online, isk, market, eve market, jita, amarr, dodixie, rens, hek, trade, trade finder, regions, stations, tradefinder, help, hauling, haul, route, buy, sell, tool, tools">
+    <meta name="google-site-verification" content="g0f9bRd7w4GdyAXj5bzHhlW725kHswcpIgkzqdEum9s" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    
+    <!-- Favicon -->
+    <link rel='shortcut icon' href='img/favicon.png' type='image/x-icon'/>
+    
+    <!-- CSS -->
+    
+    <!-- Roboto font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    
+    <!-- bootstrap.min -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Hauling Stylesheet -->
+    <link rel="stylesheet" href="css/hauling.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BFV89PY0ST"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-BFV89PY0ST');
+    </script>
+    
+</head>
+
+<body id="body">
+    
+    <!-- preloader -->
+    <div id="preloader">
+        <div class="loader-box">
+            <div class="background-container">
+                <div class="stars"></div>
+                <div class="twinkling"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end preloader -->
+    
+    <!-- Background container -->
+    <div class="background-container">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+    </div>
+    <!-- End Background container -->
+    
+    <div class="tableLoadingIcon"> <i class="fa fa-circle-o-notch fa-spin"></i></div>
+    
+    <!-- Navigation -->
+    <header id="navigation" class="navbar-inverse navbar-fixed-top animated-header">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- responsive nav button -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- /responsive nav button -->
+                
+                <!-- logo -->
+                <h1 class="navbar-brand">
+                    <a href="/"><img src="img/logo.png" alt="EVETrade"/></a>
+                </h1>
+                <!-- /logo -->
+            </div>
+            
+            <!-- main nav -->
+            <nav class="collapse navbar-collapse navbar-right" role="navigation">
+                <ul id="nav" class="nav navbar-nav">
+                    <li><a href="./index.html">Home</a></li>
+                    <li>
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Trade Menu
+                        </a>
+                      
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                          <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./station-hauling.html">Station to Station Hauling</a>
+                          <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./region-hauling.html">Region to Region Hauling</a>
+                          <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./station-trading.html">Station Trading</a>
+                        </div>
+                    </li>
+                    <li><a href="./help.html" target="_blank">Help</a></li>
+                    <li><a href="https://discord.gg/9xZh5qKCeR" target="_blank"><span class="fa-brands fa-discord"></span> Discord/Support</a></li>
+                    <li><a title="Donate" class="kofi-button" href="https://ko-fi.com/evetrade" target="_blank"><img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="Donations" class="kofiimg">Donate</a></li>
+                </ul>
+            </nav>
+            <!-- /main nav -->
+            
+        </div>
+    </header>
+    <!-- End Navigation -->
+    
+    <!-- Main Section-->
+    <main class="site-content" role="main">
+        <section id="main">
+            <div class="main">
+                <div class="slide-caption">
+                    <h1>Station Trading</h1>
+                    <h2>
+                        Find the most profitable trades at the same station.
+                    </h2>
+                    <h3>
+                        Place buy orders and flip them as sell orders.
+                    </h3>
+                    
+                    <div id="hauling-form" class="hauling-form stationTrade">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="form-holder">
+                                    <div class="form-content">
+                                        <div class="form-items">
+                                            <datalist id="stationList"></datalist>
+                                            <form>
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <label class="control-label" for="from"> Station </label> 
+                                                        <input id="from" name="for" class="form-control" type="text" placeholder="Station Name">
+                                                    </div>
+                                                    
+                                                    <div class="col-sm-12 col-md-6"> 
+                                                        <p> 
+                                                            <label class="control-label" for="profit"> Only Profit Above </label> 
+                                                            <input id="profit" type="number" name="profit" class="form-control" placeholder="Default: 1,000"> 
+                                                        </p> 
+                                                    </div> 
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-4"> 
+                                                        <label class="control-label" for="tax" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
+                                                        <select id="tax" class="form-control" name="tax"> 
+                                                            <option value="" selected>Accounting Level</option> 
+                                                            <option value="8">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.00%</option>
+                                                            <option value="7.12">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.12%</option>
+                                                            <option value="6.24">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.24%</option>
+                                                            <option value="5.36">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.36%</option>
+                                                            <option value="4.48">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.48%</option>
+                                                            <option value="3.6">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.60%</option>
+                                                        </select> 
+                                                    </div>
+                                                
+                                                    <div class="col-md-4"> 
+                                                        <p> 
+                                                            <label class="control-label" for="minVolume"> Minimum Volume </label> 
+                                                            <input id="minVolume" type="number" name="minVolume" class="form-control" placeholder="Default: 1000"> 
+                                                        </p> 
+                                                    </div> 
+                                                
+                                                    <div class="col-md-4"> 
+                                                        <p> 
+                                                            <label class="control-label" for="volumeFilter">Filter Volume By</label>
+                                                            <select id="volumeFilter" class="form-control" name="volumeFilter"> 
+                                                                <option value="" selected>24-Hour Average</option> 
+                                                                <option value="14">14-Day Average</option>
+                                                                <option value="30">30-Day Average</option>
+                                                            </select> 
+                                                        </p> 
+                                                    </div> 
+                                                </div>
+
+                                                <div class="row">
+                                                    
+                                                    <div class="col-sm-12 col-md-4"> 
+                                                        <p> 
+                                                            <label class="control-label" for="fee"> Broker Fee (in %) </label> 
+                                                            <input id="fee" type="number" name="fee" class="form-control" placeholder="Default: 3"> 
+                                                        </p> 
+                                                    </div> 
+                                                
+                                                    <div class="col-md-4"> 
+                                                        <p> 
+                                                            <label class="control-label" for="marginAbove"> Return margins above (%) </label> 
+                                                            <input id="marginAbove" type="number" name="marginAbove" class="form-control" placeholder="Default: 20"> 
+                                                        </p> 
+                                                    </div> 
+                                                
+                                                    <div class="col-md-4"> 
+                                                        <p> 
+                                                            <label class="control-label" for="marginBelow"> and margins below (%) </label> 
+                                                            <input id="marginBelow" type="number" name="marginBelow" class="form-control" placeholder="Default: 40"> 
+                                                        </p> 
+                                                    </div> 
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <p>
+                                                            <button id="submit" class="btn btn-grey btn-border btn-effect">Search</button>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="coreTable" class="coreTable" oncontextmenu="return false;">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <ul id="fromRegion" class="hauling-list">
+                                    <p> Starting Region </p>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <ul id="toRegion" class="hauling-list">
+                                    <p> Ending Region </p>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ad-unit-section">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0599578547621989" crossorigin="anonymous"></script>
+                <!-- Responsive Horizontal Main - EVETrade 2.0 -->
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-0599578547621989"
+                    data-ad-slot="7822967669"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+        </section>
+    </main>
+    
+    
+    <!-- End Main Section -->
+    <footer id="footer">
+        <main class="container">
+            <div class="row text-center">
+                <div class="footer-content">
+                    <p><a href="./release.html" target="_blank">Version {{version}}</a> | Updated {{release_date}} | <a href="https://github.com/awhipp/evetrade" target="_blank">Source Code</a></li> | <a href="https://github.com/awhipp/evetrade/releases" target="_blank">Download</a></p>		
+                    <p>Copyright &copy; {{years_active}} EVETrade. All Rights Reserved.</p>
+                </div>
+            </div>
+        </main>
+    </footer>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/brands.min.css"/>
+    <link rel="stylesheet" href="css/datatables.css"/>
+    
+    <!-- Javascript  -->
+    
+    <!-- Main jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/inputStore.jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    
+    <!-- Twitter Bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Custom Functions -->
+    <script src="js/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <script src="js/station-trading.js"></script>
+    
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.flash.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" defer></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js" defer></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js" defer></script>
+</body>
+</html>
