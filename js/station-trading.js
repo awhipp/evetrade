@@ -35,41 +35,6 @@ function getStationList(){
     
 }
 
-function addStationToList(stationName, domId) {
-    const data = universeList[stationName.toLowerCase()];
-    const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
-    
-    let stationList = $(`#${domId}`);
-    
-    if ($(dataAttribute).length == 0) {
-        stationList.show();
-        stationList.append(`<li data-region="${data.region}" data-station="${data.station}"><span class="stationName">${stationName}</span><span class="remove-item">x</span></li>`);
-        
-        $(`#${domId} li`).on("click", function() {
-            const parent = $(this.parentElement);
-            $(this).remove();
-            const children = parent.children().length;
-            
-            if(children <= 1) {
-                parent.hide();
-            } else {
-                parent.show();
-            }
-        });
-    } else {
-        console.log(`Station ${stationName} already added.`);
-    }
-}
-
-function getStationInfoFromList(domId) {
-    const stations = [];
-    const stationList = $(`#${domId} li`);
-    stationList.each(function() {
-        stations.push(`${$(this).attr('data-region')}:${$(this).attr('data-station')}`);
-    });
-    return stations.join(',');
-}
-
 /**
 * Initializes the auto complete function for the given input.
 * @param {} domId The id of the input to initialize. 
@@ -88,14 +53,14 @@ function initAwesomplete(domId, list) {
     });
 }
 
-function createTradeHeader(request, from) {
+function createTradeHeader(request, station) {
 
-    const profit = request.profit;
-    const tax = (request.tax * 100).toFixed(2) + "%";
-    const minVolume = request.min_volume;
+    const profit = round_value(request.profit, 0);
+    const tax = round_value(request.tax * 100, 2) + "%";
+    const minVolume = round_value(request.min_volume, 0);
     const volumeFilter = request.volume_filter == 1 ? '24-Hour Average' : `${request.volume_filter}-Day Average`;
-    const fee = request.fee;
-    const margins = `${(request.margins.split(',')[0]*100).toFixed(2)}%&nbsp;and&nbsp;${(request.margins.split(',')[1]*100).toFixed(2)}%`;
+    const fee = `${round_value(request.fee*100, 2)}%`;
+    const margins = `${round_value(request.margins.split(',')[0]*100, 2)}%&nbsp;and&nbsp;${round_value(request.margins.split(',')[1]*100, 2)}%`;
         
     let subHeader = `<b>Profit&nbsp;Above:</b>&nbsp;${profit} | <b>Sales&nbsp;Tax:</b>&nbsp;${tax} | <b>Broker&nbsp;Fee:</b>&nbsp;${fee}`;
     subHeader += `<br><b>Min&nbsp;Volume:</b>&nbsp;${minVolume} | <b>Filter&nbsp;By:</b>&nbsp;${volumeFilter} | <b>Margins:</b>&nbsp;${margins}`;
@@ -105,9 +70,9 @@ function createTradeHeader(request, from) {
     $('main h2').html(`
         <div class="row header-row">
             <div class="col-sm-12">
-                <ul id="fromStations" class="hauling-list header-list">
+                <ul id="atStations" class="hauling-list header-list">
                     <p> Station Trading at: </p>
-                    ${from}
+                    ${station}
                 </ul>
             </div>
         </div>`
@@ -123,40 +88,48 @@ function getNameFromUniverseStations(stationId) {
     
     for (const stationName in universeList) {
         if (universeList[stationName].station == stationId) {
-            return universeList[stationName];
+            return universeList[stationName].name
         }
     }
     window.alert("Station not found in universe list. Retry query parameters.");
     throw 'Station not found in universe list. Retry query parameters.';
 }
 
+function getNameFromUniverseStationName(stationName) {
+    stationName = stationName.toLowerCase();
+    
+    for (const name in universeList) {
+        if (universeList[name].name.toLowerCase() == stationName) {
+            return universeList[name].station;
+        }
+    }
+    window.alert("Station name not found in universe list. Retry query parameters.");
+    throw 'StationName not found in universe list. Retry query parameters.';
+}
+
+
 /**
 * Pulls data from form HTML element and creates JSON
 */
 async function getTradingData(hasQueryParams) {
-    let from = [];
+    let station = '';
     
     if (hasQueryParams) {
-        // Converting From/To Query Params back to station names.
-        fromLocations = trading_request.from.split(',');
-        for(const flocation of fromLocations) {
-            from.push(getNameFromUniverseStations(flocation.split(':')[1]).name)
-        }
-        
-        from = from.join(',');
+        // Converting Query Params back to station names.
+        station = getNameFromUniverseStations(trading_request.station);
     } else {
         console.log('Pulling from Form');
-        from = $('#from').val();
+        station = $('#station').val();
         
         trading_request = {
-            from: from,
+            station: getNameFromUniverseStationName(station),
             profit: parseInt($("#profit").val()) >= 0 ? parseInt($("#profit").val()) : 1000,
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4)),
             min_volume: parseInt($("#minVolume").val()) >= 0 ? parseInt($("#minVolume").val()) : 1000,
             volume_filter: $("#volumeFilter").val() || "1",
             fee: parseFloat((parseFloat($("#fee").val()/100) || 0.03).toFixed(4)),
-            margins: parseFloat((parseFloat($("#marginAbove").val()/100) || 0.02).toFixed(4)) + ',' +
-                parseFloat((parseFloat($("#marginBelow").val()/100) || 0.04).toFixed(4))
+            margins: parseFloat((parseFloat($("#marginAbove").val()/100) || 0.2).toFixed(4)) + ',' +
+                parseFloat((parseFloat($("#marginBelow").val()/100) || 0.4).toFixed(4))
         }
     }
     
@@ -171,7 +144,7 @@ async function getTradingData(hasQueryParams) {
         window.history.pushState({path:newurl},'',newurl);
     }
     
-    createTradeHeader(trading_request, from);
+    createTradeHeader(trading_request, station);
     
     const qp = new URLSearchParams(trading_request).toString();
     const requestUrl = `${API_ENDPOINT}/station?${qp}`;
@@ -195,7 +168,7 @@ function createTable(data) {
     $("#hauling-form").remove();
     $(".tableLoadingIcon").hide();
 
-    let tableHTML = `<span class='dropdown-holder'><button class="btn btn-grey btn-border btn-effect small-btn show-hide dropdown-toggle" type="button" data-toggle="dropdown"> Show/Hide Columns <span class="caret"></span> </button>`
+    let tableHTML = `<span class='dropdown-holder'><button class="btn btn-grey btn-border btn-effect small-btn show-hide dropdown-toggle" type="button" data-toggle="dropdown"> Show/Hide Columns </button>`
     tableHTML += `<ul id="colvis" class="colvis dropdown-menu" x-placement="bottom-start"></ul></span>`
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`;
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.reload();">Refresh Data</a>`;
@@ -211,9 +184,9 @@ function createTable(data) {
     let idx = 1;
     let hidden_columns = [];
     
-    initial_hidden = window.localStorage.getItem('evetrade_station_col_preferences');
+    initial_hidden = window.localStorage.getItem('evetrade_stationtrade_col_preferences');
     if (initial_hidden == null) {
-        initial_hidden = ["Item ID", "Net Costs", "Net Sales", "Gross Margin", "Sales Taxes", "Jumps", "Profit per Jump"];
+        initial_hidden = ["Item ID", "Sales Tax", "Gross Margin", "Buying Fees", "Selling Fees"];
     } else {
         initial_hidden = initial_hidden.split(',');
     }
@@ -277,7 +250,7 @@ function createTable(data) {
             initial_hidden.splice(initial_hidden.indexOf($(this).text()), 1);
         }
         
-        window.localStorage.setItem('evetrade_station_col_preferences', initial_hidden.join(','));
+        window.localStorage.setItem('evetrade_stationtrade_col_preferences', initial_hidden.join(','));
     });
     
     for (let i = 0; i < hidden_columns.length; i++) {
@@ -302,16 +275,15 @@ function swapTradeHub(station) {
 * Creates the datatable based on the trading style that is being queried
 */
 function displayData(data) {
+    console.log(data[0]);
     
     data.forEach(function(row) {      
-        from = swapTradeHub(row['From']);
-        to = swapTradeHub(row['Take To']);
-        
-        row['From'] = from;
-        row['Take To'] = to;
+        row['Volume'] = round_value(row['Volume'], 0);        
         row['View'] = `<a class="investigate" title="View Market Depth for ${row['Item']}"  href=
-        '/orders.html?itemId=${row['Item ID']}&from=${trading_request['from']}&to=${trading_request['from']}' 
+        '/orders.html?itemId=${row['Item ID']}&from=${row['Region ID']}:${trading_request['station']}&to=${row['Region ID']}:${trading_request['station']}' 
         target='_blank'><i class="fa fa-search-plus"></i></a>`;
+
+        delete row['Region ID']
     });
     
     createTable(data);
@@ -339,14 +311,14 @@ function loadNext() {
             var search = window.location.search.substring(1);
             const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
             
-            if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
+            if (thr.station && thr.profit && thr.tax && thr.min_volume && thr.volume_filter && thr.fee && thr.margins) {
                 console.log("Found query params:");
                 console.log(thr);
-                hauling_request = thr;
+                trading_request = thr;
                 
                 getUniverseList().then(function(data) {
                     universeList = data;
-                    executeHauling(true);
+                    executeTrading(true);
                 });
                 return;
             }
@@ -367,7 +339,7 @@ function loadNext() {
         
         console.log(`${stationList.length} stations loaded.`);
         
-        initAwesomplete("from", "stationList");
+        initAwesomplete("station", "stationList");
     });
     
     getUniverseList().then(function(data) {
@@ -377,7 +349,7 @@ function loadNext() {
     
     $("#submit").click(function(){
         // Form Validation
-        if ($('#from').val().length <= 0) {
+        if ($('#station').val().length <= 0) {
             window.alert("Please select a valid starting station.");
             return false;
         } else {

@@ -32,6 +32,16 @@
     display: block;
 }
 
+#atStations {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#atStations p {
+    text-align: center;
+}
+
 .header-row {
     max-width: 1100px;
     margin: 0 auto;

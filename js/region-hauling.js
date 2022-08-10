@@ -60,11 +60,11 @@ function initAwesomplete(domId, list) {
 
 function createTradeHeader(request, from, to) {
     
-    const minProfit = request.minProfit;
-    const maxWeight = request.maxWeight == Number.MAX_SAFE_INTEGER ? "Infinite" : request.maxWeight;
+    const minProfit = round_value(request.minProfit, 0);
+    const maxWeight = request.maxWeight == Number.MAX_SAFE_INTEGER ? "Infinite" : round_value(request.maxWeight, 0);
     const minROI = (request.minROI * 100).toFixed(2) + "%";
-    const maxBudget = request.maxBudget == Number.MAX_SAFE_INTEGER ? "Infinite" : request.maxBudget;
-    const tax = (request.tax * 100).toFixed(2) + "%";
+    const maxBudget = request.maxBudget == Number.MAX_SAFE_INTEGER ? "Infinite" : round_value(request.maxBudget, 0);
+    const tax = round_value(request.tax * 100, 2) + "%";
     
     let systemSecurity = request.systemSecurity;
     switch(systemSecurity) {
@@ -198,7 +198,7 @@ function createTable(data) {
     $("#hauling-form").remove();
     $(".tableLoadingIcon").hide();
     
-    let tableHTML = `<span class='dropdown-holder'><button class="btn btn-grey btn-border btn-effect small-btn show-hide dropdown-toggle" type="button" data-toggle="dropdown"> Show/Hide Columns <span class="caret"></span> </button>`
+    let tableHTML = `<span class='dropdown-holder'><button class="btn btn-grey btn-border btn-effect small-btn show-hide dropdown-toggle" type="button" data-toggle="dropdown"> Show/Hide Columns </button>`
     tableHTML += `<ul id="colvis" class="colvis dropdown-menu" x-placement="bottom-start"></ul></span>`
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.replace(location.pathname);">New Search</a>`;
     tableHTML += `<a class="btn btn-grey btn-border btn-effect small-btn" href="javascript:window.location.reload();">Refresh Data</a>`;

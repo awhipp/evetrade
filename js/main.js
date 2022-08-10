@@ -10,6 +10,17 @@ function loadComplete() {
     $('main').fadeTo('slow', 1, function() {});
 }
 
+
+/**
+* Round value to 2 decimal and add commas
+*/
+function round_value(value, amount) {
+    return parseFloat(value).toLocaleString("en-US", {
+        minimumFractionDigits: amount, 
+        maximumFractionDigits: amount
+    });
+}
+
 window.alert = function(msg='An unknown error has occurred. Try refreshing this page.', title='Error has occurred', type='error', hasRefresh=false) {
     if (hasRefresh) {
         swal(title, msg, type,{
@@ -47,14 +58,15 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
         
         try { 
             return await fetch(url);
-        }
-        catch (err) {
+        }catch (err) {
             errs.push(err);
         }
     }
     
     window.alert(
         msg = errorMsg,
+        title = 'Error has occurred',
+        type = 'error',
         hasRefresh = true
     );
     

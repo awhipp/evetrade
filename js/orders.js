@@ -18,20 +18,23 @@ function getOrdersData(itemId, from, to) {
 }
 
 function setStationNames() {
-    let startSet = false;
-    let endSet = false;
+    let startSet = '';
+    let endSet = '';
 
     for (const stationName in universeList) {
-        if (!startSet && universeList[stationName].name.indexOf('-') > 0 && universeList[stationName].station == thr.from.split(':')[1]) {
+        if (startSet.length == 0 && universeList[stationName].name.indexOf('-') > 0 && universeList[stationName].station == thr.from.split(':')[1]) {
             console.log(universeList[stationName]);
             $("#starting-station").text(universeList[stationName].name);
-            startSet = true;
+            startSet = universeList[stationName].name;
         }
-        if (!endSet && universeList[stationName].name.indexOf('-') > 0 && universeList[stationName].station == thr.to.split(':')[1]) {
+        if (endSet.length == 0 && universeList[stationName].name.indexOf('-') > 0 && universeList[stationName].station == thr.to.split(':')[1]) {
             $("#ending-station").text(universeList[stationName].name);
-            endSet = true;
+            endSet = universeList[stationName].name;
         }
+    }
 
+    if (startSet == endSet) {
+        $("#stationsRow").text(startSet);
     }
 }
 
@@ -77,9 +80,9 @@ function setItemName() {
 
 }
 
-function createTable(domId, data) {
+function createTable(domId, data, tableTitle) {
     return new Promise (function(resolve, reject) {    
-        let tableHTML = `<table id="${domId}_dt" class="display"></table>`;
+        let tableHTML = `<table id="${domId}_dt" class="display"><h3>${tableTitle}</h3></table>`;
         $(`#${domId}`).html(tableHTML);
         $(".dataTableFilters").html("");
         
@@ -146,8 +149,8 @@ function loadNext() {
                         const orders = data;
                         setStationNames();
                         setItemName().then(function() {
-                            createTable('starting-station-table', orders['from']).then(function() {
-                                createTable('ending-station-table', orders['to']).then(function() {
+                            createTable('starting-station-table', orders['from'], 'Sell Orders').then(function() {
+                                createTable('ending-station-table', orders['to'], 'Buy Orders').then(function() {
 
                                     $(".tableLoadingIcon").hide();    
                                     $('#main').fadeTo('slow', 1, function() {});
