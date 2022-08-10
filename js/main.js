@@ -2,7 +2,7 @@
 const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
 
-const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 || window.location.href.indexOf("127.0.0.1") > 0 ? "https://evetrade.space/api":"/api";
+const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 || window.location.href.indexOf("127.0.0.1") > 0 ? "https://evetrade.space/dev":"/api";
 
 let universeList = {};
 
