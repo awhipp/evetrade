@@ -26,9 +26,14 @@ Implements the [EVE ESI API](https://esi.tech.ccp.is/) on the [backend](https://
 
 ## Architecture Diagram
 
-![EVETrade Architecture Diagram](/documentation/evetrade_architecture?raw=true "EVETrade Architecture Diagram")
+![EVETrade Architecture Diagram](/documentation/evetrade_architecture.png?raw=true "EVETrade Architecture Diagram")
 
-### Recommended Development
+## Other Repositories
+
+* [EVETrade API](https://github.com/awhipp/evetrade_api)
+* [EVETrade Resources](https://github.com/awhipp/evetrade_resources)
+
+## Recommended Development
 
 * [Live Server](https://github.com/ritwickdey/vscode-live-server) or other tool required to build and serve locally to avoid CORs issues
 * Other options include `jekyll`, `browsersync`, `http-server`, `npx serve` `python SimpleHTTPServer`, and more...
