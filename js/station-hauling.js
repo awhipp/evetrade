@@ -375,8 +375,8 @@ function displayData(data) {
 }
 
 function executeHauling(hasQueryParams) {
+    countDownDivText(functionDurations['evetrade-get-hauling-orders']);
     $(".tableLoadingIcon").show();
-    // createTradeHeader();
     
     getHaulingData(hasQueryParams).then((data) => {
         if (data.length == 0) {

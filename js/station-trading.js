@@ -196,7 +196,7 @@ function createTable(data) {
             columns.push({data: name, title: name});
             $('.colvis').append(`<li><button class="colvistoggle btn btn-effect small-btn is-true" colidx="${idx}">${name}</button></li>`);
         }
-        if (name == "Profit Per Item") sort_column = idx;
+        if (name == "Net Profit") sort_column = idx;
         if (initial_hidden.includes(name)) hidden_columns.push(idx);
         idx += 1;
     });
@@ -290,6 +290,7 @@ function displayData(data) {
 }
 
 function executeTrading(hasQueryParams) {
+    countDownDivText(functionDurations['evetrade-get-station-trades']);
     $(".tableLoadingIcon").show();
     
     getTradingData(hasQueryParams).then((data) => {

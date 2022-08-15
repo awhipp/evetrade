@@ -129,6 +129,7 @@ let thr = {};
 * Initializes on window load
 */
 function loadNext() {
+    countDownDivText(functionDurations['evetrade-get-orders']);
     $(".tableLoadingIcon").show();
     
     try {
@@ -152,12 +153,12 @@ function loadNext() {
                             createTable('starting-station-table', orders['from'], 'Sell Orders').then(function() {
                                 createTable('ending-station-table', orders['to'], 'Buy Orders').then(function() {
 
-                                    $(".tableLoadingIcon").hide();    
                                     $('#main').fadeTo('slow', 1, function() {});
 
                                     runTime = new Date() - startTime;
                                     console.log(`Request took ${runTime}ms`);
                                     $("#time_taken").html(`Request took ${runTime/1000} seconds.`);
+                                    $(".tableLoadingIcon").hide();
                                 });
                             });
                         })
@@ -174,7 +175,6 @@ function loadNext() {
         console.log(`Error parsing query params ${location.search}.`);
     }
     
-    $(".tableLoadingIcon").hide();
     $('#main').fadeTo('slow', 1, function() {});
     $("h2").text("Invalid search parameters. No results.");
     $("h3").text("");

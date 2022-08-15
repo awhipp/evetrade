@@ -216,7 +216,7 @@ function createTable(data) {
     
     initial_hidden = window.localStorage.getItem('evetrade_region_col_preferences');
     if (initial_hidden == null) {
-        initial_hidden = ["Item ID", "Net Costs", "Net Sales", "Gross Margin", "Sales Taxes", "Jumps", "Profit per Jump"];
+        initial_hidden = ["Item ID", "Net Costs", "Net Sales", "Gross Margin", "Sales Taxes"];
     } else {
         initial_hidden = initial_hidden.split(',');
     }
@@ -226,7 +226,7 @@ function createTable(data) {
             columns.push({data: name, title: name});
             $('.colvis').append(`<li><button class="colvistoggle btn btn-effect small-btn is-true" colidx="${idx}">${name}</button></li>`);
         }
-        if (name == "Profit Per Item") sort_column = idx;
+        if (name == "Profit per Jump") sort_column = idx;
         if (initial_hidden.includes(name)) hidden_columns.push(idx);
         idx += 1;
     });
@@ -323,6 +323,7 @@ function displayData(data) {
 }
 
 function executeHauling(hasQueryParams) {
+    countDownDivText(functionDurations['evetrade-get-hauling-orders']);
     $(".tableLoadingIcon").show();
     
     getHaulingData(hasQueryParams).then((data) => {

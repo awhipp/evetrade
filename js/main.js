@@ -5,6 +5,7 @@ const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate
 const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 || window.location.href.indexOf("127.0.0.1") > 0 ? "https://evetrade.space/dev":"/api";
 
 let universeList = {};
+let functionDurations = {};
 
 function loadComplete() {
     $('main').fadeTo('slow', 1, function() {});
@@ -21,6 +22,13 @@ function round_value(value, amount) {
     });
 }
 
+/**
+ * Overrides the default window.alert function with a better UI/UX
+ * @param {*} msg Alert message
+ * @param {*} title Alert title
+ * @param {*} type Type of alert
+ * @param {*} hasRefresh If it allows refresh on the page
+ */
 window.alert = function(msg='An unknown error has occurred. Try refreshing this page.', title='Error has occurred', type='error', hasRefresh=false) {
     if (hasRefresh) {
         swal(title, msg, type,{
@@ -43,6 +51,24 @@ window.alert = function(msg='An unknown error has occurred. Try refreshing this 
         swal(title, msg, type);
     }
 }
+
+/**
+ * Every 100ms updates the div text with the new time
+ */
+function countDownDivText(initialTime) {
+    let startTime = new Date();
+    let interval = setInterval(function() {
+        let timeLeft = initialTime - (new Date() - startTime);
+        if(timeLeft < 0) {
+            clearInterval(interval);
+            return;
+        }
+
+        const percent = (1 - (timeLeft / initialTime)) * 100;
+        $('.durationPercent').text((percent).toFixed(1));
+    }, 100);
+}
+
 
 /**
 * Wrap the fetch call with a number of retries.
@@ -123,6 +149,40 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
             });
             
         }
+
+        /**
+         * Get Function durations
+        * Used by multiple pages.
+        * @returns {Promise<void>}
+         */
+        function getFunctionDurations() {
+            return new Promise (function(resolve, reject) {
+                const dateCacheKey = 'evetrade_function_durations_last_retrieved';
+                const jsonCacheKey = 'functionDurations';
+                
+                const lastRetrieved = window.localStorage.getItem(dateCacheKey);
+                
+                if(dateString == lastRetrieved) {
+                    console.log('Same Day - Retrieving Function Durations Cache.');
+                    
+                    try {
+                        resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
+                    } catch(e) {
+                        console.log('Error Retrieving Function Durations Cache. Retrying.');
+                    }
+                } else {
+                    console.log('New Day - Retrieving Function Durations Cache.');
+                }
+                
+                getResourceData('functionDurations.json').then(function(response) {
+                    console.log('Function Durations Loaded.');
+                    window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                    window.localStorage.setItem(dateCacheKey, dateString);
+                    resolve(response);
+                });
+            });
+            
+        }
         
         
         /* ========================================================================= */
@@ -149,6 +209,9 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                 })
                 .catch(error => console.log(error));
                 
+                getFunctionDurations().then(function(data) {
+                    functionDurations = data;
+                });
                 
                 
                 $(function () {

@@ -33,14 +33,14 @@
     <link rel="stylesheet" href="css/main.css">
     <!-- Hauling Stylesheet -->
     <link rel="stylesheet" href="css/hauling.css">
-
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BFV89PY0ST"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
+        
         gtag('config', 'G-BFV89PY0ST');
     </script>
     
@@ -66,7 +66,10 @@
     </div>
     <!-- End Background container -->
     
-    <div class="tableLoadingIcon"> <i class="fa fa-circle-o-notch fa-spin"></i></div>
+    <div class="tableLoadingIcon">
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <div class="durationEstimate">Fetching Orders: <span class="durationPercent"></span>% Complete</div>
+    </div>
     
     <!-- Navigation -->
     <header id="navigation" class="navbar-inverse navbar-fixed-top animated-header">
@@ -94,13 +97,13 @@
                     <li><a href="./index.html">Home</a></li>
                     <li>
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Trade Menu
+                            Trade Menu
                         </a>
-                      
+                        
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                          <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./station-hauling.html">Station to Station Hauling</a>
-                          <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./region-hauling.html">Region to Region Hauling</a>
-                          <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./station-trading.html">Station Trading</a>
+                            <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./station-trading.html">Single Station</a>
+                            <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./station-hauling.html">Station to Station</a>
+                            <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./region-hauling.html">Region to Region</a>
                         </div>
                     </li>
                     <li><a href="./help.html" target="_blank">Help</a></li>
@@ -148,7 +151,7 @@
                                                         </p> 
                                                     </div> 
                                                 </div>
-
+                                                
                                                 <div class="row">
                                                     <div class="col-sm-12 col-md-4"> 
                                                         <label class="control-label" for="tax" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
@@ -162,14 +165,14 @@
                                                             <option value="3.6">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.60%</option>
                                                         </select> 
                                                     </div>
-                                                
+                                                    
                                                     <div class="col-md-4"> 
                                                         <p> 
                                                             <label class="control-label" for="minVolume"> Minimum Volume </label> 
                                                             <input id="minVolume" type="number" name="minVolume" class="form-control" placeholder="Default: 1000"> 
                                                         </p> 
                                                     </div> 
-                                                
+                                                    
                                                     <div class="col-md-4"> 
                                                         <p> 
                                                             <label class="control-label" for="volumeFilter">Filter Volume By</label>
@@ -181,7 +184,7 @@
                                                         </p> 
                                                     </div> 
                                                 </div>
-
+                                                
                                                 <div class="row">
                                                     
                                                     <div class="col-sm-12 col-md-4"> 
@@ -190,14 +193,14 @@
                                                             <input id="fee" type="number" name="fee" class="form-control" placeholder="Default: 3"> 
                                                         </p> 
                                                     </div> 
-                                                
+                                                    
                                                     <div class="col-md-4"> 
                                                         <p> 
                                                             <label class="control-label" for="marginAbove"> Return margins above (%) </label> 
                                                             <input id="marginAbove" type="number" name="marginAbove" class="form-control" placeholder="Default: 20"> 
                                                         </p> 
                                                     </div> 
-                                                
+                                                    
                                                     <div class="col-md-4"> 
                                                         <p> 
                                                             <label class="control-label" for="marginBelow"> and margins below (%) </label> 
@@ -205,7 +208,7 @@
                                                         </p> 
                                                     </div> 
                                                 </div>
-
+                                                
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <p>
@@ -226,21 +229,21 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="ad-unit-section">
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0599578547621989" crossorigin="anonymous"></script>
                 <!-- Responsive Horizontal Main - EVETrade 2.0 -->
                 <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-0599578547621989"
-                    data-ad-slot="7822967669"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
+                style="display:block"
+                data-ad-client="ca-pub-0599578547621989"
+                data-ad-slot="7822967669"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
                 <script>
                     (adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
             </div>
-
+            
         </section>
     </main>
     
