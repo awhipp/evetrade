@@ -290,6 +290,7 @@ function displayData(data) {
 }
 
 function executeTrading(hasQueryParams) {
+    countDownDivText(functionDurations['evetrade-get-station-trades']);
     $(".tableLoadingIcon").show();
     
     getTradingData(hasQueryParams).then((data) => {
