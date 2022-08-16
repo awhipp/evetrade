@@ -201,9 +201,6 @@ function createTable(data) {
         idx += 1;
     });
     
-    // Append to colvis as we loop
-    // <li><button class="colvistoggle btn btn-default is-true" colidx="1">Sell Order</button></li>
-    
     const dt = dataTableDOM.DataTable({
         "order": [[sort_column, "desc"]],
         "lengthMenu": [[50], ["50"]],
@@ -352,11 +349,12 @@ function loadNext() {
         // Form Validation
         if ($('#station').val().length <= 0) {
             window.alert("Please select a valid starting station.");
-            return false;
         } else {
             $("#submit"). attr("disabled", true);
             executeTrading(false);
         }
+
+        return false;
     });
     
     const formElements = ['profit', 'tax', 'minVolume', 'volumeFilter', 'fee', 'marginAbove', 'marginBelow'];

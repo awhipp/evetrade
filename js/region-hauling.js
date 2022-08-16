@@ -386,11 +386,12 @@ function loadNext() {
         // Form Validation
         if ($('#from').val() == "" || $('#to').val() == "") {
             window.alert("Please select a valid starting AND ending regions.");
-            return false;
         } else {
-            $("#submit"). attr("disabled", true);
+            $("#submit").attr("disabled", true);
             executeHauling(false);
         }
+
+        return false;
     });
     
     const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety'];
