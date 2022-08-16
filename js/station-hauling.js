@@ -225,7 +225,7 @@ async function getHaulingData(hasQueryParams) {
     
     if (history.pushState) {
         var newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${qs}`;
-        window.history.pushState({path:newurl},'',newurl);
+        window.history.pushState({urlPath:newurl}, '', newurl);
     }
     
     createTradeHeader(hauling_request, from, to);
@@ -434,15 +434,16 @@ function loadNext() {
     });
     
     
-    $("#submit").click(function(){
+    $("#submit").click(function(e){
         // Form Validation
         if (getStationNamesFromList('fromStations') == "" || getStationNamesFromList('toStations') == "") {
             window.alert("Please select a valid starting AND ending stations.");
-            return false;
         } else {
-            $("#submit"). attr("disabled", true);
+            $("#submit").attr("disabled", true);
             executeHauling(false);
         }
+
+        return false;
     });
     
     const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety'];
