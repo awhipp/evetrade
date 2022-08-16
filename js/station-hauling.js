@@ -23,14 +23,14 @@ function getStationList(){
             }
         } else {
             console.log('New Day - Retrieving StationList Cache.');
-        }
         
-        getResourceData('stationList.json').then(function(response) {
-            console.log('Station List Loaded.');
-            window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-            window.localStorage.setItem(dateCacheKey, dateString);
-            resolve(response);
-        });
+            getResourceData('stationList.json').then(function(response) {
+                console.log('Station List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
     });
     
 }
