@@ -54,15 +54,15 @@ function getInvTypes() {
             }
         } else {
             console.log('New Day - Retrieving InvType Cache.');
+        
+            getResourceData('invTypes.json').then(function(response) {
+                console.log('InvTypes Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
         }
         
-        
-        getResourceData('invTypes.json').then(function(response) {
-            console.log('InvTypes Loaded.');
-            window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-            window.localStorage.setItem(dateCacheKey, dateString);
-            resolve(response);
-        });
     });
 }
 

@@ -55,8 +55,12 @@ window.alert = function(msg='An unknown error has occurred. Try refreshing this 
 /**
  * Every 100ms updates the div text with the new time
  */
+let storedTime = 0;
+
 function countDownDivText(initialTime) {
+    initialTime = initialTime;
     let startTime = new Date();
+
     let interval = setInterval(function() {
         let timeLeft = initialTime - (new Date() - startTime);
         if(timeLeft < 0) {
@@ -83,7 +87,18 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
         console.log(`Trying: GET '${url}' [${i + 1} of ${tries}]`);
         
         try { 
-            return await fetch(url);
+            const response = await fetch(url);
+
+            console.log(response);
+
+            if(response.ok) {
+                return response;
+            }
+
+            countDownDivText(storedTime);
+
+            const json = await response.json();
+            errs.push(json.error);
         }catch (err) {
             errs.push(err);
         }
@@ -138,14 +153,14 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                     }
                 } else {
                     console.log('New Day - Retrieving UniverseList Cache.');
-                }
                 
-                getResourceData('universeList.json').then(function(response) {
-                    console.log('Universe List Loaded.');
-                    window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-                    window.localStorage.setItem(dateCacheKey, dateString);
-                    resolve(response);
-                });
+                    getResourceData('universeList.json').then(function(response) {
+                        console.log('Universe List Loaded.');
+                        window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                        window.localStorage.setItem(dateCacheKey, dateString);
+                        resolve(response);
+                    });
+                }
             });
             
         }
@@ -172,14 +187,14 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                     }
                 } else {
                     console.log('New Day - Retrieving Function Durations Cache.');
-                }
                 
-                getResourceData('functionDurations.json').then(function(response) {
-                    console.log('Function Durations Loaded.');
-                    window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-                    window.localStorage.setItem(dateCacheKey, dateString);
-                    resolve(response);
-                });
+                    getResourceData('functionDurations.json').then(function(response) {
+                        console.log('Function Durations Loaded.');
+                        window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                        window.localStorage.setItem(dateCacheKey, dateString);
+                        resolve(response);
+                    });
+                }
             });
             
         }
