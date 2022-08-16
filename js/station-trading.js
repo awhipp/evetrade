@@ -23,14 +23,14 @@ function getStationList(){
             }
         } else {
             console.log('New Day - Retrieving StationList Cache.');
-        }
         
-        getResourceData('stationList.json').then(function(response) {
-            console.log('Station List Loaded.');
-            window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-            window.localStorage.setItem(dateCacheKey, dateString);
-            resolve(response);
-        });
+            getResourceData('stationList.json').then(function(response) {
+                console.log('Station List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
     });
     
 }
@@ -272,8 +272,6 @@ function swapTradeHub(station) {
 * Creates the datatable based on the trading style that is being queried
 */
 function displayData(data) {
-    console.log(data[0]);
-    
     data.forEach(function(row) {      
         row['Volume'] = round_value(row['Volume'], 0);        
         row['View'] = `<a class="investigate" title="View Market Depth for ${row['Item']}"  href=

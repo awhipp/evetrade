@@ -23,14 +23,14 @@ function getRegionList(){
             }
         } else {
             console.log('New Day - Retrieving RegionList Cache.');
-        }
         
-        getResourceData('regionList.json').then(function(response) {
-            console.log('Region List Loaded.');
-            window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-            window.localStorage.setItem(dateCacheKey, dateString);
-            resolve(response);
-        });
+            getResourceData('regionList.json').then(function(response) {
+                console.log('Region List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
     });
     
 }

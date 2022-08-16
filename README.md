@@ -19,7 +19,7 @@
 
 
 ## About
-Implements the [EVE ESI API](https://esi.tech.ccp.is/) on the [backend](https://github.com/awhipp/evetrade_api) in order to find:
+Implements the [EVE ESI API](https://esi.evetech.net/ui/) on the [backend](https://github.com/awhipp/evetrade_api) in order to find:
 
 * the best trades within a station (ie: station trading or margin trading).
 * the best hauling trades between stations and regions.
