@@ -9,7 +9,7 @@
     * [![Convert SDE to JSON](https://github.com/awhipp/evetrade_resources/actions/workflows/download.yml/badge.svg)](https://github.com/awhipp/evetrade_resources/actions/workflows/download.yml)
 
 * Historical Volume Redis Cache Ingestion (every 2 hours):
-    * [![Synchronize Redis Cache](https://github.com/awhipp/evetrade_resources/actions/workflows/redis-push.yml/badge.svg)](https://github.com/awhipp/evetrade_resources/actions/workflows/redis-push.yml)
+    * [![Synchronize Redis Cache (Historical Volume Data)](https://github.com/awhipp/evetrade_resources/actions/workflows/sync-volume-data.yml/badge.svg)](https://github.com/awhipp/evetrade_resources/actions/workflows/sync-volume-data.yml)
 
 * Elasticsearch data and healthcheck (every 15-30 minutes): 
     * [![Data Ingestion Process](https://github.com/awhipp/evetrade_api/actions/workflows/check_data_sync.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/check_data_sync.yml)

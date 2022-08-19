@@ -355,19 +355,37 @@ function swapTradeHub(station) {
     return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
 
+function getProperStationInformation(station_id, list) {
+    if (list.indexOf(',') >= 0) {
+        list = list.split(',');
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].indexOf(station_id) >= 0) {
+                return list[i];
+            }
+        }
+    } else {
+        return list;
+    }
+}
+
 /**
 * Creates the datatable based on the trading style that is being queried
 */
 function displayData(data) {
     
-    data.forEach(function(row) {      
-        from = swapTradeHub(row['From']);
-        to = swapTradeHub(row['Take To']);
-        
+    data.forEach(function(row) { 
+        station_id_from = row['From']['station_id'];
+        station_id_to = row['Take To']['station_id'];
+        const properFromLocation = getProperStationInformation(station_id_from, hauling_request['from']);
+        const propertToLocation = getProperStationInformation(station_id_to, hauling_request['to']);
+
+        const from = swapTradeHub(row['From']);
+        const to = swapTradeHub(row['Take To']);
         row['From'] = from;
         row['Take To'] = to;
+        
         row['View'] = `<a class="investigate" title="View Market Depth for ${row['Item']}"  href=
-        '/orders.html?itemId=${row['Item ID']}&from=${hauling_request['from']}&to=${hauling_request['to']}' 
+        '/orders.html?itemId=${row['Item ID']}&from=${properFromLocation}&to=${propertToLocation}' 
         target='_blank'><i class="fa fa-search-plus"></i></a>`;
     });
     
