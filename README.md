@@ -32,6 +32,7 @@ Implements the [EVE ESI API](https://esi.evetech.net/ui/) on the [backend](https
 
 * [EVETrade API](https://github.com/awhipp/evetrade_api)
 * [EVETrade Resources](https://github.com/awhipp/evetrade_resources)
+* [EVETrade Discord Bot](https://github.com/awhipp/evetrade_discord_bot)
 
 ## Recommended Development
 
