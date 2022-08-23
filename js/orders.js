@@ -140,8 +140,6 @@ function loadNext() {
             startTime = new Date();
             
             if (thr.from && thr.to && thr.itemId) {
-                console.log("Found query params:");
-                console.log(thr);
                 hauling_request = thr;
                 
                 getUniverseList().then(function(data) {

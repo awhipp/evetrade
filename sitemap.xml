@@ -4,39 +4,41 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
 
 <url>
   <loc>https://evetrade.space/</loc>
-  <lastmod>2022-08-15T22:00:04+00:00</lastmod>
+  <lastmod>2022-08-22T22:00:04+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://evetrade.space/station-trading</loc>
-  <lastmod>2022-08-15T22:00:04+00:00</lastmod>
+  <lastmod>2022-08-22T22:00:04+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://evetrade.space/station-hauling</loc>
-  <lastmod>2022-08-15T22:00:04+00:00</lastmod>
+  <lastmod>2022-08-22T22:00:04+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://evetrade.space/region-hauling</loc>
-  <lastmod>2022-08-15T22:00:04+00:00</lastmod>
+  <lastmod>2022-08-22T22:00:04+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://evetrade.space/help</loc>
-  <lastmod>2022-08-15T22:00:04+00:00</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2022-08-22T22:00:04+00:00</lastmod>
+  <priority>0.40</priority>
 </url>
 <url>
   <loc>https://evetrade.space/release</loc>
-  <lastmod>2022-08-15T22:00:04+00:00</lastmod>
-  <priority>0.80</priority>
+  <lastmod>2022-08-22T22:00:04+00:00</lastmod>
+  <priority>0.40</priority>
 </url>
-
+<url>
+  <loc>https://evetrade.space/orders</loc>
+  <lastmod>2022-08-22T22:00:04+00:00</lastmod>
+  <priority>0.40</priority>
+</url>
 
 </urlset>

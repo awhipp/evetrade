@@ -89,8 +89,6 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
         try { 
             const response = await fetch(url);
 
-            console.log(response);
-
             if(response.ok) {
                 return response;
             }

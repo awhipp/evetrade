@@ -6,6 +6,8 @@
 
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-BFV89PY0ST"></script>
+        <link rel="canonical" href="https://evetrade.space/release" />
+
     </head>
     <body>
 
@@ -15,75 +17,45 @@
 
 # EVETrade.space Release Notes
 
-### V7.0.3
-    * Bugfix: Station to Station Haul Market Depth improperly linked to incorrect page when multiple TO or FROM stations were selected.
+### V7.1
 
-### V7.0.2
-    * Bugfix: In the event of a failed request, 3 retries should take place, and then an error modal should display.
-
-### V7.0.1
-    * Bugfix: Submitting forms would refresh on Firefox due to not preventing the default action (Thanks to k3v on Discord for submitting this bug)
+    * V7.0.4: System to System trading has been reintroduced on the station-to-station trading page. Improved UI from the legacy application collapses all stations on the UI to a single row.
+    * V7.0.3: (Bugfix) Station to Station Haul Market Depth improperly linked to incorrect page when multiple TO or FROM stations were selected.
+    * V7.0.2: (Bugfix) In the event of a failed request, 3 retries should take place, and then an error modal should display.
+    * V7.0.1: (Bugfix) Submitting forms would refresh on Firefox due to not preventing the default action (Thanks to k3v on Discord for submitting this bug)
 
 ### V7.0
     * Major Release of improved backend architecture and overhauled UI
 
-### V6.6.2
+### V6.X
     * Enabled queries to the backend via the /api route
-
-### V6.6.1
     * Pulling resource data from the backend via the /api route
     * Caching resource data daily to avoid hitting the backend too often
-
-### V6.6
     * Updating Sales Tax and Brokers Fee to align with EVE Online Update
     * Minor backend update to prepare for V7.0 performance refactoring in the coming months
     * Reduced resources needed on initial startup
-
-### V6.52
     * Fixed bug where download modal does not pop up for application downloads
-
-### V6.51
     * Fixed Bug where searches would not complete
     * Temporarily Removed Citadels checkbox as API is unavailable
-
-### V6.5
     * Improved and optimized resource fetching for quicker load times
     * Added feature to search nearby regions
     * Updated autocomplete feature to be more robust
-    * Fixed bugs and error
-
-Contributor: [@psolyca](https://github.com/psolyca)
-
-### V6.4
-
     * Browser bookmark links now available for searches
     * Update Stations and Regions directly from EVE Online database
     * General Bugfixes and Syntax Updates
     * Code Homogenization and Santization
-
-Contributor: [@psolyca](https://github.com/psolyca)
-
-### V6.3
-
     * Fixed number of jumps count
     * Menu added to choose what to trade added instead of a restart button
     * Added net profit and tax calculation field
-    * Minor bugfixes
-
-Contributors: [@psolyca](https://github.com/psolyca) and [@timegrinder](https://github.com/timegrinder)
-
-### V6.2
     * Adding additional external applications (Windows, OSX, and Linux)
-
-### V6.1
     * Fixed a bug where nothing but SELL ORDERS to BUY ORDERS would return the proper results. [Now that it works, we have to give this warning. Be sure to understand the nature of your query. If you request too much information by widening your filters, this may crash your browser.]
-
-### V6
     * Refined the build process to be more developer focused
     * Created a structure and pipeline for open-source development
     * Added the ability to select buy/sell orders at start or end station
 
-### V5
+Contributors: [@psolyca](https://github.com/psolyca) and [@timegrinder](https://github.com/timegrinder)
+
+### V5.X
     * Station Trading now includes 14 and 30 day moving averages for volume.
     * Filter now applies to 14-day moving average rather than the last 24 hours to provide better results.
     * Region Trading security filter defaults to NULL Sec or better to accomodate queries with null-sec regions selected (otherwise no results are returned).
@@ -103,7 +75,7 @@ Contributors: [@psolyca](https://github.com/psolyca) and [@timegrinder](https://
     * Loading indicator in top right added to know that results are still being added while you scroll.
     * Highly anticipated beta version of the region-to-region feature is now live.
 
-### V4
+### V4.X
     * Continuing progress towards Region-Region trading by allowing multiple starting locations.
     * Cutting down on spam items that provide unreasonable results.
     * Mobile responsiveness updates for the input dialogue
@@ -142,8 +114,7 @@ Contributors: [@psolyca](https://github.com/psolyca) and [@timegrinder](https://
     * Restricted to 25 stations in custom route trading instead of 10.
     * Slightly updated UI
 
-
-### V3
+### V3.X
     * Allow for decimals to be entered
     * Fixed bug where backspacing on input dialogues for specific browsers would not work.
     * Minimize time spent editing forms
@@ -158,8 +129,7 @@ Contributors: [@psolyca](https://github.com/psolyca) and [@timegrinder](https://
     * Also added custom select station trading
     * These features is in BETA as the EVE CREST API does not currently support getting all these stations so we are working off of a fixed backend, please report any bugs you find
 
-
-### V2
+### V2.X
     * Ability to filter profits to show only rows where ISK is greater than N on route trades
     * Ability to filter ROI to show only rows where ROI % is greater than M on route trades
     * Ability to filter Buy Cost to show only rows where Cost is less than O on route trades
@@ -176,8 +146,7 @@ Contributors: [@psolyca](https://github.com/psolyca) and [@timegrinder](https://
     * Addition of filtering of columns with preset columns to make tables a little more mobile responsive on small width screens.
     * Added functionality for margin trading within a station
 
-
-### V1
+### V1.X
     * Allows user to view all active orders - buy and sell for a specific item on shift + click
     * Only ctrl + click selects all now
     * Updates algorithm to return better profit results

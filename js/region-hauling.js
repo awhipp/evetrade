@@ -164,9 +164,7 @@ async function getHaulingData(hasQueryParams) {
 
         createTradeHeader(hauling_request, from, to);
     }
-    
-    console.log(hauling_request);
-    
+        
     const qs = Object.keys(hauling_request)
     .map(key => `${key}=${hauling_request[key]}`)
     .join('&');
@@ -347,7 +345,6 @@ function loadNext() {
             
             if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
                 console.log("Found query params:");
-                console.log(thr);
                 hauling_request = thr;
                 
                 getUniverseList().then(function(data) {
