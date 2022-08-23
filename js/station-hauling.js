@@ -54,7 +54,7 @@ function getSystemFromStation(station) {
         }
     });
 
-    return systemName.trim();
+    return `${systemName.trim()} (Entire System)`;
 }
 
 function addStationToList(stationName, domId) {
@@ -76,7 +76,7 @@ function addStationToList(stationName, domId) {
             if (classes.contains('addSystem')) {
                 const label = $(this).children()[0];
                 const systemName = getSystemFromStation(label.textContent);
-                $(label).text(`${systemName} (Entire System)`);
+                $(label).text(systemName);
                 $(this).children()[1].remove();
 
                 $(this).attr('data-system-list', getAllStationsForSystem($(this).attr('data-system')));
