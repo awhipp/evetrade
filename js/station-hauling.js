@@ -256,7 +256,7 @@ function collapseStationsToSystems(locations) {
     for (const location of locations) {
         const obj = universeList[location.toLowerCase()];
         if (systemIdCount[obj.system] === true) {
-            newLocations.add(`${getSystemFromStation(location)} (Entire System)`);
+            newLocations.add(getSystemFromStation(location));
         } else {
             newLocations.add(location);
         }
