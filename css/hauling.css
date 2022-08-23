@@ -9,7 +9,7 @@
     padding: 0.5em 1em;
     list-style: none;
     display: none;
-    text-align: center;
+    text-align: left;
 }
 
 .hauling-list li {
@@ -41,6 +41,11 @@
 
 #atStations p {
     text-align: center;
+}
+
+.addSystem {
+    padding: 0 0.25em;
+    min-width: unset;
 }
 
 .header-row {

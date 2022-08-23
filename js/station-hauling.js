@@ -35,6 +35,24 @@ function getStationList(){
     
 }
 
+function isRoman(string) {
+    // regex pattern
+    const pattern = /^(M{1,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|C?D|D?C{1,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|X?L|L?X{1,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|I?V|V?I{1,3}))$/
+    return pattern.test(string);
+};
+
+function getSystemFromStation(station) {      
+    const stationSplit = station.split(' - ')[0].split(' ');
+    let systemName = '';
+    stationSplit.forEach(function(word) {
+        if (!isRoman(word) && word[0] != '(') {
+            systemName += word + ' ';
+        }
+    });
+
+    return systemName.trim();
+}
+
 function addStationToList(stationName, domId) {
     const data = universeList[stationName.toLowerCase()];
     const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
@@ -43,17 +61,31 @@ function addStationToList(stationName, domId) {
     
     if ($(dataAttribute).length == 0) {
         stationList.show();
-        stationList.append(`<li data-region="${data.region}" data-station="${data.station}"><span class="stationName">${stationName}</span><span class="remove-item">x</span></li>`);
+        stationList.append(`<li data-region="${data.region}" data-system="${data.system}" data-station="${data.station}">` +
+            `<span class="stationName">${stationName}</span>` + 
+            `<span class="addSystem btn-grey btn-border btn-effect small-btn">Add System</span>` + 
+            `<span class="remove-item">x</span></li>`
+        );
         
-        $(`#${domId} li`).on("click", function() {
-            const parent = $(this.parentElement);
-            $(this).remove();
-            const children = parent.children().length;
-            
-            if(children <= 1) {
-                parent.hide();
+        $(`#${domId} li`).on("click", function(evt) {
+            const classes = evt.target.classList;
+            if (classes.contains('addSystem')) {
+                const label = $(this).children()[0];
+                const systemName = getSystemFromStation(label.textContent);
+                $(label).text(`${systemName} (Entire System)`);
+                $(this).children()[1].remove();
+
+                $(this).attr('data-system-list', getAllStationsForSystem($(this).attr('data-system')));
             } else {
-                parent.show();
+                const parent = $(this.parentElement);
+                $(this).remove();
+                const children = parent.children().length;
+                
+                if(children <= 1) {
+                    parent.hide();
+                } else {
+                    parent.show();
+                }
             }
         });
     } else {
@@ -65,7 +97,11 @@ function getStationInfoFromList(domId) {
     const stations = [];
     const stationList = $(`#${domId} li`);
     stationList.each(function() {
-        stations.push(`${$(this).attr('data-region')}:${$(this).attr('data-station')}`);
+        if ($(this).attr('data-system-list') != undefined) {
+            stations.push($(this).attr('data-system-list'));
+        } else {
+            stations.push(`${$(this).attr('data-region')}:${$(this).attr('data-station')}`);
+        }
     });
     return stations.join(',');
 }
@@ -77,6 +113,16 @@ function getStationNamesFromList(domId) {
         stations.push(`${$(this).text()}`);
     });
     return stations.join(',');
+}
+
+function getAllStationsForSystem(system_id) {
+    const systemInformation = [];
+    Object.values(universeList).forEach(function(item) {
+        if ('system' in item && item.system == system_id) {
+            systemInformation.push(`${item.region}:${item.station}`);
+        }
+    });
+    return systemInformation.join(',');
 }
 
 /**
@@ -179,6 +225,43 @@ function getNameFromUniverseStations(stationId) {
 }
 
 /**
+ * Collapse the given list of stations to a system if all stations are added
+ * @param {*} locations 
+ * @returns 
+ */
+function collapseStationsToSystems(locations) {
+    const systemIdCount = {};
+    // Count the number of systems across locations
+    for (const location of locations) {
+        const obj = universeList[location.toLowerCase()]
+        systemIdCount[obj.system] = (systemIdCount[obj.system] || 0) + 1;
+    }
+
+    // If system count == total stations then mark as true
+    for (const systemId in systemIdCount) {
+        const systemCount = Object.values(universeList).filter(function(item) {
+            return item.system == systemId
+        }).length;
+        if (systemCount == systemIdCount[systemId]) {
+            systemIdCount[systemId] = true;
+        }
+    }
+
+    // Collapse stations to systems if true
+    const newLocations = new Set();
+    for (const location of locations) {
+        const obj = universeList[location.toLowerCase()];
+        if (systemIdCount[obj.system] === true) {
+            newLocations.add(`${getSystemFromStation(location)} (Entire System)`);
+        } else {
+            newLocations.add(location);
+        }
+    }
+
+    return Array.from(newLocations);
+}
+
+/**
 * Pulls data from form HTML element and creates JSON
 */
 async function getHaulingData(hasQueryParams) {
@@ -191,16 +274,19 @@ async function getHaulingData(hasQueryParams) {
         for(const flocation of fromLocations) {
             from.push(getNameFromUniverseStations(flocation.split(':')[1]).name)
         }
+
+        from = collapseStationsToSystems(from);
         
         toLocations = hauling_request.to.split(',');
         for(const tlocation of toLocations) {
             to.push(getNameFromUniverseStations(tlocation.split(':')[1]).name)
         }
-        
+
+        to = collapseStationsToSystems(to);
+
         from = from.join(',');
         to = to.join(',');
     } else {
-        console.log('Pulling from Form');
         from = getStationNamesFromList('fromStations');
         to = getStationNamesFromList('toStations');
         
@@ -216,9 +302,7 @@ async function getHaulingData(hasQueryParams) {
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4))
         }
     }
-    
-    console.log(hauling_request);
-    
+        
     const qs = Object.keys(hauling_request)
     .map(key => `${key}=${hauling_request[key]}`)
     .join('&');
@@ -416,8 +500,6 @@ function loadNext() {
             const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
             
             if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
-                console.log("Found query params:");
-                console.log(thr);
                 hauling_request = thr;
                 
                 getUniverseList().then(function(data) {

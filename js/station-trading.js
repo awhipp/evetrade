@@ -118,7 +118,6 @@ async function getTradingData(hasQueryParams) {
         // Converting Query Params back to station names.
         station = getNameFromUniverseStations(trading_request.station);
     } else {
-        console.log('Pulling from Form');
         station = $('#station').val();
         
         trading_request = {
@@ -132,9 +131,7 @@ async function getTradingData(hasQueryParams) {
                 parseFloat((parseFloat($("#marginBelow").val()/100) || 0.4).toFixed(4))
         }
     }
-    
-    console.log(trading_request);
-    
+        
     const qs = Object.keys(trading_request)
     .map(key => `${key}=${trading_request[key]}`)
     .join('&');
@@ -308,8 +305,6 @@ function loadNext() {
             const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
             
             if (thr.station && thr.profit && thr.tax && thr.min_volume && thr.volume_filter && thr.fee && thr.margins) {
-                console.log("Found query params:");
-                console.log(thr);
                 trading_request = thr;
                 
                 getUniverseList().then(function(data) {
