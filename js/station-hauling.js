@@ -41,7 +41,11 @@ function isRoman(string) {
     return pattern.test(string);
 };
 
-function getSystemFromStation(station) {      
+function getSystemFromStation(station) {   
+    if (station.indexOf('Entire System') >= 0) {
+        return station;
+    }   
+
     const stationSplit = station.split(' - ')[0].split(' ');
     let systemName = '';
     stationSplit.forEach(function(word) {
