@@ -4,9 +4,7 @@ The top-searched EVE Online trading tool that lets you discover what to trade be
 
 ## Support
 
-![EVETrade Discord Server](https://discordapp.com/api/guilds/999342296522821722/widget.png?style=banner2)
-
-[Join our Discord Server](https://discord.gg/9xZh5qKCeR)
+[![EVETrade Discord Server](https://discordapp.com/api/guilds/999342296522821722/widget.png?style=banner2)](https://discord.gg/9xZh5qKCeR)
 
 ## System Status
 
