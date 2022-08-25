@@ -87,7 +87,16 @@
                             <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./region-hauling.html">Region to Region</a>
                         </div>
                     </li>
-                    <li><a href="./help.html" target="_blank">Help</a></li>
+                    <li>
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Help
+                        </a>
+                        
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item btn btn-grey btn-border btn-effect" href="./help.html" target="_blank">Documentation &amp; Guide</a>
+                            <a class="dropdown-item btn btn-grey btn-border btn-effect" href="#" onclick="clearLocalStorageAndRefresh()" title="Clears your local resource cache and refreshes the page. Useful if experiencing bugs.">Reload Resources</a>
+                        </div>
+                    </li>
                     <li><a href="https://discord.gg/9xZh5qKCeR" target="_blank"><span class="fa-brands fa-discord"></span> Discord/Support</a></li>
                     <li><a title="Donate" class="kofi-button" href="https://ko-fi.com/evetrade" target="_blank"><img src="https://storage.ko-fi.com/cdn/cup-border.png" alt="Donations" class="kofiimg">Donate</a></li>
                 </ul>
