@@ -224,7 +224,8 @@ function getNameFromUniverseStations(stationId) {
             return universeList[stationName];
         }
     }
-    window.alert("Station not found in universe list. Retry query parameters.");
+    $(".tableLoadingIcon").hide();
+    window.alert(`Station ID (${stationId}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'Station not found in universe list. Retry query parameters.';
 }
 
@@ -328,8 +329,7 @@ async function getHaulingData(hasQueryParams) {
         url = requestUrl,
         tries = 3,
         errorMsg = `Error retrieving orders for this station hauling request. Please try refreshing this page.`
-    ).then(response => response.json())
-    .then(function(response) {
+    ).then(function(response) {
         return response;
     });
 }

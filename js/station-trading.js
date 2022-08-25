@@ -91,7 +91,9 @@ function getNameFromUniverseStations(stationId) {
             return universeList[stationName].name
         }
     }
-    window.alert("Station not found in universe list. Retry query parameters.");
+    $(".tableLoadingIcon").hide();
+    $("#submit").attr("disabled", false);
+    window.alert(`Station ID (${stationId}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'Station not found in universe list. Retry query parameters.';
 }
 
@@ -103,7 +105,9 @@ function getNameFromUniverseStationName(stationName) {
             return universeList[name].station;
         }
     }
-    window.alert("Station name not found in universe list. Retry query parameters.");
+    $(".tableLoadingIcon").hide();
+    $("#submit").attr("disabled", false);
+    window.alert(`Station Name (${stationName}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'StationName not found in universe list. Retry query parameters.';
 }
 
@@ -153,8 +157,7 @@ async function getTradingData(hasQueryParams) {
         url = requestUrl,
         tries = 3,
         errorMsg = `Error retrieving orders for this station hauling request. Please try refreshing this page.`
-    ).then(response => response.json())
-    .then(function(response) {
+    ).then(function(response) {
         return response;
     });
 }

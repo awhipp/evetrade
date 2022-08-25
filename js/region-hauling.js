@@ -116,7 +116,8 @@ function getNameFromUniverseRegionName(regionName) {
             return universeList[name];
         }
     }
-    window.alert("Region name not found in universe list. Retry query parameters.");
+    $(".tableLoadingIcon").hide();
+    window.alert(`Region name (${regionName}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'RegionName not found in universe list. Retry query parameters.';
 }
 
@@ -127,7 +128,8 @@ function getNameFromUniverseRegionId(regionId) {
             return universeList[name];
         }
     }
-    window.alert("Region ID not found in universe list. Retry query parameters.");
+    $(".tableLoadingIcon").hide();
+    window.alert(`Region ID (${regionId}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'RegionId not found in universe list. Retry query parameters.';
 }
 
@@ -184,8 +186,7 @@ async function getHaulingData(hasQueryParams) {
         url = requestUrl,
         tries = 3,
         errorMsg = `Error retrieving orders for this region hauling request. Please try refreshing this page.`
-    ).then(response => response.json())
-    .then(function(response) {
+    ).then(function(response) {
         return response;
     });
 }
@@ -344,7 +345,6 @@ function loadNext() {
             const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
             
             if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
-                console.log("Found query params:");
                 hauling_request = thr;
                 
                 getUniverseList().then(function(data) {

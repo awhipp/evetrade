@@ -11,8 +11,7 @@ function getOrdersData(itemId, from, to) {
         url = `${API_ENDPOINT}/orders?itemId=${itemId}&from=${from}&to=${to}`,
         tries = 3,
         errorMsg = `Unable to retrieve orders from API for given itemId (${itemId}). Please try refreshing this page.`
-    ).then(response => response.json())
-    .then(function(response) {
+    ).then(function(response) {
         return response;
     });
 }
