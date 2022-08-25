@@ -117,6 +117,7 @@ function getNameFromUniverseRegionName(regionName) {
         }
     }
     $(".tableLoadingIcon").hide();
+    $("#submit").attr("disabled", false);
     window.alert(`Region name (${regionName}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'RegionName not found in universe list. Retry query parameters.';
 }
@@ -129,6 +130,7 @@ function getNameFromUniverseRegionId(regionId) {
         }
     }
     $(".tableLoadingIcon").hide();
+    $("#submit").attr("disabled", false);
     window.alert(`Region ID (${regionId}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'RegionId not found in universe list. Retry query parameters.';
 }

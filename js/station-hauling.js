@@ -225,6 +225,7 @@ function getNameFromUniverseStations(stationId) {
         }
     }
     $(".tableLoadingIcon").hide();
+    $("#submit").attr("disabled", false);
     window.alert(`Station ID (${stationId}) not found in universe list. Retry query parameters. (Error Code: ${Object.values(universeList).length})`);
     throw 'Station not found in universe list. Retry query parameters.';
 }

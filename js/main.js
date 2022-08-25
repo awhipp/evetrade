@@ -140,6 +140,14 @@ function getResourceData(fileName) {
         }
     );
 }
+
+/**
+ * Clears local storage and refreshes the page.
+ */
+function clearLocalStorageAndRefresh() {
+    window.localStorage.clear();
+    window.location = '/';
+}
         
 /**
 * Get's the universe list data for the EVE universe.
