@@ -1,4 +1,12 @@
-# EVE Trade Finder
+# EVE Trade 
+
+The top-searched EVE Online trading tool that lets you discover what to trade between stations and regions. This tool enables making ISK through hauling or station trading.
+
+## Support
+
+![EVETrade Discord Server](https://discordapp.com/api/guilds/999342296522821722/widget.png?style=banner2)
+
+[Join our Discord Server](https://discord.gg/9xZh5qKCeR)
 
 ## System Status
 
