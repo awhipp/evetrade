@@ -164,8 +164,6 @@ function loadNext() {
                 });
                 return;
             } 
-            
-            console.log(`Invalid search parameters: ${search}`);
         }
         
     } catch(e) {
@@ -173,7 +171,14 @@ function loadNext() {
     }
     
     $('#main').fadeTo('slow', 1, function() {});
+    $(".tableLoadingIcon").hide();
     $("h2").text("Invalid search parameters. No results.");
     $("h3").text("");
+    window.alert(
+        msg='Market Depth requires a valid item and two valid stations.',
+        title='Invalid search parameters.', 
+        type='error', 
+        hasRefresh=false
+    );
 
 }
