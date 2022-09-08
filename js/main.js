@@ -100,12 +100,16 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
 
             const json = await response.json();
 
-            if(response.ok && !('error' in json)) {
+            if (url.indexOf('/resource') > 0 && Object.keys(json).length == 0) {
+                console.log(`Empty JSON for ${url}. Retrying...`);
+                errs.push(`No data returned from Resource API. Retrying...`);
+            } else if(response.ok && !('error' in json)) {
                 return json;
+            } else {
+                countDownDivText(storedTime, i+2);
+                errs.push(json.error);
             }
 
-            countDownDivText(storedTime, i+2);
-            errs.push(json.error);
         }catch (err) {
             countDownDivText(storedTime, i+2);
             errs.push(err);
@@ -130,15 +134,12 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
 */
 function getResourceData(fileName) {
     return fetchWithRetry(
-        url = `${API_ENDPOINT}/resource?file=${fileName}`,
-        tries = 3,
-        errorMsg = `Unable to retrieve ${fileName} from the API.\n\n Would you like to refresh this page?`
-        )
-        .then(
-            function(response) {
-                return response;
-        }
-    );
+            url = `${API_ENDPOINT}/resource?file=${fileName}`,
+            tries = 3,
+            errorMsg = `Unable to retrieve ${fileName} from the API.\n\n Would you like to refresh this page?`
+        ).then(function(response) {
+            return response;
+        });
 }
 
 /**
