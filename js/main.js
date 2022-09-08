@@ -101,8 +101,8 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
             const json = await response.json();
 
             if (url.indexOf('/resource') > 0 && Object.keys(json).length == 0) {
-                countDownDivText(storedTime, i+2);
-                errs.push(`No data returned from Resource API (${url}). Retrying...`);
+                console.log(`Empty JSON for ${url}. Retrying...`);
+                errs.push(`No data returned from Resource API. Retrying...`);
             } else if(response.ok && !('error' in json)) {
                 return json;
             } else {
