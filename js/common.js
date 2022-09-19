@@ -5,7 +5,7 @@ var ESI_ENDPOINT = "https://esi.evetech.net";
 var RES_ENDPOINT = "https://api.github.com/repos/awhipp/evetrade_resources/contents/resources";
 
 // For local development otherwise hit backend route
-const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 ? "https://evetrade.space/api" : "/api"
+const API_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/'
 
 var STATION_TRADE = 0;
 var STATION_HAUL = 1;
@@ -841,7 +841,7 @@ function setupBookmark(urlParams) {
 
 // Generic function to get JSON data from API endpoin t
 function getResourceData(fileName) {
-    return fetch(API_ENDPOINT + '/resource?file=' + fileName)
+    return fetch(`${API_ENDPOINT}${fileName}`)
     .then(response => response.json())
     .then(function(response) {
         return response;
