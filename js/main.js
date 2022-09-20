@@ -301,29 +301,33 @@ jQuery(window).load(function(){
                 const value = config[key];
                 document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
             }
+
+            getUniverseList().then(function(universe_response) {
+                universeList = universe_response;
+                console.log(`${Object.keys(universeList).length} items in universe list.`);
+
+                getRegionList().then(function(region_response) {
+                    regionList = region_response;
+                    console.log(`${regionList.length} items in region list.`);
+
+                    getStationList().then(function(station_response) {
+                        stationList = station_response;
+                        console.log(`${stationList.length} items in station list.`);
+        
+                        getFunctionDurations().then(function(data) {
+                            functionDurations = data;
+                            console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
             
-            if (typeof loadNext !== 'undefined') {
-                
-
-                getUniverseList().then(function(universe_response) {
-                    universeList = universe_response;
-                    console.log(`${Object.keys(universeList).length} items in universe list.`);
-
-                    getRegionList().then(function(region_response) {
-                        regionList = region_response;
-                        console.log(`${regionList.length} items in region list.`);
-
-                        getStationList().then(function(station_response) {
-                            stationList = station_response;
-                            console.log(`${stationList.length} items in station list.`);
-                            loadNext();
+                            if (typeof loadNext !== 'undefined') {
+                                loadNext();
+                            }
+                            loadComplete();
                         });
-
                     });
+
                 });
-            }
+            });
             
-            loadComplete();
     }).catch((err) => {
             console.log(err);
             window.alert(
@@ -332,10 +336,6 @@ jQuery(window).load(function(){
                 type = 'error',
                 hasRefresh = true
             )
-    });
-        
-    getFunctionDurations().then(function(data) {
-        functionDurations = data;
     });
         
         
