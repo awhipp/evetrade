@@ -3,39 +3,6 @@ let startTime = 0;
 let runTime = 0;
 
 /**
-* Get's the region list data for the EVE universe.
-* @returns {Promise<void>}
-*/
-function getRegionList(){
-    return new Promise (function(resolve, reject) {
-        const dateCacheKey = 'evetrade_region_list_last_retrieved';
-        const jsonCacheKey = 'regionList';
-
-        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
-        
-        if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving RegionList Cache.');
-            
-            try {
-                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
-            } catch(e) {
-                console.log('Error Retrieving RegionList Cache. Retrying.');
-            }
-        } else {
-            console.log('New Day - Retrieving RegionList Cache.');
-        
-            getResourceData('regionList.json').then(function(response) {
-                console.log('Region List Loaded.');
-                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-                window.localStorage.setItem(dateCacheKey, dateString);
-                resolve(response);
-            });
-        }
-    });
-    
-}
-
-/**
 * Initializes the auto complete function for the given input.
 * @param {} domId The id of the input to initialize. 
 * @param {*} list  The list of options to use for the auto complete.
@@ -348,11 +315,7 @@ function loadNext() {
             
             if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
                 hauling_request = thr;
-                
-                getUniverseList().then(function(data) {
-                    universeList = data;
-                    executeHauling(true);
-                });
+                executeHauling(true);
                 return;
             }
             
@@ -362,24 +325,15 @@ function loadNext() {
     } catch(e) {
         console.log(`Error parsing query params ${location.search}.`);
     }
-    
-    getRegionList().then(function(regionList) {        
-        regionList.forEach(function(region){
-            var option = document.createElement("option");
-            option.innerHTML = region;
-            $("#regionList").append(option);
-        });
-        
-        console.log(`${regionList.length} regions loaded.`);
-        
-        initAwesomplete("from", "regionList");
-        initAwesomplete("to", "regionList");
+
+    regionList.forEach(function(region){
+        var option = document.createElement("option");
+        option.innerHTML = region;
+        $("#regionList").append(option);
     });
     
-    getUniverseList().then(function(data) {
-        universeList = data;
-    });
-    
+    initAwesomplete("from", "regionList");
+    initAwesomplete("to", "regionList");
     
     $("#submit").click(function(){
         // Form Validation

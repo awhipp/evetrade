@@ -1,39 +1,6 @@
-let hauling_request = {};
 let startTime = 0;
 let runTime = 0;
 
-/**
-* Get's the station list data for the EVE universe.
-* @returns {Promise<void>}
-*/
-function getStationList(){
-    return new Promise (function(resolve, reject) {
-        const dateCacheKey = 'evetrade_station_list_last_retrieved';
-        const jsonCacheKey = 'stationList';
-
-        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
-        
-        if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving StationList Cache.');
-            
-            try {
-                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
-            } catch(e) {
-                console.log('Error Retrieving StationList Cache. Retrying.');
-            }
-        } else {
-            console.log('New Day - Retrieving StationList Cache.');
-        
-            getResourceData('stationList.json').then(function(response) {
-                console.log('Station List Loaded.');
-                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-                window.localStorage.setItem(dateCacheKey, dateString);
-                resolve(response);
-            });
-        }
-    });
-    
-}
 
 /**
 * Initializes the auto complete function for the given input.
@@ -309,11 +276,7 @@ function loadNext() {
             
             if (thr.station && thr.profit && thr.tax && thr.min_volume && thr.volume_filter && thr.fee && thr.margins) {
                 trading_request = thr;
-                
-                getUniverseList().then(function(data) {
-                    universeList = data;
-                    executeTrading(true);
-                });
+                executeTrading(true);
                 return;
             }
             
@@ -324,23 +287,14 @@ function loadNext() {
         console.log(`Error parsing query params ${location.search}.`);
     }
     
-    getStationList().then(function(stationList) {        
-        stationList.forEach(function(station){
-            var option = document.createElement("option");
-            option.innerHTML = station;
-            $("#stationList").append(option);
-        });
-        
-        console.log(`${stationList.length} stations loaded.`);
-        
-        initAwesomplete("station", "stationList");
+    stationList.forEach(function(station){
+        var option = document.createElement("option");
+        option.innerHTML = station;
+        $("#stationList").append(option);
     });
     
-    getUniverseList().then(function(data) {
-        universeList = data;
-    });
-    
-    
+    initAwesomplete("station", "stationList");
+
     $("#submit").click(function(){
         // Form Validation
         if ($('#station').val().length <= 0) {

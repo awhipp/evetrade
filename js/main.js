@@ -6,6 +6,8 @@ const API_ENDPOINT = window.location.href.indexOf("localhost") > 0 || window.loc
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
 let universeList = {};
+let stationList = [];
+let regionList = [];
 let functionDurations = {};
 
 function loadComplete() {
@@ -218,7 +220,72 @@ function getFunctionDurations() {
     });
     
 }
+
+
+/**
+* Get's the region list data for the EVE universe.
+* @returns {Promise<void>}
+*/
+function getRegionList(){
+    return new Promise (function(resolve, reject) {
+        const dateCacheKey = 'evetrade_region_list_last_retrieved';
+        const jsonCacheKey = 'regionList';
+
+        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
+        if(dateString == lastRetrieved) {
+            console.log('Same Day - Retrieving RegionList Cache.');
+            
+            try {
+                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
+            } catch(e) {
+                console.log('Error Retrieving RegionList Cache. Retrying.');
+            }
+        } else {
+            console.log('New Day - Retrieving RegionList Cache.');
+        
+            getResourceData('regionList.json').then(function(response) {
+                console.log('Region List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
+    });
+    
+}   
+
+/**
+* Get's the station list data for the EVE universe.
+* @returns {Promise<void>}
+*/
+function getStationList(){
+    return new Promise (function(resolve, reject) {
+        const dateCacheKey = 'evetrade_station_list_last_retrieved';
+        const jsonCacheKey = 'stationList';
+
+        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
+        
+        if(dateString == lastRetrieved) {
+            console.log('Same Day - Retrieving StationList Cache.');
+            
+            try {
+                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
+            } catch(e) {
+                console.log('Error Retrieving StationList Cache. Retrying.');
+            }
+        } else {
+            console.log('New Day - Retrieving StationList Cache.');
+        
+            getResourceData('stationList.json').then(function(response) {
+                console.log('Station List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
+    });
+}
         
 /* ========================================================================= */
 /*	Preloader
@@ -236,7 +303,24 @@ jQuery(window).load(function(){
             }
             
             if (typeof loadNext !== 'undefined') {
-                loadNext();
+                
+
+                getUniverseList().then(function(universe_response) {
+                    universeList = universe_response;
+                    console.log(`${Object.keys(universeList).length} items in universe list.`);
+
+                    getRegionList().then(function(region_response) {
+                        regionList = region_response;
+                        console.log(`${regionList.length} items in region list.`);
+
+                        getStationList().then(function(station_response) {
+                            stationList = station_response;
+                            console.log(`${stationList.length} items in station list.`);
+                            loadNext();
+                        });
+
+                    });
+                });
             }
             
             loadComplete();

@@ -2,39 +2,6 @@ let hauling_request = {};
 let startTime = 0;
 let runTime = 0;
 
-/**
-* Get's the station list data for the EVE universe.
-* @returns {Promise<void>}
-*/
-function getStationList(){
-    return new Promise (function(resolve, reject) {
-        const dateCacheKey = 'evetrade_station_list_last_retrieved';
-        const jsonCacheKey = 'stationList';
-
-        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
-        
-        if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving StationList Cache.');
-            
-            try {
-                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
-            } catch(e) {
-                console.log('Error Retrieving StationList Cache. Retrying.');
-            }
-        } else {
-            console.log('New Day - Retrieving StationList Cache.');
-        
-            getResourceData('stationList.json').then(function(response) {
-                console.log('Station List Loaded.');
-                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
-                window.localStorage.setItem(dateCacheKey, dateString);
-                resolve(response);
-            });
-        }
-    });
-    
-}
-
 function isRoman(string) {
     // regex pattern
     const pattern = /^(M{1,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|C?D|D?C{1,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|X?L|L?X{1,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|I?V|V?I{1,3}))$/
@@ -61,11 +28,11 @@ function addStationToList(stationName, domId) {
     const data = universeList[stationName.toLowerCase()];
     const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
     
-    let stationList = $(`#${domId}`);
+    let stationListId = $(`#${domId}`);
     
     if ($(dataAttribute).length == 0) {
-        stationList.show();
-        stationList.append(`<li data-region="${data.region}" data-system="${data.system}" data-station="${data.station}">` +
+        stationListId.show();
+        stationListId.append(`<li data-region="${data.region}" data-system="${data.system}" data-station="${data.station}">` +
             `<span class="stationName">${stationName}</span>` + 
             `<span class="addSystem btn-grey btn-border btn-effect small-btn">Add System</span>` + 
             `<span class="remove-item">x</span></li>`
@@ -99,8 +66,8 @@ function addStationToList(stationName, domId) {
 
 function getStationInfoFromList(domId) {
     const stations = [];
-    const stationList = $(`#${domId} li`);
-    stationList.each(function() {
+    const stationListId = $(`#${domId} li`);
+    stationListId.each(function() {
         if ($(this).attr('data-system-list') != undefined) {
             stations.push($(this).attr('data-system-list'));
         } else {
@@ -112,8 +79,8 @@ function getStationInfoFromList(domId) {
 
 function getStationNamesFromList(domId) {
     const stations = [];
-    const stationList = $(`#${domId} li .stationName`);
-    stationList.each(function() {
+    const stationListId = $(`#${domId} li .stationName`);
+    stationListId.each(function() {
         stations.push(`${$(this).text()}`);
     });
     return stations.join(',');
@@ -506,11 +473,7 @@ function loadNext() {
             
             if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
                 hauling_request = thr;
-                
-                getUniverseList().then(function(data) {
-                    universeList = data;
-                    executeHauling(true);
-                });
+                executeHauling(true);
                 return;
             }
             
@@ -521,23 +484,14 @@ function loadNext() {
         console.log(`Error parsing query params ${location.search}.`);
     }
     
-    getStationList().then(function(stationList) {        
-        stationList.forEach(function(station){
-            var option = document.createElement("option");
-            option.innerHTML = station;
-            $("#stationList").append(option);
-        });
-        
-        console.log(`${stationList.length} stations loaded.`);
-        
-        initAwesomplete("from", "stationList");
-        initAwesomplete("to", "stationList");
+    stationList.forEach(function(station){
+        var option = document.createElement("option");
+        option.innerHTML = station;
+        $("#stationList").append(option);
     });
     
-    getUniverseList().then(function(data) {
-        universeList = data;
-    });
-    
+    initAwesomplete("from", "stationList");
+    initAwesomplete("to", "stationList");
     
     $("#submit").click(function(e){
         // Form Validation
