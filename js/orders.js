@@ -140,27 +140,23 @@ function loadNext() {
             
             if (thr.from && thr.to && thr.itemId) {
                 hauling_request = thr;
-                
-                getUniverseList().then(function(data) {
-                    universeList = data;
-                    getOrdersData(thr.itemId, thr.from, thr.to).then(function(data) {
-                        const orders = data;
-                        setStationNames();
-                        setItemName().then(function() {
-                            createTable('starting-station-table', orders['from'], 'Sell Orders').then(function() {
-                                createTable('ending-station-table', orders['to'], 'Buy Orders').then(function() {
+                getOrdersData(thr.itemId, thr.from, thr.to).then(function(data) {
+                    const orders = data;
+                    setStationNames();
+                    setItemName().then(function() {
+                        createTable('starting-station-table', orders['from'], 'Sell Orders').then(function() {
+                            createTable('ending-station-table', orders['to'], 'Buy Orders').then(function() {
 
-                                    $('#main').fadeTo('slow', 1, function() {});
+                                $('#main').fadeTo('slow', 1, function() {});
 
-                                    runTime = new Date() - startTime;
-                                    console.log(`Request took ${runTime}ms`);
-                                    $("#time_taken").html(`Request took ${runTime/1000} seconds.`);
-                                    $(".tableLoadingIcon").hide();
-                                });
+                                runTime = new Date() - startTime;
+                                console.log(`Request took ${runTime}ms`);
+                                $("#time_taken").html(`Request took ${runTime/1000} seconds.`);
+                                $(".tableLoadingIcon").hide();
                             });
-                        })
+                        });
+                    })
 
-                    });
                 });
                 return;
             } 
