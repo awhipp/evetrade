@@ -2,6 +2,9 @@ let hauling_request = {};
 let startTime = 0;
 let runTime = 0;
 
+let fromPreference = 'sell';
+let toPreference = 'buy';
+
 function isRoman(string) {
     // regex pattern
     const pattern = /^(M{1,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|C?D|D?C{1,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|X?L|L?X{1,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|I?V|V?I{1,3}))$/
@@ -146,6 +149,7 @@ function createTradeHeader(request, from, to) {
     
     let subHeader = `<b>Profit&nbsp;Above:</b>&nbsp;${minProfit} | <b>Capacity:</b>&nbsp;${maxWeight} | <b>R.O.I.:</b>&nbsp;${minROI} | <b>Budget:</b>&nbsp;${maxBudget}`;
     subHeader += `<br><b>Sales&nbsp;Tax:</b>&nbsp;${tax} | <b>Security:</b>&nbsp;${systemSecurity} | <b>Route:</b>&nbsp;${routeSafety}`;
+    subHeader += `<br><b>Trade Preference:</b>&nbsp;${cap(fromPreference)} Orders to ${cap(toPreference)} Orders`;
     
     $('main h1').hide();
 
@@ -234,26 +238,54 @@ function collapseStationsToSystems(locations) {
     return Array.from(newLocations);
 }
 
+function getFromTradePreference(req) {
+    if (req.indexOf('buy-') >= 0) {
+        fromPreference = 'buy';
+    } else if (req.indexOf('sell-') >= 0) {
+        fromPreference = 'sell';
+    }
+    
+    req = req.replace('buy-', '').replace('sell-', '');
+    return req;
+}
+
+function getToTradePreference(req) {
+    if (req.indexOf('buy-') >= 0) {
+        toPreference = 'buy';
+    } else if (req.indexOf('sell-') >= 0) {
+        toPreference = 'sell';
+    }
+    
+    req = req.replace('buy-', '').replace('sell-', '');
+    return req;
+}
+
 /**
 * Pulls data from form HTML element and creates JSON
 */
 async function getHaulingData(hasQueryParams) {
     let from = [];
     let to = [];
-    
+
     if (hasQueryParams) {
         // Converting From/To Query Params back to station names.
+        hauling_request.from = getFromTradePreference(hauling_request.from);
+
         fromLocations = hauling_request.from.split(',');
         for(const flocation of fromLocations) {
             from.push(getNameFromUniverseStations(flocation.split(':')[1]).name)
         }
+        hauling_request.from = `${fromPreference}-${hauling_request.from}`;
 
         from = collapseStationsToSystems(from);
+
+        hauling_request.to = getToTradePreference(hauling_request.to);
         
         toLocations = hauling_request.to.split(',');
         for(const tlocation of toLocations) {
             to.push(getNameFromUniverseStations(tlocation.split(':')[1]).name)
         }
+        hauling_request.to = `${toPreference}-${hauling_request.to}`;
 
         to = collapseStationsToSystems(to);
 
@@ -262,10 +294,17 @@ async function getHaulingData(hasQueryParams) {
     } else {
         from = getStationNamesFromList('fromStations');
         to = getStationNamesFromList('toStations');
+
+        tradePreference = $('#tradePreference').val();
+
+        if (tradePreference.length > 0) {
+            fromPreference = $('#tradePreference').val().split('-')[0];
+            toPreference = $('#tradePreference').val().split('-')[1];
+        }
         
         hauling_request = {
-            from: getStationInfoFromList('fromStations'),
-            to: getStationInfoFromList('toStations'),
+            from: `${fromPreference}-${getStationInfoFromList('fromStations')}`,
+            to: `${toPreference}-${getStationInfoFromList('toStations')}`,
             maxBudget: parseInt($("#maxBudget").val()) || Number.MAX_SAFE_INTEGER,
             maxWeight: parseInt($("#maxWeight").val()) || Number.MAX_SAFE_INTEGER,
             minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
@@ -505,7 +544,7 @@ function loadNext() {
         return false;
     });
     
-    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety'];
+    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety', 'tradePreference'];
     for (let i = 0; i < formElements.length; i++) {
         $(`#${formElements[i]}`).inputStore({
             name: 'station-' + formElements[i]

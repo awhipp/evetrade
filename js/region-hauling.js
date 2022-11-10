@@ -2,6 +2,9 @@ let hauling_request = {};
 let startTime = 0;
 let runTime = 0;
 
+let fromPreference = 'sell';
+let toPreference = 'buy';
+
 /**
 * Initializes the auto complete function for the given input.
 * @param {} domId The id of the input to initialize. 
@@ -50,6 +53,7 @@ function createTradeHeader(request, from, to) {
     
     let subHeader = `<b>Profit&nbsp;Above:</b>&nbsp;${minProfit} | <b>Capacity:</b>&nbsp;${maxWeight} | <b>R.O.I.:</b>&nbsp;${minROI} | <b>Budget:</b>&nbsp;${maxBudget}`;
     subHeader += `<br><b>Sales&nbsp;Tax:</b>&nbsp;${tax} | <b>Security:</b>&nbsp;${systemSecurity} | <b>Route:</b>&nbsp;${routeSafety}`;
+    subHeader += `<br><b>Trade Preference:</b>&nbsp;${cap(fromPreference)} Orders to ${cap(toPreference)} Orders`;
     
     $('main h1').hide();
 
@@ -102,6 +106,28 @@ function getNameFromUniverseRegionId(regionId) {
     throw 'RegionId not found in universe list. Retry query parameters.';
 }
 
+function getFromTradePreference(req) {
+    if (req.indexOf('buy-') >= 0) {
+        fromPreference = 'buy';
+    } else if (req.indexOf('sell-') >= 0) {
+        fromPreference = 'sell';
+    }
+    
+    req = req.replace('buy-', '').replace('sell-', '');
+    return req;
+}
+
+function getToTradePreference(req) {
+    if (req.indexOf('buy-') >= 0) {
+        toPreference = 'buy';
+    } else if (req.indexOf('sell-') >= 0) {
+        toPreference = 'sell';
+    }
+    
+    req = req.replace('buy-', '').replace('sell-', '');
+    return req;
+}
+
 /**
 * Pulls data from form HTML element and creates JSON
 */
@@ -111,19 +137,30 @@ async function getHaulingData(hasQueryParams) {
     
     if (hasQueryParams) {
          // Converting From/To Query Params back to station names.
+        hauling_request.from = getFromTradePreference(hauling_request.from);
         from = getNameFromUniverseRegionId(hauling_request.from);
+        hauling_request.from = `${fromPreference}-${hauling_request.from}`;
         
+        hauling_request.to = getToTradePreference(hauling_request.to);
         to = getNameFromUniverseRegionId(hauling_request.to);
+        hauling_request.to = `${toPreference}-${hauling_request.to}`;
         createTradeHeader(hauling_request, from.name, to.name);
         
     } else {
         console.log('Pulling from Form...');
         from = $('#from').val();
         to = $('#to').val();
+
+        tradePreference = $('#tradePreference').val();
+
+        if (tradePreference.length > 0) {
+            fromPreference = $('#tradePreference').val().split('-')[0];
+            toPreference = $('#tradePreference').val().split('-')[1];
+        }
         
         hauling_request = {
-            from: getNameFromUniverseRegionName(from).id,
-            to: getNameFromUniverseRegionName(to).id,
+            from:`${fromPreference}-${getNameFromUniverseRegionName(from).id}`,
+            to: `${toPreference}-${getNameFromUniverseRegionName(to).id}`,
             maxBudget: parseInt($("#maxBudget").val()) || Number.MAX_SAFE_INTEGER,
             maxWeight: parseInt($("#maxWeight").val()) || Number.MAX_SAFE_INTEGER,
             minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
@@ -347,7 +384,7 @@ function loadNext() {
         return false;
     });
     
-    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety'];
+    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety', 'tradePreference'];
     for (let i = 0; i < formElements.length; i++) {
         $(`#${formElements[i]}`).inputStore({
             name: 'region-' + formElements[i]
