@@ -195,6 +195,18 @@ input[type=text], input[type=number], select {
     padding: 0.5em;
 }
 
+.disclaimer {
+    margin-top: 1em;
+    font-size: 0.8em;
+    color: #ccc;
+    display: none;
+}
+
+mark {
+    background-color: #ff0;
+    font-weight: bold;
+}
+
 /**
 * SWAL Modal
 */
@@ -457,7 +469,7 @@ Footer
     font-size: 5em;
     color: rgba(0,158,227, 0.78);
     text-align: center;
-    line-height: 1em;
+    line-height: 0.5em;
 }   
 
 .durationEstimate {

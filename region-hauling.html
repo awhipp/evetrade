@@ -193,7 +193,7 @@
                                                 </div> 
                                                 
                                                 
-                                                <div class="col-md-4"> 
+                                                <div class="col-md-3"> 
                                                     <label class="control-label" for="tax" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
                                                     <select id="tax" class="form-control" name="tax"> 
                                                         <option value="" selected>Accounting Level</option> 
@@ -206,7 +206,7 @@
                                                     </select> 
                                                 </div>
                                                 
-                                                <div class="col-md-4"> 
+                                                <div class="col-md-3"> 
                                                     <label class="control-label" for="systemSecurity"> Security Status Filter </label>
                                                     <select id="systemSecurity" class="form-control" name="systemSecurity"> 
                                                         <option value="" selected>No Filter</option> 
@@ -215,12 +215,22 @@
                                                     </select> 
                                                 </div> 
                                                 
-                                                <div class="col-md-4"> 
+                                                <div class="col-md-3"> 
                                                     <label class="control-label" for="routeSafety"> Route Preference </label> 
                                                     <select id="routeSafety" class="form-control" name="routeSafety"> 
                                                         <option value="" selected>Shortest Route</option>
                                                         <option value="secure">Safest Route</option>
                                                         <option value="insecure">Least Safe Route</option> 
+                                                    </select> 
+                                                </div>
+                                                        
+                                                <div class="col-md-3"> 
+                                                    <label class="control-label" for="tradePreference"> Trade Preference </label> 
+                                                    <select id="tradePreference" class="form-control" name="tradePreference"> 
+                                                        <option value="" selected>Sell Orders to Buy Orders</option>
+                                                        <option value="sell-sell">Sell Orders to Sell Orders (*)</option>
+                                                        <option value="buy-sell">Buy Orders to Sell Orders (*)</option> 
+                                                        <option value="buy-buy">Buy Orders to Buy Orders (*)</option> 
                                                     </select> 
                                                 </div>
                                                 
@@ -232,6 +242,11 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                                
+                        <div class="disclaimer">
+                            * <mark>High risk trading style</mark> and using may lead to large results or timeouts.
+                            <br> If timeout occurs, try to reduce broad queries (e.g. Higher Security, Profit Filter, or ROI).
                         </div>
                     </div>
                     
