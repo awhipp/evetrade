@@ -2,9 +2,7 @@
 const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
 
-const ROOT_ENDPOINT = 'https://px82vf9n78.execute-api.us-east-1.amazonaws.com/v1';
-
-const API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${ROOT_ENDPOINT}` :  `${ROOT_ENDPOINT}/dev`;
+const API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `/api` :  `https://evetrade.space/dev`;
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
 let universeList = {};
