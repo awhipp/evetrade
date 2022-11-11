@@ -1,6 +1,8 @@
 let startTime = 0;
 let runTime = 0;
 
+let API_ENDPOINT = '';
+
 /**
 * Generic function to get JSON data from API endpoint
 * @param {*} fileName 
@@ -8,7 +10,7 @@ let runTime = 0;
 */
 function getOrdersData(itemId, from, to) {
     return fetchWithRetry(
-        url = `${API_ENDPOINT}/orders?itemId=${itemId}&from=${from}&to=${to}`,
+        url = `${API_ENDPOINT}?itemId=${itemId}&from=${from}&to=${to}`,
         tries = 3,
         errorMsg = `Unable to retrieve orders from API for given itemId (${itemId}). Please try refreshing this page.`
     ).then(function(response) {
@@ -128,6 +130,8 @@ let thr = {};
 * Initializes on window load
 */
 function loadNext() {
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['orders'] : global_config['api']['dev']['orders'];
+
     countDownDivText(functionDurations['evetrade-get-orders']);
     $(".tableLoadingIcon").show();
     

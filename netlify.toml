@@ -1,6 +1,6 @@
 [build]
-  environment = { VERSION = "7.0.10" }
-  command = 'echo {\"version\": \"$VERSION\", \"release_date\": \"`date "+%B %d, %Y"`\", \"years_active\": \"2016-`date +%Y`\"} > config.json'
+  environment = { VERSION = "7.0.11" }
+  command = 'echo {\"version\": \"$VERSION\", \"release_date\": \"`date "+%B %d, %Y"`\", \"years_active\": \"2016-`date +%Y`\"} > version.json'
   base = "/"
   publish = "/"
 
@@ -15,41 +15,3 @@
   for = "/dev/*"
     [headers.values]
     Access-Control-Allow-Origin = "*"
-
-# Production APIs
-[[redirects]]
-  from = "/api/hauling"
-  to = "https://piptktarmow72ckohqhqk4n5ey0jojzc.lambda-url.us-east-1.on.aws/"
-  status = 200
-  query = {from = ":from", to = ":to", tax = ":tax", minProfit = ":minProfit", minROI = ":minROI", maxBudget = ":maxBudget", maxWeight = ":maxWeight", routeSafety = ":routeSafety", systemSecurity = ":systemSecurity" }
-
-[[redirects]]
-  from = "/api/orders"
-  to = "https://qt6vgbn3r4tx6jltrvjjagqfnu0torte.lambda-url.us-east-1.on.aws/"
-  status = 200
-  query = {itemId = ":itemId", from = ":from", to = ":to"}
-  
-[[redirects]]
-  from = "/api/station"
-  to = "https://tsebcrtpkwto6ucma4nieqaxpm0qoafm.lambda-url.us-east-1.on.aws/"
-  status = 200
-  query = {station = ":station", profit = ":profit", tax = ":tax", fee = ":fee", margins = ":margins", min_volume = ":min_volume", volume_filter = ":volume_filter"}
-
-# Development APIs
-[[redirects]]
-  from = "/dev/hauling"
-  to = "https://xvt3u35gl6jpijalmxlengdk7q0srnyq.lambda-url.us-east-1.on.aws/"
-  status = 200
-  query = {from = ":from", to = ":to", tax = ":tax", minProfit = ":minProfit", minROI = ":minROI", maxBudget = ":maxBudget", maxWeight = ":maxWeight", routeSafety = ":routeSafety", systemSecurity = ":systemSecurity" }
-
-[[redirects]]
-  from = "/dev/orders"
-  to = "https://dsjfyxvbb63ba6rm3su3zlxbcu0luate.lambda-url.us-east-1.on.aws/"
-  status = 200
-  query = {itemId = ":itemId", from = ":from", to = ":to"}
-  
-[[redirects]]
-  from = "/dev/station"
-  to = "https://poj5znykutqnolqnirqst24vou0vokcw.lambda-url.us-east-1.on.aws/"
-  status = 200
-  query = {station = ":station", profit = ":profit", tax = ":tax", fee = ":fee", margins = ":margins", min_volume = ":min_volume", volume_filter = ":volume_filter"}

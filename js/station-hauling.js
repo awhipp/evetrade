@@ -5,6 +5,8 @@ let runTime = 0;
 let fromPreference = 'sell';
 let toPreference = 'buy';
 
+let API_ENDPOINT = '';
+
 function isRoman(string) {
     // regex pattern
     const pattern = /^(M{1,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|C?D|D?C{1,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|X?L|L?X{1,3})(IX|IV|V?I{0,3})|M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|I?V|V?I{1,3}))$/
@@ -327,7 +329,7 @@ async function getHaulingData(hasQueryParams) {
     createTradeHeader(hauling_request, from, to);
     
     const qp = new URLSearchParams(hauling_request).toString();
-    const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
+    const requestUrl = `${API_ENDPOINT}?${qp}`;
     startTime = new Date();
     
     $("#hauling-form").fadeTo('fast', 0, function() {});
@@ -471,8 +473,16 @@ function displayData(data) {
     data.forEach(function(row) { 
         station_id_from = row['From']['station_id'];
         station_id_to = row['Take To']['station_id'];
-        const properFromLocation = getProperStationInformation(station_id_from, hauling_request['from']);
-        const propertToLocation = getProperStationInformation(station_id_to, hauling_request['to']);
+
+        let properFromLocation = getProperStationInformation(station_id_from, hauling_request['from']);
+        let propertToLocation = getProperStationInformation(station_id_to, hauling_request['to']);
+
+        if (properFromLocation.indexOf('-') == -1) {
+            properFromLocation = fromPreference + '-' + properFromLocation;
+        }
+        if (propertToLocation.indexOf('-') == -1) {
+            propertToLocation = toPreference + '-' + propertToLocation;
+        }
 
         const from = swapTradeHub(row['From']);
         const to = swapTradeHub(row['Take To']);
@@ -506,6 +516,7 @@ let disclaimer_shown = false;
 * Initializes on window load
 */
 function loadNext() {
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['hauling'] : global_config['api']['dev']['hauling'];
     
     try {
         if (window.location.search.length > 0) {

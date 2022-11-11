@@ -2,13 +2,13 @@
 const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
 
-const API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `/api` :  `https://evetrade.space/dev`;
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
 let universeList = {};
 let stationList = [];
 let regionList = [];
 let functionDurations = {};
+let global_config = {};
 
 function loadComplete() {
     $('main').fadeTo('slow', 1, function() {});
@@ -300,8 +300,26 @@ jQuery(window).load(function(){
         errorMsg = `Unable to retrieve configuration file. Try refreshing this page.`
         ).then((config) => {
             console.log(`Config Loaded.`);
-            for (const key in config) {
-                const value = config[key];
+            global_config = config;            
+    }).catch((err) => {
+            console.log(err);
+            window.alert(
+                msg = 'Unable to retrieve configuration file. Try refreshing this page.',
+                title = 'Error has occurred',
+                type = 'error',
+                hasRefresh = true
+            )
+    });
+        
+    fetchWithRetry(
+        url = './version.json',
+        tries = 3,
+        errorMsg = `Unable to retrieve version file. Try refreshing this page.`
+        ).then((version) => {
+            console.log(`Version Loaded.`);
+
+            for (const key in version) {
+                const value = version[key];
                 document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
             }
 
@@ -334,7 +352,7 @@ jQuery(window).load(function(){
     }).catch((err) => {
             console.log(err);
             window.alert(
-                msg = 'Unable to retrieve configuration file. Try refreshing this page.',
+                msg = 'Unable to retrieve version file. Try refreshing this page.',
                 title = 'Error has occurred',
                 type = 'error',
                 hasRefresh = true
