@@ -1,6 +1,7 @@
 let startTime = 0;
 let runTime = 0;
 
+let API_ENDPOINT = '';
 
 /**
 * Initializes the auto complete function for the given input.
@@ -115,7 +116,7 @@ async function getTradingData(hasQueryParams) {
     createTradeHeader(trading_request, station);
     
     const qp = new URLSearchParams(trading_request).toString();
-    const requestUrl = `${API_ENDPOINT}/station?${qp}`;
+    const requestUrl = `${API_ENDPOINT}?${qp}`;
     startTime = new Date();
     
     $("#hauling-form").fadeTo('fast', 0, function() {});
@@ -239,6 +240,7 @@ function swapTradeHub(station) {
 * Creates the datatable based on the trading style that is being queried
 */
 function displayData(data) {
+
     data.forEach(function(row) {      
         row['Volume'] = round_value(row['Volume'], 0);        
         row['View'] = `<a class="investigate" title="View Market Depth for ${row['Item']}"  href=
@@ -268,6 +270,7 @@ function executeTrading(hasQueryParams) {
 * Initializes on window load
 */
 function loadNext() {
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['station'] : global_config['api']['dev']['station'];
     
     try {
         if (window.location.search.length > 0) {

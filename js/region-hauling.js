@@ -5,6 +5,8 @@ let runTime = 0;
 let fromPreference = 'sell';
 let toPreference = 'buy';
 
+let API_ENDPOINT = '';
+
 /**
 * Initializes the auto complete function for the given input.
 * @param {} domId The id of the input to initialize. 
@@ -183,7 +185,7 @@ async function getHaulingData(hasQueryParams) {
     }
     
     const qp = new URLSearchParams(hauling_request).toString();
-    const requestUrl = `${API_ENDPOINT}/hauling?${qp}`;
+    const requestUrl = `${API_ENDPOINT}?${qp}`;
     startTime = new Date();
     
     $("#hauling-form").fadeTo('fast', 0, function() {});
@@ -345,7 +347,8 @@ let disclaimer_shown = false;
 /**
 * Initializes on window load
 */
-function loadNext() {
+function loadNext() { 
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['hauling'] : global_config['api']['dev']['hauling'];
     
     try {
         if (window.location.search.length > 0) {

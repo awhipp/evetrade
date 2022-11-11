@@ -2,13 +2,13 @@
 const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
 
-const API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `/api` :  `https://evetrade.space/dev`;
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
 let universeList = {};
 let stationList = [];
 let regionList = [];
 let functionDurations = {};
+let global_config = {};
 
 function loadComplete() {
     $('main').fadeTo('slow', 1, function() {});
@@ -300,6 +300,8 @@ jQuery(window).load(function(){
         errorMsg = `Unable to retrieve configuration file. Try refreshing this page.`
         ).then((config) => {
             console.log(`Config Loaded.`);
+            global_config = config;
+
             for (const key in config) {
                 const value = config[key];
                 document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);

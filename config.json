@@ -1,5 +1,17 @@
 {
     "version": "X.X.X",
     "release_date": "XX-XX-XXXX",
-    "years_active": "2016-XXXX"
+    "years_active": "2016-XXXX",
+    "api": {
+        "dev": {
+            "hauling": "https://xvt3u35gl6jpijalmxlengdk7q0srnyq.lambda-url.us-east-1.on.aws/",
+            "orders": "https://dsjfyxvbb63ba6rm3su3zlxbcu0luate.lambda-url.us-east-1.on.aws/",
+            "station": "https://poj5znykutqnolqnirqst24vou0vokcw.lambda-url.us-east-1.on.aws/"
+        },
+        "prod": {
+            "hauling": "https://piptktarmow72ckohqhqk4n5ey0jojzc.lambda-url.us-east-1.on.aws/",
+            "orders": "https://qt6vgbn3r4tx6jltrvjjagqfnu0torte.lambda-url.us-east-1.on.aws/",
+            "station": "https://tsebcrtpkwto6ucma4nieqaxpm0qoafm.lambda-url.us-east-1.on.aws/"
+        }
+    }
 }
