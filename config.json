@@ -1,7 +1,4 @@
 {
-    "version": "X.X.X",
-    "release_date": "XX-XX-XXXX",
-    "years_active": "2016-XXXX",
     "api": {
         "dev": {
             "hauling": "https://xvt3u35gl6jpijalmxlengdk7q0srnyq.lambda-url.us-east-1.on.aws/",

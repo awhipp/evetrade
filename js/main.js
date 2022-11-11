@@ -300,10 +300,26 @@ jQuery(window).load(function(){
         errorMsg = `Unable to retrieve configuration file. Try refreshing this page.`
         ).then((config) => {
             console.log(`Config Loaded.`);
-            global_config = config;
+            global_config = config;            
+    }).catch((err) => {
+            console.log(err);
+            window.alert(
+                msg = 'Unable to retrieve configuration file. Try refreshing this page.',
+                title = 'Error has occurred',
+                type = 'error',
+                hasRefresh = true
+            )
+    });
+        
+    fetchWithRetry(
+        url = './version.json',
+        tries = 3,
+        errorMsg = `Unable to retrieve version file. Try refreshing this page.`
+        ).then((version) => {
+            console.log(`Version Loaded.`);
 
-            for (const key in config) {
-                const value = config[key];
+            for (const key in version) {
+                const value = version[key];
                 document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
             }
 
@@ -336,7 +352,7 @@ jQuery(window).load(function(){
     }).catch((err) => {
             console.log(err);
             window.alert(
-                msg = 'Unable to retrieve configuration file. Try refreshing this page.',
+                msg = 'Unable to retrieve version file. Try refreshing this page.',
                 title = 'Error has occurred',
                 type = 'error',
                 hasRefresh = true
