@@ -144,8 +144,11 @@ function loadNext() {
                     const orders = data;
                     setStationNames();
                     setItemName().then(function() {
-                        createTable('starting-station-table', orders['from'], 'Sell Orders').then(function() {
-                            createTable('ending-station-table', orders['to'], 'Buy Orders').then(function() {
+                        const fromPreference = thr.from.startsWith('buy') ? 'Buy' : 'Sell';
+                        const toPreference = thr.to.startsWith('buy') ? 'Buy' : 'Sell';
+
+                        createTable('starting-station-table', orders['from'], `${fromPreference} orders`).then(function() {
+                            createTable('ending-station-table', orders['to'], `${toPreference} Orders`).then(function() {
 
                                 $('#main').fadeTo('slow', 1, function() {});
 

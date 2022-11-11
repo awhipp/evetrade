@@ -500,6 +500,8 @@ function executeHauling(hasQueryParams) {
     });
 }
 
+let disclaimer_shown = false;
+
 /**
 * Initializes on window load
 */
@@ -550,4 +552,22 @@ function loadNext() {
             name: 'station-' + formElements[i]
         });
     }
+    
+    if ($("#tradePreference").val() != "") {
+        disclaimer_shown = true;
+        $(".disclaimer").slideToggle();
+    }
+
+    $("#tradePreference").change(function(e){
+        if ($("#tradePreference").val() != "" && !disclaimer_shown) {
+            disclaimer_shown = true;
+            $(".disclaimer").slideToggle();
+        }
+
+        if ($("#tradePreference").val() == "" && disclaimer_shown) {
+            disclaimer_shown = false;
+            $(".disclaimer").slideToggle();
+        }
+
+    });
 }
