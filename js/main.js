@@ -300,59 +300,59 @@ jQuery(window).load(function(){
         errorMsg = `Unable to retrieve configuration file. Try refreshing this page.`
         ).then((config) => {
             console.log(`Config Loaded.`);
-            global_config = config;            
+            global_config = config;   
+
+            fetchWithRetry(
+                url = './version.json',
+                tries = 3,
+                errorMsg = `Unable to retrieve version file. Try refreshing this page.`
+                ).then((version) => {
+                    console.log(`Version Loaded.`);
+
+                    for (const key in version) {
+                        const value = version[key];
+                        document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
+                    }
+
+                    getUniverseList().then(function(universe_response) {
+                        universeList = universe_response;
+                        console.log(`${Object.keys(universeList).length} items in universe list.`);
+
+                        getRegionList().then(function(region_response) {
+                            regionList = region_response;
+                            console.log(`${regionList.length} items in region list.`);
+
+                            getStationList().then(function(station_response) {
+                                stationList = station_response;
+                                console.log(`${stationList.length} items in station list.`);
+                
+                                getFunctionDurations().then(function(data) {
+                                    functionDurations = data;
+                                    console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
+                    
+                                    if (typeof loadNext !== 'undefined') {
+                                        loadNext();
+                                    }
+                                    loadComplete();
+                                });
+                            });
+
+                        });
+                    });
+                    
+            }).catch((err) => {
+                    console.log(err);
+                    window.alert(
+                        msg = 'Unable to retrieve version file. Try refreshing this page.',
+                        title = 'Error has occurred',
+                        type = 'error',
+                        hasRefresh = true
+                    )
+            });
     }).catch((err) => {
             console.log(err);
             window.alert(
                 msg = 'Unable to retrieve configuration file. Try refreshing this page.',
-                title = 'Error has occurred',
-                type = 'error',
-                hasRefresh = true
-            )
-    });
-        
-    fetchWithRetry(
-        url = './version.json',
-        tries = 3,
-        errorMsg = `Unable to retrieve version file. Try refreshing this page.`
-        ).then((version) => {
-            console.log(`Version Loaded.`);
-
-            for (const key in version) {
-                const value = version[key];
-                document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
-            }
-
-            getUniverseList().then(function(universe_response) {
-                universeList = universe_response;
-                console.log(`${Object.keys(universeList).length} items in universe list.`);
-
-                getRegionList().then(function(region_response) {
-                    regionList = region_response;
-                    console.log(`${regionList.length} items in region list.`);
-
-                    getStationList().then(function(station_response) {
-                        stationList = station_response;
-                        console.log(`${stationList.length} items in station list.`);
-        
-                        getFunctionDurations().then(function(data) {
-                            functionDurations = data;
-                            console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
-            
-                            if (typeof loadNext !== 'undefined') {
-                                loadNext();
-                            }
-                            loadComplete();
-                        });
-                    });
-
-                });
-            });
-            
-    }).catch((err) => {
-            console.log(err);
-            window.alert(
-                msg = 'Unable to retrieve version file. Try refreshing this page.',
                 title = 'Error has occurred',
                 type = 'error',
                 hasRefresh = true
