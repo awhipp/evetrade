@@ -19,6 +19,7 @@
 
 ### V7.1
 
+    * V7.0.12: No longer cap results to 1,000 records. Instead caps to 5 megabytes or less. This will allow more results, but could take longer for more complex requests. If you are getting a timeout, try narrowing your search parameters.
     * V7.0.11: Updated timeout from 30 seconds to 120 seconds for larger queries.
     * V7.0.10: Added trade preferences for station or region hauling trades. Included additional stations and systems (ie: Thera) that were not showing up. Limit results to the top 1,000 most profitable.
     * V7.0.9: (Bugfix) Route Chunking to avoid ES maxClauseSize of 1024
