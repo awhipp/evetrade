@@ -81,21 +81,21 @@ function setItemName() {
 
 }
 
-function createTable(domId, data, tableTitle) {
+function createTable(domId, data, orderType) {
     return new Promise (function(resolve, reject) {    
-        let tableHTML = `<table id="${domId}_dt" class="display"><h3>${tableTitle}</h3></table>`;
+        let tableHTML = `<table id="${domId}_dt" class="display"><h3>${orderType} Orders</h3></table>`;
         $(`#${domId}`).html(tableHTML);
         $(".dataTableFilters").html("");
         
         var dataTableDOM = $(`#${domId}_dt`);
         
         const columns = [
-            {data: 'price', title: domId.indexOf('start') >= 0 ? 'Sell Price' : 'Buy Price'},
+            {data: 'price', title: `${orderType} Price`},
             {data: 'quantity', title: 'Quantity'}
         ];
         
         const dt = dataTableDOM.DataTable({
-            "order": [[0, domId.indexOf('start') >= 0 ? 'asc' : 'desc']],
+            "order": [[0, orderType == 'Sell' ? 'asc' : 'desc']],
             "lengthMenu": [[10], ["10"]],
             responsive: true,
             dom: 'frtipB',
@@ -151,8 +151,8 @@ function loadNext() {
                         const fromPreference = thr.from.startsWith('buy') ? 'Buy' : 'Sell';
                         const toPreference = thr.to.startsWith('buy') ? 'Buy' : 'Sell';
 
-                        createTable('starting-station-table', orders['from'], `${fromPreference} orders`).then(function() {
-                            createTable('ending-station-table', orders['to'], `${toPreference} Orders`).then(function() {
+                        createTable('starting-station-table', orders['from'], `${fromPreference}`).then(function() {
+                            createTable('ending-station-table', orders['to'], `${toPreference}`).then(function() {
 
                                 $('#main').fadeTo('slow', 1, function() {});
 
