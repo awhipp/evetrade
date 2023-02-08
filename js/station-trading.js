@@ -26,12 +26,11 @@ function createTradeHeader(request, station) {
     const profit = round_value(request.profit, 0);
     const tax = round_value(request.tax * 100, 2) + "%";
     const minVolume = round_value(request.min_volume, 0);
-    const volumeFilter = request.volume_filter == 1 ? '24-Hour Average' : `${request.volume_filter}-Day Average`;
     const fee = `${round_value(request.fee*100, 2)}%`;
     const margins = `${round_value(request.margins.split(',')[0]*100, 2)}%&nbsp;and&nbsp;${round_value(request.margins.split(',')[1]*100, 2)}%`;
         
     let subHeader = `<b>Profit&nbsp;Above:</b>&nbsp;${profit} | <b>Sales&nbsp;Tax:</b>&nbsp;${tax} | <b>Broker&nbsp;Fee:</b>&nbsp;${fee}`;
-    subHeader += `<br><b>Min&nbsp;Volume:</b>&nbsp;${minVolume} | <b>Filter&nbsp;By:</b>&nbsp;${volumeFilter} | <b>Margins:</b>&nbsp;${margins}`;
+    subHeader += `<br><b>Min&nbsp;Volume:</b>&nbsp;${minVolume} | <b>Margins:</b>&nbsp;${margins} | <b>Volume:</b>&nbsp;20-Day Average`;
     
     $('main h1').hide();
 
@@ -97,7 +96,6 @@ async function getTradingData(hasQueryParams) {
             profit: parseInt($("#profit").val()) >= 0 ? parseInt($("#profit").val()) : 1000,
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4)),
             min_volume: parseInt($("#minVolume").val()) >= 0 ? parseInt($("#minVolume").val()) : 1000,
-            volume_filter: $("#volumeFilter").val() || "1",
             fee: parseFloat((parseFloat($("#fee").val()/100) || 0.03).toFixed(4)),
             margins: parseFloat((parseFloat($("#marginAbove").val()/100) || 0.2).toFixed(4)) + ',' +
                 parseFloat((parseFloat($("#marginBelow").val()/100) || 0.4).toFixed(4))
@@ -277,7 +275,7 @@ function loadNext() {
             var search = window.location.search.substring(1);
             const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
             
-            if (thr.station && thr.profit && thr.tax && thr.min_volume && thr.volume_filter && thr.fee && thr.margins) {
+            if (thr.station && thr.profit && thr.tax && thr.min_volume && thr.fee && thr.margins) {
                 trading_request = thr;
                 executeTrading(true);
                 return;
@@ -310,7 +308,7 @@ function loadNext() {
         return false;
     });
     
-    const formElements = ['profit', 'tax', 'minVolume', 'volumeFilter', 'fee', 'marginAbove', 'marginBelow'];
+    const formElements = ['profit', 'tax', 'minVolume', 'fee', 'marginAbove', 'marginBelow'];
     for (let i = 0; i < formElements.length; i++) {
         $(`#${formElements[i]}`).inputStore({
             name: 'station-' + formElements[i]
