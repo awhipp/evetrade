@@ -9,19 +9,22 @@ The top-searched EVE Online trading tool that lets you discover what to trade be
 ## System Status
 
 * UI Deployment Status on Netlify (on commit):
-    * [![Netlify Status](https://api.netlify.com/api/v1/badges/4daf6162-578e-4ff5-a99a-ab44e8cbdace/deploy-status)](https://app.netlify.com/sites/evetrade/deploys)
+  * [![Netlify Status](https://api.netlify.com/api/v1/badges/4daf6162-578e-4ff5-a99a-ab44e8cbdace/deploy-status)](https://app.netlify.com/sites/evetrade/deploys)
 
 * Static Data Asset Compilation (daily):
-    * [![Convert SDE to JSON](https://github.com/awhipp/evetrade_resources/actions/workflows/download.yml/badge.svg)](https://github.com/awhipp/evetrade_resources/actions/workflows/download.yml)
+  * [![Convert SDE to JSON](https://github.com/awhipp/evetrade_resources/actions/workflows/download.yml/badge.svg)](https://github.com/awhipp/evetrade_resources/actions/workflows/download.yml)
 
-* Historical Volume Redis Cache Ingestion (every 2 hours):
-    * [![Synchronize Redis Cache (Historical Volume Data)](https://github.com/awhipp/evetrade_resources/actions/workflows/sync-volume-data.yml/badge.svg)](https://github.com/awhipp/evetrade_resources/actions/workflows/sync-volume-data.yml)
+* Historical Market Volume Pull (every 15min):
+  * [![Historical Market Data](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-market-data.yml/badge.svg)](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-market-data.yml)
+
+* Historical Volume Ingest (daily):
+  * [![Historical Volume Ingest](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-volume-ingest.yml/badge.svg)](https://github.com/awhipp/evetrade_historical_volume/actions/workflows/historical-volume-ingest.yml)
 
 * Elasticsearch data and healthcheck (every 15-30 minutes): 
-    * [![Data Ingestion Process](https://github.com/awhipp/evetrade_api/actions/workflows/check_data_sync.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/check_data_sync.yml)
+  * [![Data Ingestion Process](https://github.com/awhipp/evetrade_api/actions/workflows/check_data_sync.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/check_data_sync.yml)
 
 * Backend API healthcheck: 
-    * [![API Service Check](https://github.com/awhipp/evetrade_api/actions/workflows/check_endpoints.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/check_endpoints.yml)
+  * [![API Service Check](https://github.com/awhipp/evetrade_api/actions/workflows/check_endpoints.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/check_endpoints.yml)
 
 
 ## About
