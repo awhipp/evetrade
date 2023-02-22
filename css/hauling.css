@@ -109,6 +109,11 @@
     background-color: rgba(0,158,227, 0.6);
 }
 
+.citadel {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
 .security-code10 {
     color: #2FEFEF;
 }

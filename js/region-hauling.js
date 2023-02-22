@@ -305,6 +305,9 @@ function swapTradeHub(station) {
     const stationName = station['name'];
     const stationSecurity = station['rating'].toFixed(1).replace('.', '');
 
+    if (station['citadel']) {
+        return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName} *</span>`;
+    }
     return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
 
@@ -314,6 +317,9 @@ function swapTradeHub(station) {
 function displayData(data) {
     
     data.forEach(function(row) {      
+        fromCitadel = row['From']['citadel'];
+        toCitadel = row['Take To']['citadel'];
+
         from = swapTradeHub(row['From']);
         to = swapTradeHub(row['Take To']);
 
@@ -322,6 +328,7 @@ function displayData(data) {
         '/orders.html?itemId=${row['Item ID']}&from=${hauling_request.from}:${row['From'].station_id}&to=${hauling_request.to}:${row['Take To'].station_id}' 
         target='_blank'><i class="fa fa-search-plus"></i></a>`;
         
+
         row['From'] = from;
         row['Take To'] = to;
     });
