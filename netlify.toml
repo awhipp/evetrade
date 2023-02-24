@@ -1,5 +1,5 @@
 [build]
-  environment = { VERSION = "7.0.13" }
+  environment = { VERSION = "7.0.14" }
   command = 'echo {\"version\": \"$VERSION\", \"release_date\": \"`date "+%B %d, %Y"`\", \"years_active\": \"2016-`date +%Y`\"} > version.json'
   base = "/"
   publish = "/"
