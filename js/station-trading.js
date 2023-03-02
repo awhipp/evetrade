@@ -242,7 +242,7 @@ function displayData(data) {
     data.forEach(function(row) {      
         row['Volume'] = round_value(row['Volume'], 0);        
         row['View'] = `<a class="investigate" title="View Market Depth for ${row['Item']}"  href=
-        '/orders.html?itemId=${row['Item ID']}&from=${row['Region ID']}:${trading_request['station']}&to=${row['Region ID']}:${trading_request['station']}' 
+        '/orders.html?itemId=${row['Item ID']}&from=buy-${row['Region ID']}:${trading_request['station']}&to=sell-${row['Region ID']}:${trading_request['station']}' 
         target='_blank'><i class="fa fa-search-plus"></i></a>`;
 
         delete row['Region ID']
