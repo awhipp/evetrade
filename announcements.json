@@ -1,0 +1,13 @@
+{
+    "announcements": [
+      {
+        "header": "Version 7.1 Released",
+        "content": [
+            "Player Structures added to trading options.",
+            "No more cap on results (used to be 1,000). Instead results are capped at 5mb or less.",
+            "Updated Help Page and Documentations."
+        ],
+        "date": "03-10-2023"
+      }
+    ]
+}
