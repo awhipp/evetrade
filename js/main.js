@@ -334,6 +334,8 @@ jQuery(window).load(function(){
                                         loadNext();
                                     }
                                     loadComplete();
+
+                                    set_announcement(version.release_date);
                                 });
                             });
 
