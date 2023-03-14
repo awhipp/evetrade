@@ -268,7 +268,7 @@ function executeTrading(hasQueryParams) {
 * Initializes on window load
 */
 function loadNext() {
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['station'] : global_config['api']['dev']['station'];
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/station` : `${global_config['api_gateway']}/dev/station`;
     
     try {
         if (window.location.search.length > 0) {

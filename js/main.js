@@ -45,7 +45,6 @@ window.alert = function(msg='An unknown error has occurred. Try refreshing this 
         })
         .then((value) => {
             switch (value) {
-                
                 case "refresh":
                     window.location.reload();
                     break;
@@ -105,6 +104,26 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
             const response = await fetch(url);
 
             const json = await response.json();
+
+            if (json.statusCode == 429) {
+                window.alert(
+                    msg = 'Please wait a few minutes and try again.',
+                    title = json.body,
+                    type = 'error',
+                    hasRefresh = true
+                );
+                return;
+            }
+
+            if (json.statusCode == 401) {
+                window.alert(
+                    msg = 'Contact Support.',
+                    title = `401 - ${json.body}`,
+                    type = 'error',
+                    hasRefresh = true
+                );
+                return;
+            }
 
             if (url.indexOf('/resource') > 0 && Object.keys(json).length == 0) {
                 console.log(`Empty JSON for ${url}. Retrying...`);
@@ -295,72 +314,57 @@ function getStationList(){
 /* ========================================================================= */
 jQuery(window).load(function(){
     fetchWithRetry(
-        url = './config.json',
+        url = './version.json',
         tries = 3,
-        errorMsg = `Unable to retrieve configuration file. Try refreshing this page.`
-        ).then((config) => {
-            console.log(`Config Loaded.`);
-            global_config = config;   
+        errorMsg = `Unable to retrieve version file. Try refreshing this page.`
+        ).then((version) => {
+            global_config = version;
+            console.log(`Version Loaded.`);
 
-            fetchWithRetry(
-                url = './version.json',
-                tries = 3,
-                errorMsg = `Unable to retrieve version file. Try refreshing this page.`
-                ).then((version) => {
-                    console.log(`Version Loaded.`);
+            for (const key in version) {
+                const value = version[key];
+                document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
+            }
 
-                    for (const key in version) {
-                        const value = version[key];
-                        document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
-                    }
+            getUniverseList().then(function(universe_response) {
+                universeList = universe_response;
+                console.log(`${Object.keys(universeList).length} items in universe list.`);
 
-                    getUniverseList().then(function(universe_response) {
-                        universeList = universe_response;
-                        console.log(`${Object.keys(universeList).length} items in universe list.`);
+                getRegionList().then(function(region_response) {
+                    regionList = region_response;
+                    console.log(`${regionList.length} items in region list.`);
 
-                        getRegionList().then(function(region_response) {
-                            regionList = region_response;
-                            console.log(`${regionList.length} items in region list.`);
-
-                            getStationList().then(function(station_response) {
-                                stationList = station_response;
-                                console.log(`${stationList.length} items in station list.`);
-                
-                                getFunctionDurations().then(function(data) {
-                                    functionDurations = data;
-                                    console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
-                    
-                                    if (typeof loadNext !== 'undefined') {
-                                        loadNext();
-                                    }
-                                    loadComplete();
-
-                                    set_announcement(version.release_date);
-                                });
-                            });
-
+                    getStationList().then(function(station_response) {
+                        stationList = station_response;
+                        console.log(`${stationList.length} items in station list.`);
+        
+                        getFunctionDurations().then(function(data) {
+                            functionDurations = data;
+                            console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
+            
+                            if (typeof loadNext !== 'undefined') {
+                                loadNext();
+                            }
+                            loadComplete();
+                            
+                            if (typeof set_announcement !== 'undefined') {
+                                set_announcement(version.release_date);
+                            }
                         });
                     });
-                    
-            }).catch((err) => {
-                    console.log(err);
-                    window.alert(
-                        msg = 'Unable to retrieve version file. Try refreshing this page.',
-                        title = 'Error has occurred',
-                        type = 'error',
-                        hasRefresh = true
-                    )
+
+                });
             });
+            
     }).catch((err) => {
             console.log(err);
             window.alert(
-                msg = 'Unable to retrieve configuration file. Try refreshing this page.',
+                msg = 'Unable to retrieve version file. Try refreshing this page.',
                 title = 'Error has occurred',
                 type = 'error',
                 hasRefresh = true
             )
     });
-        
         
     $(function () {
         var tabIndex = 1;

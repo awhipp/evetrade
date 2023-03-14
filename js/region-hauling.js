@@ -369,7 +369,7 @@ let disclaimer_shown = false;
 * Initializes on window load
 */
 function loadNext() { 
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['hauling'] : global_config['api']['dev']['hauling'];
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/dev/hauling` : `${global_config['api_gateway']}/dev/hauling`;
     
     try {
         if (window.location.search.length > 0) {

@@ -1,5 +1,6 @@
 {
     "version": "X.X.X",
     "release_date": "XX-XX-XXXX",
-    "years_active": "2016-XXXX"
+    "years_active": "2016-XXXX",
+    "api_gateway": "https://2womw32lucjyaznffxe2wvhqsu0ulphi.lambda-url.us-east-1.on.aws"
 }
