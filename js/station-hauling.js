@@ -30,6 +30,7 @@ function getSystemFromStation(station) {
 }
 
 function addStationToList(stationName, domId) {
+    stationName = stationName.replace('*', '');
     const data = universeList[stationName.toLowerCase()];
     const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
     
@@ -114,7 +115,7 @@ function initAwesomplete(domId, list) {
         maxItems: 5,
         autoFirst: true,
         tabSelect: true,
-        filter: Awesomplete.FILTER_STARTSWITH,
+        filter: Awesomplete.FILTER_CONTAINS,
         sort: false,
     });
     
@@ -449,6 +450,9 @@ function swapTradeHub(station) {
     const stationName = station['name'];
     const stationSecurity = station['rating'].toFixed(1).replace('.', '');
 
+    if (station['citadel']) {
+        return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName} *</span>`;
+    }
     return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
 

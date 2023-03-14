@@ -8,6 +8,9 @@
             "No more cap on results (used to be 1,000). Instead results are capped at 5mb or less.",
             "Updated Help Page and Documentations.",
             "Added an API Gateway to rate limit malicious requests and bots."
+        ],
+        "known_issues": [
+            "When querying market depth on the orders page,or some structures, some items do not show values."
         ]
       }
     ]

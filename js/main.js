@@ -308,6 +308,72 @@ function getStationList(){
         }
     });
 }
+
+
+/**
+* Get's the structure list data for the EVE universe.
+* @returns {Promise<void>}
+*/
+function getStructureList(){
+    return new Promise (function(resolve, reject) {
+        const dateCacheKey = 'evetrade_structure_list_last_retrieved';
+        const jsonCacheKey = 'structureList';
+
+        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
+        
+        if(dateString == lastRetrieved) {
+            console.log('Same Day - Retrieving StructureList Cache.');
+            
+            try {
+                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
+            } catch(e) {
+                console.log('Error Retrieving StructureList Cache. Retrying.');
+            }
+        } else {
+            console.log('New Day - Retrieving StructureList Cache.');
+        
+            getResourceData('structureList.json').then(function(response) {
+                console.log('Structure List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
+    });
+}
+
+
+/**
+* Get's the structure info data for the EVE universe.
+* @returns {Promise<void>}
+*/
+function getStructureInfo(){
+    return new Promise (function(resolve, reject) {
+        const dateCacheKey = 'evetrade_structure_info_last_retrieved';
+        const jsonCacheKey = 'structureInfo';
+
+        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
+        
+        if(dateString == lastRetrieved) {
+            console.log('Same Day - Retrieving StructureInfo Cache.');
+            
+            try {
+                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
+            } catch(e) {
+                console.log('Error Retrieving StructureInfo Cache. Retrying.');
+            }
+        } else {
+            console.log('New Day - Retrieving StructureInfo Cache.');
+        
+            getResourceData('structureInfo.json').then(function(response) {
+                console.log('Structure Info Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
+    });
+}
         
 /* ========================================================================= */
 /*	Preloader
@@ -337,19 +403,46 @@ jQuery(window).load(function(){
                     getStationList().then(function(station_response) {
                         stationList = station_response;
                         console.log(`${stationList.length} items in station list.`);
-        
-                        getFunctionDurations().then(function(data) {
-                            functionDurations = data;
-                            console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
-            
-                            if (typeof loadNext !== 'undefined') {
-                                loadNext();
-                            }
-                            loadComplete();
+
+                        getStructureList().then(function(structure_response) {
+                            // Add asterisk to the end of every string in structure_response
+                            structure_response = structure_response.map(function(item) {
+                                return item + '*';
+                            });
                             
-                            if (typeof set_announcement !== 'undefined') {
-                                set_announcement(version.release_date);
-                            }
+                            stationList = stationList.concat(structure_response);
+                            console.log(`${structure_response.length} items in structure list (added to stationList).`);
+
+                            getStructureInfo().then(function(structure_info_response) {
+                                for(structureId in structure_info_response) {
+                                    structure = structure_info_response[structureId];
+                                    universeList[structure['name'].toLowerCase()] = {
+                                        constellation: structure['constellation'],
+                                        name: structure['name'],
+                                        region: structure['region_id'],
+                                        security: structure['security'],
+                                        system: structure['system_id'],
+                                        station: structure['station_id'],
+                                    }
+                                }
+                                console.log(`${Object.keys(structure_info_response).length} items in structure info (added to universeList).`);
+        
+                                getFunctionDurations().then(function(data) {
+                                    functionDurations = data;
+                                    console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
+                    
+                                    if (typeof loadNext !== 'undefined') {
+                                        loadNext();
+                                    }
+                                    loadComplete();
+                                    
+                                    if (typeof set_announcement !== 'undefined') {
+                                        set_announcement(version.release_date);
+                                    }
+                                });
+
+                            });
+
                         });
                     });
 

@@ -20,7 +20,7 @@ function initAwesomplete(domId, list) {
         maxItems: 5,
         autoFirst: true,
         tabSelect: true,
-        filter: Awesomplete.FILTER_STARTSWITH,
+        filter: Awesomplete.FILTER_CONTAINS,
         sort: false,
     });
     
@@ -330,10 +330,7 @@ function swapTradeHub(station) {
 */
 function displayData(data) {
     
-    data.forEach(function(row) {      
-        fromCitadel = row['From']['citadel'];
-        toCitadel = row['Take To']['citadel'];
-
+    data.forEach(function(row) {
         from = swapTradeHub(row['From']);
         to = swapTradeHub(row['Take To']);
 
