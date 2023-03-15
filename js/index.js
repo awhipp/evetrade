@@ -16,9 +16,6 @@ function set_announcement(version_data){
                     const announcementHeaderEl = document.createElement("h2");
                     announcementHeaderEl.classList.add("announcement-header");
                     announcementHeaderEl.innerText = announcement.header;
-                    const announcementDateEl = document.createElement("div");
-                    announcementDateEl.classList.add("announcement-date");
-                    announcementDateEl.innerText = announcementDate.toLocaleDateString();
                     const lineContentEl = document.createElement("hr");
 
                     const announcementContentElDiv = document.createElement("div");
@@ -53,7 +50,6 @@ function set_announcement(version_data){
 
 
                     announcementEl.appendChild(announcementHeaderEl);
-                    announcementEl.appendChild(announcementDateEl);
                     announcementEl.appendChild(lineContentEl);
                     announcementEl.appendChild(announcementContentElDiv);
                     document.getElementById("announcements").appendChild(announcementEl);
