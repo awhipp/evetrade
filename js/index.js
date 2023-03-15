@@ -5,7 +5,7 @@ function set_announcement(version_data){
         if (!data.disabled) {
             const timeLimit = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
             data.announcements.forEach(announcement => {
-                const announcementDate = version_data == 'XX-XX-XXXX' ? new Date() : new Date(version_data);
+                const announcementDate = version_data == 'XX-XX-XXXX' ? new Date() : new Date(new Date(version_data).setDate(new Date(version_data).getDate() - 1));
                 const timeDiff = new Date().getTime() - announcementDate.getTime();
                 if (timeDiff < timeLimit) {
                     const announcementEl = document.createElement("div");
