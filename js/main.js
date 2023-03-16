@@ -385,6 +385,7 @@ jQuery(window).load(function(){
         errorMsg = `Unable to retrieve version file. Try refreshing this page.`
         ).then((version) => {
             global_config = version;
+            global_config["api_gateway"] = "https://2womw32lucjyaznffxe2wvhqsu0ulphi.lambda-url.us-east-1.on.aws";
             console.log(`Version Loaded.`);
 
             for (const key in version) {
