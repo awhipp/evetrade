@@ -46,7 +46,7 @@ function getInvTypes() {
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving InvType Cache.');
+            console.log('Same Hour - Retrieving InvType Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -54,7 +54,7 @@ function getInvTypes() {
                 console.log('Error Retrieving invTypes Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving InvType Cache.');
+            console.log('New Hour - Retrieving InvType Cache.');
         
             getResourceData('invTypes.json').then(function(response) {
                 console.log('InvTypes Loaded.');

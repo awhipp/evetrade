@@ -1,6 +1,6 @@
 
 const date = new Date();
-const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
+const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
 
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
@@ -188,7 +188,7 @@ function getUniverseList() {
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving UniverseList Cache.');
+            console.log('Same Hour - Retrieving UniverseList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -196,7 +196,7 @@ function getUniverseList() {
                 console.log('Error Retrieving UniverseList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving UniverseList Cache.');
+            console.log('New Hour - Retrieving UniverseList Cache.');
         
             getResourceData('universeList.json').then(function(response) {
                 console.log('Universe List Loaded.');
@@ -222,7 +222,7 @@ function getFunctionDurations() {
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving Function Durations Cache.');
+            console.log('Same Hour - Retrieving Function Durations Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -230,7 +230,7 @@ function getFunctionDurations() {
                 console.log('Error Retrieving Function Durations Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving Function Durations Cache.');
+            console.log('New Hour - Retrieving Function Durations Cache.');
         
             getResourceData('functionDurations.json').then(function(response) {
                 console.log('Function Durations Loaded.');
@@ -256,7 +256,7 @@ function getRegionList(){
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving RegionList Cache.');
+            console.log('Same Hour - Retrieving RegionList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -264,7 +264,7 @@ function getRegionList(){
                 console.log('Error Retrieving RegionList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving RegionList Cache.');
+            console.log('New Hour - Retrieving RegionList Cache.');
         
             getResourceData('regionList.json').then(function(response) {
                 console.log('Region List Loaded.');
@@ -289,7 +289,7 @@ function getStationList(){
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving StationList Cache.');
+            console.log('Same Hour - Retrieving StationList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -297,7 +297,7 @@ function getStationList(){
                 console.log('Error Retrieving StationList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving StationList Cache.');
+            console.log('New Hour - Retrieving StationList Cache.');
         
             getResourceData('stationList.json').then(function(response) {
                 console.log('Station List Loaded.');
@@ -322,7 +322,7 @@ function getStructureList(){
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving StructureList Cache.');
+            console.log('Same Hour - Retrieving StructureList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -330,7 +330,7 @@ function getStructureList(){
                 console.log('Error Retrieving StructureList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving StructureList Cache.');
+            console.log('New Hour - Retrieving StructureList Cache.');
         
             getResourceData('structureList.json').then(function(response) {
                 console.log('Structure List Loaded.');
@@ -355,7 +355,7 @@ function getStructureInfo(){
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving StructureInfo Cache.');
+            console.log('Same Hour - Retrieving StructureInfo Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -363,7 +363,7 @@ function getStructureInfo(){
                 console.log('Error Retrieving StructureInfo Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving StructureInfo Cache.');
+            console.log('New Hour - Retrieving StructureInfo Cache.');
         
             getResourceData('structureInfo.json').then(function(response) {
                 console.log('Structure Info Loaded.');
