@@ -317,7 +317,8 @@ function createTable(data) {
 
 function swapTradeHub(station) {
     const stationName = station['name'];
-    const stationSecurity = station['rating'].toFixed(1).replace('.', '');
+    const stationRating = station['rating'] < 0 ? 0.0 : station['rating'];
+    const stationSecurity = stationRating.toFixed(1).replace('.', '').replace('-', '');
 
     if (station['citadel']) {
         return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName} *</span>`;
