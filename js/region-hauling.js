@@ -321,7 +321,7 @@ function swapTradeHub(station) {
     const stationSecurity = stationRating.toFixed(1).replace('.', '').replace('-', '');
 
     if (station['citadel']) {
-        return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName} *</span>`;
+        return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName}*</span>`;
     }
     return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
