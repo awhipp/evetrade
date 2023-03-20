@@ -745,3 +745,65 @@ Bootstrap
     margin-left: 0;
     margin-right: 0;
 }
+
+
+/**
+Announcement Section
+**/
+#announcements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .announcement {
+    background-color: #2b2b2b;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 800px;
+    text-align: left;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* .announcement:hover {
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-5px);
+  } */
+  
+  .past {
+    display: none;
+  }
+  
+  .announcement h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #f5f5f5;
+  }
+  
+  .announcement-date {
+    font-size: 12px;
+    font-style: italic;
+    margin-bottom: 5px;
+    color: #d9d9d9;
+    text-transform: capitalize;
+  }
+  
+  .announcement-content {
+    font-size: 14px;
+    margin-bottom: 5px;
+    line-height: 1.5;
+    color: #f5f5f5;
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+
+  .announcement-header {
+    color: #f5f5f5;
+    font-weight: bold;
+  }
+  

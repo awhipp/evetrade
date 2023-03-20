@@ -166,9 +166,7 @@
                                                             <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'fromStations');">Dodixie</span> 
                                                             <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'fromStations');">Rens</span> 
                                                             <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'fromStations');">Hek</span>
-                                                            <!-- <span onclick="addStationToList('Oursulaert III - Federation Navy Testing Facilities', 'fromStations');">Oursulaert</span>
-                                                                <span onclick="addStationToList('Tash-Murkon Prime II - Moon 1 - Kaalakiota Corporation Factory', 'fromStations');">Tash-Murkon</span>
-                                                                <span onclick="addStationToList('Agil VI - Moon 2 - CONCORD Logistic Support', 'fromStations');">Agil</span> -->
+                                                            <span onclick="addStationToList('Perimeter - Tranquility Trading Tower', 'fromStations');">TTT*</span>
                                                             </p>
                                                         </div>
                                                         <div class="col-sm-12 col-md-6">
@@ -181,9 +179,7 @@
                                                                 <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'toStations');">Dodixie</span> 
                                                                 <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'toStations');">Rens</span> 
                                                                 <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'toStations');">Hek</span>
-                                                                <!-- <span onclick="addStationToList('Oursulaert III - Federation Navy Testing Facilities', 'toStations');">Oursulaert</span>
-                                                                    <span onclick="addStationToList('Tash-Murkon Prime II - Moon 1 - Kaalakiota Corporation Factory', 'toStations');">Tash-Murkon</span>
-                                                                    <span onclick="addStationToList('Agil VI - Moon 2 - CONCORD Logistic Support', 'toStations');">Agil</span> -->
+                                                                <span onclick="addStationToList('Perimeter - Tranquility Trading Tower', 'toStations');">TTT*</span>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -201,78 +197,85 @@
                                                             </div>
                                                         </div>
                                                         
-                                                        <div class="col-md-3"> 
-                                                            <p> 
-                                                                <label class="control-label" for="minProfit"> Only Profit Above </label> 
-                                                                <input id="minProfit" type="number" name="minProfit" class="form-control" placeholder="Default: 500,000"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-3"> 
-                                                            <p> 
-                                                                <label class="control-label" for="maxWeight"> Cargo Capacity </label> 
-                                                                <input id="maxWeight" type="number" name="maxWeight" class="form-control" placeholder="Default: Infinity"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-3"> 
-                                                            <p> 
-                                                                <label class="control-label" for="minROI"> Return on Investment (%) </label> 
-                                                                <input id="minROI" type="number" name="minROI" class="form-control" placeholder="Default: 4"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-3">
-                                                            <p> 
-                                                                <label class="control-label" for="maxBudget"> Budget </label> 
-                                                                <input id="maxBudget" type="number" name="maxBudget" class="form-control" placeholder="Default: Infinity"> 
-                                                            </p> 
-                                                        </div> 
-                                                        
-                                                        
-                                                        <div class="col-md-3"> 
-                                                            <label class="control-label" for="tax" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
-                                                            <select id="tax" class="form-control" name="tax"> 
-                                                                <option value="" selected>Accounting Level</option> 
-                                                                <option value="8">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.00%</option>
-                                                                <option value="7.12">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.12%</option>
-                                                                <option value="6.24">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.24%</option>
-                                                                <option value="5.36">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.36%</option>
-                                                                <option value="4.48">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.48%</option>
-                                                                <option value="3.6">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.60%</option>
-                                                            </select> 
+
+                                                        <div class="row">
+                                                            <div class="col-md-3"> 
+                                                                <p> 
+                                                                    <label class="control-label" for="minProfit"> Only Profit Above </label> 
+                                                                    <input id="minProfit" type="number" name="minProfit" class="form-control" placeholder="Default: 500,000"> 
+                                                                </p> 
+                                                            </div> 
+                                                            
+                                                            <div class="col-md-3"> 
+                                                                <p> 
+                                                                    <label class="control-label" for="maxWeight"> Cargo Capacity </label> 
+                                                                    <input id="maxWeight" type="number" name="maxWeight" class="form-control" placeholder="Default: Infinity"> 
+                                                                </p> 
+                                                            </div> 
+                                                            
+                                                            <div class="col-md-3"> 
+                                                                <p> 
+                                                                    <label class="control-label" for="minROI"> Return on Investment (%) </label> 
+                                                                    <input id="minROI" type="number" name="minROI" class="form-control" placeholder="Default: 4"> 
+                                                                </p> 
+                                                            </div> 
+                                                            
+                                                            <div class="col-md-3">
+                                                                <p> 
+                                                                    <label class="control-label" for="maxBudget"> Budget </label> 
+                                                                    <input id="maxBudget" type="number" name="maxBudget" class="form-control" placeholder="Default: Infinity"> 
+                                                                </p> 
+                                                            </div> 
                                                         </div>
                                                         
-                                                        <div class="col-md-3"> 
-                                                            <label class="control-label" for="systemSecurity"> Security Status Filter </label>
-                                                            <select id="systemSecurity" class="form-control" name="systemSecurity"> 
-                                                                <option value="" selected>No Filter</option> 
-                                                                <option value="high_sec,low_sec">Only Low or High Sec</option> 
-                                                                <option value="high_sec">Only High Sec</option> 
-                                                            </select> 
-                                                        </div> 
-                                                        
-                                                        <div class="col-md-3"> 
-                                                            <label class="control-label" for="routeSafety"> Route Preference </label> 
-                                                            <select id="routeSafety" class="form-control" name="routeSafety"> 
-                                                                <option value="" selected>Shortest Route</option>
-                                                                <option value="secure">Safest Route</option>
-                                                                <option value="insecure">Least Safe Route</option> 
-                                                            </select>
+                                                        <div class="row">
+                                                            <div class="col-md-3"> 
+                                                                <label class="control-label" for="tax" title="Calculation = 8 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
+                                                                <select id="tax" class="form-control" name="tax"> 
+                                                                    <option value="" selected>Accounting Level</option> 
+                                                                    <option value="8">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.00%</option>
+                                                                    <option value="7.12">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.12%</option>
+                                                                    <option value="6.24">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.24%</option>
+                                                                    <option value="5.36">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.36%</option>
+                                                                    <option value="4.48">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.48%</option>
+                                                                    <option value="3.6">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.60%</option>
+                                                                </select> 
+                                                            </div>
+                                                            
+                                                            <div class="col-md-3"> 
+                                                                <label class="control-label" for="systemSecurity"> Security Status </label>
+                                                                <select id="systemSecurity" class="form-control" name="systemSecurity"> 
+                                                                    <option value="" selected>Any Security</option> 
+                                                                    <option value="high_sec,low_sec">Only Low or High Sec</option> 
+                                                                    <option value="high_sec">Only High Sec</option> 
+                                                                </select> 
+                                                            </div> 
+                                                            
+                                                            <div class="col-md-3"> 
+                                                                <label class="control-label" for="routeSafety"> Route Preference </label> 
+                                                                <select id="routeSafety" class="form-control" name="routeSafety"> 
+                                                                    <option value="" selected>Shortest Route</option>
+                                                                    <option value="secure">Safest Route</option>
+                                                                    <option value="insecure">Least Safe Route</option> 
+                                                                </select>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-3"> 
+                                                                <label class="control-label" for="tradePreference"> Trade Preference </label> 
+                                                                <select id="tradePreference" class="form-control" name="tradePreference"> 
+                                                                    <option value="" selected>Sell Orders to Buy Orders</option>
+                                                                    <option value="sell-sell">Sell Orders to Sell Orders (*)</option>
+                                                                    <option value="buy-sell">Buy Orders to Sell Orders (*)</option> 
+                                                                    <option value="buy-buy">Buy Orders to Buy Orders (*)</option> 
+                                                                </select> 
+                                                            </div>
                                                         </div>
                                                         
-                                                        <div class="col-md-3"> 
-                                                            <label class="control-label" for="tradePreference"> Trade Preference </label> 
-                                                            <select id="tradePreference" class="form-control" name="tradePreference"> 
-                                                                <option value="" selected>Sell Orders to Buy Orders</option>
-                                                                <option value="sell-sell">Sell Orders to Sell Orders (*)</option>
-                                                                <option value="buy-sell">Buy Orders to Sell Orders (*)</option> 
-                                                                <option value="buy-buy">Buy Orders to Buy Orders (*)</option> 
-                                                            </select> 
-                                                        </div>
-                                                        
-                                                        <div class="col-md-12">
-                                                            <button id="submit" class="btn btn-grey btn-border btn-effect">Search</button>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <br>
+                                                                <button id="submit" class="btn btn-grey btn-border btn-effect">Search</button>
+                                                            </div>
                                                         </div>
                                                     </form>
                                                 </div>

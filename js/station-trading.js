@@ -16,7 +16,7 @@ function initAwesomplete(domId, list) {
         maxItems: 5,
         autoFirst: true,
         tabSelect: true,
-        filter: Awesomplete.FILTER_STARTSWITH,
+        filter: Awesomplete.FILTER_CONTAINS,
         sort: false,
     });
 }
@@ -89,7 +89,7 @@ async function getTradingData(hasQueryParams) {
         // Converting Query Params back to station names.
         station = getNameFromUniverseStations(trading_request.station);
     } else {
-        station = $('#station').val();
+        station = $('#station').val().replace('*', '');
         
         trading_request = {
             station: getNameFromUniverseStationName(station),
@@ -231,6 +231,9 @@ function swapTradeHub(station) {
     const stationName = station['name'];
     const stationSecurity = station['rating'].toFixed(1).replace('.', '');
 
+    if (station['citadel']) {
+        return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName}*</span>`;
+    }
     return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
 
@@ -257,7 +260,7 @@ function executeTrading(hasQueryParams) {
     
     getTradingData(hasQueryParams).then((data) => {
         if (data.length == 0) {
-            $(".tableLoadingIcon").html(`No Results Found<br><a class="btn btn-grey btn-border btn-effect" href="javascript:window.location.replace(location.pathname);">Refresh this page</a>`);
+            $(".tableLoadingIcon").html(`No Results Found<br><br><a class="btn btn-grey btn-border btn-effect" href="javascript:window.location.replace(location.pathname);">Try another search</a>`);
         } else {
             displayData(data);
         }
@@ -268,7 +271,7 @@ function executeTrading(hasQueryParams) {
 * Initializes on window load
 */
 function loadNext() {
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['station'] : global_config['api']['dev']['station'];
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/station` : `${global_config['api_gateway']}/dev/station`;
     
     try {
         if (window.location.search.length > 0) {

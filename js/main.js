@@ -1,6 +1,6 @@
 
 const date = new Date();
-const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate();
+const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
 
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
@@ -45,7 +45,6 @@ window.alert = function(msg='An unknown error has occurred. Try refreshing this 
         })
         .then((value) => {
             switch (value) {
-                
                 case "refresh":
                     window.location.reload();
                     break;
@@ -105,6 +104,26 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
             const response = await fetch(url);
 
             const json = await response.json();
+
+            if (json.statusCode == 429) {
+                window.alert(
+                    msg = 'Please wait a few minutes and try again.',
+                    title = json.body,
+                    type = 'error',
+                    hasRefresh = true
+                );
+                return;
+            }
+
+            if (json.statusCode == 401) {
+                window.alert(
+                    msg = 'Contact Support.',
+                    title = `401 - ${json.body}`,
+                    type = 'error',
+                    hasRefresh = true
+                );
+                return;
+            }
 
             if (url.indexOf('/resource') > 0 && Object.keys(json).length == 0) {
                 console.log(`Empty JSON for ${url}. Retrying...`);
@@ -169,7 +188,7 @@ function getUniverseList() {
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving UniverseList Cache.');
+            console.log('Same Hour - Retrieving UniverseList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -177,7 +196,7 @@ function getUniverseList() {
                 console.log('Error Retrieving UniverseList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving UniverseList Cache.');
+            console.log('New Hour - Retrieving UniverseList Cache.');
         
             getResourceData('universeList.json').then(function(response) {
                 console.log('Universe List Loaded.');
@@ -203,7 +222,7 @@ function getFunctionDurations() {
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving Function Durations Cache.');
+            console.log('Same Hour - Retrieving Function Durations Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -211,7 +230,7 @@ function getFunctionDurations() {
                 console.log('Error Retrieving Function Durations Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving Function Durations Cache.');
+            console.log('New Hour - Retrieving Function Durations Cache.');
         
             getResourceData('functionDurations.json').then(function(response) {
                 console.log('Function Durations Loaded.');
@@ -237,7 +256,7 @@ function getRegionList(){
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving RegionList Cache.');
+            console.log('Same Hour - Retrieving RegionList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -245,7 +264,7 @@ function getRegionList(){
                 console.log('Error Retrieving RegionList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving RegionList Cache.');
+            console.log('New Hour - Retrieving RegionList Cache.');
         
             getResourceData('regionList.json').then(function(response) {
                 console.log('Region List Loaded.');
@@ -270,7 +289,7 @@ function getStationList(){
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
-            console.log('Same Day - Retrieving StationList Cache.');
+            console.log('Same Hour - Retrieving StationList Cache.');
             
             try {
                 resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
@@ -278,10 +297,76 @@ function getStationList(){
                 console.log('Error Retrieving StationList Cache. Retrying.');
             }
         } else {
-            console.log('New Day - Retrieving StationList Cache.');
+            console.log('New Hour - Retrieving StationList Cache.');
         
             getResourceData('stationList.json').then(function(response) {
                 console.log('Station List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
+    });
+}
+
+
+/**
+* Get's the structure list data for the EVE universe.
+* @returns {Promise<void>}
+*/
+function getStructureList(){
+    return new Promise (function(resolve, reject) {
+        const dateCacheKey = 'evetrade_structure_list_last_retrieved';
+        const jsonCacheKey = 'structureList';
+
+        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
+        
+        if(dateString == lastRetrieved) {
+            console.log('Same Hour - Retrieving StructureList Cache.');
+            
+            try {
+                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
+            } catch(e) {
+                console.log('Error Retrieving StructureList Cache. Retrying.');
+            }
+        } else {
+            console.log('New Hour - Retrieving StructureList Cache.');
+        
+            getResourceData('structureList.json').then(function(response) {
+                console.log('Structure List Loaded.');
+                window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
+                window.localStorage.setItem(dateCacheKey, dateString);
+                resolve(response);
+            });
+        }
+    });
+}
+
+
+/**
+* Get's the structure info data for the EVE universe.
+* @returns {Promise<void>}
+*/
+function getStructureInfo(){
+    return new Promise (function(resolve, reject) {
+        const dateCacheKey = 'evetrade_structure_info_last_retrieved';
+        const jsonCacheKey = 'structureInfo';
+
+        const lastRetrieved = window.localStorage.getItem(dateCacheKey);
+        
+        if(dateString == lastRetrieved) {
+            console.log('Same Hour - Retrieving StructureInfo Cache.');
+            
+            try {
+                resolve(JSON.parse(window.localStorage.getItem(jsonCacheKey)));
+            } catch(e) {
+                console.log('Error Retrieving StructureInfo Cache. Retrying.');
+            }
+        } else {
+            console.log('New Hour - Retrieving StructureInfo Cache.');
+        
+            getResourceData('structureInfo.json').then(function(response) {
+                console.log('Structure Info Loaded.');
                 window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
                 window.localStorage.setItem(dateCacheKey, dateString);
                 resolve(response);
@@ -295,37 +380,54 @@ function getStationList(){
 /* ========================================================================= */
 jQuery(window).load(function(){
     fetchWithRetry(
-        url = './config.json',
+        url = './version.json',
         tries = 3,
-        errorMsg = `Unable to retrieve configuration file. Try refreshing this page.`
-        ).then((config) => {
-            console.log(`Config Loaded.`);
-            global_config = config;   
+        errorMsg = `Unable to retrieve version file. Try refreshing this page.`
+        ).then((version) => {
+            global_config = version;
+            global_config["api_gateway"] = "https://2womw32lucjyaznffxe2wvhqsu0ulphi.lambda-url.us-east-1.on.aws";
+            console.log(`Version Loaded.`);
 
-            fetchWithRetry(
-                url = './version.json',
-                tries = 3,
-                errorMsg = `Unable to retrieve version file. Try refreshing this page.`
-                ).then((version) => {
-                    console.log(`Version Loaded.`);
+            for (const key in version) {
+                const value = version[key];
+                document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
+            }
 
-                    for (const key in version) {
-                        const value = version[key];
-                        document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
-                    }
+            getUniverseList().then(function(universe_response) {
+                universeList = universe_response;
+                console.log(`${Object.keys(universeList).length} items in universe list.`);
 
-                    getUniverseList().then(function(universe_response) {
-                        universeList = universe_response;
-                        console.log(`${Object.keys(universeList).length} items in universe list.`);
+                getRegionList().then(function(region_response) {
+                    regionList = region_response;
+                    console.log(`${regionList.length} items in region list.`);
 
-                        getRegionList().then(function(region_response) {
-                            regionList = region_response;
-                            console.log(`${regionList.length} items in region list.`);
+                    getStationList().then(function(station_response) {
+                        stationList = station_response;
+                        console.log(`${stationList.length} items in station list.`);
 
-                            getStationList().then(function(station_response) {
-                                stationList = station_response;
-                                console.log(`${stationList.length} items in station list.`);
-                
+                        getStructureList().then(function(structure_response) {
+                            // Add asterisk to the end of every string in structure_response
+                            structure_response = structure_response.map(function(item) {
+                                return item + '*';
+                            });
+                            
+                            stationList = stationList.concat(structure_response);
+                            console.log(`${structure_response.length} items in structure list (added to stationList).`);
+
+                            getStructureInfo().then(function(structure_info_response) {
+                                for(structureId in structure_info_response) {
+                                    structure = structure_info_response[structureId];
+                                    universeList[structure['name'].toLowerCase()] = {
+                                        constellation: structure['constellation'],
+                                        name: structure['name'],
+                                        region: structure['region_id'],
+                                        security: structure['security'],
+                                        system: structure['system_id'],
+                                        station: structure['station_id'],
+                                    }
+                                }
+                                console.log(`${Object.keys(structure_info_response).length} items in structure info (added to universeList).`);
+        
                                 getFunctionDurations().then(function(data) {
                                     functionDurations = data;
                                     console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
@@ -334,31 +436,29 @@ jQuery(window).load(function(){
                                         loadNext();
                                     }
                                     loadComplete();
+                                    
+                                    if (typeof set_announcement !== 'undefined') {
+                                        set_announcement(version.release_date);
+                                    }
                                 });
+
                             });
 
                         });
                     });
-                    
-            }).catch((err) => {
-                    console.log(err);
-                    window.alert(
-                        msg = 'Unable to retrieve version file. Try refreshing this page.',
-                        title = 'Error has occurred',
-                        type = 'error',
-                        hasRefresh = true
-                    )
+
+                });
             });
+            
     }).catch((err) => {
             console.log(err);
             window.alert(
-                msg = 'Unable to retrieve configuration file. Try refreshing this page.',
+                msg = 'Unable to retrieve version file. Try refreshing this page.',
                 title = 'Error has occurred',
                 type = 'error',
                 hasRefresh = true
             )
     });
-        
         
     $(function () {
         var tabIndex = 1;

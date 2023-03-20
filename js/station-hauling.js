@@ -30,6 +30,7 @@ function getSystemFromStation(station) {
 }
 
 function addStationToList(stationName, domId) {
+    stationName = stationName.replace('*', '');
     const data = universeList[stationName.toLowerCase()];
     const dataAttribute = `#${domId} li[data-station="${data.station}"]`;
     
@@ -114,7 +115,7 @@ function initAwesomplete(domId, list) {
         maxItems: 5,
         autoFirst: true,
         tabSelect: true,
-        filter: Awesomplete.FILTER_STARTSWITH,
+        filter: Awesomplete.FILTER_CONTAINS,
         sort: false,
     });
     
@@ -449,6 +450,9 @@ function swapTradeHub(station) {
     const stationName = station['name'];
     const stationSecurity = station['rating'].toFixed(1).replace('.', '');
 
+    if (station['citadel']) {
+        return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName}*</span>`;
+    }
     return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
 
@@ -516,7 +520,7 @@ let disclaimer_shown = false;
 * Initializes on window load
 */
 function loadNext() {
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['hauling'] : global_config['api']['dev']['hauling'];
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/hauling` : `${global_config['api_gateway']}/dev/hauling`;
     
     try {
         if (window.location.search.length > 0) {

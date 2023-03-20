@@ -20,7 +20,7 @@ function initAwesomplete(domId, list) {
         maxItems: 5,
         autoFirst: true,
         tabSelect: true,
-        filter: Awesomplete.FILTER_STARTSWITH,
+        filter: Awesomplete.FILTER_CONTAINS,
         sort: false,
     });
     
@@ -37,7 +37,20 @@ function createTradeHeader(request, from, to) {
     const minROI = (request.minROI * 100).toFixed(2) + "%";
     const maxBudget = request.maxBudget == Number.MAX_SAFE_INTEGER ? "Infinite" : round_value(request.maxBudget, 0);
     const tax = round_value(request.tax * 100, 2) + "%";
-    
+
+    let structureType = request.structureType;
+    switch(structureType) {
+        case "citadel":
+            structureType = "Player Only";
+            break;
+        case "npc":
+            structureType = "NPC Only";
+            break;
+        default:
+            structureType = "NPC and Player";
+            break;
+    }
+
     let systemSecurity = request.systemSecurity;
     switch(systemSecurity) {
         case "high_sec,low_sec,null_sec":
@@ -55,7 +68,7 @@ function createTradeHeader(request, from, to) {
     
     let subHeader = `<b>Profit&nbsp;Above:</b>&nbsp;${minProfit} | <b>Capacity:</b>&nbsp;${maxWeight} | <b>R.O.I.:</b>&nbsp;${minROI} | <b>Budget:</b>&nbsp;${maxBudget}`;
     subHeader += `<br><b>Sales&nbsp;Tax:</b>&nbsp;${tax} | <b>Security:</b>&nbsp;${systemSecurity} | <b>Route:</b>&nbsp;${routeSafety}`;
-    subHeader += `<br><b>Trade Preference:</b>&nbsp;${cap(fromPreference)} Orders to ${cap(toPreference)} Orders`;
+    subHeader += `<br><b>Trade Preference:</b>&nbsp;${cap(fromPreference)} Orders to ${cap(toPreference)} Orders | <b>Structures:</b>&nbsp;${structureType}`;
     
     $('main h1').hide();
 
@@ -168,6 +181,7 @@ async function getHaulingData(hasQueryParams) {
             minProfit: parseInt($("#minProfit").val()) >= 0 ? parseInt($("#minProfit").val()) : 500000,
             minROI: parseFloat((parseFloat($("#minROI").val()/100) || 0.04).toFixed(2)),
             routeSafety: $("#routeSafety").val() || "shortest",
+            structureType: $("#structureType").val() || "both",
             systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4))
         }
@@ -303,8 +317,12 @@ function createTable(data) {
 
 function swapTradeHub(station) {
     const stationName = station['name'];
-    const stationSecurity = station['rating'].toFixed(1).replace('.', '');
+    const stationRating = station['rating'] < 0 ? 0.0 : station['rating'];
+    const stationSecurity = stationRating.toFixed(1).replace('.', '').replace('-', '');
 
+    if (station['citadel']) {
+        return `<span class='security-code${stationSecurity} citadel' title='Citadel // Security Rating: ${station['rating'].toFixed(2)}'>${stationName}*</span>`;
+    }
     return `<span class='security-code${stationSecurity}' title='Security Rating: ${station['rating'].toFixed(2)}'>${stationName}</span>`;
 }
 
@@ -313,7 +331,7 @@ function swapTradeHub(station) {
 */
 function displayData(data) {
     
-    data.forEach(function(row) {      
+    data.forEach(function(row) {
         from = swapTradeHub(row['From']);
         to = swapTradeHub(row['Take To']);
 
@@ -322,6 +340,7 @@ function displayData(data) {
         '/orders.html?itemId=${row['Item ID']}&from=${hauling_request.from}:${row['From'].station_id}&to=${hauling_request.to}:${row['Take To'].station_id}' 
         target='_blank'><i class="fa fa-search-plus"></i></a>`;
         
+
         row['From'] = from;
         row['Take To'] = to;
     });
@@ -348,14 +367,14 @@ let disclaimer_shown = false;
 * Initializes on window load
 */
 function loadNext() { 
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? global_config['api']['prod']['hauling'] : global_config['api']['dev']['hauling'];
+    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/hauling` : `${global_config['api_gateway']}/dev/hauling`;
     
     try {
         if (window.location.search.length > 0) {
             var search = window.location.search.substring(1);
             const thr = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
             
-            if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.systemSecurity && thr.tax) {
+            if (thr.from && thr.to && thr.maxBudget && thr.maxWeight && thr.minProfit && thr.minROI && thr.routeSafety && thr.structureType && thr.systemSecurity && thr.tax) {
                 hauling_request = thr;
                 executeHauling(true);
                 return;
@@ -389,7 +408,7 @@ function loadNext() {
         return false;
     });
     
-    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'routeSafety', 'tradePreference'];
+    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'structureType', 'routeSafety', 'tradePreference'];
     for (let i = 0; i < formElements.length; i++) {
         $(`#${formElements[i]}`).inputStore({
             name: 'region-' + formElements[i]

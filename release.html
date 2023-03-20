@@ -18,18 +18,20 @@
 # EVETrade.space Release Notes
 
 ### V7.1
-    * V7.0.14: (Bugfix) Orders Page does not load properly when coming from Station Trading Page.
-    * V7.0.13: Setting historical volume average to 20-days by default due to limitation of EVE ESI.
-    * V7.0.12: No longer cap results to 1,000 records. Instead caps to 5 megabytes or less. This will allow more results, but could take longer for more complex requests. If you are getting a timeout, try narrowing your search parameters.
-    * V7.0.11: Updated timeout from 30 seconds to 120 seconds for larger queries.
-    * V7.0.10: Added trade preferences for station or region hauling trades. Included additional stations and systems (ie: Thera) that were not showing up. Limit results to the top 1,000 most profitable.
-    * V7.0.9: (Bugfix) Route Chunking to avoid ES maxClauseSize of 1024
-    * V7.0.8: Added a jump route cache which improves performance for hauling trade requests by an average of 50%. Average requests were between 10-20 seconds and this has shrunk to 5-10 seconds.
-    * V7.0.7: (Bugfixes) Using static S3 resources rather than a resource API to minimize exceptions (Thanks to @Megakaktus @Heaths and @k3v on Discord for submitting this bug)
-    * V7.0.4: System to System trading has been reintroduced on the station-to-station trading page. Improved UI from the legacy application collapses all stations on the UI to a single row.
-    * V7.0.3: (Bugfix) Station to Station Haul Market Depth improperly linked to incorrect page when multiple TO or FROM stations were selected.
-    * V7.0.2: (Bugfix) In the event of a failed request, 3 retries should take place, and then an error modal should display.
-    * V7.0.1: (Bugfix) Submitting forms would refresh on Firefox due to not preventing the default action (Thanks to k3v on Discord for submitting this bug)
+    * Player Structures added to trading options.
+    * Added an API Gateway to rate limit malicious requests and bots.
+    * (Bugfix) Orders Page does not load properly when coming from Station Trading Page.
+    * Setting historical volume average to 20-days by default due to limitation of EVE ESI.
+    * No longer cap results to 1,000 records. Instead caps to 5 megabytes or less. This will allow more results, but could take longer for more complex requests. If you are getting a timeout, try narrowing your search parameters.
+    * Updated timeout from 30 seconds to 120 seconds for larger queries.
+    * Added trade preferences for station or region hauling trades. Included additional stations and systems (ie: Thera) that were not showing up. Limit results to the top 1,000 most profitable.
+    * (Bugfix) Route Chunking to avoid ES maxClauseSize of 1024
+    * Added a jump route cache which improves performance for hauling trade requests by an average of 50%. Average requests were between 10-20 seconds and this has shrunk to 5-10 seconds.
+    * (Bugfixes) Using static S3 resources rather than a resource API to minimize exceptions (Thanks to @Megakaktus @Heaths and @k3v on Discord for submitting this bug)
+    * System to System trading has been reintroduced on the station-to-station trading page. Improved UI from the legacy application collapses all stations on the UI to a single row.
+    * (Bugfix) Station to Station Haul Market Depth improperly linked to incorrect page when multiple TO or FROM stations were selected.
+    * (Bugfix) In the event of a failed request, 3 retries should take place, and then an error modal should display.
+    * (Bugfix) Submitting forms would refresh on Firefox due to not preventing the default action (Thanks to k3v on Discord for submitting this bug)
 
 ### V7.0
     * Major Release of improved backend architecture and overhauled UI
