@@ -132,7 +132,7 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
 
             if (json.statusCode == 403) {
                 window.alert(
-                    msg = 'Come back in a week.',
+                    msg = 'Banned for 1 week. Come back later.',
                     title = json.body,
                     type = 'error',
                     hasRefresh = true
