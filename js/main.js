@@ -10,7 +10,22 @@ let regionList = [];
 let functionDurations = {};
 let global_config = {};
 
+let page_loaded = false;
+
+// If loadComplete has not been called after 10 seconds, show the page anyway
+window.onload = function(){
+    console.log('Page loaded. Waiting for loadComplete() to be called...');
+    setTimeout(function() {
+        if (!page_loaded) {
+            clearLocalStorageAndRefresh();
+        } else {
+            console.log('Cache prepared before timeout.');
+        }
+    }, 10000);
+};
+
 function loadComplete() {
+    page_loaded = true;
     $('main').fadeTo('slow', 1, function() {});
 }
 
@@ -108,6 +123,16 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
             if (json.statusCode == 429) {
                 window.alert(
                     msg = 'Please wait a few minutes and try again.',
+                    title = json.body,
+                    type = 'error',
+                    hasRefresh = true
+                );
+                return;
+            }
+
+            if (json.statusCode == 403) {
+                window.alert(
+                    msg = 'Banned for 1 week. Come back later.',
                     title = json.body,
                     type = 'error',
                     hasRefresh = true
