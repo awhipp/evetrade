@@ -36,17 +36,19 @@ function set_announcement(version_data){
 
                     const announcementContentElP2 = document.createElement("p");
                     announcementContentElP2.classList.add("announcement-header");
-                    announcementContentElP2.innerText = 'Known Issues:';
-                    announcementContentElDiv.appendChild(announcementContentElP2);
+                    if (announcement.known_issues.length > 0) {
+                        announcementContentElP2.innerText = 'Known Issues:';
+                        announcementContentElDiv.appendChild(announcementContentElP2);
 
-                    const announcementContentElUl2 = document.createElement("ul");
-                    announcementContentElUl2.classList.add("announcement-content");
-                    for (let i = 0; i < announcement.known_issues.length; i++) {
-                        const announcementContentElLi = document.createElement("li");
-                        announcementContentElLi.innerText = announcement.known_issues[i];
-                        announcementContentElUl2.appendChild(announcementContentElLi);
+                        const announcementContentElUl2 = document.createElement("ul");
+                        announcementContentElUl2.classList.add("announcement-content");
+                        for (let i = 0; i < announcement.known_issues.length; i++) {
+                            const announcementContentElLi = document.createElement("li");
+                            announcementContentElLi.innerText = announcement.known_issues[i];
+                            announcementContentElUl2.appendChild(announcementContentElLi);
+                        }
+                        announcementContentElDiv.appendChild(announcementContentElUl2);
                     }
-                    announcementContentElDiv.appendChild(announcementContentElUl2);
 
 
                     announcementEl.appendChild(announcementHeaderEl);
