@@ -2,12 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "Version 7.1 Released",
+        "header": "Version 7.1.1 Released",
         "content": [
-            "Player Structures added to trading options.",
-            "No more cap on results (used to be 1,000). Instead results are capped at 5mb or less.",
-            "Updated Help Page and Documentations.",
-            "Added an API Gateway to rate limit malicious requests and bots."
+            "Bugfix: Fixed an issue where users were stuck on an empty screen after their first load of the day."
         ],
         "known_issues": [
             "When querying market depth on the orders page,or some structures, some items do not show values."

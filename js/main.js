@@ -10,7 +10,22 @@ let regionList = [];
 let functionDurations = {};
 let global_config = {};
 
+let page_loaded = false;
+
+// If loadComplete has not been called after 10 seconds, show the page anyway
+window.onload = function(){
+    console.log('Page loaded. Waiting for loadComplete() to be called...');
+    setTimeout(function() {
+        if (!page_loaded) {
+            clearLocalStorageAndRefresh();
+        } else {
+            console.log('Cache prepared before timeout.');
+        }
+    }, 5000);
+};
+
 function loadComplete() {
+    page_loaded = true;
     $('main').fadeTo('slow', 1, function() {});
 }
 
