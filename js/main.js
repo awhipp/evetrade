@@ -21,7 +21,7 @@ window.onload = function(){
         } else {
             console.log('Cache prepared before timeout.');
         }
-    }, 5000);
+    }, 10000);
 };
 
 function loadComplete() {
