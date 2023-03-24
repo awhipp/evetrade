@@ -3,7 +3,7 @@ function set_announcement(version_data){
     .then(response => response.json())
     .then(data => {
         if (!data.disabled) {
-            const timeLimit = 3 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
+            const timeLimit = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
             data.announcements.forEach(announcement => {
                 const announcementDate = version_data == 'XX-XX-XXXX' ? new Date() : new Date(new Date(version_data).setDate(new Date(version_data).getDate() - 1));
                 const timeDiff = new Date().getTime() - announcementDate.getTime();

@@ -130,6 +130,16 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                 return;
             }
 
+            if (json.statusCode == 403) {
+                window.alert(
+                    msg = 'Come back in a week.',
+                    title = json.body,
+                    type = 'error',
+                    hasRefresh = true
+                );
+                return;
+            }
+
             if (json.statusCode == 401) {
                 window.alert(
                     msg = 'Contact Support.',
