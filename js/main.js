@@ -399,6 +399,9 @@ function getStructureInfo(){
         }
     });
 }
+
+PRODUCTION_ENDPOINT = "https://vhpefngyqszqmbo7pryufo37cy0kvdpy.lambda-url.us-east-1.on.aws/";
+DEVELOPMENT_ENDPOINT = "https://2womw32lucjyaznffxe2wvhqsu0ulphi.lambda-url.us-east-1.on.aws";
         
 /* ========================================================================= */
 /*	Preloader
@@ -410,7 +413,15 @@ jQuery(window).load(function(){
         errorMsg = `Unable to retrieve version file. Try refreshing this page.`
         ).then((version) => {
             global_config = version;
-            global_config["api_gateway"] = "https://2womw32lucjyaznffxe2wvhqsu0ulphi.lambda-url.us-east-1.on.aws";
+
+            // If on https://evetrade.space, use the production API Gateway
+            if (window.location.host == "evetrade.space") {
+                console.log("Production Endpoint Loaded.");
+                global_config["api_gateway"] = PRODUCTION_ENDPOINT;
+            } else {
+                console.log("Development Endpoint Loaded.");
+                global_config["api_gateway"] = DEVELOPMENT_ENDPOINT;
+            }
             console.log(`Version Loaded.`);
 
             for (const key in version) {
