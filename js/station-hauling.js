@@ -333,7 +333,7 @@ async function getHaulingData(hasQueryParams) {
     const requestUrl = `${API_ENDPOINT}?${qp}`;
     startTime = new Date();
     
-    $("#hauling-form").fadeTo('fast', 0, function() {});
+    $("#hauling-form").remove();
     
     return fetchWithRetry(
         url = requestUrl,
@@ -509,7 +509,12 @@ function executeHauling(hasQueryParams) {
         if (data.length == 0) {
             $(".tableLoadingIcon").html(`No Results Found<br><a class="btn btn-grey btn-border btn-effect" href="javascript:window.location.replace(location.pathname);">Refresh this page</a>`);
         } else {
-            displayData(data);
+            try {
+                displayData(data);
+            } catch (e) {
+                window.alert(`Unhandled Exception has occurred. Please try again.`);
+                console.log(e);
+            }
         }
     });
 }
