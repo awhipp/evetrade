@@ -44,6 +44,19 @@ function round_value(value, amount) {
 }
 
 /**
+* Override the default console.log function to add a timestamp with milliseconds
+*/
+console.log = (function (orig) {
+    return function () {
+        var args = Array.prototype.slice.call(arguments);
+        const d = new Date()
+        args.unshift(`[${d.toISOString(tz=0)}]`);
+        orig.apply(this, args);
+    };
+})(console.log);
+
+
+/**
  * Overrides the default window.alert function with a better UI/UX
  * @param {*} msg Alert message
  * @param {*} title Alert title
@@ -97,9 +110,9 @@ function countDownDivText(initialTime, retryCount = 0) {
 
         const percent = (1 - (timeLeft / initialTime)) * 100;
         
-        $('.durationPercent').text((percent).toFixed(1));
+        $('.durationPercent').text((percent).toFixed(2));
         $('.durationRetry').text(retryText);
-    }, 100);
+    }, 10);
 }
 
 
@@ -118,7 +131,11 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
         try { 
             const response = await fetch(url);
 
-            const json = await response.json();
+            let json = await response.json();
+            if (typeof(json) == 'string') {
+                json = JSON.parse(json);
+            }
+            
 
             if (json.statusCode == 429) {
                 window.alert(
@@ -154,6 +171,8 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                 console.log(`Empty JSON for ${url}. Retrying...`);
                 errs.push(`No data returned from Resource API. Retrying...`);
             } else if(response.ok && !('error' in json)) {
+                // print json size in mb
+                console.log(`JSON size: ${JSON.stringify(json).length/1024/1024} megabytes`);
                 return json;
             } else {
                 countDownDivText(storedTime, i+2);
