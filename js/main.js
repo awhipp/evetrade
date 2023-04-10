@@ -400,7 +400,7 @@ function getStructureInfo(){
     });
 }
 
-PRODUCTION_ENDPOINT = "https://vhpefngyqszqmbo7pryufo37cy0kvdpy.lambda-url.us-east-1.on.aws/";
+PRODUCTION_ENDPOINT = "https://vhpefngyqszqmbo7pryufo37cy0kvdpy.lambda-url.us-east-1.on.aws";
 DEVELOPMENT_ENDPOINT = "https://2womw32lucjyaznffxe2wvhqsu0ulphi.lambda-url.us-east-1.on.aws";
         
 /* ========================================================================= */
