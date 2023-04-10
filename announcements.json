@@ -1,11 +1,9 @@
 {
-    "disabled": false,
+    "disabled": true,
     "announcements": [
       {
-        "header": "Version 7.1.1 Released",
+        "header": "",
         "content": [
-            "Bugfix: Fixed an issue where users were stuck on an empty screen after their first load of the day.",
-            "Automatic bans placed on IPs that attempt to circumvent rate-limit"
         ],
         "known_issues": [
         ]
