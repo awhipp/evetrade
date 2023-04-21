@@ -502,7 +502,7 @@ function displayData(data) {
 }
 
 function executeHauling(hasQueryParams) {
-    countDownDivText(functionDurations['evetrade-api']);
+    countDownDivText(functionDurations['evetrade_api']);
     $(".tableLoadingIcon").show();
     
     getHaulingData(hasQueryParams).then((data) => {
