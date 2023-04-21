@@ -502,7 +502,7 @@ function displayData(data) {
 }
 
 function executeHauling(hasQueryParams) {
-    countDownDivText(functionDurations['evetrade-get-hauling-orders']);
+    countDownDivText(functionDurations['evetrade-api']);
     $(".tableLoadingIcon").show();
     
     getHaulingData(hasQueryParams).then((data) => {

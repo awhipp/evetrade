@@ -132,7 +132,7 @@ let thr = {};
 function loadNext() {
     API_ENDPOINT = `${global_config['api_gateway']}/orders`;
 
-    countDownDivText(functionDurations['evetrade-get-orders']);
+    countDownDivText(functionDurations['evetrade-api']);
     $(".tableLoadingIcon").show();
     
     try {

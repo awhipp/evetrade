@@ -255,7 +255,7 @@ function displayData(data) {
 }
 
 function executeTrading(hasQueryParams) {
-    countDownDivText(functionDurations['evetrade-get-station-trades']);
+    countDownDivText(functionDurations['evetrade-api']);
     $(".tableLoadingIcon").show();
     
     getTradingData(hasQueryParams).then((data) => {
