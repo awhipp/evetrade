@@ -502,7 +502,7 @@ function displayData(data) {
 }
 
 function executeHauling(hasQueryParams) {
-    countDownDivText(functionDurations['evetrade-get-hauling-orders']);
+    countDownDivText(functionDurations['evetrade_api']);
     $(".tableLoadingIcon").show();
     
     getHaulingData(hasQueryParams).then((data) => {
@@ -525,7 +525,7 @@ let disclaimer_shown = false;
 * Initializes on window load
 */
 function loadNext() {
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/hauling` : `${global_config['api_gateway']}/dev/hauling`;
+    API_ENDPOINT = `${global_config['api_gateway']}/hauling`;
     
     try {
         if (window.location.search.length > 0) {

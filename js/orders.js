@@ -130,9 +130,9 @@ let thr = {};
 * Initializes on window load
 */
 function loadNext() {
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/orders` : `${global_config['api_gateway']}/dev/orders`;
+    API_ENDPOINT = `${global_config['api_gateway']}/orders`;
 
-    countDownDivText(functionDurations['evetrade-get-orders']);
+    countDownDivText(functionDurations['evetrade_api']);
     $(".tableLoadingIcon").show();
     
     try {

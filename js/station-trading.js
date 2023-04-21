@@ -255,7 +255,7 @@ function displayData(data) {
 }
 
 function executeTrading(hasQueryParams) {
-    countDownDivText(functionDurations['evetrade-get-station-trades']);
+    countDownDivText(functionDurations['evetrade_api']);
     $(".tableLoadingIcon").show();
     
     getTradingData(hasQueryParams).then((data) => {
@@ -276,7 +276,7 @@ function executeTrading(hasQueryParams) {
 * Initializes on window load
 */
 function loadNext() {
-    API_ENDPOINT = window.location.href.startsWith('https://evetrade.space') ? `${global_config['api_gateway']}/station` : `${global_config['api_gateway']}/dev/station`;
+    API_ENDPOINT = `${global_config['api_gateway']}/station`;
     
     try {
         if (window.location.search.length > 0) {

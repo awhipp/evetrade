@@ -419,8 +419,8 @@ function getStructureInfo(){
     });
 }
 
-PRODUCTION_ENDPOINT = "https://vhpefngyqszqmbo7pryufo37cy0kvdpy.lambda-url.us-east-1.on.aws";
-DEVELOPMENT_ENDPOINT = "https://2womw32lucjyaznffxe2wvhqsu0ulphi.lambda-url.us-east-1.on.aws";
+PRODUCTION_ENDPOINT = "https://remy65obllca7kdbhp56q74l7m0ultyy.lambda-url.us-east-1.on.aws";
+DEVELOPMENT_ENDPOINT = "https://ykojlvmo2vgjde53lye6nyst5y0irbdx.lambda-url.us-east-1.on.aws";
         
 /* ========================================================================= */
 /*	Preloader
