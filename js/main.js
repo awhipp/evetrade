@@ -139,7 +139,7 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
 
             if (json.statusCode == 429) {
                 window.alert(
-                    msg = 'Please wait a few minutes and try again.',
+                    msg = 'Please wait a few minutes and try again. IP Reference: ' + json.ip,
                     title = json.body,
                     type = 'error',
                     hasRefresh = true
@@ -149,7 +149,7 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
 
             if (json.statusCode == 403) {
                 window.alert(
-                    msg = 'Banned for 1 week. Come back later.',
+                    msg = 'Banned for 1 week. Come back later. IP Reference: ' + json.ip,
                     title = json.body,
                     type = 'error',
                     hasRefresh = true
