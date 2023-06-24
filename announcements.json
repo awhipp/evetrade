@@ -1,9 +1,10 @@
 {
-    "disabled": true,
+    "disabled": false,
     "announcements": [
       {
-        "header": "",
+        "header": "7.1.4: TTT Destroyed o7",
         "content": [
+            "Tranquility Trading Tower is no more (2018-2023). TTT removed from bookmarks."
         ],
         "known_issues": [
         ]
