@@ -96,6 +96,11 @@ function createTradeHeader(request, from, to) {
 
 function getNameFromUniverseRegionName(regionName) {
     regionName = regionName.toLowerCase();
+    if (regionName.toLowerCase().indexOf('nearby regions') >= 0) {
+        return {
+            'id': 'nearby'
+        };
+    } 
     
     for (const name in universeList) {
         if (universeList[name].name.toLowerCase() == regionName) {
@@ -109,7 +114,10 @@ function getNameFromUniverseRegionName(regionName) {
 }
 
 
-function getNameFromUniverseRegionId(regionId) {   
+function getNameFromUniverseRegionId(regionId) {  
+    if (regionId.toLowerCase().indexOf('nearby') >= 0) {
+        return 'nearby';
+    } 
     for (const name in universeList) {
         if (universeList[name].id !== undefined && universeList[name].id == regionId) {
             return universeList[name];
@@ -368,6 +376,17 @@ function executeHauling(hasQueryParams) {
 
 let disclaimer_shown = false;
 
+function isNearbyChecked(){
+    if ($("#nearbyOnly").is(":checked")) {
+        $("#to").attr("disabled", true);
+        // TODO: Get nearby regions from API
+        $("#to").val("Nearby Regions (TBD, TBD, TBD).");
+    } else {
+        $("#nearbyOnly").attr("disabled", false);
+        $("#to").val("");
+    }
+}
+
 /**
 * Initializes on window load
 */
@@ -413,11 +432,12 @@ function loadNext() {
         return false;
     });
     
-    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'structureType', 'routeSafety', 'tradePreference'];
+    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'structureType', 'routeSafety', 'tradePreference', 'nearbyOnly'];
     for (let i = 0; i < formElements.length; i++) {
         $(`#${formElements[i]}`).inputStore({
             name: 'region-' + formElements[i]
         });
+        isNearbyChecked();
     }
     
     if ($("#tradePreference").val() != "") {
@@ -425,7 +445,7 @@ function loadNext() {
         $(".disclaimer").slideToggle();
     }
 
-    $("#tradePreference").change(function(e){
+    $("#tradePreference").change(function(){
         if ($("#tradePreference").val() != "" && !disclaimer_shown) {
             disclaimer_shown = true;
             $(".disclaimer").slideToggle();
@@ -436,5 +456,7 @@ function loadNext() {
             $(".disclaimer").slideToggle();
         }
 
-    })
+    });
+
+    $("#nearbyOnly").change(isNearbyChecked);
 }

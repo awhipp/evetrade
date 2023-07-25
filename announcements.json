@@ -2,9 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.1.4: TTT Destroyed o7",
+        "header": "7.1.5",
         "content": [
-            "Tranquility Trading Tower is no more (2018-2023). TTT removed from bookmarks."
+            "Region Hauling now allows trading with nearby regions."
         ],
         "known_issues": [
         ]
