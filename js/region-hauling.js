@@ -378,11 +378,11 @@ let disclaimer_shown = false;
 
 function isNearbyChecked(){
     if ($("#nearbyOnly").is(":checked")) {
-        $("#to").attr("disabled", true);
         // TODO: Get nearby regions from API
+        $("#to").attr("disabled", true);
         $("#to").val("Nearby Regions (TBD, TBD, TBD).");
     } else {
-        $("#nearbyOnly").attr("disabled", false);
+        $("#to").attr("disabled", false);
         $("#to").val("");
     }
 }
