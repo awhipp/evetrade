@@ -27,6 +27,9 @@ function initAwesomplete(domId, list) {
     $(input).on('awesomplete-select', function(selection) {
         console.log(`Added (select): ${selection.originalEvent.text.value}`);
         $(input).blur();
+        setTimeout(function() {
+            isNearbyChecked();
+        }, 500);
     });
 }
 
@@ -167,6 +170,12 @@ async function getHaulingData(hasQueryParams) {
         hauling_request.to = getToTradePreference(hauling_request.to);
         to = getNameFromUniverseRegionId(hauling_request.to);
         hauling_request.to = `${toPreference}-${hauling_request.to}`;
+
+        if (to.name === undefined) {
+            to = {};
+            to.name = getNumberNearbyRegions(from.name).length + " Nearby Regions";
+        }
+
         createTradeHeader(hauling_request, from.name, to.name);
         
     } else {
@@ -378,13 +387,23 @@ let disclaimer_shown = false;
 
 function isNearbyChecked(){
     if ($("#nearbyOnly").is(":checked")) {
-        // TODO: Get nearby regions from API
-        $("#to").attr("disabled", true);
-        $("#to").val("Nearby Regions (TBD, TBD, TBD).");
+        if ($("#from").val() == "") {
+            $("#nearbyOnly").attr("checked", false);
+            window.alert("Please select a valid starting region. Before selecting nearby regions.");
+        } else {
+            nearby = getNumberNearbyRegions($("#from").val());
+            // TODO: Get nearby regions from API
+            $("#to").attr("disabled", true);
+            $("#to").val(nearby.length + " Nearby Regions");
+        }
     } else {
         $("#to").attr("disabled", false);
         $("#to").val("");
     }
+}
+
+function getNumberNearbyRegions(region_name) {
+    return nearbyRegions[universeList[region_name.toLowerCase()].id]
 }
 
 /**
@@ -432,7 +451,7 @@ function loadNext() {
         return false;
     });
     
-    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'structureType', 'routeSafety', 'tradePreference', 'nearbyOnly'];
+    const formElements = ['minProfit', 'maxWeight', 'minROI', 'maxBudget', 'tax', 'systemSecurity', 'structureType', 'routeSafety', 'tradePreference'];
     for (let i = 0; i < formElements.length; i++) {
         $(`#${formElements[i]}`).inputStore({
             name: 'region-' + formElements[i]
