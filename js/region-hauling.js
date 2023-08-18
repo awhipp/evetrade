@@ -28,9 +28,16 @@ function initAwesomplete(domId, list) {
         console.log(`Added (select): ${selection.originalEvent.text.value}`);
         $(input).blur();
         setTimeout(function() {
-            isNearbyChecked();
+            updateNearbyCount();
         }, 500);
     });
+    $(input).on('awesomplete-close', function() {
+        setTimeout(function() {
+            updateNearbyCount();
+        }, 500);
+    });
+
+
 }
 
 function createTradeHeader(request, from, to) {
@@ -173,7 +180,7 @@ async function getHaulingData(hasQueryParams) {
 
         if (to.name === undefined) {
             to = {};
-            to.name = getNumberNearbyRegions(from.name).length + " Nearby Regions";
+            to.name = getNumberNearbyRegions(from.name).join(", ");
         }
 
         createTradeHeader(hauling_request, from.name, to.name);
@@ -385,25 +392,39 @@ function executeHauling(hasQueryParams) {
 
 let disclaimer_shown = false;
 
-function isNearbyChecked(){
+function updateNearbyCount(){
     if ($("#nearbyOnly").is(":checked")) {
+        $("#to").attr("disabled", true);
         if ($("#from").val() == "") {
-            $("#nearbyOnly").attr("checked", false);
-            window.alert("Please select a valid starting region. Before selecting nearby regions.");
+            $("#to").val("<< Select a Starting Region >>");
+            $("#nearbyList").text(``);
         } else {
-            nearby = getNumberNearbyRegions($("#from").val());
-            // TODO: Get nearby regions from API
-            $("#to").attr("disabled", true);
-            $("#to").val(nearby.length + " Nearby Regions");
+            try{
+                nearby = getNumberNearbyRegions($("#from").val());
+                // TODO: Get nearby regions from API
+                $("#to").val(`${nearby.length} Nearby Regions`);
+                $("#nearbyList").text(`Regions Include: ${nearby.join(", ")}`);
+            } catch(e) {
+                $("#to").val("<< Select a Valid Starting Region >>");
+                $("#nearbyList").text(``);
+            }
         }
     } else {
         $("#to").attr("disabled", false);
         $("#to").val("");
+        $("#nearbyList").text(``);
     }
 }
 
 function getNumberNearbyRegions(region_name) {
-    return nearbyRegions[universeList[region_name.toLowerCase()].id]
+    nearbyIds = nearbyRegions[universeList[region_name.toLowerCase()].id];
+    nearbyRegionNames = []
+    for (universeObject in universeList) {
+        if (nearbyIds.includes(universeList[universeObject].id)) {
+            nearbyRegionNames.push(universeList[universeObject].name);
+        }
+    }
+    return nearbyRegionNames.sort()
 }
 
 /**
@@ -441,7 +462,7 @@ function loadNext() {
     
     $("#submit").click(function(){
         // Form Validation
-        if ($('#from').val() == "" || $('#to').val() == "") {
+        if ($('#from').val() == "" || $('#to').val() == "" || $('#to').val().indexOf("<<") >= 0) {
             window.alert("Please select a valid starting AND ending regions.");
         } else {
             $("#submit").attr("disabled", true);
@@ -456,7 +477,7 @@ function loadNext() {
         $(`#${formElements[i]}`).inputStore({
             name: 'region-' + formElements[i]
         });
-        isNearbyChecked();
+        updateNearbyCount();
     }
     
     if ($("#tradePreference").val() != "") {
@@ -477,5 +498,5 @@ function loadNext() {
 
     });
 
-    $("#nearbyOnly").change(isNearbyChecked);
+    $("#nearbyOnly").change(updateNearbyCount);
 }
