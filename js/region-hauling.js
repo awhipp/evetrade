@@ -210,7 +210,7 @@ async function getHaulingData(hasQueryParams) {
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4))
         }
 
-        if (to.indexOf('Nearby Regions')) {
+        if (to.indexOf('Nearby Regions') > -1) {
             to = getNumberNearbyRegions(from).join(", ");
         }
 
@@ -414,9 +414,11 @@ function updateNearbyCount(){
             }
         }
     } else {
-        $("#to").attr("disabled", false);
-        $("#to").val("");
-        $("#nearbyList").text(``);
+        if ($("#to").val().indexOf("Nearby Regions") > -1 || $("#to").val().indexOf("<<") > -1) {
+            $("#to").attr("disabled", false);
+            $("#to").val("");
+            $("#nearbyList").text(``);
+        }
     }
 }
 
