@@ -190,6 +190,10 @@ async function getHaulingData(hasQueryParams) {
         from = $('#from').val();
         to = $('#to').val();
 
+        if (to.indexOf('Nearby Regions')) {
+            to = getNumberNearbyRegions(from).join(", ");
+        }
+
         tradePreference = $('#tradePreference').val();
 
         if (tradePreference.length > 0) {
