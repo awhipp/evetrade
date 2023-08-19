@@ -190,10 +190,6 @@ async function getHaulingData(hasQueryParams) {
         from = $('#from').val();
         to = $('#to').val();
 
-        if (to.indexOf('Nearby Regions')) {
-            to = getNumberNearbyRegions(from).join(", ");
-        }
-
         tradePreference = $('#tradePreference').val();
 
         if (tradePreference.length > 0) {
@@ -212,6 +208,10 @@ async function getHaulingData(hasQueryParams) {
             structureType: $("#structureType").val() || "both",
             systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4))
+        }
+
+        if (to.indexOf('Nearby Regions')) {
+            to = getNumberNearbyRegions(from).join(", ");
         }
 
         createTradeHeader(hauling_request, from, to);
