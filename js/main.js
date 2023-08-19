@@ -5,6 +5,7 @@ const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
 let universeList = {};
+let nearbyRegions = {};
 let stationList = [];
 let regionList = [];
 let functionDurations = {};
@@ -419,9 +420,20 @@ function getStructureInfo(){
     });
 }
 
+function createNearbyRegions() {
+    for (const key in universeList) {
+        const value = universeList[key];
+        if ("around" in value) {
+            nearbyRegions[value.id] = value.around;
+        }
+    }
+}
+
 PRODUCTION_ENDPOINT = "https://remy65obllca7kdbhp56q74l7m0ultyy.lambda-url.us-east-1.on.aws";
 DEVELOPMENT_ENDPOINT = "https://ykojlvmo2vgjde53lye6nyst5y0irbdx.lambda-url.us-east-1.on.aws";
-        
+
+
+
 /* ========================================================================= */
 /*	Preloader
 /* ========================================================================= */
@@ -450,7 +462,12 @@ jQuery(window).load(function(){
 
             getUniverseList().then(function(universe_response) {
                 universeList = universe_response;
+
                 console.log(`${Object.keys(universeList).length} items in universe list.`);
+
+                createNearbyRegions();
+
+                console.log(`${Object.keys(nearbyRegions).length} items in nearby regions.`);
 
                 getRegionList().then(function(region_response) {
                     regionList = region_response;

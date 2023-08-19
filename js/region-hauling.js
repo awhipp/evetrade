@@ -27,7 +27,17 @@ function initAwesomplete(domId, list) {
     $(input).on('awesomplete-select', function(selection) {
         console.log(`Added (select): ${selection.originalEvent.text.value}`);
         $(input).blur();
+        setTimeout(function() {
+            updateNearbyCount();
+        }, 500);
     });
+    $(input).on('awesomplete-close', function() {
+        setTimeout(function() {
+            updateNearbyCount();
+        }, 500);
+    });
+
+
 }
 
 function createTradeHeader(request, from, to) {
@@ -96,6 +106,11 @@ function createTradeHeader(request, from, to) {
 
 function getNameFromUniverseRegionName(regionName) {
     regionName = regionName.toLowerCase();
+    if (regionName.toLowerCase().indexOf('nearby regions') >= 0) {
+        return {
+            'id': 'nearby'
+        };
+    } 
     
     for (const name in universeList) {
         if (universeList[name].name.toLowerCase() == regionName) {
@@ -109,7 +124,10 @@ function getNameFromUniverseRegionName(regionName) {
 }
 
 
-function getNameFromUniverseRegionId(regionId) {   
+function getNameFromUniverseRegionId(regionId) {  
+    if (regionId.toLowerCase().indexOf('nearby') >= 0) {
+        return 'nearby';
+    } 
     for (const name in universeList) {
         if (universeList[name].id !== undefined && universeList[name].id == regionId) {
             return universeList[name];
@@ -159,6 +177,12 @@ async function getHaulingData(hasQueryParams) {
         hauling_request.to = getToTradePreference(hauling_request.to);
         to = getNameFromUniverseRegionId(hauling_request.to);
         hauling_request.to = `${toPreference}-${hauling_request.to}`;
+
+        if (to.name === undefined) {
+            to = {};
+            to.name = getNumberNearbyRegions(from.name).join(", ");
+        }
+
         createTradeHeader(hauling_request, from.name, to.name);
         
     } else {
@@ -184,6 +208,10 @@ async function getHaulingData(hasQueryParams) {
             structureType: $("#structureType").val() || "both",
             systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
             tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4))
+        }
+
+        if (to.indexOf('Nearby Regions')) {
+            to = getNumberNearbyRegions(from).join(", ");
         }
 
         createTradeHeader(hauling_request, from, to);
@@ -368,6 +396,42 @@ function executeHauling(hasQueryParams) {
 
 let disclaimer_shown = false;
 
+function updateNearbyCount(){
+    if ($("#nearbyOnly").is(":checked")) {
+        $("#to").attr("disabled", true);
+        if ($("#from").val() == "") {
+            $("#to").val("<< Select a Starting Region >>");
+            $("#nearbyList").text(``);
+        } else {
+            try{
+                nearby = getNumberNearbyRegions($("#from").val());
+                // TODO: Get nearby regions from API
+                $("#to").val(`${nearby.length} Nearby Regions`);
+                $("#nearbyList").text(`Regions Include: ${nearby.join(", ")}`);
+            } catch(e) {
+                $("#to").val("<< Select a Valid Starting Region >>");
+                $("#nearbyList").text(``);
+            }
+        }
+    } else {
+        $("#to").attr("disabled", false);
+        $("#to").val("");
+        $("#nearbyList").text(``);
+    }
+}
+
+function getNumberNearbyRegions(region_name) {
+    nearbyIds = nearbyRegions[universeList[region_name.toLowerCase()].id];
+    nearbyRegionNames = []
+    for (universeObject in universeList) {
+        if (nearbyIds.includes(universeList[universeObject].id)) {
+            nearbyRegionNames.push(universeList[universeObject].name);
+        }
+    }
+    nearbyRegionNames.push(region_name);
+    return nearbyRegionNames.sort()
+}
+
 /**
 * Initializes on window load
 */
@@ -403,7 +467,7 @@ function loadNext() {
     
     $("#submit").click(function(){
         // Form Validation
-        if ($('#from').val() == "" || $('#to').val() == "") {
+        if ($('#from').val() == "" || $('#to').val() == "" || $('#to').val().indexOf("<<") >= 0) {
             window.alert("Please select a valid starting AND ending regions.");
         } else {
             $("#submit").attr("disabled", true);
@@ -418,6 +482,7 @@ function loadNext() {
         $(`#${formElements[i]}`).inputStore({
             name: 'region-' + formElements[i]
         });
+        updateNearbyCount();
     }
     
     if ($("#tradePreference").val() != "") {
@@ -425,7 +490,7 @@ function loadNext() {
         $(".disclaimer").slideToggle();
     }
 
-    $("#tradePreference").change(function(e){
+    $("#tradePreference").change(function(){
         if ($("#tradePreference").val() != "" && !disclaimer_shown) {
             disclaimer_shown = true;
             $(".disclaimer").slideToggle();
@@ -436,5 +501,7 @@ function loadNext() {
             $(".disclaimer").slideToggle();
         }
 
-    })
+    });
+
+    $("#nearbyOnly").change(updateNearbyCount);
 }
