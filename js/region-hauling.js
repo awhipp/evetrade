@@ -424,6 +424,7 @@ function getNumberNearbyRegions(region_name) {
             nearbyRegionNames.push(universeList[universeObject].name);
         }
     }
+    nearbyRegionNames.push(region_name);
     return nearbyRegionNames.sort()
 }
 
