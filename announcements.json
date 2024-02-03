@@ -2,9 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.1.5",
+        "header": "7.2.0",
         "content": [
-            "Region Hauling now allows trading with nearby regions."
+            "Removing the use of cookies to avoid GDPR issues."
         ],
         "known_issues": [
         ]
