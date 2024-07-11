@@ -1,10 +1,3 @@
-
-const date = new Date();
-const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
-
-// Disable cookies
-document.cookie = "cookieconsent_status=deny; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
 const RESOURCE_ENDPOINT = 'https://evetrade.s3.amazonaws.com/resources/';
 
 let universeList = {};
