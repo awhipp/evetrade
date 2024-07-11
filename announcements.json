@@ -2,9 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.2.0",
+        "header": "7.2.1",
         "content": [
-            "Removing the use of cookies to avoid GDPR issues."
+            "Removed ads from the website. Enjoy! Remember to donate if you can :)"
         ],
         "known_issues": [
         ]
