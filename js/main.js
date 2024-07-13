@@ -425,9 +425,9 @@ function createNearbyRegions() {
     }
 }
 
-PRODUCTION_ENDPOINT = "https://remy65obllca7kdbhp56q74l7m0ultyy.lambda-url.us-east-1.on.aws";
-DEVELOPMENT_ENDPOINT = "https://ykojlvmo2vgjde53lye6nyst5y0irbdx.lambda-url.us-east-1.on.aws";
-
+PRODUCTION_ENDPOINT = "/api";
+DEVELOPMENT_ENDPOINT = "/dev";
+LOCAL_ENDPOINT = "https://ykojlvmo2vgjde53lye6nyst5y0irbdx.lambda-url.us-east-1.on.aws";
 
 
 /* ========================================================================= */
@@ -445,9 +445,12 @@ jQuery(window).load(function(){
             if (window.location.host == "evetrade.space") {
                 console.log("Production Endpoint Loaded.");
                 global_config["api_gateway"] = PRODUCTION_ENDPOINT;
-            } else {
+            } else if (window.location.host.indexOf("localhost") == -1) {
                 console.log("Development Endpoint Loaded.");
                 global_config["api_gateway"] = DEVELOPMENT_ENDPOINT;
+            } else {
+                console.log("Local Endpoint Loaded.");
+                global_config["api_gateway"] = LOCAL_ENDPOINT;
             }
             console.log(`Version Loaded.`);
 
