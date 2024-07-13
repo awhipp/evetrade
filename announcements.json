@@ -2,9 +2,11 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.2.1",
+        "header": "7.2.2",
         "content": [
-            "Removed ads from the website. Enjoy! Remember to donate if you can :)"
+            "Removed ads from the website. Enjoy! Remember to donate if you can :)",
+            "Resolved an issue with uBlock Origin blocking the API calls.",
+            "Default to use proxy routing rather than AWS calls."
         ],
         "known_issues": [
         ]
