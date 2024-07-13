@@ -21,7 +21,6 @@
   to = ":splat"
   status = 200
   force = true
-  conditions = {Environment = ["production"]}
   headers = {X-Forwarded-Host = "remy65obllca7kdbhp56q74l7m0ultyy.lambda-url.us-east-1.on.aws"}
 
 [[redirects]]
@@ -29,5 +28,4 @@
   to = ":splat"
   status = 200
   force = true
-  conditions = {Environment = ["deploy-preview"]}
   headers = {X-Forwarded-Host = "ykojlvmo2vgjde53lye6nyst5y0irbdx.lambda-url.us-east-1.on.aws"}

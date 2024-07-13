@@ -445,7 +445,7 @@ jQuery(window).load(function(){
             if (window.location.host == "evetrade.space") {
                 console.log("Production Endpoint Loaded.");
                 global_config["api_gateway"] = PRODUCTION_ENDPOINT;
-            } else if (window.location.host.indexOf("localhost") > -1) {
+            } else if (window.location.host.indexOf("localhost") == -1) {
                 console.log("Development Endpoint Loaded.");
                 global_config["api_gateway"] = DEVELOPMENT_ENDPOINT;
             } else {
