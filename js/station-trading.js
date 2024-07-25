@@ -94,7 +94,7 @@ async function getTradingData(hasQueryParams) {
         trading_request = {
             station: getNameFromUniverseStationName(station),
             profit: parseInt($("#profit").val()) >= 0 ? parseInt($("#profit").val()) : 1000,
-            tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4)),
+            tax: parseFloat((parseFloat($("#tax").val()/100) || 0.045).toFixed(4)),
             min_volume: parseInt($("#minVolume").val()) >= 0 ? parseInt($("#minVolume").val()) : 1000,
             fee: parseFloat((parseFloat($("#fee").val()/100) || 0.03).toFixed(4)),
             margins: parseFloat((parseFloat($("#marginAbove").val()/100) || 0.2).toFixed(4)) + ',' +
@@ -114,7 +114,7 @@ async function getTradingData(hasQueryParams) {
     createTradeHeader(trading_request, station);
     
     const qp = new URLSearchParams(trading_request).toString();
-    const requestUrl = `${API_ENDPOINT}?${qp}`;
+    const requestUrl = `${API_ENwDPOINT}?${qp}`;
     startTime = new Date();
     
     $("#hauling-form").remove();
