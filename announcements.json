@@ -2,11 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.2.2",
+        "header": "7.2.3",
         "content": [
-            "Removed ads from the website. Enjoy! Remember to donate if you can :)",
-            "Resolved an issue with uBlock Origin blocking the API calls.",
-            "Default to use proxy routing rather than AWS calls."
+            "Updated default sales tax from 8% to 4.50%"
         ],
         "known_issues": [
         ]

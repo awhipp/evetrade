@@ -314,7 +314,7 @@ async function getHaulingData(hasQueryParams) {
             minROI: parseFloat((parseFloat($("#minROI").val()/100) || 0.04).toFixed(2)),
             routeSafety: $("#routeSafety").val() || "shortest",
             systemSecurity: $("#systemSecurity").val() || "high_sec,low_sec,null_sec",
-            tax: parseFloat((parseFloat($("#tax").val()/100) || 0.08).toFixed(4))
+            tax: parseFloat((parseFloat($("#tax").val()/100) || 0.045).toFixed(4))
         }
     }
         
