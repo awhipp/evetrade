@@ -114,7 +114,7 @@ async function getTradingData(hasQueryParams) {
     createTradeHeader(trading_request, station);
     
     const qp = new URLSearchParams(trading_request).toString();
-    const requestUrl = `${API_ENwDPOINT}?${qp}`;
+    const requestUrl = `${API_ENDPOINT}?${qp}`;
     startTime = new Date();
     
     $("#hauling-form").remove();
