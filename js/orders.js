@@ -4,11 +4,34 @@ let runTime = 0;
 let API_ENDPOINT = '';
 
 /**
+ * Function that replaces the 'nearby' text with the region ID using the station ID.
+ * @param {*} text
+ * @returns The text with the region ID replacing nearby if applicable.
+ */
+function replaceNearby(text) {
+    // If it contains nearby, replace it with the region ID
+    // Do this by looping through the universeList and finding the station ID
+    // Replace the text with the region ID
+    if (text.includes('nearby')) {
+        const stationId = text.split(':')[1];
+        for (const stationName in universeList) {
+            if (universeList[stationName].station == stationId) {
+                text = text.replace('nearby', universeList[stationName].region);
+            }
+        }
+    }
+    return text;
+}
+
+/**
 * Generic function to get JSON data from API endpoint
 * @param {*} fileName 
 * @returns The Data from the API.
 */
 function getOrdersData(itemId, from, to) {
+    from = replaceNearby(from);
+    to = replaceNearby(to);
+    
     return fetchWithRetry(
         url = `${API_ENDPOINT}?itemId=${itemId}&from=${from}&to=${to}`,
         tries = 3,
