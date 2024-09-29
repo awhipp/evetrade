@@ -2,9 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.2.3",
+        "header": "7.2.4",
         "content": [
-            "Updated default sales tax from 8% to 4.50%"
+            "Resolving bug for Order page where `nearby` region searches were breaking."
         ],
         "known_issues": [
         ]
