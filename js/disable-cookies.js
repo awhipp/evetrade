@@ -1,4 +1,4 @@
-const date = new Date();
+/*const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
 
 // Disable cookies for this site entirely
@@ -14,4 +14,4 @@ document.cookie = "cookieconsent_status=deny; expires=Thu, 01 Jan 1970 00:00:00 
             set: function(value) {} // No-op for cookie writes
         });
     }
-})();
+})();*/
