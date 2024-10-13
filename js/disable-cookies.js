@@ -14,4 +14,4 @@ document.cookie = "cookieconsent_status=deny; expires=Thu, 01 Jan 1970 00:00:00 
             set: function(value) {} // No-op for cookie writes
         });
     }*/
-})();*
+})();
