@@ -2,9 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.2.4",
+        "header": "7.3",
         "content": [
-            "Resolving bug for Order page where `nearby` region searches were breaking."
+            "Resolved a bug where EVE's Static Data Export was not being refreshed properly."
         ],
         "known_issues": [
         ]
