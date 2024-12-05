@@ -8,6 +8,8 @@ let functionDurations = {};
 let global_config = {};
 
 let page_loaded = false;
+const date = new Date();
+const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
 
 // If loadComplete has not been called after 10 seconds, show the page anyway
 window.onload = function(){
