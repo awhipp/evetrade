@@ -11,6 +11,13 @@ let page_loaded = false;
 const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
 
+function checkAds() {           
+    if (!window.frames['googlefcPresent']) {
+        console.log('Google Funding Choices not present...');
+    }
+}
+
+
 // If loadComplete has not been called after 10 seconds, show the page anyway
 window.onload = function(){
     console.log('Page loaded. Waiting for loadComplete() to be called...');
@@ -19,6 +26,7 @@ window.onload = function(){
             clearLocalStorageAndRefresh();
         } else {
             console.log('Cache prepared before timeout.');
+            checkAds();
         }
     }, 10000);
 };
@@ -43,25 +51,12 @@ function round_value(value, amount) {
 }
 
 /**
-* Override the default console.log function to add a timestamp with milliseconds
+* Overrides the default window.alert function with a better UI/UX
+* @param {*} msg Alert message
+* @param {*} title Alert title
+* @param {*} type Type of alert
+* @param {*} hasRefresh If it allows refresh on the page
 */
-console.log = (function (orig) {
-    return function () {
-        var args = Array.prototype.slice.call(arguments);
-        const d = new Date()
-        args.unshift(`[${d.toISOString(tz=0)}]`);
-        orig.apply(this, args);
-    };
-})(console.log);
-
-
-/**
- * Overrides the default window.alert function with a better UI/UX
- * @param {*} msg Alert message
- * @param {*} title Alert title
- * @param {*} type Type of alert
- * @param {*} hasRefresh If it allows refresh on the page
- */
 window.alert = function(msg='An unknown error has occurred. Try refreshing this page.', title='Error has occurred', type='error', hasRefresh=false) {
     if (hasRefresh) {
         swal(title, msg, type,{
@@ -73,10 +68,10 @@ window.alert = function(msg='An unknown error has occurred. Try refreshing this 
         .then((value) => {
             switch (value) {
                 case "refresh":
-                    window.location.reload();
-                    break;
+                window.location.reload();
+                break;
                 default:
-                    break;
+                break;
             }
         });
     } else {
@@ -85,8 +80,8 @@ window.alert = function(msg='An unknown error has occurred. Try refreshing this 
 }
 
 /**
- * Every 100ms updates the div text with the new time
- */
+* Every 100ms updates the div text with the new time
+*/
 let storedTime = 0;
 let interval = undefined;
 
@@ -94,19 +89,19 @@ function countDownDivText(initialTime, retryCount = 0) {
     storedTime = initialTime;
     let startTime = new Date();
     let retryText = ''
-
+    
     if (interval || retryCount > 0) {
         clearInterval(interval);
         retryText = `Request Failed. Attempt #${retryCount}.`;
     }
-
+    
     interval = setInterval(function() {
         let timeLeft = initialTime - (new Date() - startTime);
         if(timeLeft < 0) {
             clearInterval(interval);
             return;
         }
-
+        
         const percent = (1 - (timeLeft / initialTime)) * 100;
         
         $('.durationPercent').text((percent).toFixed(2));
@@ -129,13 +124,13 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
         
         try { 
             const response = await fetch(url);
-
+            
             let json = await response.json();
             if (typeof(json) == 'string') {
                 json = JSON.parse(json);
             }
             
-
+            
             if (json.statusCode == 429) {
                 window.alert(
                     msg = 'Please wait a few minutes and try again.\n\nIP Reference: ' + json.ip,
@@ -145,7 +140,7 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                 );
                 return;
             }
-
+            
             if (json.statusCode == 403) {
                 window.alert(
                     msg = 'Banned for 1 week. Come back later.\n\nIP Reference: ' + json.ip,
@@ -155,7 +150,7 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                 );
                 return;
             }
-
+            
             if (json.statusCode == 401) {
                 window.alert(
                     msg = 'Contact Support.\n\nIP Reference: ' + json.ip,
@@ -165,7 +160,7 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                 );
                 return;
             }
-
+            
             if (url.indexOf('/resource') > 0 && Object.keys(json).length == 0) {
                 console.log(`Empty JSON for ${url}. Retrying...`);
                 errs.push(`No data returned from Resource API. Retrying...`);
@@ -177,7 +172,7 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
                 countDownDivText(storedTime, i+2);
                 errs.push(json.error);
             }
-
+            
         }catch (err) {
             countDownDivText(storedTime, i+2);
             errs.push(err);
@@ -193,8 +188,8 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
     
     throw errs;
 };
-    
-    
+
+
 /**
 * Generic function to get JSON data from API endpoint
 * @param {*} fileName 
@@ -202,22 +197,22 @@ async function fetchWithRetry(url=url, tries=3, errorMsg='An unknown error has o
 */
 function getResourceData(fileName) {
     return fetchWithRetry(
-            url = `${RESOURCE_ENDPOINT}${fileName}`,
-            tries = 3,
-            errorMsg = `Unable to retrieve ${fileName} from the API.\n\n Would you like to refresh this page?`
-        ).then(function(response) {
-            return response;
-        });
+        url = `${RESOURCE_ENDPOINT}${fileName}`,
+        tries = 3,
+        errorMsg = `Unable to retrieve ${fileName} from the API.\n\n Would you like to refresh this page?`
+    ).then(function(response) {
+        return response;
+    });
 }
 
 /**
- * Clears local storage and refreshes the page.
- */
+* Clears local storage and refreshes the page.
+*/
 function clearLocalStorageAndRefresh() {
     window.localStorage.clear();
     window.location = '/';
 }
-        
+
 /**
 * Get's the universe list data for the EVE universe.
 * Used by multiple pages.
@@ -240,7 +235,7 @@ function getUniverseList() {
             }
         } else {
             console.log('New Hour - Retrieving UniverseList Cache.');
-        
+            
             getResourceData('universeList.json').then(function(response) {
                 console.log('Universe List Loaded.');
                 window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
@@ -253,10 +248,10 @@ function getUniverseList() {
 }
 
 /**
- * Get Function durations
+* Get Function durations
 * Used by multiple pages.
 * @returns {Promise<void>}
-    */
+*/
 function getFunctionDurations() {
     return new Promise (function(resolve, reject) {
         const dateCacheKey = 'evetrade_function_durations_last_retrieved';
@@ -274,7 +269,7 @@ function getFunctionDurations() {
             }
         } else {
             console.log('New Hour - Retrieving Function Durations Cache.');
-        
+            
             getResourceData('functionDurations.json').then(function(response) {
                 console.log('Function Durations Loaded.');
                 window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
@@ -295,7 +290,7 @@ function getRegionList(){
     return new Promise (function(resolve, reject) {
         const dateCacheKey = 'evetrade_region_list_last_retrieved';
         const jsonCacheKey = 'regionList';
-
+        
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
@@ -308,7 +303,7 @@ function getRegionList(){
             }
         } else {
             console.log('New Hour - Retrieving RegionList Cache.');
-        
+            
             getResourceData('regionList.json').then(function(response) {
                 console.log('Region List Loaded.');
                 window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
@@ -328,7 +323,7 @@ function getStationList(){
     return new Promise (function(resolve, reject) {
         const dateCacheKey = 'evetrade_station_list_last_retrieved';
         const jsonCacheKey = 'stationList';
-
+        
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
@@ -341,7 +336,7 @@ function getStationList(){
             }
         } else {
             console.log('New Hour - Retrieving StationList Cache.');
-        
+            
             getResourceData('stationList.json').then(function(response) {
                 console.log('Station List Loaded.');
                 window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
@@ -361,7 +356,7 @@ function getStructureList(){
     return new Promise (function(resolve, reject) {
         const dateCacheKey = 'evetrade_structure_list_last_retrieved';
         const jsonCacheKey = 'structureList';
-
+        
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
@@ -374,7 +369,7 @@ function getStructureList(){
             }
         } else {
             console.log('New Hour - Retrieving StructureList Cache.');
-        
+            
             getResourceData('structureList.json').then(function(response) {
                 console.log('Structure List Loaded.');
                 window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
@@ -394,7 +389,7 @@ function getStructureInfo(){
     return new Promise (function(resolve, reject) {
         const dateCacheKey = 'evetrade_structure_info_last_retrieved';
         const jsonCacheKey = 'structureInfo';
-
+        
         const lastRetrieved = window.localStorage.getItem(dateCacheKey);
         
         if(dateString == lastRetrieved) {
@@ -407,7 +402,7 @@ function getStructureInfo(){
             }
         } else {
             console.log('New Hour - Retrieving StructureInfo Cache.');
-        
+            
             getResourceData('structureInfo.json').then(function(response) {
                 console.log('Structure Info Loaded.');
                 window.localStorage.setItem(jsonCacheKey, JSON.stringify(response));
@@ -440,99 +435,99 @@ jQuery(window).load(function(){
         url = './version.json',
         tries = 3,
         errorMsg = `Unable to retrieve version file. Try refreshing this page.`
-        ).then((version) => {
-            global_config = version;
-
-            // If on https://evetrade.space, use the production API Gateway
-            if (window.location.host == "evetrade.space") {
-                console.log("Production Endpoint Loaded.");
-                global_config["api_gateway"] = PRODUCTION_ENDPOINT;
-            } else if (window.location.host.indexOf("localhost") == -1) {
-                console.log("Development Endpoint Loaded.");
-                global_config["api_gateway"] = DEVELOPMENT_ENDPOINT;
-            } else {
-                console.log("Local Endpoint Loaded.");
-                global_config["api_gateway"] = LOCAL_ENDPOINT;
-            }
-            console.log(`Version Loaded.`);
-
-            for (const key in version) {
-                const value = version[key];
-                document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
-            }
-
-            getUniverseList().then(function(universe_response) {
-                universeList = universe_response;
-
-                console.log(`${Object.keys(universeList).length} items in universe list.`);
-
-                createNearbyRegions();
-
-                console.log(`${Object.keys(nearbyRegions).length} items in nearby regions.`);
-
-                getRegionList().then(function(region_response) {
-                    regionList = region_response;
-                    console.log(`${regionList.length} items in region list.`);
-
-                    getStationList().then(function(station_response) {
-                        stationList = station_response;
-                        console.log(`${stationList.length} items in station list.`);
-
-                        getStructureList().then(function(structure_response) {
-                            // Add asterisk to the end of every string in structure_response
-                            structure_response = structure_response.map(function(item) {
-                                return item + '*';
+    ).then((version) => {
+        global_config = version;
+        
+        // If on https://evetrade.space, use the production API Gateway
+        if (window.location.host == "evetrade.space") {
+            console.log("Production Endpoint Loaded.");
+            global_config["api_gateway"] = PRODUCTION_ENDPOINT;
+        } else if (window.location.host.indexOf("localhost") == -1) {
+            console.log("Development Endpoint Loaded.");
+            global_config["api_gateway"] = DEVELOPMENT_ENDPOINT;
+        } else {
+            console.log("Local Endpoint Loaded.");
+            global_config["api_gateway"] = LOCAL_ENDPOINT;
+        }
+        console.log(`Version Loaded.`);
+        
+        for (const key in version) {
+            const value = version[key];
+            document.body.innerHTML = document.body.innerHTML.replace(`{{${key}}}`, value);
+        }
+        
+        getUniverseList().then(function(universe_response) {
+            universeList = universe_response;
+            
+            console.log(`${Object.keys(universeList).length} items in universe list.`);
+            
+            createNearbyRegions();
+            
+            console.log(`${Object.keys(nearbyRegions).length} items in nearby regions.`);
+            
+            getRegionList().then(function(region_response) {
+                regionList = region_response;
+                console.log(`${regionList.length} items in region list.`);
+                
+                getStationList().then(function(station_response) {
+                    stationList = station_response;
+                    console.log(`${stationList.length} items in station list.`);
+                    
+                    getStructureList().then(function(structure_response) {
+                        // Add asterisk to the end of every string in structure_response
+                        structure_response = structure_response.map(function(item) {
+                            return item + '*';
+                        });
+                        
+                        stationList = stationList.concat(structure_response);
+                        console.log(`${structure_response.length} items in structure list (added to stationList).`);
+                        
+                        getStructureInfo().then(function(structure_info_response) {
+                            for(structureId in structure_info_response) {
+                                structure = structure_info_response[structureId];
+                                universeList[structure['name'].toLowerCase()] = {
+                                    constellation: structure['constellation'],
+                                    name: structure['name'],
+                                    region: structure['region_id'],
+                                    security: structure['security'],
+                                    system: structure['system_id'],
+                                    station: structure['station_id'],
+                                }
+                            }
+                            console.log(`${Object.keys(structure_info_response).length} items in structure info (added to universeList).`);
+                            
+                            getFunctionDurations().then(function(data) {
+                                functionDurations = data;
+                                console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
+                                
+                                if (typeof loadNext !== 'undefined') {
+                                    loadNext();
+                                }
+                                loadComplete();
+                                
+                                if (typeof set_announcement !== 'undefined') {
+                                    set_announcement(version.release_date);
+                                }
                             });
                             
-                            stationList = stationList.concat(structure_response);
-                            console.log(`${structure_response.length} items in structure list (added to stationList).`);
-
-                            getStructureInfo().then(function(structure_info_response) {
-                                for(structureId in structure_info_response) {
-                                    structure = structure_info_response[structureId];
-                                    universeList[structure['name'].toLowerCase()] = {
-                                        constellation: structure['constellation'],
-                                        name: structure['name'],
-                                        region: structure['region_id'],
-                                        security: structure['security'],
-                                        system: structure['system_id'],
-                                        station: structure['station_id'],
-                                    }
-                                }
-                                console.log(`${Object.keys(structure_info_response).length} items in structure info (added to universeList).`);
-        
-                                getFunctionDurations().then(function(data) {
-                                    functionDurations = data;
-                                    console.log(`${Object.keys(functionDurations).length} items in functionDurations.`);
-                    
-                                    if (typeof loadNext !== 'undefined') {
-                                        loadNext();
-                                    }
-                                    loadComplete();
-                                    
-                                    if (typeof set_announcement !== 'undefined') {
-                                        set_announcement(version.release_date);
-                                    }
-                                });
-
-                            });
-
                         });
+                        
                     });
-
                 });
+                
             });
-            
-    }).catch((err) => {
-            console.log(err);
-            window.alert(
-                msg = 'Unable to retrieve version file. Try refreshing this page.',
-                title = 'Error has occurred',
-                type = 'error',
-                hasRefresh = true
-            )
-    });
+        });
         
+    }).catch((err) => {
+        console.log(err);
+        window.alert(
+            msg = 'Unable to retrieve version file. Try refreshing this page.',
+            title = 'Error has occurred',
+            type = 'error',
+            hasRefresh = true
+        )
+    });
+    
     $(function () {
         var tabIndex = 1;
         $('input,select').each(function () {
@@ -544,4 +539,4 @@ jQuery(window).load(function(){
         });
     });
 });
-            
+
