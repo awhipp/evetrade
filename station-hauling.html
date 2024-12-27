@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="css/main.css">
     <!-- Hauling Stylesheet -->
     <link rel="stylesheet" href="css/hauling.css">
-
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BFV89PY0ST"></script>
     <script>
@@ -44,7 +44,7 @@
         
         gtag('config', 'G-BFV89PY0ST');
     </script>
-
+    
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0599578547621989" crossorigin="anonymous"></script>
 </head>
 
@@ -167,193 +167,192 @@
                                                             <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'fromStations');">Dodixie</span> 
                                                             <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'fromStations');">Rens</span> 
                                                             <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'fromStations');">Hek</span>
-                                                            </p>
-                                                        </div>
-                                                        <div class="col-sm-12 col-md-6">
-                                                            <label class="control-label" for="to"> Ending Station(s) </label>
-                                                            <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
-                                                            <p class="suggestions"> 
-                                                                Trade Hubs:
-                                                                <span onclick="addStationToList('Jita IV - Moon 4 - Caldari Navy Assembly Plant', 'toStations');">Jita</span> 
-                                                                <span onclick="addStationToList('Amarr VIII (Oris) - Emperor Family Academy', 'toStations');">Amarr</span> 
-                                                                <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'toStations');">Dodixie</span> 
-                                                                <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'toStations');">Rens</span> 
-                                                                <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'toStations');">Hek</span>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
-                                                                <ul id="fromStations" class="hauling-list">
-                                                                    <p> Starting Station(s) </p>
-                                                                </ul>
-                                                            </div>
-                                                            <div class="col-sm-12 col-md-6">
-                                                                <ul id="toStations" class="hauling-list">
-                                                                    <p> Ending Station(s) </p>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                        
-
-                                                        <div class="row">
-                                                            <div class="col-md-3"> 
-                                                                <p> 
-                                                                    <label class="control-label" for="minProfit"> Only Profit Above </label> 
-                                                                    <input id="minProfit" type="number" name="minProfit" class="form-control" placeholder="Default: 500,000"> 
-                                                                </p> 
-                                                            </div> 
-                                                            
-                                                            <div class="col-md-3"> 
-                                                                <p> 
-                                                                    <label class="control-label" for="maxWeight"> Cargo Capacity </label> 
-                                                                    <input id="maxWeight" type="number" name="maxWeight" class="form-control" placeholder="Default: Infinity"> 
-                                                                </p> 
-                                                            </div> 
-                                                            
-                                                            <div class="col-md-3"> 
-                                                                <p> 
-                                                                    <label class="control-label" for="minROI"> Return on Investment (%) </label> 
-                                                                    <input id="minROI" type="number" name="minROI" class="form-control" placeholder="Default: 4"> 
-                                                                </p> 
-                                                            </div> 
-                                                            
-                                                            <div class="col-md-3">
-                                                                <p> 
-                                                                    <label class="control-label" for="maxBudget"> Budget </label> 
-                                                                    <input id="maxBudget" type="number" name="maxBudget" class="form-control" placeholder="Default: Infinity"> 
-                                                                </p> 
-                                                            </div> 
-                                                        </div>
-                                                        
-                                                        <div class="row">
-                                                            <div class="col-md-3"> 
-                                                                <label class="control-label" for="tax" title="Calculation = 4.5 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
-                                                                <select id="tax" class="form-control" name="tax"> 
-                                                                    <option value="" selected>Accounting Level</option> 
-                                                                    <option value="4.5">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.50%</option>
-                                                                    <option value="4.005">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.005%</option>
-                                                                    <option value="3.51">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.51%</option>
-                                                                    <option value="3.015">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.015%</option>
-                                                                    <option value="2.52">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.52%</option>
-                                                                    <option value="2.025">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.025%</option>
-                                                                </select> 
-                                                            </div>
-                                                            
-                                                            <div class="col-md-3"> 
-                                                                <label class="control-label" for="systemSecurity"> Security Status </label>
-                                                                <select id="systemSecurity" class="form-control" name="systemSecurity"> 
-                                                                    <option value="" selected>Any Security</option> 
-                                                                    <option value="high_sec,low_sec">Only Low or High Sec</option> 
-                                                                    <option value="high_sec">Only High Sec</option> 
-                                                                </select> 
-                                                            </div> 
-                                                            
-                                                            <div class="col-md-3"> 
-                                                                <label class="control-label" for="routeSafety"> Route Preference </label> 
-                                                                <select id="routeSafety" class="form-control" name="routeSafety"> 
-                                                                    <option value="" selected>Shortest Route</option>
-                                                                    <option value="secure">Safest Route</option>
-                                                                    <option value="insecure">Least Safe Route</option> 
-                                                                </select>
-                                                            </div>
-                                                            
-                                                            <div class="col-md-3"> 
-                                                                <label class="control-label" for="tradePreference"> Trade Preference </label> 
-                                                                <select id="tradePreference" class="form-control" name="tradePreference"> 
-                                                                    <option value="" selected>Sell Orders to Buy Orders</option>
-                                                                    <option value="sell-sell">Sell Orders to Sell Orders (*)</option>
-                                                                    <option value="buy-sell">Buy Orders to Sell Orders (*)</option> 
-                                                                    <option value="buy-buy">Buy Orders to Buy Orders (*)</option> 
-                                                                </select> 
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <br>
-                                                                <button id="submit" class="btn btn-grey btn-border btn-effect">Search</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <label class="control-label" for="to"> Ending Station(s) </label>
+                                                        <input id="to" name="to" class="form-control" type="text" placeholder="Station Name">
+                                                        <p class="suggestions"> 
+                                                            Trade Hubs:
+                                                            <span onclick="addStationToList('Jita IV - Moon 4 - Caldari Navy Assembly Plant', 'toStations');">Jita</span> 
+                                                            <span onclick="addStationToList('Amarr VIII (Oris) - Emperor Family Academy', 'toStations');">Amarr</span> 
+                                                            <span onclick="addStationToList('Dodixie IX - Moon 20 - Federation Navy Assembly Plant', 'toStations');">Dodixie</span> 
+                                                            <span onclick="addStationToList('Rens VI - Moon 8 - Brutor Tribe Treasury', 'toStations');">Rens</span> 
+                                                            <span onclick="addStationToList('Hek VIII - Moon 12 - Boundless Creation Factory', 'toStations');">Hek</span>
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <ul id="fromStations" class="hauling-list">
+                                                            <p> Starting Station(s) </p>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-6">
+                                                        <ul id="toStations" class="hauling-list">
+                                                            <p> Ending Station(s) </p>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-3"> 
+                                                        <p> 
+                                                            <label class="control-label" for="minProfit"> Only Profit Above </label> 
+                                                            <input id="minProfit" type="number" name="minProfit" class="form-control" placeholder="Default: 500,000"> 
+                                                        </p> 
+                                                    </div> 
+                                                    
+                                                    <div class="col-md-3"> 
+                                                        <p> 
+                                                            <label class="control-label" for="maxWeight"> Cargo Capacity </label> 
+                                                            <input id="maxWeight" type="number" name="maxWeight" class="form-control" placeholder="Default: Infinity"> 
+                                                        </p> 
+                                                    </div> 
+                                                    
+                                                    <div class="col-md-3"> 
+                                                        <p> 
+                                                            <label class="control-label" for="minROI"> Return on Investment (%) </label> 
+                                                            <input id="minROI" type="number" name="minROI" class="form-control" placeholder="Default: 4"> 
+                                                        </p> 
+                                                    </div> 
+                                                    
+                                                    <div class="col-md-3">
+                                                        <p> 
+                                                            <label class="control-label" for="maxBudget"> Budget </label> 
+                                                            <input id="maxBudget" type="number" name="maxBudget" class="form-control" placeholder="Default: Infinity"> 
+                                                        </p> 
+                                                    </div> 
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-3"> 
+                                                        <label class="control-label" for="tax" title="Calculation = 4.5 * (1 - 0.11 * AccountingLevel)">Sales Tax</label>
+                                                        <select id="tax" class="form-control" name="tax"> 
+                                                            <option value="" selected>Accounting Level</option> 
+                                                            <option value="4.5">No&nbsp;skill&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.50%</option>
+                                                            <option value="4.005">Lvl&nbsp;I&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.005%</option>
+                                                            <option value="3.51">Lvl&nbsp;II&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.51%</option>
+                                                            <option value="3.015">Lvl&nbsp;III&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.015%</option>
+                                                            <option value="2.52">Lvl&nbsp;IV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.52%</option>
+                                                            <option value="2.025">Lvl&nbsp;V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.025%</option>
+                                                        </select> 
+                                                    </div>
+                                                    
+                                                    <div class="col-md-3"> 
+                                                        <label class="control-label" for="systemSecurity"> Security Status </label>
+                                                        <select id="systemSecurity" class="form-control" name="systemSecurity"> 
+                                                            <option value="" selected>Any Security</option> 
+                                                            <option value="high_sec,low_sec">Only Low or High Sec</option> 
+                                                            <option value="high_sec">Only High Sec</option> 
+                                                        </select> 
+                                                    </div> 
+                                                    
+                                                    <div class="col-md-3"> 
+                                                        <label class="control-label" for="routeSafety"> Route Preference </label> 
+                                                        <select id="routeSafety" class="form-control" name="routeSafety"> 
+                                                            <option value="" selected>Shortest Route</option>
+                                                            <option value="secure">Safest Route</option>
+                                                            <option value="insecure">Least Safe Route</option> 
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-3"> 
+                                                        <label class="control-label" for="tradePreference"> Trade Preference </label> 
+                                                        <select id="tradePreference" class="form-control" name="tradePreference"> 
+                                                            <option value="" selected>Sell Orders to Buy Orders</option>
+                                                            <option value="sell-sell">Sell Orders to Sell Orders (*)</option>
+                                                            <option value="buy-sell">Buy Orders to Sell Orders (*)</option> 
+                                                            <option value="buy-buy">Buy Orders to Buy Orders (*)</option> 
+                                                        </select> 
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <br>
+                                                        <button id="submit" class="btn btn-grey btn-border btn-effect">Search</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="disclaimer">
-                                    * <mark>High risk trading style</mark> and using may lead to large results or timeouts.
-                                    <br> If timeout occurs, try to reduce broad queries (e.g. Higher Security, Profit Filter, or ROI).
-                                </div>
                             </div>
-                            
-                            <div id="coreTable" class="coreTable">
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-6">
-                                        <ul id="fromStations" class="hauling-list">
-                                            <p> Starting Station(s) </p>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-12 col-md-6">
-                                        <ul id="toStations" class="hauling-list">
-                                            <p> Ending Station(s) </p>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        
+                        <div class="disclaimer">
+                            * <mark>High risk trading style</mark> and using may lead to large results or timeouts.
+                            <br> If timeout occurs, try to reduce broad queries (e.g. Higher Security, Profit Filter, or ROI).
                         </div>
                     </div>
                     
-                </section>
-            </main>
-            
-            
-            <!-- End Main Section -->
-            <footer id="footer">
-                <main class="container">
-                    <div class="row text-center">
-                        <div class="footer-content">
-                            <p><a href="./release.html" target="_blank">Version {{version}}</a> | Updated {{release_date}} | <a href="https://github.com/awhipp/evetrade" target="_blank">Source Code</a></li> | <a href="https://github.com/awhipp/evetrade/releases" target="_blank">Download</a></p>		
-                            <p>Copyright &copy; {{years_active}} EVETrade. All Rights Reserved.</p>
+                    <div id="coreTable" class="coreTable">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <ul id="fromStations" class="hauling-list">
+                                    <p> Starting Station(s) </p>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <ul id="toStations" class="hauling-list">
+                                    <p> Ending Station(s) </p>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </main>
-            </footer>
+                </div>
+            </div>
             
-            <!-- CSS -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.css"/>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/brands.min.css"/>
-            <link rel="stylesheet" href="css/datatables.css"/>
-            
-            <!-- Javascript  -->
-            
-            <!-- Main jQuery -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-            <script src="js/inputStore.jquery.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-            
-            <!-- Twitter Bootstrap -->
-            <script src="js/bootstrap.min.js"></script>
-            <!-- Custom Functions -->
-            <script src="js/main.js"></script>
-            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
-            <script src="js/station-hauling.js"></script>
-            
-            <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-            <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js" defer></script>
-            <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.flash.min.js" defer></script>
-            <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js" defer></script>
-            <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js" defer></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" defer></script>
-            <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js" defer></script>
-            <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js" defer></script>
-            <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js" defer></script>
-            <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js" defer></script>
-            <script src="https://fundingchoicesmessages.google.com/i/pub-0599578547621989?ers=1"></script>
-            <script src="js/checkAds.js" defer></script>
-        </body>
-        </html>
+        </section>
+    </main>
+    
+    
+    <!-- End Main Section -->
+    <footer id="footer">
+        <main class="container">
+            <div class="row text-center">
+                <div class="footer-content">
+                    <p><a href="./release.html" target="_blank">Version {{version}}</a> | Updated {{release_date}} | <a href="https://github.com/awhipp/evetrade" target="_blank">Source Code</a></li> | <a href="https://github.com/awhipp/evetrade/releases" target="_blank">Download</a></p>		
+                    <p>Copyright &copy; {{years_active}} EVETrade. All Rights Reserved.</p>
+                </div>
+            </div>
+        </main>
+    </footer>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.base.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/brands.min.css"/>
+    <link rel="stylesheet" href="css/datatables.css"/>
+    
+    <!-- Javascript  -->
+    
+    <!-- Main jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/inputStore.jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    
+    <!-- Twitter Bootstrap -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Custom Functions -->
+    <script src="js/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <script src="js/station-hauling.js"></script>
+    
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/dataTables.buttons.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.flash.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" defer></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js" defer></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.html5.min.js" defer></script>
+    <script src="https://cdn.datatables.net/buttons/1.4.0/js/buttons.print.min.js" defer></script>
+    <script src="https://fundingchoicesmessages.google.com/i/pub-0599578547621989?ers=1"></script>
+</body>
+</html>

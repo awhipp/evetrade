@@ -11,6 +11,13 @@ let page_loaded = false;
 const date = new Date();
 const dateString = "Date=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
 
+function checkAds() {           
+    if (!window.frames['googlefcPresent']) {
+        console.log('Google Funding Choices not present...');
+    }
+    (function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent']) {if (document.body) {const iframe = document.createElement('iframe'); iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;'; iframe.style.display = 'none'; iframe.name = 'googlefcPresent'; document.body.appendChild(iframe);} else {setTimeout(signalGooglefcPresent, 0);}}}signalGooglefcPresent();})();
+}
+
 // If loadComplete has not been called after 10 seconds, show the page anyway
 window.onload = function(){
     console.log('Page loaded. Waiting for loadComplete() to be called...');
@@ -19,6 +26,7 @@ window.onload = function(){
             clearLocalStorageAndRefresh();
         } else {
             console.log('Cache prepared before timeout.');
+            checkAds();
         }
     }, 10000);
 };
@@ -48,8 +56,16 @@ function round_value(value, amount) {
 console.log = (function (orig) {
     return function () {
         var args = Array.prototype.slice.call(arguments);
-        const d = new Date()
-        args.unshift(`[${d.toISOString(tz=0)}]`);
+        const d = new Date();
+        args.unshift(`[${d.toISOString()}]`);
+
+        // Capture stack trace
+        const stack = new Error().stack.split('\n');
+        if (stack.length > 2) {
+            const lineInfo = stack[2].trim();
+            args.unshift(lineInfo);
+        }
+
         orig.apply(this, args);
     };
 })(console.log);
