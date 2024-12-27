@@ -51,27 +51,6 @@ function round_value(value, amount) {
 }
 
 /**
-* Override the default console.log function to add a timestamp with milliseconds
-*/
-console.log = (function (orig) {
-    return function () {
-        var args = Array.prototype.slice.call(arguments);
-        const d = new Date();
-        args.unshift(`[${d.toISOString()}]`);
-        
-        // Capture stack trace
-        const stack = new Error().stack.split('\n');
-        if (stack.length > 2) {
-            const lineInfo = stack[2].trim();
-            args.unshift(lineInfo);
-        }
-        
-        orig.apply(this, args);
-    };
-})(console.log);
-
-
-/**
 * Overrides the default window.alert function with a better UI/UX
 * @param {*} msg Alert message
 * @param {*} title Alert title
