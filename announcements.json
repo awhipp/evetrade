@@ -2,9 +2,9 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.3",
+        "header": "7.3.1",
         "content": [
-            "Resolved a bug where EVE's Static Data Export was not being refreshed properly."
+            "Updated default sales tax from <a href='https://www.eveonline.com/news/view/patch-notes-version-22-02' target='_blank'>4.5% to 7.5%</a>."
         ],
         "known_issues": [
         ]
