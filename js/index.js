@@ -3,13 +3,9 @@ function set_announcement(){
     .then(response => response.json())
     .then(data => {
         if (!data.disabled) {
-            const timeLimit = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
             data.announcements.forEach(announcement => {
                 const announcementEl = document.createElement("div");
                 announcementEl.classList.add("announcement");
-                if (timeDiff < 0 && !isClosureNotice) {
-                    announcementEl.classList.add("past");
-                }
                 const announcementHeaderEl = document.createElement("h2");
                 announcementHeaderEl.classList.add("announcement-header");
                 announcementHeaderEl.innerText = announcement.header;
