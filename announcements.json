@@ -4,6 +4,9 @@
       {
         "header": "<a href=\"./announcements.html\">Site Closure Notice</a>",
         "content": [
+            "After more than a decade of running EveTrade, I've made the difficult decision to close the site within the next year.",
+            "The site will officially close its doors on April 1, 2026 (maybe sooner).",
+            "For more details, please visit the <a href=\"./announcements.html\">Announcements</a> page."
         ],
         "known_issues": [
         ]
