@@ -2,12 +2,8 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "Site Closure Notice",
+        "header": "<a href=\"./announcements.html\">Site Closure Notice</a>",
         "content": [
-            "After more than a decade of running EveTrade, I've made the difficult decision to close the site within the next year.",
-            "The site will officially close its doors on April 1, 2026 (maybe sooner).",
-            "The domain EveTrade.Space is listed for sale on Namecheap. All underlying code is open-source on Github.",
-            "Thank you for your incredible support over the past decade!"
         ],
         "known_issues": [
         ]

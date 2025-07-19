@@ -504,10 +504,6 @@ jQuery(window).load(function(){
                                     loadNext();
                                 }
                                 loadComplete();
-                                
-                                if (typeof set_announcement !== 'undefined') {
-                                    set_announcement(version.release_date);
-                                }
                             });
                             
                         });
