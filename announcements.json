@@ -2,10 +2,8 @@
     "disabled": false,
     "announcements": [
       {
-        "header": "7.3.1",
-        "content": [
-            "Updated default sales tax from 4.5% to 7.5% due to patch changes."
-        ],
+        "header": "<a href=\"./announcements.html\" target=\"_blank\">Impending Site Closure Notice</a>",
+        "content": [],
         "known_issues": [
         ]
       }
