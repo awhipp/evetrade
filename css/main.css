@@ -797,7 +797,13 @@ Announcement Section
   }
 
   .announcement-header {
+    text-align: center;
     color: #f5f5f5;
     font-weight: bold;
+  }
+
+  .announcement-header a {
+    color: #f5f5f5;
+    font-size: 18px;
   }
   
