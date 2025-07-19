@@ -8,7 +8,7 @@ function set_announcement(){
                 announcementEl.classList.add("announcement");
                 const announcementHeaderEl = document.createElement("h2");
                 announcementHeaderEl.classList.add("announcement-header");
-                announcementHeaderEl.innerText = announcement.header;
+                announcementHeaderEl.innerHTML = announcement.header;
                 const lineContentEl = document.createElement("hr");
                 
                 const announcementContentElDiv = document.createElement("div");
@@ -22,7 +22,7 @@ function set_announcement(){
                 announcementContentElUl.classList.add("announcement-content");
                 for (let i = 0; i < announcement.content.length; i++) {
                     const announcementContentElLi = document.createElement("li");
-                    announcementContentElLi.innerText = announcement.content[i];
+                    announcementContentElLi.innerHTML = announcement.content[i];
                     announcementContentElUl.appendChild(announcementContentElLi);
                 }
                 announcementContentElDiv.appendChild(announcementContentElUl);
@@ -37,7 +37,7 @@ function set_announcement(){
                     announcementContentElUl2.classList.add("announcement-content");
                     for (let i = 0; i < announcement.known_issues.length; i++) {
                         const announcementContentElLi = document.createElement("li");
-                        announcementContentElLi.innerText = announcement.known_issues[i];
+                        announcementContentElLi.innerHTML = announcement.known_issues[i];
                         announcementContentElUl2.appendChild(announcementContentElLi);
                     }
                     announcementContentElDiv.appendChild(announcementContentElUl2);
