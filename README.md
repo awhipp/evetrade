@@ -19,9 +19,10 @@ The top-searched EVE Online trading tool that lets you discover what to trade be
 
 * Market Data Ingestion (Every 5 min)
   * [![Check Data Sync](https://github.com/awhipp/evetrade-data-sync-service/actions/workflows/check.yml/badge.svg)](https://github.com/awhipp/evetrade-data-sync-service/actions/workflows/check.yml)
-
-* Backend API healthcheck: 
-  * [![API Service Check](https://github.com/awhipp/evetrade_api/actions/workflows/check_endpoints.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/check_endpoints.yml)
+ 
+* API Deployments
+  * [![EVETrade API Deploy - Dev](https://github.com/awhipp/evetrade_api/actions/workflows/evetrade_deploy_dev.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/evetrade_deploy_dev.yml)
+  * [![EVETrade API Deploy - Prod](https://github.com/awhipp/evetrade_api/actions/workflows/evetrade_deploy_prod.yml/badge.svg)](https://github.com/awhipp/evetrade_api/actions/workflows/evetrade_deploy_prod.yml)
 
 ## About
 
